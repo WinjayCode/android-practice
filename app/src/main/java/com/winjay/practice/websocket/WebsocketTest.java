@@ -24,9 +24,13 @@ import okio.ByteString;
  */
 public class WebsocketTest {
     private static final String TAG = WebsocketTest.class.getSimpleName();
+
     MockWebServer mockWebServer = new MockWebServer();
     ExecutorService writeExecutor = Executors.newSingleThreadExecutor();
 
+    /**
+     * 启动服务端
+     */
     public void startServer() {
         mockWebServer.enqueue(new MockResponse().withWebSocketUpgrade(new WebSocketListener() {
             @Override
@@ -85,6 +89,9 @@ public class WebsocketTest {
         }));
     }
 
+    /**
+     * 启动客户端
+     */
     public void startClient() {
         String wsUrl = "ws://" + mockWebServer.getHostName() + ":" + mockWebServer.getPort() + "/";
         Log.d(TAG, "wsUrl=" + wsUrl);
