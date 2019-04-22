@@ -5,9 +5,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.winjay.practice.kotlin.KotlinTestActivity;
 import com.winjay.practice.so.SOActivity;
 import com.winjay.practice.websocket.WebsocketTest;
 
+/**
+ *
+ *
+ * @author Winjay
+ * @date 2019/3/21
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -35,6 +42,15 @@ public class MainActivity extends AppCompatActivity {
      */
     public void soTest(View view) {
         Intent intent = new Intent(this, SOActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Kotlin
+     * @param view
+     */
+    public void kotlinTest(View view) {
+        Intent intent = new Intent(this, KotlinTestActivity.class);
         startActivity(intent);
     }
 }

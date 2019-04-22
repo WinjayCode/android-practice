@@ -20,6 +20,8 @@
         </activity>
 
         <activity android:name=".so.SOActivity"/>
+
+        <activity android:name=".kotlin.KotlinTestActivity"/>
     </application>
 
 </manifest>
