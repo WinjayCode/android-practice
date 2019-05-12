@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.winjay.practice">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -19,9 +19,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".so.SOActivity"/>
+        <activity android:name=".so.SOActivity" />
 
-        <activity android:name=".kotlin.KotlinTestActivity"/>
+        <activity android:name=".kotlin.KotlinTestActivity" />
+
+        <activity android:name=".contentProvider.ProviderActivity" />
+
+        <provider
+            android:name=".contentProvider.UserinfoProvider"
+            android:authorities="com.winjay.info" />
     </application>
 
 </manifest>
