@@ -25,6 +25,8 @@
 
         <activity android:name=".contentProvider.ProviderActivity" />
 
+        <activity android:name=".TestActivity" />
+
         <provider
             android:name=".contentProvider.UserinfoProvider"
             android:authorities="com.winjay.info" />
