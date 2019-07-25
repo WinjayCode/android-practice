@@ -3,14 +3,15 @@ package com.winjay.practice;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.winjay.practice.utils.VolumeUtil;
 import com.winjay.practice.view.RecognitionView;
