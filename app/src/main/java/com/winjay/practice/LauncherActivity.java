@@ -28,6 +28,9 @@ public class LauncherActivity extends AppCompatActivity {
             @Override
             public void onHwUnavailable() {
                 Log.d(TAG, "onHwUnavailable()");
+                Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
 
             @Override

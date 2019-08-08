@@ -27,12 +27,12 @@
 
         <activity android:name=".kotlin.KotlinTestActivity" />
 
-        <activity android:name=".contentProvider.ProviderActivity" />
+        <activity android:name=".content_provider.ProviderActivity" />
 
         <activity android:name=".TestActivity" />
 
         <provider
-            android:name=".contentProvider.UserinfoProvider"
+            android:name=".content_provider.UserinfoProvider"
             android:authorities="com.winjay.info" />
     </application>
 

@@ -3,12 +3,14 @@ package com.winjay.practice;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,7 +45,6 @@ public class TestActivity extends AppCompatActivity {
         mTestSV = findViewById(R.id.test_sv);
         testRL = findViewById(R.id.re_rl);
         skillLL = findViewById(R.id.skill_ll);
-        downBtn = findViewById(R.id.down_btn);
         editText = findViewById(R.id.edit);
 
         audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
@@ -67,6 +68,14 @@ public class TestActivity extends AppCompatActivity {
 //        }, 2000);
     }
 
+    private void mute(View view) {
+        VolumeUtil.muteVolume(this, AudioManager.STREAM_MUSIC);
+    }
+
+    private void unmute(View view) {
+        VolumeUtil.unMuteVolume(this, AudioManager.STREAM_MUSIC);
+    }
+
     public void up(View view) {
 //        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(downBtn, "translationY", 200, -50, 50, 0);
 //        objectAnimator.setDuration(1000);
@@ -78,32 +87,23 @@ public class TestActivity extends AppCompatActivity {
 //        objectAnimator.setInterpolator(new DecelerateInterpolator());
 //        objectAnimator.start();
 
-        dialogMute(this);
+        VolumeUtil.volumeUp(this, AudioManager.STREAM_MUSIC);
+        getVolume(view);
     }
 
     public void down(View view) {
-        dialogUnMute(this);
+        VolumeUtil.volumeDown(this, AudioManager.STREAM_MUSIC);
+        getVolume(view);
     }
 
-    public void test(View view) {
-
+    public void getVolume(View view) {
+        int volume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        Toast.makeText(this, "" + volume, Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * 对话状态的静音
-     *
-     * @param context
-     */
-    public void dialogMute(Context context) {
-        VolumeUtil.muteVolume(context, AudioManager.STREAM_MUSIC);
-    }
-
-    /**
-     * 对话状态的取消静音
-     *
-     * @param context
-     */
-    public void dialogUnMute(Context context) {
-        VolumeUtil.unMuteVolume(context, AudioManager.STREAM_MUSIC);
+    public void setVolume(View view) {
+        if (!TextUtils.isEmpty(editText.getText().toString()) && TextUtils.isDigitsOnly(editText.getText().toString())) {
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, Integer.valueOf(editText.getText().toString()), AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_PLAY_SOUND);
+        }
     }
 }

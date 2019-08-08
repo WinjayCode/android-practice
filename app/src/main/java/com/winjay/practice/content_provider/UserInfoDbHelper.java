@@ -1,4 +1,4 @@
-package com.winjay.practice.contentProvider;
+package com.winjay.practice.content_provider;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

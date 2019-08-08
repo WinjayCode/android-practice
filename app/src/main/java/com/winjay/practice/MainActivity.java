@@ -6,7 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.winjay.practice.contentProvider.ProviderActivity;
+import com.winjay.practice.content_provider.ProviderActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
 import com.winjay.practice.so.SOActivity;
 import com.winjay.practice.websocket.WebsocketTest;

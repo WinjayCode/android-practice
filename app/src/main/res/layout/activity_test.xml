@@ -5,11 +5,28 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/down_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="test"
-        android:text="Test" />
+        android:onClick="getVolume"
+        android:text="getVolume" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="setVolume"
+        android:text="setVolume" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="mute"
+        android:text="Mute" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="unmute"
+        android:text="unMute" />
 
     <Button
         android:layout_width="wrap_content"
@@ -18,7 +35,6 @@
         android:text="UP" />
 
     <Button
-        android:id="@+id/down_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="down"
@@ -36,7 +52,8 @@
         android:background="#662b2b2b"
         android:fillViewport="true"
         android:scrollbarStyle="outsideInset"
-        android:verticalScrollbarPosition="left">
+        android:verticalScrollbarPosition="left"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
