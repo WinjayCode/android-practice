@@ -1,49 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/getVolume"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="getVolume"
-        android:text="getVolume" />
+        android:text="getVolume"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/setVolume"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="setVolume"
-        android:text="setVolume" />
+        android:text="setVolume"
+        app:layout_constraintTop_toBottomOf="@+id/getVolume" />
 
     <Button
+        android:id="@+id/mute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="mute"
-        android:text="Mute" />
+        android:text="Mute"
+        app:layout_constraintTop_toBottomOf="@+id/setVolume" />
 
     <Button
+        android:id="@+id/unmute"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="unmute"
-        android:text="unMute" />
+        android:text="unMute"
+        app:layout_constraintTop_toBottomOf="@+id/mute" />
 
     <Button
+        android:id="@+id/up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="up"
-        android:text="UP" />
+        android:text="UP"
+        app:layout_constraintTop_toBottomOf="@+id/unmute" />
 
     <Button
+        android:id="@+id/down"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="down"
-        android:text="Down" />
+        android:text="Down"
+        app:layout_constraintTop_toBottomOf="@+id/up" />
 
     <EditText
         android:id="@+id/edit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/down" />
 
     <ScrollView
         android:id="@+id/test_sv"
@@ -53,7 +67,8 @@
         android:fillViewport="true"
         android:scrollbarStyle="outsideInset"
         android:verticalScrollbarPosition="left"
-        android:visibility="gone">
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/edit">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,4 +100,4 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

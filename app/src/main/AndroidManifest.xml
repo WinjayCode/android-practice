@@ -31,6 +31,8 @@
 
         <activity android:name=".TestActivity" />
 
+        <activity android:name=".ConstrainLayoutActivity" />
+
         <provider
             android:name=".content_provider.UserinfoProvider"
             android:authorities="com.winjay.info" />

@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.constraint.Guideline
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="10dp" />
+
+            <TextView
+                android:id="@+id/hello"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="20dp"
+                android:text="Hello" />
+
+            <TextView
+                android:id="@+id/world"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="10dp"
+                android:text="World"
+                app:layout_constraintBaseline_toBaselineOf="@+id/hello"
+                app:layout_constraintLeft_toRightOf="@+id/hello" />
+
+            <TextView
+                android:id="@+id/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="20dp"
+                android:text="Android"
+                app:layout_constraintLeft_toRightOf="@+id/world"
+                app:layout_goneMarginLeft="30dp" />
+
+            <TextView
+                android:id="@+id/center_in_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="20dp"
+                android:text="水平居中"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/android" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="20dp"
+                android:text="垂直居中"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/center_in_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="20dp"
+                android:text="全局居中"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="20dp"
+                android:text="水平居中偏左"
+                app:layout_constraintHorizontal_bias="0.1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/android" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="20dp"
+                android:text="圆形定位"
+                app:layout_constraintCircle="@id/center_in_parent"
+                app:layout_constraintCircleAngle="30"
+                app:layout_constraintCircleRadius="100dp" />
+
+            <TextView
+                android:id="@+id/fifty_percent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="百分之五十宽度"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/center_in_horizontal"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.5" />
+
+            <TextView
+                android:id="@+id/w_h"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="宽高比"
+                app:layout_constraintDimensionRatio="3:1"
+                app:layout_constraintTop_toBottomOf="@+id/fifty_percent" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="0dp"
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="高宽比"
+                app:layout_constraintDimensionRatio="H,1:0.5"
+                app:layout_constraintLeft_toRightOf="@+id/w_h"
+                app:layout_constraintTop_toBottomOf="@+id/fifty_percent" />
+
+            <android.support.constraint.Group
+                android:id="@+id/group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="hide_1,hide_2" />
+
+            <TextView
+                android:id="@+id/hide_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="隐藏1"
+                app:layout_constraintTop_toBottomOf="@+id/w_h" />
+
+            <TextView
+                android:id="@+id/hide_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="隐藏2"
+                app:layout_constraintLeft_toRightOf="@+id/hide_1"
+                app:layout_constraintTop_toBottomOf="@+id/w_h" />
+
+            <TextView
+                android:id="@+id/placeholder_test_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="测试占位符"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/hide_2" />
+
+            <android.support.constraint.Placeholder
+                android:id="@+id/placeholder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:content="@id/placeholder_tv"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/placeholder_test_tv"
+                app:layout_constraintTop_toBottomOf="@+id/hide_2" />
+
+            <TextView
+                android:id="@+id/placeholder_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="占位符"
+                app:layout_constraintLeft_toRightOf="@+id/placeholder_test_tv"
+                app:layout_constraintTop_toBottomOf="@+id/hide_2" />
+
+            <TextView
+                android:id="@+id/chain_a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="20dp"
+                android:text="A"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/chain_b"
+                app:layout_constraintTop_toBottomOf="@+id/center_in_parent" />
+
+            <TextView
+                android:id="@+id/chain_b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="20dp"
+                android:text="B"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintLeft_toRightOf="@+id/chain_a"
+                app:layout_constraintRight_toLeftOf="@+id/chain_c"
+                app:layout_constraintTop_toBottomOf="@+id/center_in_parent" />
+
+            <TextView
+                android:id="@+id/chain_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="20dp"
+                android:text="C"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintLeft_toRightOf="@+id/chain_b"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/center_in_parent" />
+
+            <TextView
+                android:id="@+id/chain_d"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="20dp"
+                android:text="D"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/chain_e"
+                app:layout_constraintTop_toBottomOf="@+id/chain_c" />
+
+            <TextView
+                android:id="@+id/chain_e"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="20dp"
+                android:text="E"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintLeft_toRightOf="@+id/chain_d"
+                app:layout_constraintRight_toLeftOf="@+id/chain_f"
+                app:layout_constraintTop_toBottomOf="@+id/chain_c" />
+
+            <TextView
+                android:id="@+id/chain_f"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:padding="20dp"
+                android:text="F"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintLeft_toRightOf="@+id/chain_e"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chain_c" />
+
+            <TextView
+                android:id="@+id/chain_g"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="G"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/chain_h"
+                app:layout_constraintTop_toBottomOf="@+id/chain_e" />
+
+            <TextView
+                android:id="@+id/chain_h"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_blue_bright"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="H"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintLeft_toRightOf="@+id/chain_g"
+                app:layout_constraintRight_toLeftOf="@+id/chain_i"
+                app:layout_constraintTop_toBottomOf="@+id/chain_e" />
+
+            <TextView
+                android:id="@+id/chain_i"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="I"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintLeft_toRightOf="@+id/chain_h"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chain_e" />
+
+            <TextView
+                android:id="@+id/chain_j"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="J"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/chain_k"
+                app:layout_constraintTop_toBottomOf="@+id/chain_h" />
+
+            <TextView
+                android:id="@+id/chain_k"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_green_dark"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="K"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toRightOf="@+id/chain_j"
+                app:layout_constraintRight_toLeftOf="@+id/chain_l"
+                app:layout_constraintTop_toBottomOf="@+id/chain_h" />
+
+            <TextView
+                android:id="@+id/chain_l"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="L"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toRightOf="@+id/chain_k"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chain_h" />
+
+            <TextView
+                android:id="@+id/chain_m"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="M"
+                app:layout_constraintHorizontal_bias="0.2"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/chain_n"
+                app:layout_constraintTop_toBottomOf="@+id/chain_k" />
+
+            <TextView
+                android:id="@+id/chain_n"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_green_dark"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="N"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toRightOf="@+id/chain_m"
+                app:layout_constraintRight_toLeftOf="@+id/chain_o"
+                app:layout_constraintTop_toBottomOf="@+id/chain_k" />
+
+            <TextView
+                android:id="@+id/chain_o"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="O"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toRightOf="@+id/chain_n"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chain_k" />
+
+            <android.support.constraint.Barrier
+                android:id="@+id/barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="right"
+                app:constraint_referenced_ids="phone,pwd" />
+
+            <TextView
+                android:id="@+id/phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="手机号码："
+                app:layout_constraintBaseline_toBaselineOf="@+id/phone_et"
+                app:layout_constraintTop_toBottomOf="@+id/chain_o" />
+
+            <EditText
+                android:id="@+id/phone_et"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="输入手机号码"
+                app:layout_constraintLeft_toRightOf="@+id/barrier"
+                app:layout_constraintTop_toBottomOf="@+id/chain_o" />
+
+            <TextView
+                android:id="@+id/pwd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="密码："
+                app:layout_constraintBaseline_toBaselineOf="@+id/pwd_et"
+                app:layout_constraintTop_toBottomOf="@+id/phone" />
+
+            <EditText
+                android:id="@+id/pwd_et"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="输入密码"
+                app:layout_constraintLeft_toRightOf="@+id/barrier"
+                app:layout_constraintTop_toBottomOf="@+id/phone_et" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</LinearLayout>
