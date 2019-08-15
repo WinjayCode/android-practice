@@ -195,6 +195,27 @@
                 app:layout_constraintTop_toBottomOf="@+id/hide_2" />
 
             <TextView
+                android:id="@+id/test_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                app:layout_constraintTop_toBottomOf="@+id/placeholder"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="20dp"
+                android:padding="20dp"
+                android:text="111"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/holo_orange_light"
+                app:layout_constraintTop_toBottomOf="@+id/placeholder"
+                app:layout_constraintEnd_toStartOf="@+id/test_1"
+                app:layout_constraintStart_toStartOf="parent"
+                android:padding="20dp"
+                android:text="222"/>
+
+            <TextView
                 android:id="@+id/chain_a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

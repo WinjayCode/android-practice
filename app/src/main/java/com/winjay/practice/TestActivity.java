@@ -1,10 +1,15 @@
 package com.winjay.practice;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -38,6 +43,10 @@ public class TestActivity extends AppCompatActivity {
 
     private AudioManager audioManager;
 
+    private Button testBtn;
+
+    private ObjectAnimator objectAnimator;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +55,7 @@ public class TestActivity extends AppCompatActivity {
         testRL = findViewById(R.id.re_rl);
         skillLL = findViewById(R.id.skill_ll);
         editText = findViewById(R.id.edit);
+        testBtn = findViewById(R.id.test_btn);
 
         audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
 
@@ -105,5 +115,45 @@ public class TestActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(editText.getText().toString()) && TextUtils.isDigitsOnly(editText.getText().toString())) {
             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, Integer.valueOf(editText.getText().toString()), AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_PLAY_SOUND);
         }
+    }
+
+    public void startDialog(View view) {
+        Intent intent = new Intent();
+        intent.setAction("aispeech.intent.action.START_DIALOG");
+        sendBroadcast(intent);
+    }
+
+    public void setting(View view) {
+        //系统设置界面
+        Intent intent = new Intent(Settings.ACTION_SETTINGS);
+        startActivity(intent);
+    }
+
+    public void animation(View view) {
+        objectAnimator = ObjectAnimator.ofFloat(testBtn, "translationX", 0, -100, 0);
+        objectAnimator.setDuration(1000);
+        objectAnimator.setInterpolator(new LinearInterpolator());
+        objectAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                objectAnimator.setCurrentFraction(0);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        objectAnimator.start();
     }
 }
