@@ -1,9 +1,11 @@
-package com.winjay.practice;
+package com.winjay.practice.constrain_layout;
 
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.winjay.practice.R;
 
 /**
  * ConstrainLayout练习
@@ -15,6 +17,6 @@ public class ConstrainLayoutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.constraint_layout_test);
+        setContentView(R.layout.constraint_layout_test_activity);
     }
 }

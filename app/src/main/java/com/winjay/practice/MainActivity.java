@@ -6,8 +6,10 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.winjay.practice.constrain_layout.ConstrainLayoutActivity;
 import com.winjay.practice.content_provider.ProviderActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
+import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.so.SOActivity;
 import com.winjay.practice.websocket.WebsocketTest;
 
@@ -20,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
     }
 
     /**
@@ -72,6 +74,16 @@ public class MainActivity extends AppCompatActivity {
      */
     public void constrainLayout(View view) {
         Intent intent = new Intent(this, ConstrainLayoutActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Location
+     *
+     * @param view
+     */
+    public void location(View view) {
+        Intent intent = new Intent(this, LocationActivity.class);
         startActivity(intent);
     }
 

@@ -37,6 +37,12 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Location"
+        android:onClick="location"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="test"
         android:onClick="test"/>
 </LinearLayout>

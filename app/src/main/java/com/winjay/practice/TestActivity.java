@@ -50,7 +50,7 @@ public class TestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.test_activity);
         mTestSV = findViewById(R.id.test_sv);
         testRL = findViewById(R.id.re_rl);
         skillLL = findViewById(R.id.skill_ll);

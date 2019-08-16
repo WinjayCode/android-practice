@@ -38,7 +38,7 @@ public class SOActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_so);
+        setContentView(R.layout.so_activity);
 
         Toast.makeText(this, "" + SOActivity.num(), Toast.LENGTH_SHORT).show();
     }
