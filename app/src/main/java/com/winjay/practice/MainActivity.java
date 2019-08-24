@@ -1,6 +1,7 @@
 package com.winjay.practice;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -84,6 +85,14 @@ public class MainActivity extends AppCompatActivity {
      */
     public void location(View view) {
         Intent intent = new Intent(this, LocationActivity.class);
+        startActivity(intent);
+    }
+
+    public void intentFilter(View view) {
+        Intent intent = new Intent();
+        intent.setAction("com.winjay.practice.action_1");
+        intent.addCategory("com.winjay.practice.category_1");
+        intent.setDataAndType(Uri.parse("file://abc"), "text/plain");
         startActivity(intent);
     }
 

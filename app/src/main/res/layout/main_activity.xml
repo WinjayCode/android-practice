@@ -43,6 +43,12 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Intent_Filter"
+        android:onClick="intentFilter"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="test"
         android:onClick="test"/>
 </LinearLayout>

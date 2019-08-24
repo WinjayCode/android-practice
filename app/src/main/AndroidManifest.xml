@@ -6,8 +6,8 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <!--地理位置相关-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".AppApplication"
@@ -18,7 +18,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".LauncherActivity">
+        <!--configChanges：配置中的属性发生变化时，activity不会重建-->
+        <!--launchMode：activity启动模式（standard、singleTop、singleTask、singleInstance）-->
+        <!--excludeFromRecents：activity不会出现在历史activity列表中-->
+        <!--taskAffinity：activity所需要的任务栈的名字（默认和包名一致）-->
+        <activity
+            android:name=".LauncherActivity"
+            android:configChanges="orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:launchMode="standard"
+            android:taskAffinity="com.winjay.practice">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,6 +48,20 @@
         <activity android:name=".constrain_layout.ConstrainLayoutActivity" />
 
         <activity android:name=".location.LocationActivity" />
+
+        <!--隐式启动activity，action、category、data必须同时匹配，才能隐式启动（android.intent.category.DEFAULT必须有）-->
+        <activity android:name=".intent_filter.IntentFilterActivity">
+            <intent-filter>
+                <action android:name="com.winjay.practice.action_1" />
+                <action android:name="com.winjay.practice.action_2" />
+
+                <category android:name="com.winjay.practice.category_1" />
+                <category android:name="com.winjay.practice.category_2" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
 
         <provider
             android:name=".content_provider.UserinfoProvider"
