@@ -22,6 +22,7 @@
         <!--launchMode：activity启动模式（standard、singleTop、singleTask、singleInstance）-->
         <!--excludeFromRecents：activity不会出现在历史activity列表中-->
         <!--taskAffinity：activity所需要的任务栈的名字（默认和包名一致）-->
+        <!--process：指定进程名（默认进程名为包名）（adb shell ps、adb shell ps|grep xxx.xxx命令查看进程）-->
         <activity
             android:name=".LauncherActivity"
             android:configChanges="orientation|screenSize"
