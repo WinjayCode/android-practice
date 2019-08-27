@@ -1,135 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <Button
-        android:id="@+id/animation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Animation"
-        android:onClick="animation"/>
-
-    <Button
-        android:id="@+id/test_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TEST"
-        app:layout_constraintRight_toRightOf="parent"/>
-
-    <Button
-        android:id="@+id/setting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Setting"
-        android:onClick="setting"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/animation"/>
-
-    <Button
-        android:id="@+id/start_dialog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="StartDialog"
-        android:onClick="startDialog"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/setting"/>
-
-    <Button
-        android:id="@+id/getVolume"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="getVolume"
-        android:text="getVolume"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/start_dialog"/>
-
-    <Button
-        android:id="@+id/setVolume"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="setVolume"
-        android:text="setVolume"
-        app:layout_constraintTop_toBottomOf="@+id/getVolume" />
-
-    <Button
-        android:id="@+id/mute"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="mute"
-        android:text="Mute"
-        app:layout_constraintTop_toBottomOf="@+id/setVolume" />
-
-    <Button
-        android:id="@+id/unmute"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="unmute"
-        android:text="unMute"
-        app:layout_constraintTop_toBottomOf="@+id/mute" />
-
-    <Button
-        android:id="@+id/up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="up"
-        android:text="UP"
-        app:layout_constraintTop_toBottomOf="@+id/unmute" />
-
-    <Button
-        android:id="@+id/down"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="down"
-        android:text="Down"
-        app:layout_constraintTop_toBottomOf="@+id/up" />
-
-    <EditText
-        android:id="@+id/edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/down" />
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ScrollView
-        android:id="@+id/test_sv"
         android:layout_width="match_parent"
-        android:layout_height="500px"
-        android:background="#662b2b2b"
-        android:fillViewport="true"
-        android:scrollbarStyle="outsideInset"
-        android:verticalScrollbarPosition="left"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/edit">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <RelativeLayout
-                android:id="@+id/re_rl"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical" />
+            <Button
+                android:id="@+id/animation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="animation"
+                android:text="Animation" />
 
-            <LinearLayout
-                android:id="@+id/skill_ll"
+            <Button
+                android:id="@+id/test_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TEST"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <Button
+                android:id="@+id/setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="setting"
+                android:text="Setting"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/animation" />
+
+            <Button
+                android:id="@+id/start_dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="startDialog"
+                android:text="StartDialog"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/setting" />
+
+            <Button
+                android:id="@+id/getVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="getVolume"
+                android:text="getVolume"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/start_dialog" />
+
+            <Button
+                android:id="@+id/setVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="setVolume"
+                android:text="setVolume"
+                app:layout_constraintTop_toBottomOf="@+id/getVolume" />
+
+            <Button
+                android:id="@+id/mute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="mute"
+                android:text="Mute"
+                app:layout_constraintTop_toBottomOf="@+id/setVolume" />
+
+            <Button
+                android:id="@+id/unmute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="unmute"
+                android:text="unMute"
+                app:layout_constraintTop_toBottomOf="@+id/mute" />
+
+            <Button
+                android:id="@+id/up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="up"
+                android:text="UP"
+                app:layout_constraintTop_toBottomOf="@+id/unmute" />
+
+            <Button
+                android:id="@+id/down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="down"
+                android:text="Down"
+                app:layout_constraintTop_toBottomOf="@+id/up" />
+
+            <EditText
+                android:id="@+id/edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
+                app:layout_constraintTop_toBottomOf="@+id/down" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_launcher" />
+            <ScrollView
+                android:id="@+id/test_sv"
+                android:layout_width="match_parent"
+                android:layout_height="500px"
+                android:background="#662b2b2b"
+                android:fillViewport="true"
+                android:scrollbarStyle="outsideInset"
+                android:verticalScrollbarPosition="left"
+                app:layout_constraintTop_toBottomOf="@+id/edit">
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_launcher" />
-            </LinearLayout>
-        </LinearLayout>
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/re_rl"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical" />
+
+                    <LinearLayout
+                        android:id="@+id/skill_ll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/ic_launcher" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/ic_launcher" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+            <com.winjay.practice.view.AlignTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="李白（701年－762年） ，字太白，号青莲居士，又号“谪仙人”，是唐代伟大的浪漫主义诗人，被后人誉为“诗仙”，与杜甫并称为“李杜”，为了与另两位诗人李商隐与杜牧即“小李杜” 区别，杜甫与李白又合称“大李杜” 。其人爽朗大方，爱饮酒作诗，喜交友。李白深受黄老列庄思想影响，有《李太白集》传世，诗作中多以醉时写的，代表作有《望庐山瀑布》、《行路难》、《蜀道难》、《将进酒》、《梁甫吟》、《早发白帝城》等多首。李白所作词赋，宋人已有传记（如文莹《湘山野录》卷上），就其开创意义及艺术成就而言，“李白词”享有极为崇高的地位。"
+                app:layout_constraintTop_toBottomOf="@+id/test_sv" />
+        </android.support.constraint.ConstraintLayout>
     </ScrollView>
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
