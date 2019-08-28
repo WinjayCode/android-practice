@@ -1,4 +1,4 @@
-package com.winjay.practice;
+package com.winjay.practice.test_java;
 
 import android.app.Activity;
 import android.os.Parcel;
