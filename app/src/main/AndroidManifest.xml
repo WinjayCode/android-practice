@@ -64,6 +64,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".cardview.CardViewActivity" />
+
         <provider
             android:name=".content_provider.UserinfoProvider"
             android:authorities="com.winjay.info" />

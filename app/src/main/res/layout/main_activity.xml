@@ -49,6 +49,12 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="CardView"
+        android:onClick="cardview"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="test"
         android:onClick="test"/>
 </LinearLayout>

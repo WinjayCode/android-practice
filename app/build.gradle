@@ -78,7 +78,7 @@ dependencies {
     implementation rootProject.ext.dependencies.okhttp
     implementation rootProject.ext.dependencies.mockwebserver
     implementation rootProject.ext.dependencies.kotlin_stdlib_jdk7
-
+    implementation rootProject.ext.dependencies.cardview
     // 指纹识别
     api project(':biometricprompt')
 }

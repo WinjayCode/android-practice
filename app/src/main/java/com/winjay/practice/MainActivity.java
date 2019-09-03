@@ -7,6 +7,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.winjay.practice.cardview.CardViewActivity;
 import com.winjay.practice.constrain_layout.ConstrainLayoutActivity;
 import com.winjay.practice.content_provider.ProviderActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
@@ -93,6 +94,15 @@ public class MainActivity extends AppCompatActivity {
         intent.setAction("com.winjay.practice.action_1");
         intent.addCategory("com.winjay.practice.category_1");
         intent.setDataAndType(Uri.parse("file://abc"), "text/plain");
+        startActivity(intent);
+    }
+
+    /**
+     * CardView
+     * @param view
+     */
+    public void cardview(View view) {
+        Intent intent = new Intent(this, CardViewActivity.class);
         startActivity(intent);
     }
 
