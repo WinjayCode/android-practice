@@ -5,9 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.winjay.practice.cardview.CardViewActivity;
+import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.constrain_layout.ConstrainLayoutActivity;
 import com.winjay.practice.content_provider.ProviderActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
@@ -15,22 +14,27 @@ import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.so.SOActivity;
 import com.winjay.practice.websocket.WebsocketTest;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * @author Winjay
  * @date 2019/3/21
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+        ButterKnife.bind(this);
     }
 
     /**
      * Websocket
      */
-    public void websocketTest(View view) {
+    @OnClick(R.id.websocket)
+    void websocketTest() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -44,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * so库的使用
      */
-    public void soTest(View view) {
+    @OnClick(R.id.so_use)
+    void soTest() {
         Intent intent = new Intent(this, SOActivity.class);
         startActivity(intent);
     }
@@ -99,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * CardView
+     *
      * @param view
      */
     public void cardview(View view) {

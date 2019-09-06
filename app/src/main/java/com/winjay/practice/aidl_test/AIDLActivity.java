@@ -1,4 +1,4 @@
-package com.winjay.practice.aidl;
+package com.winjay.practice.aidl_test;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,11 +7,12 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 
 import com.winjay.practice.R;
+import com.winjay.practice.aidl.Book;
+import com.winjay.practice.aidl.IBookManager;
 import com.winjay.practice.common.BaseActivity;
 
 import java.util.ArrayList;

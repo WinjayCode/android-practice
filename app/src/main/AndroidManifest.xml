@@ -66,7 +66,7 @@
 
         <activity android:name=".cardview.CardViewActivity" />
 
-        <activity android:name=".aidl.AIDLActivity" />
+        <activity android:name=".aidl_test.AIDLActivity" />
 
         <provider
             android:name=".content_provider.UserinfoProvider"
