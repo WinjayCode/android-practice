@@ -8,6 +8,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.winjay.practice.hook.HookSetOnClickListenerHelper;
 import com.winjay.practice.utils.VolumeUtil;
 import com.winjay.practice.view.RecognitionView;
 
@@ -56,26 +58,33 @@ public class TestActivity extends AppCompatActivity {
         skillLL = findViewById(R.id.skill_ll);
         editText = findViewById(R.id.edit);
         testBtn = findViewById(R.id.test_btn);
+        testBtn.setOnClickListener(v -> {
+            Log.d("HookSetOnClickListener", "111");
+            Toast.makeText(TestActivity.this, "测试点击", Toast.LENGTH_SHORT).show();
+            Log.d("HookSetOnClickListener", "222");
+        });
+        // Hook
+        HookSetOnClickListenerHelper.hook(this, testBtn);
 
         audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
 
-        recognitionView = new RecognitionView(this);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        testRL.addView(recognitionView, layoutParams);
-
-        recognitionView.setTTSContent("我在，有什么可以帮你");
-        recognitionView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recognitionView.setRecognitionContent("李白是谁");
-                recognitionView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        recognitionView.setTTSContent("李白（701年－762年） ，字太白，号青莲居士，又号“谪仙人”，是唐代伟大的浪漫主义诗人，被后人誉为“诗仙”，与杜甫并称为“李杜”，为了与另两位诗人李商隐与杜牧即“小李杜” 区别，杜甫与李白又合称“大李杜” 。其人爽朗大方，爱饮酒作诗，喜交友。李白深受黄老列庄思想影响，有《李太白集》传世，诗作中多以醉时写的，代表作有《望庐山瀑布》、《行路难》、《蜀道难》、《将进酒》、《梁甫吟》、《早发白帝城》等多首。李白所作词赋，宋人已有传记（如文莹《湘山野录》卷上），就其开创意义及艺术成就而言，“李白词”享有极为崇高的地位。");
-                    }
-                }, 2000);
-            }
-        }, 2000);
+//        recognitionView = new RecognitionView(this);
+//        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        testRL.addView(recognitionView, layoutParams);
+//
+//        recognitionView.setTTSContent("我在，有什么可以帮你");
+//        recognitionView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                recognitionView.setRecognitionContent("李白是谁");
+//                recognitionView.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        recognitionView.setTTSContent("李白（701年－762年） ，字太白，号青莲居士，又号“谪仙人”，是唐代伟大的浪漫主义诗人，被后人誉为“诗仙”，与杜甫并称为“李杜”，为了与另两位诗人李商隐与杜牧即“小李杜” 区别，杜甫与李白又合称“大李杜” 。其人爽朗大方，爱饮酒作诗，喜交友。李白深受黄老列庄思想影响，有《李太白集》传世，诗作中多以醉时写的，代表作有《望庐山瀑布》、《行路难》、《蜀道难》、《将进酒》、《梁甫吟》、《早发白帝城》等多首。李白所作词赋，宋人已有传记（如文莹《湘山野录》卷上），就其开创意义及艺术成就而言，“李白词”享有极为崇高的地位。");
+//                    }
+//                }, 2000);
+//            }
+//        }, 2000);
     }
 
     private void mute(View view) {

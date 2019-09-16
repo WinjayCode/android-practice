@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Activity集合
  *
- * @author winjay
+ * @author Winjay
  * @date 2019-08-15
  */
 public class ActivityListUtil {
