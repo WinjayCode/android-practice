@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.os.Build;
-import android.util.Log;
+import com.winjay.practice.utils.LogUtil;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -60,10 +60,10 @@ public class FloatView {
         //设置window type
         if (Build.VERSION.SDK_INT > 24) {
             mLayoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
-            Log.d(TAG, "WindowManager.LayoutParams.TYPE_PHONE;");
+            LogUtil.d(TAG, "WindowManager.LayoutParams.TYPE_PHONE;");
         } else {
             mLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-            Log.d(TAG, "WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;");
+            LogUtil.d(TAG, "WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;");
         }
 
         //设置图片格式，效果为背景透明
@@ -87,7 +87,7 @@ public class FloatView {
      */
     public void addView(View view) {
         if (!hasAdded) {
-            Log.d(TAG, "WindowManager addView");
+            LogUtil.d(TAG, "WindowManager addView");
             mLayoutParams.flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                     | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                     | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
@@ -102,7 +102,7 @@ public class FloatView {
      */
     public void removeView(View view) {
         if (hasAdded) {
-            Log.d(TAG, "WindowManager removeView");
+            LogUtil.d(TAG, "WindowManager removeView");
             mWindowManager.removeView(view);
             hasAdded = false;
         }

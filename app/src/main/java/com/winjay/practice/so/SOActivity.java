@@ -1,7 +1,7 @@
 package com.winjay.practice.so;
 
 import android.os.Bundle;
-import android.util.Log;
+import com.winjay.practice.utils.LogUtil;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +25,7 @@ public class SOActivity extends AppCompatActivity {
      * 加载so库
      */
     static{
-        Log.d(TAG, "load so library: libJNITest.so");
+        LogUtil.d(TAG, "load so library: libJNITest.so");
         System.loadLibrary("JNITest");
     }
 

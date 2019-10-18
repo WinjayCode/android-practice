@@ -3,7 +3,7 @@ package com.winjay.practice;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import com.winjay.practice.utils.LogUtil;
 import android.view.View;
 
 import com.winjay.practice.cardview.CardViewActivity;
@@ -32,13 +32,13 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate()");
+        LogUtil.d(TAG, "onCreate()");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume()");
+        LogUtil.d(TAG, "onResume()");
 
 //        Intent intent = new Intent(this, TestService.class);
 //        startService(intent);
@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy()");
+        LogUtil.d(TAG, "onDestroy()");
     }
 
     /**

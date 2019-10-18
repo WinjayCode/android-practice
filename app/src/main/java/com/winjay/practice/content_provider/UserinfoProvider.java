@@ -6,7 +6,7 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.util.Log;
+import com.winjay.practice.utils.LogUtil;
 
 /**
  * @author Winjay
@@ -44,14 +44,14 @@ public class UserinfoProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        Log.d(TAG, "onCreate()");
+        LogUtil.d(TAG, "onCreate()");
         mDatabase = new UserInfoDbHelper(getContext()).getWritableDatabase();
         return true;
     }
 
     @Override
     public String getType(Uri uri) {
-        Log.d(TAG, "getType()_type=" + uriMatcher.match(uri));
+        LogUtil.d(TAG, "getType()_type=" + uriMatcher.match(uri));
         switch (uriMatcher.match(uri)) {
             case USER_INFOS:
             case COMPANY:
@@ -79,7 +79,7 @@ public class UserinfoProvider extends ContentProvider {
                 break;
         }
         if (newId > 0) {
-            Log.d(TAG, "insert()_newUri=" + newUri);
+            LogUtil.d(TAG, "insert()_newUri=" + newUri);
             return newUri;
         }
         throw new IllegalArgumentException("Failed to insert row into " + uri);
@@ -88,7 +88,7 @@ public class UserinfoProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor cursor = null;
-        Log.d(TAG, "query()_type=" + uriMatcher.match(uri));
+        LogUtil.d(TAG, "query()_type=" + uriMatcher.match(uri));
         switch (uriMatcher.match(uri)) {
             case USER_INFOS:
                 cursor = mDatabase.query(UserInfoDbHelper.TABLE_USER_INFO, projection, selection, selectionArgs, null, null, sortOrder);

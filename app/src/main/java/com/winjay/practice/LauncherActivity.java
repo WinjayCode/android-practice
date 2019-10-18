@@ -2,7 +2,6 @@ package com.winjay.practice;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -10,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.hailong.biometricprompt.fingerprint.FingerprintCallback;
 import com.hailong.biometricprompt.fingerprint.FingerprintVerifyManager;
+import com.winjay.practice.utils.LogUtil;
 
 /**
  * 指纹验证
@@ -27,7 +27,7 @@ public class LauncherActivity extends AppCompatActivity {
         builder.callback(new FingerprintCallback() {
             @Override
             public void onHwUnavailable() {
-                Log.d(TAG, "onHwUnavailable()");
+                LogUtil.d(TAG, "onHwUnavailable()");
                 Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -35,12 +35,12 @@ public class LauncherActivity extends AppCompatActivity {
 
             @Override
             public void onNoneEnrolled() {
-                Log.d(TAG, "onNoneEnrolled()");
+                LogUtil.d(TAG, "onNoneEnrolled()");
             }
 
             @Override
             public void onSucceeded() {
-                Log.d(TAG, "onSucceeded()");
+                LogUtil.d(TAG, "onSucceeded()");
                 Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -48,18 +48,18 @@ public class LauncherActivity extends AppCompatActivity {
 
             @Override
             public void onFailed() {
-                Log.d(TAG, "onFailed()");
+                LogUtil.d(TAG, "onFailed()");
                 Toast.makeText(LauncherActivity.this, "你是谁？", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onUsepwd() {
-                Log.d(TAG, "onUsepwd()");
+                LogUtil.d(TAG, "onUsepwd()");
             }
 
             @Override
             public void onCancel() {
-                Log.d(TAG, "onCancel()");
+                LogUtil.d(TAG, "onCancel()");
                 finish();
             }
         }).build();

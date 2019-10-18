@@ -8,7 +8,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
+import com.winjay.practice.utils.LogUtil;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
@@ -59,9 +59,9 @@ public class TestActivity extends AppCompatActivity {
         editText = findViewById(R.id.edit);
         testBtn = findViewById(R.id.test_btn);
         testBtn.setOnClickListener(v -> {
-            Log.d("HookSetOnClickListener", "111");
+            LogUtil.d("HookSetOnClickListener", "111");
             Toast.makeText(TestActivity.this, "测试点击", Toast.LENGTH_SHORT).show();
-            Log.d("HookSetOnClickListener", "222");
+            LogUtil.d("HookSetOnClickListener", "222");
         });
         // Hook
         HookSetOnClickListenerHelper.hook(this, testBtn);

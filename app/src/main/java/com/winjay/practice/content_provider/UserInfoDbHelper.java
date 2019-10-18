@@ -3,7 +3,7 @@ package com.winjay.practice.content_provider;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+import com.winjay.practice.utils.LogUtil;
 
 /**
  * @author Winjay
@@ -43,7 +43,7 @@ public class UserInfoDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Log.d(TAG, "onCreate()");
+        LogUtil.d(TAG, "onCreate()");
         sqLiteDatabase.execSQL(USERINFO_TABLE_SQL);
         sqLiteDatabase.execSQL(COMPANY_TABLE_SQL);
     }

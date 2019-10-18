@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
+import com.winjay.practice.utils.LogUtil;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -131,7 +131,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
             i.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(i);
         }
-        Log.d(TAG, "getLocation()_locationProvider=" + locationProvider);
+        LogUtil.d(TAG, "getLocation()_locationProvider=" + locationProvider);
         //获取Location
         Location location = locationManager.getLastKnownLocation(locationProvider);
         if (location != null) {
@@ -144,22 +144,22 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged()_Longitude=" + location.getLongitude() + ">>>Latitude=" + location.getLatitude());
+        LogUtil.d(TAG, "onLocationChanged()_Longitude=" + location.getLongitude() + ">>>Latitude=" + location.getLatitude());
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.d(TAG, "onStatusChanged()_provider=" + provider);
+        LogUtil.d(TAG, "onStatusChanged()_provider=" + provider);
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-        Log.d(TAG, "onProviderEnabled()_provider=" + provider);
+        LogUtil.d(TAG, "onProviderEnabled()_provider=" + provider);
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        Log.d(TAG, "onProviderDisabled()_provider=" + provider);
+        LogUtil.d(TAG, "onProviderDisabled()_provider=" + provider);
     }
 
     private class RunnableMockLocation implements Runnable {
@@ -191,7 +191,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
     }
 
     private void setMockLocation(double longitude, double latitude) {
-        Log.d(TAG, "setMockLocation()_longitude=" + longitude + ",latitude=" + latitude);
+        LogUtil.d(TAG, "setMockLocation()_longitude=" + longitude + ",latitude=" + latitude);
         Location location = new Location(mMockProviderName);
         location.setTime(System.currentTimeMillis());
         location.setLatitude(latitude);
@@ -205,7 +205,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
     private boolean hasAddTestProvider = false;
 
     public void stopMockLocation() {
-        Log.d(TAG, "stopMockLocation()");
+        LogUtil.d(TAG, "stopMockLocation()");
         if (hasAddTestProvider) {
             try {
                 locationManager.removeTestProvider(LocationManager.GPS_PROVIDER);

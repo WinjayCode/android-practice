@@ -1,60 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/websocket"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Websocket"/>
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/so_use"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="so_use"/>
+        <Button
+            android:id="@+id/websocket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Websocket" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="kotlin"
-        android:onClick="kotlinTest"/>
+        <Button
+            android:id="@+id/so_use"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="so_use" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="contentProvider"
-        android:onClick="provider"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="kotlinTest"
+            android:text="kotlin" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ConstrainLayout"
-        android:onClick="constrainLayout"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="provider"
+            android:text="contentProvider" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Location"
-        android:onClick="location"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="constrainLayout"
+            android:text="ConstrainLayout" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Intent_Filter"
-        android:onClick="intentFilter"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="location"
+            android:text="Location" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CardView"
-        android:onClick="cardview"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="intentFilter"
+            android:text="Intent_Filter" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="test"
-        android:onClick="test"/>
-</LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="cardview"
+            android:text="CardView" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="test"
+            android:text="test" />
+    </LinearLayout>
+</ScrollView>

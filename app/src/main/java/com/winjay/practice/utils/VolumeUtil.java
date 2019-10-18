@@ -3,7 +3,7 @@ package com.winjay.practice.utils;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Build;
-import android.util.Log;
+import com.winjay.practice.utils.LogUtil;
 
 /**
  * 音量调节工具类
@@ -23,9 +23,9 @@ public class VolumeUtil {
     public static void muteVolume(Context context, int stream) {
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.d(TAG, "dialogMute()_isStreamMute=" + audioManager.isStreamMute(stream));
+            LogUtil.d(TAG, "dialogMute()_isStreamMute=" + audioManager.isStreamMute(stream));
             if (!audioManager.isStreamMute(stream)) {
-                Log.v(TAG, "执行静音  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M");
+                LogUtil.d(TAG, "执行静音  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M");
                 audioManager.adjustStreamVolume(stream, AudioManager.ADJUST_MUTE, 0);
 //                audioManager.adjustSuggestedStreamVolume(AudioManager.ADJUST_MUTE, stream, 0);
             }
@@ -43,9 +43,9 @@ public class VolumeUtil {
     public static void unMuteVolume(Context context, int stream) {
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.d(TAG, "dialogUnMute()_isStreamMute=" + audioManager.isStreamMute(stream));
+            LogUtil.d(TAG, "dialogUnMute()_isStreamMute=" + audioManager.isStreamMute(stream));
             if (audioManager.isStreamMute(stream)) {
-                Log.v(TAG, "执行取消静音  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M");
+                LogUtil.d(TAG, "执行取消静音  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M");
                 audioManager.adjustStreamVolume(stream, AudioManager.ADJUST_UNMUTE, 0);
 //                audioManager.adjustSuggestedStreamVolume(AudioManager.ADJUST_UNMUTE, stream, 0);
             }
@@ -58,7 +58,7 @@ public class VolumeUtil {
      * 音量增加
      */
     public static void volumeUp(Context context, int stream) {
-        Log.d(TAG, "volumeUp()");
+        LogUtil.d(TAG, "volumeUp()");
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         if (audioManager != null) {
             audioManager.adjustStreamVolume(stream, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_PLAY_SOUND);
@@ -69,7 +69,7 @@ public class VolumeUtil {
      * 音量减小
      */
     public static void volumeDown(Context context, int stream) {
-        Log.d(TAG, "volumeDown()");
+        LogUtil.d(TAG, "volumeDown()");
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         if (audioManager != null) {
             audioManager.adjustStreamVolume(stream, AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI | AudioManager.FLAG_PLAY_SOUND);

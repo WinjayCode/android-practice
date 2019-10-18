@@ -1,7 +1,7 @@
 package com.winjay.practice.hook;
 
 import android.content.Context;
-import android.util.Log;
+import com.winjay.practice.utils.LogUtil;
 import android.view.View;
 
 import java.lang.reflect.Field;
@@ -62,7 +62,7 @@ public class HookSetOnClickListenerHelper {
 //                @Override
 //                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 //                    // 加入自己的逻辑
-//                    Log.d("HookSetOnClickListener", "点击事件被hook到了");
+//                    LogUtil.d("HookSetOnClickListener", "点击事件被hook到了");
 //                    // 执行被代理的对象的逻辑
 //                    return method.invoke(onClickListenerInstance, args);
 //                }
@@ -86,7 +86,7 @@ public class HookSetOnClickListenerHelper {
         @Override
         public void
         onClick(View v) {
-            Log.d("HookSetOnClickListener", "点击事件被hook到了");
+            LogUtil.d("HookSetOnClickListener", "点击事件被hook到了");
             if (oriLis != null) {
                 oriLis.onClick(v);
             }

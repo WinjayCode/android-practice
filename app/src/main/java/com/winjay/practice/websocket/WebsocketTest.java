@@ -2,7 +2,7 @@ package com.winjay.practice.websocket;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
+import com.winjay.practice.utils.LogUtil;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,16 +35,16 @@ public class WebsocketTest {
         mockWebServer.enqueue(new MockResponse().withWebSocketUpgrade(new WebSocketListener() {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
-                Log.d(TAG, "server onOpen");
-                Log.d(TAG, "server request header:" + response.request().headers());
-                Log.d(TAG, "server response header:" + response.headers());
-                Log.d(TAG, "server response:" + response);
+                LogUtil.d(TAG, "server onOpen");
+                LogUtil.d(TAG, "server request header:" + response.request().headers());
+                LogUtil.d(TAG, "server response header:" + response.headers());
+                LogUtil.d(TAG, "server response:" + response);
             }
 
             @Override
             public void onMessage(final WebSocket webSocket, String text) {
-                Log.d(TAG, "server onMessage");
-                Log.d(TAG, "message:" + text);
+                LogUtil.d(TAG, "server onMessage");
+                LogUtil.d(TAG, "message:" + text);
                 if ("command 1".equals(text)) {
                     writeExecutor.execute(new Runnable() {
                         @Override
@@ -69,22 +69,22 @@ public class WebsocketTest {
 
             @Override
             public void onClosing(WebSocket webSocket, int code, String reason) {
-                Log.d(TAG, "server onClosing");
-                Log.d(TAG, "code:" + code + " reason:" + reason);
+                LogUtil.d(TAG, "server onClosing");
+                LogUtil.d(TAG, "code:" + code + " reason:" + reason);
             }
 
             @Override
             public void onClosed(WebSocket webSocket, int code, String reason) {
-                Log.d(TAG, "server onClosed");
-                Log.d(TAG, "code:" + code + " reason:" + reason);
+                LogUtil.d(TAG, "server onClosed");
+                LogUtil.d(TAG, "code:" + code + " reason:" + reason);
                 webSocket.close(1001, "server over!");
             }
 
             @Override
             public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-                Log.d(TAG, "server onFailure");
-                Log.d(TAG, "throwable:" + t);
-                Log.d(TAG, "response:" + response);
+                LogUtil.d(TAG, "server onFailure");
+                LogUtil.d(TAG, "throwable:" + t);
+                LogUtil.d(TAG, "response:" + response);
             }
         }));
     }
@@ -94,16 +94,16 @@ public class WebsocketTest {
      */
     public void startClient() {
         String wsUrl = "ws://" + mockWebServer.getHostName() + ":" + mockWebServer.getPort() + "/";
-        Log.d(TAG, "wsUrl=" + wsUrl);
+        LogUtil.d(TAG, "wsUrl=" + wsUrl);
         OkHttpClient client = new OkHttpClient.Builder().build();
         Request request = new Request.Builder().url(wsUrl).build();
         client.newWebSocket(request, new WebSocketListener() {
             @Override
             public void onOpen(final WebSocket webSocket, Response response) {
-                Log.d(TAG, "client onOpen");
-                Log.d(TAG, "client request header:" + response.request().headers());
-                Log.d(TAG, "client response header:" + response.headers());
-                Log.d(TAG, "client response:" + response);
+                LogUtil.d(TAG, "client onOpen");
+                LogUtil.d(TAG, "client request header:" + response.request().headers());
+                LogUtil.d(TAG, "client response header:" + response.headers());
+                LogUtil.d(TAG, "client response:" + response);
 
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
@@ -115,8 +115,8 @@ public class WebsocketTest {
 
             @Override
             public void onMessage(final WebSocket webSocket, String text) {
-                Log.d(TAG, "client onMessage");
-                Log.d(TAG, "message:" + text);
+                LogUtil.d(TAG, "client onMessage");
+                LogUtil.d(TAG, "message:" + text);
                 if ("replay command 1".equals(text)) {
                     writeExecutor.execute(new Runnable() {
                         @Override
@@ -141,21 +141,21 @@ public class WebsocketTest {
 
             @Override
             public void onClosing(WebSocket webSocket, int code, String reason) {
-                Log.d(TAG, "client onClosing");
-                Log.d(TAG, "code:" + code + " reason:" + reason);
+                LogUtil.d(TAG, "client onClosing");
+                LogUtil.d(TAG, "code:" + code + " reason:" + reason);
             }
 
             @Override
             public void onClosed(WebSocket webSocket, int code, String reason) {
-                Log.d(TAG, "client onClosed");
-                Log.d(TAG, "code:" + code + " reason:" + reason);
+                LogUtil.d(TAG, "client onClosed");
+                LogUtil.d(TAG, "code:" + code + " reason:" + reason);
             }
 
             @Override
             public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-                Log.d(TAG, "client onFailure");
-                Log.d(TAG, "throwable:" + t);
-                Log.d(TAG, "response:" + response);
+                LogUtil.d(TAG, "client onFailure");
+                LogUtil.d(TAG, "throwable:" + t);
+                LogUtil.d(TAG, "response:" + response);
             }
         });
     }

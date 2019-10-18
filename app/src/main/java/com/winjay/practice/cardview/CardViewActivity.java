@@ -2,13 +2,13 @@ package com.winjay.practice.cardview;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import com.winjay.practice.MainActivity;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
+import com.winjay.practice.utils.LogUtil;
 
 import butterknife.OnClick;
 
@@ -43,7 +43,7 @@ public class CardViewActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate()");
+        LogUtil.d(TAG, "onCreate()");
     }
 
     @OnClick(R.id.card_view_tv)
@@ -56,12 +56,12 @@ public class CardViewActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume()");
+        LogUtil.d(TAG, "onResume()");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy()");
+        LogUtil.d(TAG, "onDestroy()");
     }
 }

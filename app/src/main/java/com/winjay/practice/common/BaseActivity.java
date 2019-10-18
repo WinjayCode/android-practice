@@ -1,7 +1,7 @@
 package com.winjay.practice.common;
 
 import android.os.Bundle;
-import android.util.Log;
+import com.winjay.practice.utils.LogUtil;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -22,7 +22,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate()");
+        LogUtil.d(TAG, "onCreate()");
         // 此种方式针对Activity或FragmentActivity
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         // 隐藏标题栏（针对AppCompatActivity）
@@ -49,14 +49,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume()");
+        LogUtil.d(TAG, "onResume()");
 //        hideBottomNav();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy()");
+        LogUtil.d(TAG, "onDestroy()");
     }
 
     /**

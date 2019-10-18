@@ -4,7 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
+import com.winjay.practice.utils.LogUtil;
 
 import androidx.annotation.Nullable;
 
@@ -22,7 +22,7 @@ public class TestService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate()");
+        LogUtil.d(TAG, "onCreate()");
 
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
@@ -45,13 +45,13 @@ public class TestService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand()_startId=" + startId);
+        LogUtil.d(TAG, "onStartCommand()_startId=" + startId);
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy()");
+        LogUtil.d(TAG, "onDestroy()");
     }
 }

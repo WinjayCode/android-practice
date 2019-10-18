@@ -3,9 +3,10 @@ package com.winjay.practice;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
-import android.util.Log;
+import com.winjay.practice.utils.LogUtil;
 
 import com.winjay.practice.utils.ActivityListUtil;
+import com.winjay.practice.utils.LogUtil;
 
 /**
  * Application
@@ -14,7 +15,7 @@ import com.winjay.practice.utils.ActivityListUtil;
  * @date 2019-08-15
  */
 public class AppApplication extends Application {
-    private final String TAG = getClass().getSimpleName();
+    private final String TAG = AppApplication.class.getSimpleName();
 
     @Override
     public void onCreate() {
@@ -22,8 +23,9 @@ public class AppApplication extends Application {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                LogUtil.d(TAG, "onActivityCreated()_activity=" + activity.getClass().getSimpleName());
                 ActivityListUtil.addActivity(activity);
-                Log.d(TAG, "onActivityCreated()_activity.size=" + ActivityListUtil.getActivityCount());
+                LogUtil.d(TAG, "onActivityCreated()_activity.size=" + ActivityListUtil.getActivityCount());
             }
 
             @Override
@@ -33,7 +35,7 @@ public class AppApplication extends Application {
 
             @Override
             public void onActivityResumed(Activity activity) {
-                Log.d(TAG, "onActivityResumed()_topActivity=" + ActivityListUtil.getTopActivity().getClass().getSimpleName());
+                LogUtil.d(TAG, "onActivityResumed()_activity=" + activity.getClass().getSimpleName());
             }
 
             @Override
@@ -53,8 +55,9 @@ public class AppApplication extends Application {
 
             @Override
             public void onActivityDestroyed(Activity activity) {
+                LogUtil.d(TAG, "onActivityDestroyed()_activity=" + activity.getClass().getSimpleName());
                 ActivityListUtil.removeActivity(activity);
-                Log.d(TAG, "onActivityDestroyed()_activity.size=" + ActivityListUtil.getActivityCount());
+                LogUtil.d(TAG, "onActivityDestroyed()_activity.size=" + ActivityListUtil.getActivityCount());
             }
         });
     }
