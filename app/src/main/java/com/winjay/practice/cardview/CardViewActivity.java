@@ -1,11 +1,16 @@
 package com.winjay.practice.cardview;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.winjay.practice.MainActivity;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
+
+import butterknife.OnClick;
 
 /**
  * CardView使用
@@ -28,9 +33,35 @@ import com.winjay.practice.common.BaseActivity;
  * @date 2019-09-03
  */
 public class CardViewActivity extends BaseActivity {
+    private final String TAG = CardViewActivity.class.getSimpleName();
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.card_view_activity;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.card_view_activity);
+        Log.d(TAG, "onCreate()");
+    }
+
+    @OnClick(R.id.card_view_tv)
+    void startMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy()");
     }
 }

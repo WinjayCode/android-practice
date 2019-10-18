@@ -1,26 +1,32 @@
 package com.winjay.practice.test_java;
 
+import android.util.Log;
+
 public class Test {
-    public static String hello = "天下太的福音";
+
 
     public static void main(String args[]) {
-//        String[] a = hello.split("太");
-//        for (int i = 0; i < a.length; i++) {
-//            System.out.println(a[i]);
-//        }
+        B b = new B();
+        b.a();
+    }
 
-        int index = hello.indexOf("太");
-        System.out.println(index);
+    static class B extends A {
+        private final String TAG = getClass().getSimpleName();
 
-//        String str = "天下太太的福音";
-//        int num = 0;
-//        for (int i = 0; i < str.length(); i++) {
-//            int index = str.substring(i, (i + 1)).indexOf('太');
-//            if (index != -1) {
-//                System.out.println(i);
-//                num = num + 1;
-//            }
-//        }
-//        System.out.println("次数：" + num);
+        @Override
+        protected void a() {
+            super.a();
+//            Log.d(TAG, "222");
+            System.out.println(TAG);
+        }
+    }
+
+    static abstract class A {
+        private final String TAG = getClass().getSimpleName();
+
+        protected void a() {
+//            Log.d(TAG, "111");
+            System.out.println(TAG);
+        }
     }
 }

@@ -28,9 +28,13 @@ public class AIDLActivity extends BaseActivity {
     private IBookManager bookManager;
 
     @Override
+    protected int getLayoutId() {
+        return R.layout.aidl_activity;
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.aidl_activity);
         findViewById(R.id.bind_service).setOnClickListener(view -> {
             if (bookManager == null) {
                 bindBookManagerService();

@@ -3,6 +3,7 @@ package com.winjay.practice;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.winjay.practice.cardview.CardViewActivity;
@@ -14,7 +15,6 @@ import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.so.SOActivity;
 import com.winjay.practice.websocket.WebsocketTest;
 
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -22,12 +22,32 @@ import butterknife.OnClick;
  * @date 2019/3/21
  */
 public class MainActivity extends BaseActivity {
+    private final String TAG = MainActivity.class.getSimpleName();
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.main_activity;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
-        ButterKnife.bind(this);
+        Log.d(TAG, "onCreate()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume()");
+
+//        Intent intent = new Intent(this, TestService.class);
+//        startService(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy()");
     }
 
     /**

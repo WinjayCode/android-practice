@@ -2,8 +2,7 @@ package com.winjay.practice.utils;
 
 import android.app.Activity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 /**
  * Activity集合
@@ -12,10 +11,10 @@ import java.util.List;
  * @date 2019-08-15
  */
 public class ActivityListUtil {
-    private static List<Activity> activityList = new ArrayList<>();
+    private static Stack<Activity> activityList = new Stack<>();
 
     public static void addActivity(Activity activity) {
-        activityList.add(activity);
+        activityList.push(activity);
     }
 
     public static void removeActivity(Activity activity) {
@@ -24,7 +23,7 @@ public class ActivityListUtil {
 
     public static Activity getTopActivity() {
         if (activityList.size() > 0) {
-            return activityList.get(0);
+            return activityList.peek();
         }
         return null;
     }

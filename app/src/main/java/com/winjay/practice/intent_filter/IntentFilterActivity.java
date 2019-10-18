@@ -16,8 +16,12 @@ import com.winjay.practice.common.BaseActivity;
 public class IntentFilterActivity extends BaseActivity {
 
     @Override
+    protected int getLayoutId() {
+        return R.layout.intent_filter_activity;
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.intent_filter_activity);
     }
 }

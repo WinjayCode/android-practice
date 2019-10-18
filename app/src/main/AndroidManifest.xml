@@ -64,13 +64,17 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".cardview.CardViewActivity" />
+        <activity android:name=".cardview.CardViewActivity"/>
 
         <activity android:name=".aidl_test.AIDLActivity" />
+
+        <activity android:name=".TransparentActivity" />
 
         <provider
             android:name=".content_provider.UserinfoProvider"
             android:authorities="com.winjay.info" />
+
+        <service android:name=".TestService" />
     </application>
 
 </manifest>
