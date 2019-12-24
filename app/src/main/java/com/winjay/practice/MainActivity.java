@@ -3,12 +3,6 @@ package com.winjay.practice;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import com.winjay.practice.utils.LogUtil;
-
-import android.os.Handler;
-import android.text.TextUtils;
-import android.util.Base64;
 import android.view.View;
 
 import com.winjay.practice.cardview.CardViewActivity;
@@ -18,18 +12,8 @@ import com.winjay.practice.content_provider.ProviderActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
 import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.so.SOActivity;
+import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.websocket.WebsocketTest;
-import com.youdao.sdk.app.YouDaoApplication;
-import com.youdao.zhiyun.sdk.fingerdetect.FingerDetectManager;
-import com.youdao.zhiyun.sdk.fingerdetect.FingerDetectParams;
-import com.youdao.zhiyun.sdk.fingerdetect.OCRListener;
-import com.youdao.zhiyun.sdk.fingerdetect.OcrErrorCode;
-import com.youdao.zhiyun.sdk.fingerdetect.QuestionOCRDetailResult;
-import com.youdao.zhiyun.sdk.fingerdetect.WordOCRDetailResult;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 import butterknife.OnClick;
 
@@ -151,54 +135,5 @@ public class MainActivity extends BaseActivity {
     public void test(View view) {
         Intent intent = new Intent(this, TestActivity.class);
         startActivity(intent);
-
-//        YouDaoApplication.init(this, "appkey");
-//        FingerDetectParams params = new FingerDetectParams.Builder()
-//                .fingerType("word")
-//                .timeout(10000)
-//                .build();
-//        FingerDetectManager.getIntance(params).startRecognize("", new OCRListener() {
-//            @Override
-//            public void onError(OcrErrorCode ocrErrorCode) {
-//                LogUtil.d(TAG, "code=" + ocrErrorCode.getCode() + ",msg=" + ocrErrorCode.toString());
-//            }
-//
-//            @Override
-//            public void onResult(String result, WordOCRDetailResult wordOCRDetailResult, QuestionOCRDetailResult questionOCRDetailResult) {
-//                LogUtil.d(TAG, "result=" + result);
-//            }
-//        });
-    }
-
-    /**
-     * 将图片转换成Base64编码的字符串
-     */
-    public static String imageToBase64(String path) {
-        if (TextUtils.isEmpty(path)) {
-            return null;
-        }
-        InputStream is = null;
-        byte[] data = null;
-        String result = null;
-        try {
-            is = new FileInputStream(path);
-            //创建一个字符流大小的数组。
-            data = new byte[is.available()];
-            //写入数组
-            is.read(data);
-            //用默认的编码格式进行编码
-            result = Base64.encodeToString(data, Base64.DEFAULT);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (null != is) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return result;
     }
 }
