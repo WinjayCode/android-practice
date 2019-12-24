@@ -12,54 +12,70 @@
             android:id="@+id/websocket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Websocket" />
+            android:text="Websocket"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/so_use"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="so_use" />
+            android:text="so_use"
+            android:textAllCaps="false" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="kotlinTest"
-            android:text="kotlin" />
+            android:text="kotlin"
+            android:textAllCaps="false" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="provider"
-            android:text="contentProvider" />
+            android:text="contentProvider"
+            android:textAllCaps="false" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="constrainLayout"
-            android:text="ConstrainLayout" />
+            android:text="ConstrainLayout"
+            android:textAllCaps="false" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="location"
-            android:text="Location" />
+            android:text="Location"
+            android:textAllCaps="false" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="intentFilter"
-            android:text="Intent_Filter" />
+            android:text="Intent_Filter"
+            android:textAllCaps="false" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="cardview"
-            android:text="CardView" />
+            android:text="CardView"
+            android:textAllCaps="false" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="textview"
+            android:text="AppCompatTextView"
+            android:textAllCaps="false" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="test"
-            android:text="test" />
+            android:text="test"
+            android:textAllCaps="false" />
     </LinearLayout>
 </ScrollView>

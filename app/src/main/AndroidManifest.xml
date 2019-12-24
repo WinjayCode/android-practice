@@ -75,6 +75,8 @@
             android:screenOrientation="landscape"
             android:theme="@style/NoTitleTranslucentTheme" />
 
+        <activity android:name=".app_compat_text.AppCompatTextActivity" />
+
         <provider
             android:name=".content_provider.UserinfoProvider"
             android:authorities="com.winjay.info" />

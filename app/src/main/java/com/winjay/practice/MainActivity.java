@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
+import com.winjay.practice.app_compat_text.AppCompatTextActivity;
 import com.winjay.practice.cardview.CardViewActivity;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.constrain_layout.ConstrainLayoutActivity;
@@ -129,6 +130,16 @@ public class MainActivity extends BaseActivity {
      */
     public void cardview(View view) {
         Intent intent = new Intent(this, CardViewActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * AppCompatTextView
+     *
+     * @param view
+     */
+    public void textview(View view) {
+        Intent intent = new Intent(this, AppCompatTextActivity.class);
         startActivity(intent);
     }
 
