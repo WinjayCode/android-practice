@@ -1,6 +1,8 @@
 package com.winjay.practice.common;
 
 import android.os.Bundle;
+
+import com.winjay.practice.R;
 import com.winjay.practice.utils.LogUtil;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,16 +23,17 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        LogUtil.d(TAG, "onCreate()");
+//        LogUtil.d(TAG, "onCreate()");
         // 此种方式针对Activity或FragmentActivity
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         // 隐藏标题栏（针对AppCompatActivity）
-//        if (getSupportActionBar() != null) {
-//            getSupportActionBar().hide();
-//        }
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // 沉浸效果
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -49,14 +52,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        LogUtil.d(TAG, "onResume()");
+//        LogUtil.d(TAG, "onResume()");
 //        hideBottomNav();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogUtil.d(TAG, "onDestroy()");
+//        LogUtil.d(TAG, "onDestroy()");
     }
 
     /**

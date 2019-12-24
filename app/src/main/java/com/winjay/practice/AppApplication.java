@@ -3,6 +3,8 @@ package com.winjay.practice;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import android.support.multidex.MultiDexApplication;
+
 import com.winjay.practice.utils.LogUtil;
 
 import com.winjay.practice.utils.ActivityListUtil;
@@ -14,7 +16,7 @@ import com.winjay.practice.utils.LogUtil;
  * @author winjay
  * @date 2019-08-15
  */
-public class AppApplication extends Application {
+public class AppApplication extends MultiDexApplication {
     private final String TAG = AppApplication.class.getSimpleName();
 
     @Override

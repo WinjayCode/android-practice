@@ -23,6 +23,9 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
+//        startActivity(intent);
+//        finish();
         FingerprintVerifyManager.Builder builder = new FingerprintVerifyManager.Builder(LauncherActivity.this);
         builder.callback(new FingerprintCallback() {
             @Override

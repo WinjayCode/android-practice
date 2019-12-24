@@ -2,12 +2,39 @@ package com.winjay.practice.test_java;
 
 import com.winjay.practice.utils.LogUtil;
 
+import java.text.DecimalFormat;
+
 public class Test {
 
 
     public static void main(String args[]) {
-        B b = new B();
-        b.a();
+//        B b = new B();
+//        b.a();
+
+//        C c = new D();
+//        c.c();
+
+        ////////////////////
+//        String a = "(ANS)*5÷6";
+//        System.out.println(transformExp(a));
+        ////////////////////
+
+        ////////////////////
+//        DecimalFormat df = new DecimalFormat("##.#####");
+//        float f1 = 11115.55f;
+//        float f2 = 1111115.0000f;
+//        System.out.println(df.format(f1));
+//        System.out.println(df.format(f2));
+        ////////////////////
+
+        ////////////////////
+//        float f = 11115.55f;
+//        int fi=(int)f;
+//        if(f==fi)
+//            System.out.println(fi);
+//        else
+//            System.out.println(f);
+        ////////////////////
     }
 
     static class B extends A {
@@ -29,4 +56,28 @@ public class Test {
             System.out.println(TAG);
         }
     }
+
+    public interface C {
+        void c();
+    }
+
+    public static class D implements C {
+
+        @Override
+        public void c() {
+            System.out.println("cccc");
+        }
+    }
+
+
+    ////////////////////////
+    public static String transformExp(String exp) {
+        if (exp.startsWith("(ANS)")) {
+            exp = exp.replace("(ANS)", "AAA");
+        }
+        exp = exp.replace("*", "×");
+        exp = exp.replace("/", "÷");
+        return exp;
+    }
+    ////////////////////////
 }

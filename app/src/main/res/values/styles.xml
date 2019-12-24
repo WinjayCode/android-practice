@@ -8,4 +8,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--启动背景-->
+    <style name="AppThemeWelcome" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@mipmap/welcome_bg</item>
+    </style>
+
+    <style name="NoTitleTranslucentTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/black_color_transparent_50</item>
+    </style>
 </resources>

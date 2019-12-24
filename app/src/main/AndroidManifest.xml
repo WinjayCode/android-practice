@@ -64,11 +64,16 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".cardview.CardViewActivity"/>
+        <activity android:name=".cardview.CardViewActivity" />
 
         <activity android:name=".aidl_test.AIDLActivity" />
 
-        <activity android:name=".TransparentActivity" />
+        <activity
+            android:name=".TransparentActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
+            android:launchMode="singleInstance"
+            android:screenOrientation="landscape"
+            android:theme="@style/NoTitleTranslucentTheme" />
 
         <provider
             android:name=".content_provider.UserinfoProvider"
