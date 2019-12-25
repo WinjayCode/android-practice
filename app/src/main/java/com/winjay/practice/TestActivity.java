@@ -4,12 +4,18 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.text.TextUtils;
+
 import com.winjay.practice.utils.LogUtil;
+
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
@@ -85,7 +91,44 @@ public class TestActivity extends AppCompatActivity {
 //                }, 2000);
 //            }
 //        }, 2000);
+
+
+        //监听屏幕亮度变化
+//        getContentResolver().registerContentObserver(
+//                Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS),
+//                true,
+//                mBrightnessObserver);
+//        setActivityBrightness(1.0f);
     }
+
+    /*
+     * 调整当前Activity的亮度，仅作用于当前调整当前Activity的亮度范围0-1f
+     * */
+    public void setActivityBrightness(float paramFloat) {
+        Window localWindow = this.getWindow();
+        WindowManager.LayoutParams params = localWindow.getAttributes();
+        params.screenBrightness = paramFloat;
+        localWindow.setAttributes(params);
+    }
+
+    /*
+     * 屏幕亮度变化监听的回调
+     * */
+    private ContentObserver mBrightnessObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            // 当前系统的屏幕亮度（当用户改变了系统亮度后，会回调到该方法）
+            try {
+                int currentValue = Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
+                LogUtil.d(TAG, "currentValue=" + currentValue);
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            // 作用是使刚才设置的Activity的亮度失效，值只要大于1.（为什么？）
+            setActivityBrightness(2.0f);
+        }
+    };
 
     private void mute(View view) {
         VolumeUtil.muteVolume(this, AudioManager.STREAM_MUSIC);
