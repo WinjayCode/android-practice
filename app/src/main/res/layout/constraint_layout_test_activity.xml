@@ -25,7 +25,9 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/holo_orange_light"
                 android:padding="20dp"
-                android:text="Hello" />
+                android:text="Hello"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/world"
@@ -45,6 +47,7 @@
                 android:padding="20dp"
                 android:text="Android"
                 app:layout_constraintLeft_toRightOf="@+id/world"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_goneMarginLeft="30dp" />
 
             <TextView
@@ -65,6 +68,7 @@
                 android:padding="20dp"
                 android:text="垂直居中"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -98,7 +102,9 @@
                 android:text="圆形定位"
                 app:layout_constraintCircle="@id/center_in_parent"
                 app:layout_constraintCircleAngle="30"
-                app:layout_constraintCircleRadius="100dp" />
+                app:layout_constraintCircleRadius="100dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/fifty_percent"
@@ -122,6 +128,7 @@
                 android:padding="5dp"
                 android:text="宽高比"
                 app:layout_constraintDimensionRatio="3:1"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/fifty_percent" />
 
             <TextView
@@ -150,6 +157,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="隐藏1"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/w_h" />
 
             <TextView
@@ -198,22 +206,22 @@
                 android:id="@+id/test_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@android:color/holo_orange_light"
-                app:layout_constraintTop_toBottomOf="@+id/placeholder"
-                app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginRight="20dp"
+                android:background="@android:color/holo_orange_light"
                 android:padding="20dp"
-                android:text="111"/>
+                android:text="111"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/placeholder" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@android:color/holo_orange_light"
-                app:layout_constraintTop_toBottomOf="@+id/placeholder"
+                android:padding="20dp"
+                android:text="222"
                 app:layout_constraintEnd_toStartOf="@+id/test_1"
                 app:layout_constraintStart_toStartOf="parent"
-                android:padding="20dp"
-                android:text="222"/>
+                app:layout_constraintTop_toBottomOf="@+id/placeholder" />
 
             <TextView
                 android:id="@+id/chain_a"

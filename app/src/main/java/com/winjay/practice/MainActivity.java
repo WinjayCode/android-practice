@@ -10,6 +10,7 @@ import com.winjay.practice.cardview.CardViewActivity;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.constrain_layout.ConstrainLayoutActivity;
 import com.winjay.practice.content_provider.ProviderActivity;
+import com.winjay.practice.download_manager.DownloadManagerActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
 import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.so.SOActivity;
@@ -140,6 +141,11 @@ public class MainActivity extends BaseActivity {
      */
     public void textview(View view) {
         Intent intent = new Intent(this, AppCompatTextActivity.class);
+        startActivity(intent);
+    }
+
+    public void download(View view) {
+        Intent intent = new Intent(this, DownloadManagerActivity.class);
         startActivity(intent);
     }
 

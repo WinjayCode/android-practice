@@ -74,6 +74,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="download"
+            android:text="DownloadManager"
+            android:textAllCaps="false" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="test"
             android:text="test"
             android:textAllCaps="false" />

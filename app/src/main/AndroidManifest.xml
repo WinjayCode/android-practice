@@ -77,6 +77,8 @@
 
         <activity android:name=".app_compat_text.AppCompatTextActivity" />
 
+        <activity android:name=".download_manager.DownloadManagerActivity" />
+
         <provider
             android:name=".content_provider.UserinfoProvider"
             android:authorities="com.winjay.info" />
