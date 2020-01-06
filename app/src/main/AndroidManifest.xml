@@ -79,6 +79,8 @@
 
         <activity android:name=".download_manager.DownloadManagerActivity" />
 
+        <activity android:name=".directory_structure.DirectoryStructureActivity" />
+
         <provider
             android:name=".content_provider.UserinfoProvider"
             android:authorities="com.winjay.info" />
