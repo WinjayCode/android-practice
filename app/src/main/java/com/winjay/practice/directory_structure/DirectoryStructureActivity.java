@@ -52,8 +52,12 @@ public class DirectoryStructureActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // data/data/xxx/files 或者 data/user/0/xxx/files
         one.setText("getFilesDir()：" + getFilesDir());
+        // data/data/xxx/cache 或者 data/user/0/xxx/cache
         two.setText("getCacheDir()：" + getCacheDir());
+
+        // storage/emulated/0/Android/obb/xxx 或者 sdcard/Android/obb/xxx
         three.setText("getObbDir()：" + getObbDir());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -62,7 +66,9 @@ public class DirectoryStructureActivity extends BaseActivity {
             six.setText("getNoBackupFilesDir()：" + getNoBackupFilesDir());
         }
 
+        // storage/emulated/0/Android/data/xxx/cache 或者 sdcard/Android/data/xxx/cache
         seven.setText("getExternalCacheDir()：" + getExternalCacheDir());
+        // storage/emulated/0/Android/data/xxx/files 或者 sdcard/Android/data/xxx/files
         eight.setText("getExternalFilesDir()：" + getExternalFilesDir(null));
     }
 }
