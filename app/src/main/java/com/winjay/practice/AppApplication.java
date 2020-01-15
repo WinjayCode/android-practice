@@ -3,9 +3,8 @@ package com.winjay.practice;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
-import android.support.multidex.MultiDexApplication;
 
-import com.winjay.practice.utils.LogUtil;
+import androidx.multidex.MultiDexApplication;
 
 import com.winjay.practice.utils.ActivityListUtil;
 import com.winjay.practice.utils.LogUtil;
@@ -22,7 +21,7 @@ public class AppApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+        registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
                 LogUtil.d(TAG, "onActivityCreated()_activity=" + activity.getClass().getSimpleName());

@@ -14,7 +14,7 @@ android {
         targetSdkVersion rootAndroid.targetSdkVersion
         versionCode rootVersions.versionCode
         versionName rootVersions.versionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled true
     }
@@ -43,6 +43,10 @@ android {
 
     lintOptions {//设置编译的lint开关，程序在buid的时候，会执行lint检查，有任何的错误或者警告提示，都会终止构建
         abortOnError false
+    }
+
+    dataBinding {
+        enabled = true
     }
 
     // 差异化、多渠道打包

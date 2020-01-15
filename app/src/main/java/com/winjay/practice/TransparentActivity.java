@@ -1,10 +1,11 @@
 package com.winjay.practice;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
+
+import androidx.annotation.Nullable;
 
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;

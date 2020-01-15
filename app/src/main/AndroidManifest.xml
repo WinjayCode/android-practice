@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name=".AppApplication"
         android:allowBackup="true"
@@ -80,6 +82,10 @@
         <activity android:name=".download_manager.DownloadManagerActivity" />
 
         <activity android:name=".directory_structure.DirectoryStructureActivity" />
+
+        <activity android:name=".design_mode.mvc.controller.MVCActivity" />
+        <activity android:name=".design_mode.mvp.view.MVPActivity" />
+        <activity android:name=".design_mode.mvvm.MVVMActivity" />
 
         <provider
             android:name=".content_provider.UserinfoProvider"

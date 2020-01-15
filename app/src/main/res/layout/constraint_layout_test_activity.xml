@@ -9,11 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.constraint.Guideline
+            <androidx.constraintlayout.widget.Guideline
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -142,7 +142,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/w_h"
                 app:layout_constraintTop_toBottomOf="@+id/fifty_percent" />
 
-            <android.support.constraint.Group
+            <androidx.constraintlayout.widget.Group
                 android:id="@+id/group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -182,7 +182,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/hide_2" />
 
-            <android.support.constraint.Placeholder
+            <androidx.constraintlayout.widget.Placeholder
                 android:id="@+id/placeholder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -416,7 +416,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chain_k" />
 
-            <android.support.constraint.Barrier
+            <androidx.constraintlayout.widget.Barrier
                 android:id="@+id/barrier"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -454,6 +454,6 @@
                 android:hint="输入密码"
                 app:layout_constraintLeft_toRightOf="@+id/barrier"
                 app:layout_constraintTop_toBottomOf="@+id/phone_et" />
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </LinearLayout>

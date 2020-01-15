@@ -117,6 +117,11 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    /**
+     * 隐式启动
+     *
+     * @param view
+     */
     public void intentFilter(View view) {
         Intent intent = new Intent();
         intent.setAction("com.winjay.practice.action_1");
@@ -145,11 +150,21 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    /**
+     * DownloadManager
+     *
+     * @param view
+     */
     public void download(View view) {
         Intent intent = new Intent(this, DownloadManagerActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * android本地文件目录
+     *
+     * @param view
+     */
     public void directory(View view) {
         Intent intent = new Intent(this, DirectoryStructureActivity.class);
         startActivity(intent);

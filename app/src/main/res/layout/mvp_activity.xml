@@ -4,20 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/app_compat_tv"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:maxLines="1"
-        android:textColor="@color/black_color"
-        android:textSize="40dp"
-        app:autoSizeMaxTextSize="40dp"
-        app:autoSizeMinTextSize="10dp"
-        app:autoSizeTextType="uniform"
+    <Button
+        android:id="@+id/mvp_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="获取数据"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/mvp_data_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black_color"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mvp_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>
