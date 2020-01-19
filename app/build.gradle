@@ -97,6 +97,10 @@ dependencies {
     annotationProcessor rootDependencies.butterknife_compiler
     // 指纹识别
     api project(':biometricprompt')
+    // 申请权限
+    implementation rootDependencies.permission
+    // fastjson
+    api rootDependencies.fastjson
 }
 
 repositories {

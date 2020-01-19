@@ -1,5 +1,6 @@
 package com.winjay.practice.location;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Criteria;
@@ -12,12 +13,17 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.TextUtils;
+
+import com.winjay.practice.utils.JsonUtil;
 import com.winjay.practice.utils.LogUtil;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,14 +32,20 @@ import com.winjay.practice.utils.NoDoubleClickListener;
 
 import java.util.List;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
 /**
  * 地理位置
  *
  * @author winjay
  * @date 2019-08-15
  */
-public class LocationActivity extends AppCompatActivity implements LocationListener {
+public class LocationActivity extends AppCompatActivity implements LocationListener, EasyPermissions.PermissionCallbacks {
     private final String TAG = getClass().getSimpleName();
+
+    private final int RC_PERMISSION = 100;
 
     private String mMockProviderName = LocationManager.GPS_PROVIDER;
     private LocationManager locationManager;
@@ -90,7 +102,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
         @Override
         protected void onNoDoubleClick(View v) {
             if (v == getLocation) {
-                getLocation();
+                requiresPermissions();
                 return;
             }
             if (v == startLocationMock) {
@@ -115,11 +127,45 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
     }
 
+    @AfterPermissionGranted(RC_PERMISSION)
+    private void requiresPermissions() {
+        String[] perms = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            // Already have permission, do the thing
+            getLocation();
+        } else {
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, "请授予权限，否则影响部分使用功能。", RC_PERMISSION, perms);
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        LogUtil.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
+
+        // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
+        // This will display a dialog directing them to enable the permission in app settings.
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
     private void getLocation() {
         String locationProvider = null;
         //获取所有可用的位置提供器
         List<String> providers = locationManager.getProviders(true);
-
+        LogUtil.d(TAG, "providers=" + JsonUtil.getInstance().toJson(providers));
         if (providers.contains(LocationManager.GPS_PROVIDER)) {
             //如果是GPS
             locationProvider = LocationManager.GPS_PROVIDER;
@@ -132,14 +178,18 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
             startActivity(i);
         }
         LogUtil.d(TAG, "getLocation()_locationProvider=" + locationProvider);
-        //获取Location
-        Location location = locationManager.getLastKnownLocation(locationProvider);
-        if (location != null) {
-            longitudeTV.setText("经度：" + location.getLongitude());
-            latitudeTV.setText("纬度：" + location.getLatitude());
-        }
+        if (!TextUtils.isEmpty(locationProvider)) {
+            //获取Location
+            Location location = locationManager.getLastKnownLocation(locationProvider);
+            if (location != null) {
+                longitudeTV.setText("经度：" + location.getLongitude());
+                latitudeTV.setText("纬度：" + location.getLatitude());
+            }
 
-        locationManager.requestLocationUpdates(locationProvider, 2000, 1, this);
+            locationManager.requestLocationUpdates(locationProvider, 2000, 1, this);
+        } else {
+            Toast.makeText(this, "没有可用的定位服务提供", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

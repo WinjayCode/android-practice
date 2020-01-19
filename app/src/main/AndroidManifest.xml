@@ -83,6 +83,7 @@
 
         <activity android:name=".directory_structure.DirectoryStructureActivity" />
 
+        <activity android:name=".design_mode.DesignModeActivity" />
         <activity android:name=".design_mode.mvc.controller.MVCActivity" />
         <activity android:name=".design_mode.mvp.view.MVPActivity" />
         <activity android:name=".design_mode.mvvm.MVVMActivity" />

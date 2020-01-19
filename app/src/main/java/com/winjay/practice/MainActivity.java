@@ -10,6 +10,7 @@ import com.winjay.practice.cardview.CardViewActivity;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.constrain_layout.ConstrainLayoutActivity;
 import com.winjay.practice.content_provider.ProviderActivity;
+import com.winjay.practice.design_mode.DesignModeActivity;
 import com.winjay.practice.directory_structure.DirectoryStructureActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
@@ -167,6 +168,16 @@ public class MainActivity extends BaseActivity {
      */
     public void directory(View view) {
         Intent intent = new Intent(this, DirectoryStructureActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Android架构模式
+     *
+     * @param view
+     */
+    public void designmode(View view) {
+        Intent intent = new Intent(this, DesignModeActivity.class);
         startActivity(intent);
     }
 

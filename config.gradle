@@ -52,5 +52,9 @@ ext {
             butterknife_compiler: 'com.jakewharton:butterknife-compiler:10.1.0',
             // multidex
             multidex            : 'com.android.support:multidex:1.0.3',
+            // permission
+            permission          : 'pub.devrel:easypermissions:3.0.0',
+            // fastjson
+            fastjson            : 'com.alibaba:fastjson:1.2.31',
     ]
 }
