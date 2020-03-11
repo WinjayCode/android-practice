@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -31,6 +33,11 @@ import com.winjay.practice.hook.HookSetOnClickListenerHelper;
 import com.winjay.practice.utils.VolumeUtil;
 import com.winjay.practice.view.RecognitionView;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 测试练习使用
  *
@@ -54,6 +61,8 @@ public class TestActivity extends AppCompatActivity {
     private Button testBtn;
 
     private ObjectAnimator objectAnimator;
+
+    private MediaPlayer mMediaPlayer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,6 +108,61 @@ public class TestActivity extends AppCompatActivity {
 //                true,
 //                mBrightnessObserver);
 //        setActivityBrightness(1.0f);
+
+        mTestSV.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LogUtil.d(TAG, "222");
+                Toast.makeText(TestActivity.this, "3s后", Toast.LENGTH_SHORT).show();
+            }
+        }, 3000);
+        LogUtil.d(TAG, "111");
+
+        mMediaPlayer = new MediaPlayer();
+        try {
+//            mMediaPlayer.setDataSource("system/media/audio/ringtones/Basic_Bell.ogg");
+//            mMediaPlayer.setDataSource("system/media/Music/guniang.mp3");
+            mMediaPlayer.setDataSource(this, Uri.parse("system/media/Music/guniang.mp3"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mMediaPlayer.prepareAsync();
+        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                LogUtil.d(TAG, "duration=" + mMediaPlayer.getDuration());
+                mMediaPlayer.start();
+            }
+        });
+
+        getFilesAllName("system/media/Music");
+    }
+
+    public void getFilesAllName(String path) {
+        File file = new File(path);
+        File[] files = file.listFiles();
+        if (files == null) {
+            LogUtil.d("error", "空目录");
+            return;
+        }
+//        List<String> s = new ArrayList<>();
+        for (int i = 0; i < files.length; i++) {
+            LogUtil.d(TAG, "name=" + files[i].getAbsolutePath());
+//            s.add(files[i].getAbsolutePath());
+        }
+//        return s;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mMediaPlayer != null) {
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.stop();
+            }
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
     }
 
     /*

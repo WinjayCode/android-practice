@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -93,6 +96,12 @@
             android:authorities="com.winjay.info" />
 
         <service android:name=".TestService" />
+
+        <service android:name=".ipc.messenger.MessengerService" android:process=":remote" />
+        <activity android:name=".ipc.messenger.MessengerActivity" />
+
+        <service android:name=".ipc.aidl.BookManagerService" android:process=":remote" />
+        <activity android:name=".ipc.aidl.BookManagerActivity" />
     </application>
 
 </manifest>

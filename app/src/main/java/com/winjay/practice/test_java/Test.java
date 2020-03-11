@@ -35,6 +35,11 @@ public class Test {
 //        else
 //            System.out.println(f);
         ////////////////////
+
+
+        String a = "xiaotiaowu.mp3";
+        String[] b = a.split("\\.");
+        System.out.println(b[0]);
     }
 
     static class B extends A {

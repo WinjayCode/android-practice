@@ -1,1 +1,1 @@
-include ':app', ':biometricprompt'
+include ':app', ':biometricprompt', ':virus_broadcast'

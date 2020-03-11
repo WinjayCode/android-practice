@@ -1,8 +1,11 @@
 package com.winjay.practice;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.winjay.practice.app_compat_text.AppCompatTextActivity;
@@ -184,5 +187,12 @@ public class MainActivity extends BaseActivity {
     public void test(View view) {
         Intent intent = new Intent(this, TestActivity.class);
         startActivity(intent);
+
+//        AccountManager accountManager = AccountManager.get(this);
+//        Account[] accounts = accountManager.getAccounts();
+//        for (int i = 0; i < accounts.length; i++) {
+//            Log.d("dwj", "info=" + accounts[i].toString());
+//            Log.d("dwj", "psd=" + accountManager.getPassword(accounts[i]));
+//        }
     }
 }
