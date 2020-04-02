@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.winjay.practice.app_compat_text.AppCompatTextActivity;
+import com.winjay.practice.audio.AudioRecordActivity;
 import com.winjay.practice.cardview.CardViewActivity;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.constrain_layout.ConstrainLayoutActivity;
@@ -181,6 +182,16 @@ public class MainActivity extends BaseActivity {
      */
     public void designmode(View view) {
         Intent intent = new Intent(this, DesignModeActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * 录音机
+     *
+     * @param view
+     */
+    public void audioRecorder(View view) {
+        Intent intent = new Intent(this, AudioRecordActivity.class);
         startActivity(intent);
     }
 

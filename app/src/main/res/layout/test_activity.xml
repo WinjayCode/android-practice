@@ -95,11 +95,29 @@
                 android:text="Down"
                 app:layout_constraintTop_toBottomOf="@+id/up" />
 
+            <Button
+                android:id="@+id/enable_wakeup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="enableWakeup"
+                android:text="enableWakeup"
+                android:textAllCaps="false"
+                app:layout_constraintTop_toBottomOf="@+id/down" />
+
+            <Button
+                android:id="@+id/disable_wakeup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="disableWakeup"
+                android:text="disableWakeup"
+                android:textAllCaps="false"
+                app:layout_constraintTop_toBottomOf="@+id/enable_wakeup" />
+
             <EditText
                 android:id="@+id/edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/down" />
+                app:layout_constraintTop_toBottomOf="@+id/disable_wakeup" />
 
             <ScrollView
                 android:id="@+id/test_sv"

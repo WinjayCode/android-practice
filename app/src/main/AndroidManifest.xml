@@ -12,7 +12,12 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 
+    <!--读取和写入存储权限-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!--音频录制权限 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:name=".AppApplication"
@@ -97,11 +102,19 @@
 
         <service android:name=".TestService" />
 
-        <service android:name=".ipc.messenger.MessengerService" android:process=":remote" />
+        <service
+            android:name=".ipc.messenger.MessengerService"
+            android:process=":remote" />
+
         <activity android:name=".ipc.messenger.MessengerActivity" />
 
-        <service android:name=".ipc.aidl.BookManagerService" android:process=":remote" />
+        <service
+            android:name=".ipc.aidl.BookManagerService"
+            android:process=":remote" />
+
         <activity android:name=".ipc.aidl.BookManagerActivity" />
+
+        <activity android:name=".audio.AudioRecordActivity" />
     </application>
 
 </manifest>

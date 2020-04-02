@@ -2,14 +2,20 @@ package com.winjay.practice;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.ContentObserver;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.provider.Settings;
 import android.text.TextUtils;
 
@@ -63,6 +69,8 @@ public class TestActivity extends AppCompatActivity {
     private ObjectAnimator objectAnimator;
 
     private MediaPlayer mMediaPlayer;
+
+    private Messenger mService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -118,24 +126,60 @@ public class TestActivity extends AppCompatActivity {
         }, 3000);
         LogUtil.d(TAG, "111");
 
-        mMediaPlayer = new MediaPlayer();
-        try {
-//            mMediaPlayer.setDataSource("system/media/audio/ringtones/Basic_Bell.ogg");
-//            mMediaPlayer.setDataSource("system/media/Music/guniang.mp3");
-            mMediaPlayer.setDataSource(this, Uri.parse("system/media/Music/guniang.mp3"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mMediaPlayer.prepareAsync();
-        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                LogUtil.d(TAG, "duration=" + mMediaPlayer.getDuration());
-                mMediaPlayer.start();
-            }
-        });
+        // 播放本地歌曲
+//        mMediaPlayer = new MediaPlayer();
+//        try {
+////            mMediaPlayer.setDataSource("system/media/audio/ringtones/Basic_Bell.ogg");
+////            mMediaPlayer.setDataSource("system/media/Music/guniang.mp3");
+//            mMediaPlayer.setDataSource(this, Uri.parse("system/media/Music/guniang.mp3"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        mMediaPlayer.prepareAsync();
+//        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                LogUtil.d(TAG, "duration=" + mMediaPlayer.getDuration());
+//                mMediaPlayer.start();
+//            }
+//        });
+//
+//        getFilesAllName("system/media/Music");
 
-        getFilesAllName("system/media/Music");
+
+
+        Intent intent = new Intent();
+        intent.setAction("aispeech.intent.action.WAKEUP_SERVICE");
+        intent.setComponent(new ComponentName("com.aispeech.kui","com.aispeech.kui.service.WakeupService"));
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            LogUtil.d(TAG, "onServiceConnected()");
+            mService = new Messenger(service);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            LogUtil.d(TAG, "onServiceDisconnected()");
+        }
+    };
+
+    private Messenger mGetReplyMessenger = new Messenger(new MessengerHandler());
+
+    private static class MessengerHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    LogUtil.d(TAG, "result=" + msg.getData().getInt("result"));
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
     }
 
     public void getFilesAllName(String path) {
@@ -163,6 +207,7 @@ public class TestActivity extends AppCompatActivity {
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
+        unbindService(mConnection);
     }
 
     /*
@@ -243,6 +288,26 @@ public class TestActivity extends AppCompatActivity {
         //系统设置界面
         Intent intent = new Intent(Settings.ACTION_SETTINGS);
         startActivity(intent);
+    }
+
+    public void enableWakeup(View view) {
+        Message msg = Message.obtain(null, 1);
+        msg.replyTo = mGetReplyMessenger;
+        try {
+            mService.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void disableWakeup(View view) {
+        Message msg = Message.obtain(null, 2);
+        msg.replyTo = mGetReplyMessenger;
+        try {
+            mService.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void animation(View view) {
