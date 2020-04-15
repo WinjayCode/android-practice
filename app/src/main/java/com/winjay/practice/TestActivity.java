@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
@@ -71,6 +72,8 @@ public class TestActivity extends AppCompatActivity {
     private MediaPlayer mMediaPlayer;
 
     private Messenger mService;
+
+    private Handler mHandler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -152,7 +155,19 @@ public class TestActivity extends AppCompatActivity {
         intent.setAction("aispeech.intent.action.WAKEUP_SERVICE");
         intent.setComponent(new ComponentName("com.aispeech.kui","com.aispeech.kui.service.WakeupService"));
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+
+        mHandler = new Handler(Looper.myLooper());
+        mHandler.post(myRunnable);
+        LogUtil.d(TAG, "after post!");
     }
+
+    private Runnable myRunnable = new Runnable() {
+        @Override
+        public void run() {
+            LogUtil.d(TAG, "myRunnable:run()");
+        }
+    };
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override

@@ -102,6 +102,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="emptyPage"
+            android:text="EmptyPage"
+            android:textAllCaps="false" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="test"
             android:text="test"
             android:textAllCaps="false" />

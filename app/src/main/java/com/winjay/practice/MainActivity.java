@@ -195,6 +195,15 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    private long startActivityTime;
+    public void emptyPage(View view) {
+        startActivityTime = System.currentTimeMillis();
+        LogUtil.d(TAG, "startActivity() time=" + startActivityTime);
+        Intent intent = new Intent(this, EmptyActivity.class);
+        intent.putExtra("time", System.currentTimeMillis());
+        startActivity(intent);
+    }
+
     public void test(View view) {
         Intent intent = new Intent(this, TestActivity.class);
         startActivity(intent);
@@ -205,5 +214,11 @@ public class MainActivity extends BaseActivity {
 //            Log.d("dwj", "info=" + accounts[i].toString());
 //            Log.d("dwj", "psd=" + accountManager.getPassword(accounts[i]));
 //        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogUtil.d(TAG, "onPause() cost time=" + (System.currentTimeMillis() - startActivityTime));
     }
 }
