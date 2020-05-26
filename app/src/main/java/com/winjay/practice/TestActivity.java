@@ -43,6 +43,7 @@ import com.winjay.practice.view.RecognitionView;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -88,6 +89,10 @@ public class TestActivity extends AppCompatActivity {
             LogUtil.d("HookSetOnClickListener", "111");
             Toast.makeText(TestActivity.this, "测试点击", Toast.LENGTH_SHORT).show();
             LogUtil.d("HookSetOnClickListener", "222");
+
+            HashMap<String, Object> map = new HashMap<>(1);
+            map.put("type", "本地视频");
+            openPage("com.yhkmedia.yhk", "com.yhkmedia.yhk.activity.VideoPlayActivity", map);
         });
         // Hook
         HookSetOnClickListenerHelper.hook(this, testBtn);
@@ -160,6 +165,38 @@ public class TestActivity extends AppCompatActivity {
         mHandler = new Handler(Looper.myLooper());
         mHandler.post(myRunnable);
         LogUtil.d(TAG, "after post!");
+    }
+
+    /**
+     * 根据包名类名，传参数启动
+     *
+     * @param packageName
+     * @param activity
+     * @param data
+     * @return
+     */
+    private void openPage(String packageName, String activity, HashMap<String, Object> data) {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (data != null) {
+            for (String key : data.keySet()) {
+                Object value = data.get(key);
+                if (value instanceof Integer) {
+                    intent.putExtra(key, Integer.parseInt(value.toString()));
+                } else {
+                    intent.putExtra(key, value.toString());
+                }
+            }
+        }
+        intent.setComponent(new ComponentName(packageName, activity));
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+//            ToastUtil.showToastLong(ctx, "还没有这个应用哦，请联系管理员。");
+            LogUtil.d(TAG, "没有这个应用");
+        }
     }
 
     private Runnable myRunnable = new Runnable() {

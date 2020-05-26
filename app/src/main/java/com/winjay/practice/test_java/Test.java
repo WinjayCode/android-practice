@@ -37,9 +37,17 @@ public class Test {
         ////////////////////
 
 
-        String a = "xiaotiaowu.mp3";
-        String[] b = a.split("\\.");
-        System.out.println(b[0]);
+//        String a = "xiaotiaowu.mp3";
+//        String[] b = a.split("\\.");
+//        System.out.println(b[0]);
+
+        String Str = new String("www.runoob.com");
+
+//        System.out.print("返回值 :" );
+//        System.out.println(Str.substring(4) );
+
+        System.out.print("返回值 :" );
+        System.out.println(Str.substring(0, 14));
     }
 
     static class B extends A {

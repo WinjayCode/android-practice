@@ -56,5 +56,7 @@ ext {
             permission          : 'pub.devrel:easypermissions:3.0.0',
             // fastjson
             fastjson            : 'com.alibaba:fastjson:1.2.31',
+            // viewpager2
+            viewpager2          : "androidx.viewpager2:viewpager2:1.0.0"
     ]
 }

@@ -109,6 +109,20 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="surfaceViewAnim"
+            android:text="SurfaceViewAnimation"
+            android:textAllCaps="false" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="viewPager"
+            android:text="ViewPager+Fragment"
+            android:textAllCaps="false" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:onClick="test"
             android:text="test"
             android:textAllCaps="false" />

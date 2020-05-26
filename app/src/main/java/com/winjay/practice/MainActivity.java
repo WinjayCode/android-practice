@@ -20,7 +20,9 @@ import com.winjay.practice.download_manager.DownloadManagerActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
 import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.so.SOActivity;
+import com.winjay.practice.surfaceview_animation.SurfaceViewAnimationActivity;
 import com.winjay.practice.utils.LogUtil;
+import com.winjay.practice.viewpager_fragment.ViewPagerActivity;
 import com.winjay.practice.websocket.WebsocketTest;
 
 import butterknife.OnClick;
@@ -196,11 +198,28 @@ public class MainActivity extends BaseActivity {
     }
 
     private long startActivityTime;
+
+    /**
+     * 空白页面
+     *
+     * @param view
+     */
     public void emptyPage(View view) {
         startActivityTime = System.currentTimeMillis();
         LogUtil.d(TAG, "startActivity() time=" + startActivityTime);
         Intent intent = new Intent(this, EmptyActivity.class);
         intent.putExtra("time", System.currentTimeMillis());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    /**
+     * ViewPager+Fragment
+     *
+     * @param view
+     */
+    public void viewPager(View view) {
+        Intent intent = new Intent(this, ViewPagerActivity.class);
         startActivity(intent);
     }
 
@@ -220,5 +239,15 @@ public class MainActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         LogUtil.d(TAG, "onPause() cost time=" + (System.currentTimeMillis() - startActivityTime));
+    }
+
+    /**
+     * SurfaceViewAnimation
+     *
+     * @param view
+     */
+    public void surfaceViewAnim(View view) {
+        Intent intent = new Intent(this, SurfaceViewAnimationActivity.class);
+        startActivity(intent);
     }
 }

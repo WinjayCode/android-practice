@@ -46,7 +46,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
+            android:launchMode="singleInstance" />
 
         <activity android:name=".so.SOActivity" />
 
@@ -116,7 +119,10 @@
 
         <activity android:name=".audio.AudioRecordActivity" />
 
-        <activity android:name=".EmptyActivity" />
+        <activity
+            android:name=".EmptyActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask" />
 
         <service
             android:name=".accessibility.AccessibilityServiceHelper"
@@ -128,6 +134,10 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_helper" />
         </service>
+
+        <activity android:name=".surfaceview_animation.SurfaceViewAnimationActivity" />
+
+        <activity android:name=".viewpager_fragment.ViewPagerActivity" />
     </application>
 
 </manifest>
