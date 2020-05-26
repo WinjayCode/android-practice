@@ -223,8 +223,8 @@ public class MyVerticalTextView extends TextView {
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        Log.d(TAG, "widthSize " + widthSize);
-        Log.d(TAG, "heightSize " + heightSize);
+//        Log.d(TAG, "widthSize " + widthSize);
+//        Log.d(TAG, "heightSize " + heightSize);
         // 粗略计算文字的最大宽度和最大高度，用于修正最后的测量宽高
         mTextAreaRoughBound = getTextRoughSize(heightSize == 0 ? mScreenHeight : heightSize,
                 mLineSpacingExtra, mCharSpacingExtra);
@@ -261,10 +261,10 @@ public class MyVerticalTextView extends TextView {
                     mTextAreaRoughBound[1] : heightSize;
         }
 
-        setMeasuredDimension(getPaddingLeft() + getPaddingRight(), measureHeight);
+        setMeasuredDimension((int)getTextSize() * 2, measureHeight);
 
-        Log.d(TAG, "measuredWidth " + measuredWidth);
-        Log.d(TAG, "measureHeight " + measureHeight);
+//        Log.d(TAG, "measuredWidth " + measuredWidth);
+//        Log.d(TAG, "measureHeight " + measureHeight);
     }
 
     /**
@@ -323,9 +323,9 @@ public class MyVerticalTextView extends TextView {
         // 计算文本的粗略宽度，包括padding，
         int textWidth = getPaddingLeft() + getPaddingRight() +
                 (int) ((textLines + 1) * getTextSize() + lineSpacingExtra * (textLines - 1));
-        Log.d(TAG, "textRoughLines " + textLines);
-        Log.d(TAG, "textRoughWidth " + textWidth);
-        Log.d(TAG, "textRoughHeight " + textHeight);
+//        Log.d(TAG, "textRoughLines " + textLines);
+//        Log.d(TAG, "textRoughWidth " + textWidth);
+//        Log.d(TAG, "textRoughHeight " + textHeight);
         return new int[]{textWidth, textHeight};
     }
 
@@ -680,8 +680,7 @@ public class MyVerticalTextView extends TextView {
      * @param charSpacingExtra 字符间距
      * @param isLeftToRight    文字方向
      */
-    private void drawVerticalText(Canvas canvas, float lineSpacingExtra,
-                                  float charSpacingExtra, boolean isLeftToRight) {
+    private void drawVerticalText(Canvas canvas, float lineSpacingExtra, float charSpacingExtra, boolean isLeftToRight) {
         // 文字画笔
         TextPaint textPaint = getTextPaint();
         Log.d(TAG, "text=" + getText());
@@ -715,9 +714,10 @@ public class MyVerticalTextView extends TextView {
 //                    && (!isUnicodeSymbol(char_j) || (isUnicodeSymbol(char_j) &&
 //                    currentLineOffsetY + getCharHeight(char_j, textPaint) > getHeight() - drawPadding[3] + getTextSize()));
 
-            boolean isCurrentLineFinish = (j % mLineMaxCharNum == 0);
+            boolean isCurrentLineFinish = ((j + 1) % mLineMaxCharNum == 0);
 
             if (isLineBreaks || isCurrentLineFinish) {
+                LogUtil.d(TAG, "11111");
                 // 记录记录偏移量,和行首行末字符的index；然后另起一行，
                 mLinesOffsetArray.put(mMaxTextLine, new Float[]{currentLineOffsetX, currentLineOffsetY});
                 mLinesTextIndex.put(mMaxTextLine, new int[]{currentLineStartIndex, j});
@@ -731,15 +731,18 @@ public class MyVerticalTextView extends TextView {
             // 判断是否是行首，记录行首字符位置；
             // 判断行首的条件为：currentLineOffsetY == drawPadding[1]+getTextSize()
             if (currentLineOffsetY == drawPadding[1] + getTextSize()) {
+                LogUtil.d(TAG, "22222");
                 currentLineStartIndex = j;
             }
 
             // 绘制第j个字符.
             if (isLineBreaks) {
+                LogUtil.d(TAG, "33333");
                 // 如果是换行符，do nothing
                 //char_j = "";
                 //canvas.drawText(char_j, currentLineOffsetX, currentLineOffsetY, textPaint);
             } else if (isUnicodeSymbol(char_j)) {
+                LogUtil.d(TAG, "44444");
                 // 如果是Y向需要补偿标点符号，加一个补偿 getTextSize() - getCharHeight.
                 // 注意：如果该竖行第一个字符是标点符号的话，不加补偿;
                 // 判断是否是第一个字符的条件为：offsetY == drawPadding[1] + getTextSize()
@@ -755,12 +758,14 @@ public class MyVerticalTextView extends TextView {
                 currentLineOffsetY += 1.4f * getCharHeight(char_j, textPaint) + charSpacingExtra;
 
             } else {
+                LogUtil.d(TAG, "55555");
                 canvas.drawText(char_j, currentLineOffsetX, currentLineOffsetY, textPaint);
                 currentLineOffsetY += getTextSize() + charSpacingExtra;
             }
 
             // 最后一行的偏移量和行首行末字符的index；
             if (j == textStrLength - 1) {
+                LogUtil.d(TAG, "66666");
                 mLinesOffsetArray.put(mMaxTextLine, new Float[]{currentLineOffsetX, currentLineOffsetY});
                 mLinesTextIndex.put(mMaxTextLine, new int[]{currentLineStartIndex, textStrLength});
             }

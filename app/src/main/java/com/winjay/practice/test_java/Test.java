@@ -37,17 +37,29 @@ public class Test {
         ////////////////////
 
 
+        ////////////////////
 //        String a = "xiaotiaowu.mp3";
 //        String[] b = a.split("\\.");
 //        System.out.println(b[0]);
+        ////////////////////
 
-        String Str = new String("www.runoob.com");
 
+        ////////////////////
+//        String Str = new String("www.runoob.com");
+//
 //        System.out.print("返回值 :" );
 //        System.out.println(Str.substring(4) );
+//
+//        System.out.print("返回值 :" );
+//        System.out.println(Str.substring(0, 14));
+        ////////////////////
 
-        System.out.print("返回值 :" );
-        System.out.println(Str.substring(0, 14));
+        ////////////////////
+        for (int i = 0; i < 14; i++) {
+            boolean isCurrentLineFinish = (i % 7 == 0);
+            System.out.println(isCurrentLineFinish);
+        }
+        ////////////////////
     }
 
     static class B extends A {
