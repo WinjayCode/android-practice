@@ -8,9 +8,12 @@
         android:id="@+id/aaa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/biometricprompt_color_FF5555"
         android:ems="1"
-        android:text="一二三四五六七"
+        android:lineSpacingExtra="8dp"
+        android:text="今天天气怎么样"
         android:textColor="@color/black_color"
+        android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,6 +24,7 @@
         android:layout_height="wrap_content"
         android:background="@color/biometricprompt_color_FF5555"
         android:textColor="@color/black_color"
+        android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/aaa"
         app:layout_constraintTop_toTopOf="parent" />

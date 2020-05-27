@@ -1,7 +1,9 @@
 package com.winjay.practice;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,7 +31,7 @@ import com.winjay.practice.view.VerticalTextView;
  */
 public class EmptyActivity extends AppCompatActivity {
     private static final String TAG = EmptyActivity.class.getSimpleName();
-    private String content = "今天天气怎么样明天天气怎么样";
+    private String content = "今天天气怎么样苹果英文怎么说一二三四五六七";
     private int i = 0;
     private int j = 0;
 
@@ -51,20 +53,34 @@ public class EmptyActivity extends AppCompatActivity {
 //        }
 //        scrollView.setVisibility(View.VISIBLE);
 
+        TextView a = findViewById(R.id.aaa);
         MyVerticalTextView vt = findViewById(R.id.vt);
-        vt.setLineMaxCharNum(7);
-        for (i = 0; i < 14; i++) {
-            LogUtil.d(TAG, "111i=" + i);
-            vt.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    vt.setText(content.substring(0, j + 1));
-                    vt.requestLayout();
-                    vt.invalidate();
-                    ++j;
+
+        AssetManager mgr = getAssets();
+        Typeface tf = Typeface.createFromAsset(mgr, "fonts/new.ttf");
+        a.setTypeface(tf);
+        vt.setTypeface(tf);
+
+        a.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LogUtil.d(TAG, "a.height=" + a.getMeasuredHeight());
+                vt.setLineMaxCharNum(7);
+                vt.setMaxLine(2);
+                for (i = 0; i < 21; i++) {
+                    LogUtil.d(TAG, "111i=" + i);
+                    vt.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            vt.setText(content.substring(0, j + 1));
+                            vt.requestLayout();
+                            vt.invalidate();
+                            ++j;
+                        }
+                    }, i * 1000);
                 }
-            }, i * 1000);
-        }
+            }
+        }, 2000);
     }
 
     private TextView generateHistoricalEventsTextView(String text) {
