@@ -21,7 +21,7 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
     public static final String TAG = SurfaceViewAnimationActivity.class.getSimpleName();
 
     @BindView(R.id.fsv)
-    FrameSurfaceView mFrameSurfaceView;
+    MyFrameSurfaceView mFrameSurfaceView;
 
     @BindView(R.id.pause)
     Button pauseBtn;
@@ -64,6 +64,41 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
 //            R.raw._8_hanbao31
     );
 
+    private List<Integer> mBitmapList2 = Arrays.asList(
+//            R.raw._8_hanbao00,
+//            R.raw._8_hanbao01,
+//            R.raw._8_hanbao02,
+//            R.raw._8_hanbao03,
+//            R.raw._8_hanbao04,
+//            R.raw._8_hanbao05,
+//            R.raw._8_hanbao06,
+//            R.raw._8_hanbao07,
+//            R.raw._8_hanbao08,
+//            R.raw._8_hanbao09,
+//            R.raw._8_hanbao10
+            R.raw._8_hanbao11,
+            R.raw._8_hanbao12,
+            R.raw._8_hanbao13,
+            R.raw._8_hanbao14,
+            R.raw._8_hanbao15,
+            R.raw._8_hanbao16,
+            R.raw._8_hanbao17,
+            R.raw._8_hanbao18,
+            R.raw._8_hanbao19,
+            R.raw._8_hanbao20
+//            R.raw._8_hanbao21,
+//            R.raw._8_hanbao22,
+//            R.raw._8_hanbao23,
+//            R.raw._8_hanbao24,
+//            R.raw._8_hanbao25,
+//            R.raw._8_hanbao26,
+//            R.raw._8_hanbao27,
+//            R.raw._8_hanbao28,
+//            R.raw._8_hanbao29,
+//            R.raw._8_hanbao30,
+//            R.raw._8_hanbao31
+    );
+
     @Override
     protected int getLayoutId() {
         return R.layout.surfaceview_animation_activity;
@@ -74,10 +109,10 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         mFrameSurfaceView.setBitmapIds(mBitmapList);
-        mFrameSurfaceView.setDuration(125 * mBitmapList.size());
-//        mFrameSurfaceView.setRepeatTimes(FrameSurfaceView.INFINITE);
+//        mFrameSurfaceView.setDuration(125 * mBitmapList.size());
+//        mFrameSurfaceView.setRepeatTimes(SurfaceViewAnimation.INFINITE);
 
-        mFrameSurfaceView.start();mFrameSurfaceView.pauseDrawThread();
+        mFrameSurfaceView.start();
     }
 
     @OnClick(R.id.pause)
@@ -92,9 +127,15 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
         mFrameSurfaceView.resume();
     }
 
+    @OnClick(R.id.replace)
+    void replaceAnim() {
+        LogUtil.d(TAG, "replaceAnim()");
+        mFrameSurfaceView.setBitmapIds(mBitmapList2);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mFrameSurfaceView.destroy();
+//        mFrameSurfaceView.destroy();
     }
 }
