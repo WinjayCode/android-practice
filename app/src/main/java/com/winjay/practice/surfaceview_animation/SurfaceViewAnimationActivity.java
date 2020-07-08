@@ -109,8 +109,7 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         mFrameSurfaceView.setBitmapIds(mBitmapList);
-//        mFrameSurfaceView.setDuration(125 * mBitmapList.size());
-//        mFrameSurfaceView.setRepeatTimes(SurfaceViewAnimation.INFINITE);
+        mFrameSurfaceView.setRepeatTimes(MyFrameSurfaceView.INFINITE);
 
         mFrameSurfaceView.start();
     }
@@ -130,7 +129,9 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
     @OnClick(R.id.replace)
     void replaceAnim() {
         LogUtil.d(TAG, "replaceAnim()");
+        mFrameSurfaceView.stop();
         mFrameSurfaceView.setBitmapIds(mBitmapList2);
+        mFrameSurfaceView.start();
     }
 
     @Override

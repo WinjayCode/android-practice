@@ -23,7 +23,9 @@ import java.util.List;
 
 public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     private final static String TAG = MyFrameSurfaceView.class.getSimpleName();
-    private final int DEFAULT_INTERVAL = 50;
+
+    public static final int INFINITE = -1;
+    public static final int DEFAULT_INTERVAL = 50;
     private int interval = DEFAULT_INTERVAL;
     private HandlerThread drawHandlerThread;
     private Handler drawHandler;
@@ -35,8 +37,9 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     private Rect dstRect = new Rect();
     private Canvas canvas;
     private int bitmapIdIndex = 0;
-    // -1 means repeat infinitely
-    private int repeatTimes = -1;
+    private int repeatTimes = INFINITE;
+    private int repeatedCount = 0;
+    private boolean shouldStart = false;
 
     public MyFrameSurfaceView(Context context) {
         super(context);
@@ -57,6 +60,22 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         LogUtil.d(TAG, "surfaceCreated()");
+        if (drawHandlerThread == null) {
+            drawHandlerThread = new HandlerThread("SurfaceViewThread");
+        }
+        if (!drawHandlerThread.isAlive()) {
+            drawHandlerThread.start();
+        }
+        if (drawHandler == null) {
+            drawHandler = new Handler(drawHandlerThread.getLooper());
+        }
+        if (drawRunnable == null) {
+            drawRunnable = new DrawRunnable();
+        }
+        if (shouldStart) {
+            shouldStart = false;
+            start();
+        }
     }
 
     @Override
@@ -66,6 +85,8 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         LogUtil.d(TAG, "surfaceDestroyed()");
+        bitmapIdIndex = 0;
+        shouldStart = true;
         if (drawHandlerThread != null) {
             drawHandlerThread.quit();
             drawHandlerThread = null;
@@ -91,11 +112,6 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
         options = new BitmapFactory.Options();
         options.inMutable = true;
-
-        drawHandlerThread = new HandlerThread("SurfaceViewThread");
-        drawHandlerThread.start();
-        drawHandler = new Handler(drawHandlerThread.getLooper());
-        drawRunnable = new DrawRunnable();
     }
 
     private class DrawRunnable implements Runnable {
@@ -112,8 +128,10 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
                         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
                         canvas.drawPaint(paint);
                         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+                        Bitmap bitmap = decodeBitmap(bitmapIds.get(bitmapIdIndex), options);
                         // 绘制图片资源
-                        canvas.drawBitmap(decodeBitmap(bitmapIds.get(bitmapIdIndex), options), srcRect, dstRect, paint);
+                        canvas.drawBitmap(bitmap, srcRect, dstRect, paint);
+                        options.inBitmap = bitmap;
                         bitmapIdIndex++;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -125,7 +143,19 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
                 }
                 drawHandler.postDelayed(drawRunnable, interval);
             } else {
-                LogUtil.d(TAG, "Animation done!");
+                if (repeatTimes == INFINITE) {
+                    LogUtil.d(TAG, "animation is infinite loop!");
+                    bitmapIdIndex = 0;
+                    drawHandler.postDelayed(drawRunnable, interval);
+                } else if (repeatedCount < repeatTimes - 1) {
+                    repeatedCount++;
+                    LogUtil.d(TAG, "repeatedCount=" + repeatedCount);
+                    bitmapIdIndex = 0;
+                    drawHandler.postDelayed(drawRunnable, interval);
+                } else {
+                    repeatedCount = 0;
+                    LogUtil.d(TAG, "animation done!");
+                }
             }
         }
     }
@@ -155,21 +185,37 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     public void start() {
         LogUtil.d(TAG, "start()");
-        drawHandler.post(drawRunnable);
+        if (drawHandler != null && drawRunnable != null) {
+            drawHandler.post(drawRunnable);
+        } else {
+            shouldStart = true;
+        }
+    }
+
+    public void stop() {
+        if (drawHandler != null && drawRunnable != null) {
+            drawHandler.removeCallbacks(drawRunnable);
+        }
+        bitmapIdIndex = 0;
+        repeatedCount = 0;
     }
 
     public void pause() {
         LogUtil.d(TAG, "pause()");
-        drawHandler.removeCallbacks(drawRunnable);
+        if (drawHandler != null && drawRunnable != null) {
+            drawHandler.removeCallbacks(drawRunnable);
+        }
     }
 
     public void resume() {
         LogUtil.d(TAG, "resume()");
-        drawHandler.removeCallbacks(drawRunnable);
-        drawHandler.post(drawRunnable);
+        if (drawHandler != null && drawRunnable != null) {
+            drawHandler.removeCallbacks(drawRunnable);
+            drawHandler.post(drawRunnable);
+        }
     }
 
-    public void setFrameAnimationInterval(int interval) {
+    public void setInterval(int interval) {
         if (interval < DEFAULT_INTERVAL) {
             return;
         }
@@ -177,6 +223,10 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     }
 
     public void setRepeatTimes(int repeatTimes) {
+        if (repeatTimes < -1 || repeatTimes == 0) {
+            LogUtil.e(TAG, "repeat times is invalid!");
+            return;
+        }
         this.repeatTimes = repeatTimes;
     }
 }
