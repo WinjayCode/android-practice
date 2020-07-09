@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -12,10 +13,9 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
-import com.winjay.practice.utils.LogUtil;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -89,7 +89,7 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        LogUtil.d(TAG, "surfaceCreated()");
+        Log.d(TAG, "surfaceCreated()");
         if (drawHandlerThread == null) {
             drawHandlerThread = new HandlerThread("SurfaceViewThread");
         }
@@ -114,7 +114,7 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        LogUtil.d(TAG, "surfaceDestroyed()");
+        Log.d(TAG, "surfaceDestroyed()");
         drawHandler.removeCallbacks(drawRunnable);
         bitmapIdIndex = 0;
         shouldStart = true;
@@ -146,6 +146,7 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         setZOrderOnTop(true);
 
         options = new BitmapFactory.Options();
+        // bitmap可修改，需要bitmap复用时options.inBitmap，需要配置
         options.inMutable = true;
     }
 
@@ -154,7 +155,7 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         @Override
         public void run() {
             if (bitmapIdIndex < bitmapIds.size()) {
-                LogUtil.d(TAG, "bitmapIdIndex=" + bitmapIdIndex);
+                Log.d(TAG, "bitmapIdIndex=" + bitmapIdIndex);
                 // 获取画布
                 canvas = getHolder().lockCanvas();
                 if (canvas != null) {
@@ -163,6 +164,8 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
                         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
                         canvas.drawPaint(paint);
                         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+                        // 抗锯齿
+                        canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
                         bitmap = decodeBitmap(bitmapIds.get(bitmapIdIndex), options);
                         // 绘制图片资源
                         canvas.drawBitmap(bitmap, srcRect, dstRect, paint);
@@ -176,20 +179,27 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
                         }
                     }
                 }
+                // TODO 此处有空指针风险
                 drawHandler.postDelayed(drawRunnable, interval);
             } else {
+                if (bitmapIds.size() == 1) {
+                    Log.d(TAG, "there is only one bitmap!");
+                    bitmapIdIndex = 0;
+                    repeatedCount = 0;
+                    return;
+                }
                 if (repeatTimes == INFINITE) {
-                    LogUtil.d(TAG, "animation is infinite loop!");
+                    Log.d(TAG, "animation is infinite loop!");
                     bitmapIdIndex = 0;
                     drawHandler.postDelayed(drawRunnable, interval);
                 } else if (repeatedCount < repeatTimes - 1) {
                     repeatedCount++;
-                    LogUtil.d(TAG, "repeatedCount=" + repeatedCount);
+                    Log.d(TAG, "repeatedCount=" + repeatedCount);
                     bitmapIdIndex = 0;
                     drawHandler.postDelayed(drawRunnable, interval);
                 } else {
                     repeatedCount = 0;
-                    LogUtil.d(TAG, "animation done!");
+                    Log.d(TAG, "animation done!");
                 }
             }
         }
@@ -211,6 +221,7 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     private void getBitmapDimension(int bitmapId) {
         BitmapFactory.Options options = new BitmapFactory.Options();
+        // 不会真正返回bitmap，只会返回宽高信息
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(this.getResources(), bitmapId, options);
         srcRect = new Rect(0, 0, options.outWidth, options.outHeight);
@@ -218,7 +229,7 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     }
 
     public void start() {
-        LogUtil.d(TAG, "start()");
+        Log.d(TAG, "start()");
         if (drawHandler != null && drawRunnable != null) {
             drawHandler.post(drawRunnable);
         } else {
@@ -235,14 +246,14 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     }
 
     public void pause() {
-        LogUtil.d(TAG, "pause()");
+        Log.d(TAG, "pause()");
         if (drawHandler != null && drawRunnable != null) {
             drawHandler.removeCallbacks(drawRunnable);
         }
     }
 
     public void resume() {
-        LogUtil.d(TAG, "resume()");
+        Log.d(TAG, "resume()");
         if (drawHandler != null && drawRunnable != null) {
             drawHandler.removeCallbacks(drawRunnable);
             drawHandler.post(drawRunnable);
@@ -258,7 +269,7 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     public void setRepeatTimes(int repeatTimes) {
         if (repeatTimes < -1 || repeatTimes == 0) {
-            LogUtil.e(TAG, "repeat times is invalid!");
+            Log.e(TAG, "repeat times is invalid!");
             return;
         }
         this.repeatTimes = repeatTimes;
