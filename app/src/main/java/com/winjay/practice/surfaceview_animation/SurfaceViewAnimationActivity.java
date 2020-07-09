@@ -1,12 +1,11 @@
 package com.winjay.practice.surfaceview_animation;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
 
-import com.winjay.practice.MainActivity;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
@@ -22,6 +21,9 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
 
     @BindView(R.id.fsv)
     MyFrameSurfaceView mFrameSurfaceView;
+
+    @BindView(R.id.fsv_2)
+    MyFrameSurfaceView mFrameSurfaceView2;
 
     @BindView(R.id.pause)
     Button pauseBtn;
@@ -109,9 +111,15 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         mFrameSurfaceView.setBitmapIds(mBitmapList);
-        mFrameSurfaceView.setRepeatTimes(MyFrameSurfaceView.INFINITE);
+        mFrameSurfaceView.setRepeatCount(MyFrameSurfaceView.INFINITE);
 
         mFrameSurfaceView.start();
+
+        MyFrameSurfaceView.FrameAnimation frameAnimation1 = new MyFrameSurfaceView.FrameAnimation(AnimationResUtil.getOneStar(), 1);
+        MyFrameSurfaceView.FrameAnimation frameAnimation2 = new MyFrameSurfaceView.FrameAnimation(AnimationResUtil.getTwoStar(), 1);
+        MyFrameSurfaceView.FrameAnimation frameAnimation3 = new MyFrameSurfaceView.FrameAnimation(AnimationResUtil.getThreeStar(), 1);
+        mFrameSurfaceView2.playSequentially(frameAnimation1);
+        mFrameSurfaceView2.start();
     }
 
     @OnClick(R.id.pause)
@@ -134,9 +142,19 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
         mFrameSurfaceView.start();
     }
 
+    @OnClick(R.id.show_hide)
+    void showOrHide() {
+        if (mFrameSurfaceView.getVisibility() == View.VISIBLE) {
+            mFrameSurfaceView.setVisibility(View.GONE);
+        } else if (mFrameSurfaceView.getVisibility() == View.GONE) {
+            mFrameSurfaceView.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        mFrameSurfaceView.destroy();
+        mFrameSurfaceView.destroy();
+        mFrameSurfaceView2.destroy();
     }
 }

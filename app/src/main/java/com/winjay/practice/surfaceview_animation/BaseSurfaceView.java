@@ -20,7 +20,7 @@ public abstract class BaseSurfaceView extends SurfaceView implements SurfaceHold
     protected int frameDuration = DEFAULT_FRAME_DURATION_MILLISECOND;
     private Canvas canvas;
     private boolean isAlive;
-    private DrawRunnable drawRunnable;
+//    private DrawRunnable drawRunnable;
 
     public BaseSurfaceView(Context context) {
         super(context);
@@ -81,21 +81,22 @@ public abstract class BaseSurfaceView extends SurfaceView implements SurfaceHold
         handlerThread = new HandlerThread("SurfaceViewThread");
         handlerThread.start();
         handler = new SurfaceViewHandler(handlerThread.getLooper());
-        drawRunnable = new DrawRunnable();
-        handler.post(drawRunnable);
+        handler.post(new DrawRunnable());
+//        drawRunnable = new DrawRunnable();
+//        handler.post(drawRunnable);
     }
 
-    public void pauseDrawThread() {
-        if (handler != null && drawRunnable != null) {
-            handler.removeCallbacks(drawRunnable);
-        }
-    }
-
-    public void resumeDrawThread() {
-        if (handler != null && drawRunnable != null) {
-            handler.post(drawRunnable);
-        }
-    }
+//    public void pauseDrawThread() {
+//        if (handler != null && drawRunnable != null) {
+//            handler.removeCallbacks(drawRunnable);
+//        }
+//    }
+//
+//    public void resumeDrawThread() {
+//        if (handler != null && drawRunnable != null) {
+//            handler.post(drawRunnable);
+//        }
+//    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -148,12 +149,12 @@ public abstract class BaseSurfaceView extends SurfaceView implements SurfaceHold
             }
             try {
                 canvas = getHolder().lockCanvas();
-                onFrameDraw(canvas);
+                onOneFrameDraw(canvas);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 getHolder().unlockCanvasAndPost(canvas);
-                onFrameDrawFinish();
+                onOneFrameDrawFinish();
             }
 
             // TODO: 2019-05-08 stop the drawing thread
@@ -164,12 +165,12 @@ public abstract class BaseSurfaceView extends SurfaceView implements SurfaceHold
     /**
      * it is will be invoked after one frame is drawn
      */
-    protected abstract void onFrameDrawFinish();
+    protected abstract void onOneFrameDrawFinish();
 
     /**
      * draw one frame to the surface by canvas
      *
      * @param canvas
      */
-    protected abstract void onFrameDraw(Canvas canvas);
+    protected abstract void onOneFrameDraw(Canvas canvas);
 }

@@ -45,7 +45,7 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     private Handler drawHandler;
     private DrawRunnable drawRunnable;
     /**
-     * 绘制资源列表
+     * 绘制资源集合
      */
     private List<Integer> bitmapIds = new ArrayList<>();
     private Paint paint = new Paint();
@@ -59,17 +59,21 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     private int bitmapIdIndex = 0;
     /**
      * 动画重复次数
+     * The number of times the animation must repeat. By default, an animation repeats infinite.
      */
-    private int repeatTimes = INFINITE;
+    private int repeatCount = INFINITE;
     /**
      * 动画已播放次数
+     * Indicates how many times the animation was repeated.
      */
-    private int repeatedCount = 0;
+    private int mRepeated = 0;
     /**
      * 是否在之后的某个时刻启动
      */
     private boolean shouldStart = false;
     private Bitmap bitmap;
+
+    private List<FrameAnimation> mFrameAnimationList;
 
     public MyFrameSurfaceView(Context context) {
         super(context);
@@ -90,18 +94,6 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Log.d(TAG, "surfaceCreated()");
-        if (drawHandlerThread == null) {
-            drawHandlerThread = new HandlerThread("SurfaceViewThread");
-        }
-        if (!drawHandlerThread.isAlive()) {
-            drawHandlerThread.start();
-        }
-        if (drawHandler == null) {
-            drawHandler = new Handler(drawHandlerThread.getLooper());
-        }
-        if (drawRunnable == null) {
-            drawRunnable = new DrawRunnable();
-        }
         if (shouldStart) {
             shouldStart = false;
             start();
@@ -115,23 +107,11 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.d(TAG, "surfaceDestroyed()");
-        drawHandler.removeCallbacks(drawRunnable);
+        if (drawHandler != null && drawRunnable != null) {
+            drawHandler.removeCallbacks(drawRunnable);
+        }
         bitmapIdIndex = 0;
         shouldStart = true;
-        if (drawHandlerThread != null) {
-            drawHandlerThread.quit();
-            drawHandlerThread = null;
-        }
-        if (drawHandler != null) {
-            drawHandler = null;
-        }
-        if (drawRunnable != null) {
-            drawRunnable = null;
-        }
-        if (bitmap != null) {
-            bitmap.recycle();
-            bitmap = null;
-        }
     }
 
     @Override
@@ -148,6 +128,11 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         options = new BitmapFactory.Options();
         // bitmap可修改，需要bitmap复用时options.inBitmap，需要配置
         options.inMutable = true;
+
+        drawHandlerThread = new HandlerThread("SurfaceViewThread");
+        drawHandlerThread.start();
+        drawHandler = new Handler(drawHandlerThread.getLooper());
+        drawRunnable = new DrawRunnable();
     }
 
     private class DrawRunnable implements Runnable {
@@ -179,26 +164,26 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
                         }
                     }
                 }
-                // TODO 此处有空指针风险
+                // TODO 此处有空指针风险?
                 drawHandler.postDelayed(drawRunnable, interval);
             } else {
                 if (bitmapIds.size() == 1) {
                     Log.d(TAG, "there is only one bitmap!");
                     bitmapIdIndex = 0;
-                    repeatedCount = 0;
+                    mRepeated = 0;
                     return;
                 }
-                if (repeatTimes == INFINITE) {
+                if (repeatCount == INFINITE) {
                     Log.d(TAG, "animation is infinite loop!");
                     bitmapIdIndex = 0;
                     drawHandler.postDelayed(drawRunnable, interval);
-                } else if (repeatedCount < repeatTimes - 1) {
-                    repeatedCount++;
-                    Log.d(TAG, "repeatedCount=" + repeatedCount);
+                } else if (mRepeated < repeatCount - 1) {
+                    mRepeated++;
+                    Log.d(TAG, "repeatedCount=" + mRepeated);
                     bitmapIdIndex = 0;
                     drawHandler.postDelayed(drawRunnable, interval);
                 } else {
-                    repeatedCount = 0;
+                    mRepeated = 0;
                     Log.d(TAG, "animation done!");
                 }
             }
@@ -230,11 +215,14 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     public void start() {
         Log.d(TAG, "start()");
-        if (drawHandler != null && drawRunnable != null) {
-            drawHandler.post(drawRunnable);
-        } else {
-            shouldStart = true;
+        if (mFrameAnimationList != null && !mFrameAnimationList.isEmpty()) {
+            if (mFrameAnimationList.get(0).getBitmapIds().isEmpty()) {
+                return;
+            }
+            setBitmapIds(mFrameAnimationList.get(0).getBitmapIds());
+            setRepeatCount(mFrameAnimationList.get(0).getRepeatCount());
         }
+        drawHandler.post(drawRunnable);
     }
 
     public void stop() {
@@ -242,7 +230,7 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
             drawHandler.removeCallbacks(drawRunnable);
         }
         bitmapIdIndex = 0;
-        repeatedCount = 0;
+        mRepeated = 0;
     }
 
     public void pause() {
@@ -267,11 +255,69 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         this.interval = interval;
     }
 
-    public void setRepeatTimes(int repeatTimes) {
-        if (repeatTimes < -1 || repeatTimes == 0) {
+    public void setRepeatCount(int repeatCount) {
+        if (this.repeatCount < -1 || this.repeatCount == 0) {
             Log.e(TAG, "repeat times is invalid!");
             return;
         }
-        this.repeatTimes = repeatTimes;
+        this.repeatCount = repeatCount;
+    }
+
+    public void destroy() {
+        Log.d(TAG, "destroy()");
+        if (drawHandlerThread != null) {
+            drawHandlerThread.quit();
+            drawHandlerThread = null;
+        }
+        if (drawHandler != null) {
+            drawHandler = null;
+        }
+        if (drawRunnable != null) {
+            drawRunnable = null;
+        }
+        if (bitmap != null) {
+            bitmap.recycle();
+            bitmap = null;
+        }
+    }
+
+    public static class FrameAnimation {
+        private List<Integer> bitmapIds = new ArrayList<>();
+
+        private int repeatCount = INFINITE;
+
+        public FrameAnimation(List<Integer> bitmapIds, int repeatCount) {
+            setBitmapIds(bitmapIds);
+            setRepeatCount(repeatCount);
+        }
+
+        public int getRepeatCount() {
+            return repeatCount;
+        }
+
+        public void setRepeatCount(int repeatCount) {
+            if (this.repeatCount < -1 || this.repeatCount == 0) {
+                Log.e(TAG, "repeat times is invalid!");
+                return;
+            }
+            this.repeatCount = repeatCount;
+        }
+
+        public void setBitmapIds(List<Integer> bitmapIds) {
+            if (bitmapIds == null || bitmapIds.size() == 0) {
+                return;
+            }
+            this.bitmapIds = bitmapIds;
+        }
+
+        public List<Integer> getBitmapIds() {
+            return bitmapIds;
+        }
+    }
+
+    public void playSequentially(List<FrameAnimation> frameAnimations) {
+        if (frameAnimations != null && !frameAnimations.isEmpty()) {
+            mFrameAnimationList = frameAnimations;
+        }
     }
 }

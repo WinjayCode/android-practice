@@ -113,7 +113,8 @@ public class FrameSurfaceView extends BaseSurfaceView {
     }
 
     @Override
-    protected void onFrameDrawFinish() {
+    protected void onOneFrameDrawFinish() {
+//        LogUtil.d(TAG, "onFrameDrawFinish()");
     }
 
     /**
@@ -179,7 +180,7 @@ public class FrameSurfaceView extends BaseSurfaceView {
     }
 
     @Override
-    protected void onFrameDraw(Canvas canvas) {
+    protected void onOneFrameDraw(Canvas canvas) {
         clearCanvas(canvas);
         if (!isStart()) {
             return;
@@ -189,7 +190,7 @@ public class FrameSurfaceView extends BaseSurfaceView {
             drawOneFrame(canvas);
         } else {
             LogUtil.d(TAG, "AnimationEnd! frameIndex=" + frameIndex);
-            drawOneFrame(canvas);
+//            drawOneFrame(canvas);
             onFrameAnimationEnd();
             if (repeatTimes != 0 && repeatTimes == INFINITE) {
                 start();
@@ -236,7 +237,8 @@ public class FrameSurfaceView extends BaseSurfaceView {
      * @return true: animation is finished, false: animation is doing
      */
     private boolean isFinish() {
-        return frameIndex == bitmapIds.size() - 1;
+//        return frameIndex >= bitmapIds.size() - 1;
+        return frameIndex == bitmapIds.size();
     }
 
     /**
@@ -268,21 +270,21 @@ public class FrameSurfaceView extends BaseSurfaceView {
         handler.post(decodeRunnable);
     }
 
-    public void pause() {
-        if (handler != null && decodeRunnable != null) {
-            LogUtil.d(TAG, "pause()");
-            handler.removeCallbacks(decodeRunnable);
-            pauseDrawThread();
-        }
-    }
-
-    public void resume() {
-        if (handler != null && decodeRunnable != null) {
-            LogUtil.d(TAG, "resume()");
-            handler.post(decodeRunnable);
-            resumeDrawThread();
-        }
-    }
+//    public void pause() {
+//        if (handler != null && decodeRunnable != null) {
+//            LogUtil.d(TAG, "pause()");
+//            handler.removeCallbacks(decodeRunnable);
+//            pauseDrawThread();
+//        }
+//    }
+//
+//    public void resume() {
+//        if (handler != null && decodeRunnable != null) {
+//            LogUtil.d(TAG, "resume()");
+//            handler.post(decodeRunnable);
+//            resumeDrawThread();
+//        }
+//    }
 
     /**
      * clear out the drawing on canvas,preparing for the next frame
@@ -382,7 +384,6 @@ public class FrameSurfaceView extends BaseSurfaceView {
             putDecodedBitmapByReuse(bitmapIds.get(index), options);
             index++;
             if (index < bitmapIds.size()) {
-//                LogUtil.d(TAG, "decoding! index=" + index + ", bitmapIds.size=" + bitmapIds.size());
                 handler.post(this);
             } else {
                 LogUtil.d(TAG, "decode finish!");
