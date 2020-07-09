@@ -21,25 +21,55 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * SurfaceView实现帧动画
+ *
+ * @author Winjay
+ * @date 2020/7/9
+ */
 public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     private final static String TAG = MyFrameSurfaceView.class.getSimpleName();
-
+    /**
+     * 动画无限循环
+     */
     public static final int INFINITE = -1;
+    /**
+     * 默认动画刷新间隔（ms）
+     */
     public static final int DEFAULT_INTERVAL = 50;
+    /**
+     * 动画刷新间隔（ms）
+     */
     private int interval = DEFAULT_INTERVAL;
     private HandlerThread drawHandlerThread;
     private Handler drawHandler;
     private DrawRunnable drawRunnable;
+    /**
+     * 绘制资源列表
+     */
     private List<Integer> bitmapIds = new ArrayList<>();
     private Paint paint = new Paint();
     private BitmapFactory.Options options;
     private Rect srcRect;
     private Rect dstRect = new Rect();
     private Canvas canvas;
+    /**
+     * 绘制资源index
+     */
     private int bitmapIdIndex = 0;
+    /**
+     * 动画重复次数
+     */
     private int repeatTimes = INFINITE;
+    /**
+     * 动画已播放次数
+     */
     private int repeatedCount = 0;
+    /**
+     * 是否在之后的某个时刻启动
+     */
     private boolean shouldStart = false;
+    private Bitmap bitmap;
 
     public MyFrameSurfaceView(Context context) {
         super(context);
@@ -85,6 +115,7 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         LogUtil.d(TAG, "surfaceDestroyed()");
+        drawHandler.removeCallbacks(drawRunnable);
         bitmapIdIndex = 0;
         shouldStart = true;
         if (drawHandlerThread != null) {
@@ -96,6 +127,10 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         }
         if (drawRunnable != null) {
             drawRunnable = null;
+        }
+        if (bitmap != null) {
+            bitmap.recycle();
+            bitmap = null;
         }
     }
 
@@ -128,7 +163,7 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
                         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
                         canvas.drawPaint(paint);
                         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
-                        Bitmap bitmap = decodeBitmap(bitmapIds.get(bitmapIdIndex), options);
+                        bitmap = decodeBitmap(bitmapIds.get(bitmapIdIndex), options);
                         // 绘制图片资源
                         canvas.drawBitmap(bitmap, srcRect, dstRect, paint);
                         options.inBitmap = bitmap;
@@ -179,7 +214,6 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(this.getResources(), bitmapId, options);
         srcRect = new Rect(0, 0, options.outWidth, options.outHeight);
-        // we have to re-measure to make defaultWidth in use in onMeasure()
         requestLayout();
     }
 
