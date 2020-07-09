@@ -75,6 +75,8 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     private List<FrameAnimation> mFrameAnimationList;
 
+    private FrameAnimation mCurrentFrameAnimation;
+
     public MyFrameSurfaceView(Context context) {
         super(context);
         init();
@@ -186,6 +188,23 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
                     mRepeated = 0;
                     Log.d(TAG, "animation done!");
                 }
+
+
+//                if (mCurrentFrameAnimation != null) {
+//                    if (repeatCount == INFINITE) {
+//                        Log.d(TAG, "animation is infinite loop!");
+//                        bitmapIdIndex = 0;
+//                        drawHandler.postDelayed(drawRunnable, interval);
+//                    } else if (mRepeated < repeatCount - 1) {
+//                        mRepeated++;
+//                        Log.d(TAG, "repeatedCount=" + mRepeated);
+//                        bitmapIdIndex = 0;
+//                        drawHandler.postDelayed(drawRunnable, interval);
+//                    } else {
+//                        mRepeated = 0;
+//                        Log.d(TAG, "animation done!");
+//                    }
+//                }
             }
         }
     }
@@ -219,8 +238,9 @@ public class MyFrameSurfaceView extends SurfaceView implements SurfaceHolder.Cal
             if (mFrameAnimationList.get(0).getBitmapIds().isEmpty()) {
                 return;
             }
-            setBitmapIds(mFrameAnimationList.get(0).getBitmapIds());
-            setRepeatCount(mFrameAnimationList.get(0).getRepeatCount());
+            mCurrentFrameAnimation = mFrameAnimationList.get(0);
+            setBitmapIds(mCurrentFrameAnimation.getBitmapIds());
+            setRepeatCount(mCurrentFrameAnimation.getRepeatCount());
         }
         drawHandler.post(drawRunnable);
     }

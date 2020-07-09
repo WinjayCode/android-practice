@@ -10,6 +10,7 @@ import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -115,10 +116,14 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
 
         mFrameSurfaceView.start();
 
+        List<MyFrameSurfaceView.FrameAnimation> frameAnimationList = new ArrayList<>();
         MyFrameSurfaceView.FrameAnimation frameAnimation1 = new MyFrameSurfaceView.FrameAnimation(AnimationResUtil.getOneStar(), 1);
         MyFrameSurfaceView.FrameAnimation frameAnimation2 = new MyFrameSurfaceView.FrameAnimation(AnimationResUtil.getTwoStar(), 1);
         MyFrameSurfaceView.FrameAnimation frameAnimation3 = new MyFrameSurfaceView.FrameAnimation(AnimationResUtil.getThreeStar(), 1);
-        mFrameSurfaceView2.playSequentially(frameAnimation1);
+        frameAnimationList.add(frameAnimation1);
+        frameAnimationList.add(frameAnimation2);
+        frameAnimationList.add(frameAnimation3);
+        mFrameSurfaceView2.playSequentially(frameAnimationList);
         mFrameSurfaceView2.start();
     }
 
