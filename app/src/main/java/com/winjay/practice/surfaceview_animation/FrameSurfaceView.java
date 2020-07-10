@@ -5,95 +5,115 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
+import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.AttributeSet;
-
-import com.winjay.practice.utils.LogUtil;
+import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * a SurfaceView which draws bitmaps one after another like frame animation
+ * SurfaceView实现帧动画
+ *
+ * @author Winjay
+ * @date 2020/7/9
  */
-public class FrameSurfaceView extends BaseSurfaceView {
-    public static final String TAG = FrameSurfaceView.class.getSimpleName();
-    public static final int INVALID_INDEX = Integer.MAX_VALUE;
-    private int bufferSize = 3;
-    public static final String DECODE_THREAD_NAME = "DecodingThread";
-    public static final int INFINITE = -1;
-    //-1 means repeat infinitely
-    private int repeatTimes;
-    private int repeatedCount;
-
+public class FrameSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
+    private final static String TAG = FrameSurfaceView.class.getSimpleName();
     /**
-     * the resources of frame animation
+     * 动画无限循环
+     */
+    public static final int INFINITE = -1;
+    /**
+     * 默认动画刷新间隔（ms）
+     */
+    public static final int DEFAULT_INTERVAL = 50;
+    /**
+     * 动画刷新间隔（ms）
+     */
+    private int interval = DEFAULT_INTERVAL;
+    private HandlerThread drawHandlerThread;
+    private Handler drawHandler;
+    private DrawRunnable drawRunnable;
+    /**
+     * 绘制资源集合
      */
     private List<Integer> bitmapIds = new ArrayList<>();
-    /**
-     * the index of bitmap resource which is decoding
-     */
-    private int bitmapIdIndex;
-    /**
-     * the index of frame which is drawing
-     */
-    private int frameIndex = INVALID_INDEX;
-    /**
-     * decoded bitmaps stores in this queue
-     * consumer is drawing thread, producer is decoding thread.
-     */
-    private LinkedBlockingQueue decodedBitmaps = new LinkedBlockingQueue(bufferSize);
-    /**
-     * bitmaps already drawn by canvas stores in this queue
-     * consumer is decoding thread, producer is drawing thread.
-     */
-    private LinkedBlockingQueue drawnBitmaps = new LinkedBlockingQueue(bufferSize);
-    /**
-     * the thread for decoding bitmaps
-     */
-    private HandlerThread decodeThread;
-    /**
-     * the Runnable describes how to decode one bitmap
-     */
-    private DecodeRunnable decodeRunnable;
-    /**
-     * this handler helps to decode bitmap one after another
-     */
-    private Handler handler;
-    private BitmapFactory.Options options;
     private Paint paint = new Paint();
+    private BitmapFactory.Options options;
     private Rect srcRect;
     private Rect dstRect = new Rect();
-    private int defaultWidth;
-    private int defaultHeight;
+    private Canvas canvas;
+    /**
+     * 绘制资源index
+     */
+    private int bitmapIdIndex = 0;
+    /**
+     * 动画重复次数
+     * The number of times the animation must repeat. By default, an animation repeats infinite.
+     */
+    private int repeatCount = INFINITE;
+    /**
+     * 动画已播放次数
+     * Indicates how many times the animation was repeated.
+     */
+    private int mRepeated = 0;
+    /**
+     * 是否在之后的某个时刻启动
+     */
+    private boolean shouldStart = false;
+    private Bitmap bitmap;
+
+    private List<FrameAnimation> mFrameAnimationList;
+
+    private FrameAnimation mCurrentFrameAnimation;
 
     public FrameSurfaceView(Context context) {
         super(context);
+        init();
     }
 
     public FrameSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public FrameSurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
-    public void setRepeatTimes(int repeatTimes) {
-        this.repeatTimes = repeatTimes;
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        Log.d(TAG, "surfaceCreated()");
+        if (shouldStart) {
+            shouldStart = false;
+            start();
+        }
     }
 
     @Override
-    protected void init() {
-        super.init();
-        options = new BitmapFactory.Options();
-        options.inMutable = true;
-        decodeThread = new HandlerThread(DECODE_THREAD_NAME);
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        Log.d(TAG, "surfaceDestroyed()");
+        if (drawHandler != null && drawRunnable != null) {
+            drawHandler.removeCallbacks(drawRunnable);
+        }
+        bitmapIdIndex = 0;
+        shouldStart = true;
     }
 
     @Override
@@ -102,293 +122,225 @@ public class FrameSurfaceView extends BaseSurfaceView {
         dstRect.set(0, 0, getWidth(), getHeight());
     }
 
-    @Override
-    protected int getDefaultWidth() {
-        return defaultWidth;
+    private void init() {
+        getHolder().addCallback(this);
+        getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        setZOrderOnTop(true);
+
+        options = new BitmapFactory.Options();
+        // bitmap可修改，需要bitmap复用时options.inBitmap，需要配置
+        options.inMutable = true;
+
+        drawHandlerThread = new HandlerThread("SurfaceViewThread");
+        drawHandlerThread.start();
+        drawHandler = new Handler(drawHandlerThread.getLooper());
+        drawRunnable = new DrawRunnable();
     }
 
-    @Override
-    protected int getDefaultHeight() {
-        return defaultHeight;
-    }
+    private class DrawRunnable implements Runnable {
 
-    @Override
-    protected void onOneFrameDrawFinish() {
-//        LogUtil.d(TAG, "onFrameDrawFinish()");
-    }
-
-    /**
-     * set the duration of frame animation
-     *
-     * @param duration time in milliseconds
-     */
-    public void setDuration(int duration) {
-        int frameDuration = duration / bitmapIds.size();
-        setFrameDuration(frameDuration);
-    }
-
-    /**
-     * set the materials of frame animation which is an array of bitmap resource id
-     *
-     * @param bitmapIds an array of bitmap resource id
-     */
-    public void setBitmapIds(List<Integer> bitmapIds) {
-        if (bitmapIds == null || bitmapIds.size() == 0) {
-            return;
-        }
-        this.bitmapIds = bitmapIds;
-        //by default, take the first bitmap's dimension into consideration
-        getBitmapDimension(bitmapIds.get(bitmapIdIndex));
-        preloadFrames();
-        decodeRunnable = new DecodeRunnable(bitmapIdIndex, bitmapIds, options);
-    }
-
-    private void getBitmapDimension(int bitmapId) {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(this.getResources(), bitmapId, options);
-        defaultWidth = options.outWidth;
-        defaultHeight = options.outHeight;
-        srcRect = new Rect(0, 0, defaultWidth, defaultHeight);
-        //we have to re-measure to make defaultWidth in use in onMeasure()
-        requestLayout();
-    }
-
-    /**
-     * load the first several frames of animation before it is started
-     */
-    private void preloadFrames() {
-        putDecodedBitmap(bitmapIds.get(bitmapIdIndex++), options, new LinkedBitmap());
-        putDecodedBitmap(bitmapIds.get(bitmapIdIndex++), options, new LinkedBitmap());
-    }
-
-    /**
-     * recycle the bitmap used by frame animation.
-     * Usually it should be invoked when the ui of frame animation is no longer visible
-     */
-    public void destroy() {
-        if (drawnBitmaps != null) {
-            drawnBitmaps.clear();
-        }
-        if (decodeThread != null) {
-            decodeThread.quit();
-            decodeThread = null;
-        }
-        if (handler != null) {
-            handler = null;
-        }
-    }
-
-    @Override
-    protected void onOneFrameDraw(Canvas canvas) {
-        clearCanvas(canvas);
-        if (!isStart()) {
-            return;
-        }
-        if (!isFinish()) {
-            LogUtil.d(TAG, "frameIndex=" + frameIndex);
-            drawOneFrame(canvas);
-        } else {
-            LogUtil.d(TAG, "AnimationEnd! frameIndex=" + frameIndex);
-//            drawOneFrame(canvas);
-            onFrameAnimationEnd();
-            if (repeatTimes != 0 && repeatTimes == INFINITE) {
-                start();
-            } else if (repeatedCount < repeatTimes) {
-                start();
-                repeatedCount++;
+        @Override
+        public void run() {
+            if (bitmapIdIndex < bitmapIds.size()) {
+//                Log.d(TAG, "bitmapIdIndex=" + bitmapIdIndex);
+                // 获取画布
+                canvas = getHolder().lockCanvas();
+                if (canvas != null) {
+                    try {
+                        // 清空画布
+                        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+                        canvas.drawPaint(paint);
+                        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+                        // 抗锯齿
+                        canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+                        bitmap = decodeBitmap(bitmapIds.get(bitmapIdIndex), options);
+                        // 绘制图片资源
+                        canvas.drawBitmap(bitmap, srcRect, dstRect, paint);
+                        options.inBitmap = bitmap;
+                        bitmapIdIndex++;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (canvas != null) {
+                            getHolder().unlockCanvasAndPost(canvas);
+                        }
+                    }
+                }
+                // TODO 此处可能有空指针风险！
+                drawHandler.postDelayed(drawRunnable, interval);
             } else {
-                repeatedCount = 0;
+                bitmapIdIndex = 0;
+                if (mCurrentFrameAnimation == null) {
+                    if (bitmapIds.size() == 1) {
+                        Log.d(TAG, "there is only one bitmap!");
+                        mRepeated = 0;
+                        return;
+                    }
+                }
+
+                if (repeatCount == INFINITE) {
+                    Log.d(TAG, "animation is infinite loop!");
+                    drawHandler.postDelayed(drawRunnable, interval);
+                } else if (mRepeated < repeatCount - 1) {
+                    mRepeated++;
+                    Log.d(TAG, "mRepeated=" + mRepeated);
+                    drawHandler.postDelayed(drawRunnable, interval);
+                } else {
+                    mRepeated = 0;
+                    if (mCurrentFrameAnimation != null) {
+                        mFrameAnimationList.remove(mCurrentFrameAnimation);
+                        if (!mFrameAnimationList.isEmpty()) {
+                            post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    start();
+                                }
+                            });
+                        } else {
+                            mCurrentFrameAnimation = null;
+                            Log.d(TAG, "all animation done!");
+                        }
+                    } else {
+                        Log.d(TAG, "animation done!");
+                    }
+                }
             }
         }
     }
 
-    /**
-     * draw a single frame which is a bitmap
-     *
-     * @param canvas
-     */
-    private void drawOneFrame(Canvas canvas) {
-        LinkedBitmap linkedBitmap = getDecodedBitmap();
-        if (linkedBitmap != null) {
-            canvas.drawBitmap(linkedBitmap.bitmap, srcRect, dstRect, paint);
-        }
-        putDrawnBitmap(linkedBitmap);
-        frameIndex++;
-    }
-
-    /**
-     * invoked when frame animation is done
-     */
-    private void onFrameAnimationEnd() {
-        reset();
-    }
-
-    /**
-     * reset the index of frame, preparing for the next frame animation
-     */
-    private void reset() {
-        frameIndex = INVALID_INDEX;
-    }
-
-    /**
-     * whether frame animation is finished
-     *
-     * @return true: animation is finished, false: animation is doing
-     */
-    private boolean isFinish() {
-//        return frameIndex >= bitmapIds.size() - 1;
-        return frameIndex == bitmapIds.size();
-    }
-
-    /**
-     * whether frame animation is started
-     *
-     * @return true: animation is started, false: animation is not started
-     */
-    private boolean isStart() {
-        return frameIndex != INVALID_INDEX;
-    }
-
-    /**
-     * start frame animation from the first frame
-     */
-    public void start() {
-        frameIndex = 0;
-        if (decodeThread == null) {
-            decodeThread = new HandlerThread(DECODE_THREAD_NAME);
-        }
-        if (!decodeThread.isAlive()) {
-            decodeThread.start();
-        }
-        if (handler == null) {
-            handler = new Handler(decodeThread.getLooper());
-        }
-        if (decodeRunnable != null) {
-            decodeRunnable.setIndex(0);
-        }
-        handler.post(decodeRunnable);
-    }
-
-//    public void pause() {
-//        if (handler != null && decodeRunnable != null) {
-//            LogUtil.d(TAG, "pause()");
-//            handler.removeCallbacks(decodeRunnable);
-//            pauseDrawThread();
-//        }
-//    }
-//
-//    public void resume() {
-//        if (handler != null && decodeRunnable != null) {
-//            LogUtil.d(TAG, "resume()");
-//            handler.post(decodeRunnable);
-//            resumeDrawThread();
-//        }
-//    }
-
-    /**
-     * clear out the drawing on canvas,preparing for the next frame
-     * * @param canvas
-     */
-    private void clearCanvas(Canvas canvas) {
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        canvas.drawPaint(paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
-    }
-
-    /**
-     * decode bitmap by BitmapFactory.decodeStream(), it is about twice faster than BitmapFactory.decodeResource()
-     *
-     * @param resId   the bitmap resource
-     * @param options
-     * @return
-     */
     private Bitmap decodeBitmap(int resId, BitmapFactory.Options options) {
         options.inScaled = false;
         InputStream inputStream = getResources().openRawResource(resId);
         return BitmapFactory.decodeStream(inputStream, null, options);
     }
 
-    private void putDecodedBitmapByReuse(int resId, BitmapFactory.Options options) {
-        LinkedBitmap linkedBitmap = getDrawnBitmap();
-        if (linkedBitmap == null) {
-            linkedBitmap = new LinkedBitmap();
+    public void setBitmapIds(List<Integer> bitmapIds) {
+        if (bitmapIds == null || bitmapIds.size() == 0) {
+            return;
         }
-        options.inBitmap = linkedBitmap.bitmap;
-        putDecodedBitmap(resId, options, linkedBitmap);
+        this.bitmapIds = bitmapIds;
+        getBitmapDimension(bitmapIds.get(0));
     }
 
-    private void putDecodedBitmap(int resId, BitmapFactory.Options options, LinkedBitmap linkedBitmap) {
-        Bitmap bitmap = decodeBitmap(resId, options);
-        linkedBitmap.bitmap = bitmap;
-        try {
-            decodedBitmaps.put(linkedBitmap);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    private void getBitmapDimension(int bitmapId) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        // 不会真正返回bitmap，只会返回宽高信息
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(this.getResources(), bitmapId, options);
+        srcRect = new Rect(0, 0, options.outWidth, options.outHeight);
+        requestLayout();
     }
 
-    private void putDrawnBitmap(LinkedBitmap bitmap) {
-        drawnBitmaps.offer(bitmap);
-    }
-
-    /**
-     * get bitmap which already drawn by canvas
-     *
-     * @return
-     */
-    private LinkedBitmap getDrawnBitmap() {
-        LinkedBitmap bitmap = null;
-        try {
-            bitmap = drawnBitmaps.take();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return bitmap;
-    }
-
-    /**
-     * get decoded bitmap in the decoded bitmap queue
-     * it might block due to new bitmap is not ready
-     *
-     * @return
-     */
-    private LinkedBitmap getDecodedBitmap() {
-        LinkedBitmap bitmap = null;
-        try {
-            bitmap = decodedBitmaps.take();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return bitmap;
-    }
-
-    private class DecodeRunnable implements Runnable {
-
-        private int index;
-        private List<Integer> bitmapIds;
-        private BitmapFactory.Options options;
-
-        public DecodeRunnable(int index, List<Integer> bitmapIds, BitmapFactory.Options options) {
-            this.index = index;
-            this.bitmapIds = bitmapIds;
-            this.options = options;
-        }
-
-        public void setIndex(int index) {
-            this.index = index;
-        }
-
-        @Override
-        public void run() {
-            putDecodedBitmapByReuse(bitmapIds.get(index), options);
-            index++;
-            if (index < bitmapIds.size()) {
-                handler.post(this);
-            } else {
-                LogUtil.d(TAG, "decode finish!");
-                index = 0;
+    public void start() {
+        Log.d(TAG, "start()");
+        if (mFrameAnimationList != null && !mFrameAnimationList.isEmpty()) {
+            if (mFrameAnimationList.get(0).getBitmapIds().isEmpty()) {
+                return;
             }
+            mCurrentFrameAnimation = mFrameAnimationList.get(0);
+            setBitmapIds(mCurrentFrameAnimation.getBitmapIds());
+            setRepeatCount(mCurrentFrameAnimation.getRepeatCount());
+        }
+        drawHandler.post(drawRunnable);
+    }
+
+    public void reset() {
+        if (drawHandler != null && drawRunnable != null) {
+            drawHandler.removeCallbacks(drawRunnable);
+        }
+        bitmapIdIndex = 0;
+        mRepeated = 0;
+        if (mFrameAnimationList != null) {
+            mFrameAnimationList.clear();
+        }
+        mCurrentFrameAnimation = null;
+    }
+
+    public void pause() {
+        Log.d(TAG, "pause()");
+        if (drawHandler != null && drawRunnable != null) {
+            drawHandler.removeCallbacks(drawRunnable);
+        }
+    }
+
+    public void resume() {
+        Log.d(TAG, "resume()");
+        if (drawHandler != null && drawRunnable != null) {
+            drawHandler.removeCallbacks(drawRunnable);
+            drawHandler.post(drawRunnable);
+        }
+    }
+
+    public void setInterval(int interval) {
+        if (interval < DEFAULT_INTERVAL) {
+            return;
+        }
+        this.interval = interval;
+    }
+
+    public void setRepeatCount(int repeatCount) {
+        if (this.repeatCount < -1 || this.repeatCount == 0) {
+            Log.e(TAG, "repeat times is invalid!");
+            return;
+        }
+        this.repeatCount = repeatCount;
+    }
+
+    public void destroy() {
+        Log.d(TAG, "destroy()");
+        if (drawHandlerThread != null) {
+            drawHandlerThread.quit();
+            drawHandlerThread = null;
+        }
+        if (drawHandler != null) {
+            drawHandler = null;
+        }
+        if (drawRunnable != null) {
+            drawRunnable = null;
+        }
+        if (bitmap != null) {
+            bitmap.recycle();
+            bitmap = null;
+        }
+    }
+
+    public static class FrameAnimation {
+        private List<Integer> bitmapIds = new ArrayList<>();
+
+        private int repeatCount = INFINITE;
+
+        public FrameAnimation(List<Integer> bitmapIds, int repeatCount) {
+            setBitmapIds(bitmapIds);
+            setRepeatCount(repeatCount);
+        }
+
+        public int getRepeatCount() {
+            return repeatCount;
+        }
+
+        public void setRepeatCount(int repeatCount) {
+            if (this.repeatCount < -1 || this.repeatCount == 0) {
+                Log.e(TAG, "repeat times is invalid!");
+                return;
+            }
+            this.repeatCount = repeatCount;
+        }
+
+        public void setBitmapIds(List<Integer> bitmapIds) {
+            if (bitmapIds == null || bitmapIds.size() == 0) {
+                return;
+            }
+            this.bitmapIds = bitmapIds;
+        }
+
+        public List<Integer> getBitmapIds() {
+            return bitmapIds;
+        }
+    }
+
+    public void playSequentially(List<FrameAnimation> frameAnimations) {
+        if (frameAnimations != null && !frameAnimations.isEmpty()) {
+            mFrameAnimationList = frameAnimations;
         }
     }
 }

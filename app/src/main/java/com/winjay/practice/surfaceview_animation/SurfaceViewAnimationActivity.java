@@ -21,10 +21,10 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
     public static final String TAG = SurfaceViewAnimationActivity.class.getSimpleName();
 
     @BindView(R.id.fsv)
-    MyFrameSurfaceView mFrameSurfaceView;
+    FrameSurfaceView mFrameSurfaceView;
 
-    @BindView(R.id.fsv_2)
-    MyFrameSurfaceView mFrameSurfaceView2;
+//    @BindView(R.id.fsv_2)
+//    FrameSurfaceView mFrameSurfaceView2;
 
     @BindView(R.id.pause)
     Button pauseBtn;
@@ -112,19 +112,19 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         mFrameSurfaceView.setBitmapIds(mBitmapList);
-        mFrameSurfaceView.setRepeatCount(MyFrameSurfaceView.INFINITE);
+        mFrameSurfaceView.setRepeatCount(FrameSurfaceView.INFINITE);
 
         mFrameSurfaceView.start();
 
-        List<MyFrameSurfaceView.FrameAnimation> frameAnimationList = new ArrayList<>();
-        MyFrameSurfaceView.FrameAnimation frameAnimation1 = new MyFrameSurfaceView.FrameAnimation(AnimationResUtil.getOneStar(), 1);
-        MyFrameSurfaceView.FrameAnimation frameAnimation2 = new MyFrameSurfaceView.FrameAnimation(AnimationResUtil.getTwoStar(), 1);
-        MyFrameSurfaceView.FrameAnimation frameAnimation3 = new MyFrameSurfaceView.FrameAnimation(AnimationResUtil.getThreeStar(), 1);
-        frameAnimationList.add(frameAnimation1);
-        frameAnimationList.add(frameAnimation2);
-        frameAnimationList.add(frameAnimation3);
-        mFrameSurfaceView2.playSequentially(frameAnimationList);
-        mFrameSurfaceView2.start();
+//        List<FrameSurfaceView.FrameAnimation> frameAnimationList = new ArrayList<>();
+//        FrameSurfaceView.FrameAnimation frameAnimation1 = new FrameSurfaceView.FrameAnimation(AnimationResUtil.getOneStar(), 2);
+//        FrameSurfaceView.FrameAnimation frameAnimation2 = new FrameSurfaceView.FrameAnimation(AnimationResUtil.getTwoStar(), 1);
+//        FrameSurfaceView.FrameAnimation frameAnimation3 = new FrameSurfaceView.FrameAnimation(AnimationResUtil.getThreeStar(), FrameSurfaceView.INFINITE);
+//        frameAnimationList.add(frameAnimation1);
+//        frameAnimationList.add(frameAnimation2);
+//        frameAnimationList.add(frameAnimation3);
+//        mFrameSurfaceView2.playSequentially(frameAnimationList);
+//        mFrameSurfaceView2.start();
     }
 
     @OnClick(R.id.pause)
@@ -142,7 +142,7 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
     @OnClick(R.id.replace)
     void replaceAnim() {
         LogUtil.d(TAG, "replaceAnim()");
-        mFrameSurfaceView.stop();
+        mFrameSurfaceView.reset();
         mFrameSurfaceView.setBitmapIds(mBitmapList2);
         mFrameSurfaceView.start();
     }
@@ -160,6 +160,6 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mFrameSurfaceView.destroy();
-        mFrameSurfaceView2.destroy();
+//        mFrameSurfaceView2.destroy();
     }
 }
