@@ -101,6 +101,8 @@ dependencies {
     implementation rootDependencies.permission
     // fastjson
     api rootDependencies.fastjson
+
+    implementation project(':baselibrary')
 }
 
 repositories {

@@ -20,6 +20,8 @@ import android.os.RemoteException;
 import android.provider.Settings;
 import android.text.TextUtils;
 
+import com.winjay.baselibrary.BindViewById;
+import com.winjay.baselibrary.BindViewUtils;
 import com.winjay.practice.utils.LogUtil;
 
 import android.view.View;
@@ -76,10 +78,16 @@ public class TestActivity extends AppCompatActivity {
 
     private Handler mHandler;
 
+    @BindViewById(R.id.animation)
+    Button animation;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity);
+
+        BindViewUtils.inject(this);
+
         mTestSV = findViewById(R.id.test_sv);
         testRL = findViewById(R.id.re_rl);
         skillLL = findViewById(R.id.skill_ll);
