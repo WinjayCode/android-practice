@@ -1,4 +1,4 @@
-package com.winjay.baselibrary;
+package com.winjay.ioclibrary;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.winjay.baselibrary.test", appContext.getPackageName());
+        assertEquals("com.winjay.ioclibrary.test", appContext.getPackageName());
     }
 }

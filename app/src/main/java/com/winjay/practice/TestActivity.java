@@ -9,7 +9,6 @@ import android.content.ServiceConnection;
 import android.database.ContentObserver;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -19,11 +18,6 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.text.TextUtils;
-
-import com.winjay.baselibrary.BindViewById;
-import com.winjay.baselibrary.BindViewUtils;
-import com.winjay.practice.utils.LogUtil;
-
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -38,15 +32,15 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.winjay.ioclibrary.BindViewById;
+import com.winjay.ioclibrary.BindViewUtils;
 import com.winjay.practice.hook.HookSetOnClickListenerHelper;
+import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.VolumeUtil;
 import com.winjay.practice.view.RecognitionView;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * 测试练习使用
