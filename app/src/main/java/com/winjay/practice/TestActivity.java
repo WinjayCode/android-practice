@@ -32,8 +32,10 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.winjay.ioclibrary.BindViewById;
+import com.winjay.ioclibrary.BindView;
 import com.winjay.ioclibrary.BindViewUtils;
+import com.winjay.ioclibrary.CheckNet;
+import com.winjay.ioclibrary.OnClick;
 import com.winjay.practice.hook.HookSetOnClickListenerHelper;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.VolumeUtil;
@@ -72,7 +74,7 @@ public class TestActivity extends AppCompatActivity {
 
     private Handler mHandler;
 
-    @BindViewById(R.id.animation)
+    @BindView(R.id.animation)
     Button animation;
 
     @Override
@@ -80,7 +82,7 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity);
 
-        BindViewUtils.inject(this);
+        BindViewUtils.bind(this);
 
         mTestSV = findViewById(R.id.test_sv);
         testRL = findViewById(R.id.re_rl);
@@ -167,6 +169,12 @@ public class TestActivity extends AppCompatActivity {
         mHandler = new Handler(Looper.myLooper());
         mHandler.post(myRunnable);
         LogUtil.d(TAG, "after post!");
+    }
+
+    @OnClick(R.id.animation)
+    @CheckNet
+    private void OnClick(View view) {
+
     }
 
     /**
