@@ -1,6 +1,7 @@
 package com.winjay.practice.view;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -18,19 +19,26 @@ public class MyView extends View {
     private static final String TAG = MyView.class.getSimpleName();
 
     public MyView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public MyView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public MyView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init() {
+        // 布局中android:visibility="gone"的时候，还是会初始化对象，但是不会走绘制流程onMeasure、onLayout、onDraw
+        LogUtil.d(TAG, "init()");
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        LogUtil.d(TAG, "onMeasure()");
         int measuredWidth = measureWidth(widthMeasureSpec);
         int measuredHeight = measureHeight(heightMeasureSpec);
         LogUtil.d(TAG, "measuredWidth=" + measuredWidth);
@@ -68,5 +76,17 @@ public class MyView extends View {
             }
         }
         return result;
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        LogUtil.d(TAG, "onLayout()");
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        LogUtil.d(TAG, "onDraw()");
     }
 }

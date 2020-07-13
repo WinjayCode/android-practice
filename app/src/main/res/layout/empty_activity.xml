@@ -4,14 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <com.winjay.practice.view.MyVerticalTextView
         android:id="@+id/aaa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/biometricprompt_color_FF5555"
-        android:ems="1"
-        android:lineSpacingExtra="8dp"
-        android:text="今天天气怎么样"
         android:textColor="@color/black_color"
         android:textSize="25dp"
         app:layout_constraintBottom_toBottomOf="parent"

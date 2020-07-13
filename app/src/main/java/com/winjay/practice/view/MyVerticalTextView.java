@@ -5,11 +5,11 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.winjay.practice.R;
+import com.winjay.practice.utils.LogUtil;
 
 /**
  * 唐诗考评竖向文字view
@@ -19,7 +19,6 @@ import com.winjay.practice.R;
  */
 public class MyVerticalTextView extends AppCompatTextView {
     private static String TAG = MyVerticalTextView.class.getSimpleName();
-    private Context mContext;
     /**
      * 每列最多显示文字个数
      */
@@ -47,40 +46,39 @@ public class MyVerticalTextView extends AppCompatTextView {
 
     public MyVerticalTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mContext = context;
         TypedArray mTypedArray = context.obtainStyledAttributes(attrs, R.styleable.VerticalTextView);
         mLineSpacingExtra = mTypedArray.getDimension(R.styleable.VerticalTextView_lineSpacingExtra, 0);
         mCharSpacingExtra = mTypedArray.getDimension(R.styleable.VerticalTextView_charSpacingExtra, 0);
         mTypedArray.recycle();
     }
 
-    public MyVerticalTextView setLineMaxCharNum(int num) {
-        Log.d(TAG, "setLineMaxCharNum()_num=" + num);
+    public void setLineMaxCharNum(int num) {
+        LogUtil.d(TAG, "setLineMaxCharNum()_num=" + num);
         mLineMaxCharNum = num;
-        return this;
     }
 
-    public MyVerticalTextView setMaxLine(int num) {
-        Log.d(TAG, "setMaxLine()_num=" + num);
+    public void setMaxLine(int num) {
+        LogUtil.d(TAG, "setMaxLine()_num=" + num);
         mMaxLine = num;
-        return this;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = (int) (getTextSize() * mMaxLine + mLineSpacingExtra);
-        int height = measureHeight();
-        setMeasuredDimension(width, height);
+        setMeasuredDimension(measureWidth(), measureHeight());
+    }
+
+    private int measureWidth() {
+        return (int) (getTextSize() * mMaxLine + mLineSpacingExtra);
     }
 
     private int measureHeight() {
-        return (int) (getTextSize() * mLineMaxCharNum + (mLineMaxCharNum - 1) * mCharSpacingExtra);
+        return (int) ((Math.abs(getPaint().getFontMetricsInt().top) + getPaint().getFontMetricsInt().bottom) * mLineMaxCharNum + (mLineMaxCharNum - 1) * mCharSpacingExtra);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         TextPaint textPaint = getTextPaint();
-        Log.d(TAG, "text=" + getText());
+//        TLog.d(TAG, "text=" + getText());
         int textStrLength = getText().length();
         String content = getText().toString();
         if (textStrLength == 0) {
@@ -88,11 +86,11 @@ public class MyVerticalTextView extends AppCompatTextView {
         }
         // 单列
         if (mMaxLine == 1) {
-            float currentLineOffsetY = getTextSize();
+            float currentLineOffsetY = Math.abs(getPaint().getFontMetricsInt().top);
             for (int i = 0; i < textStrLength; i++) {
                 String char_i = String.valueOf(content.charAt(i));
                 canvas.drawText(char_i, 0, currentLineOffsetY, textPaint);
-                currentLineOffsetY += getTextSize() + mCharSpacingExtra;
+                currentLineOffsetY += getPaint().getFontMetricsInt().bottom + mCharSpacingExtra + Math.abs(getPaint().getFontMetricsInt().top);
             }
         }
         // 多列
@@ -104,7 +102,7 @@ public class MyVerticalTextView extends AppCompatTextView {
             }
 
             float currentLineOffsetX = getTextSize() + mLineSpacingExtra;
-            float currentLineOffsetY = getTextSize();
+            float currentLineOffsetY = Math.abs(getPaint().getFontMetricsInt().top);
 
             for (int j = 0; j < textStrLength; j++) {
                 String char_j = String.valueOf(content.charAt(j));
@@ -113,11 +111,11 @@ public class MyVerticalTextView extends AppCompatTextView {
 
                 if (isCurrentLineFinish) {
                     currentLineOffsetX = 0;
-                    currentLineOffsetY = getTextSize();
+                    currentLineOffsetY = Math.abs(getPaint().getFontMetricsInt().top);
                 }
 
                 canvas.drawText(char_j, currentLineOffsetX, currentLineOffsetY, textPaint);
-                currentLineOffsetY += getTextSize() + mCharSpacingExtra;
+                currentLineOffsetY += getPaint().getFontMetricsInt().bottom + mCharSpacingExtra + Math.abs(getPaint().getFontMetricsInt().top);
             }
         }
     }
@@ -132,5 +130,11 @@ public class MyVerticalTextView extends AppCompatTextView {
         TextPaint textPaint = getPaint();
         textPaint.setColor(getCurrentTextColor());
         return textPaint;
+    }
+
+    public void setText(String text) {
+        super.setText(text);
+        requestLayout();
+        invalidate();
     }
 }

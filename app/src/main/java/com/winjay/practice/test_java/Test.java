@@ -3,6 +3,9 @@ package com.winjay.practice.test_java;
 import com.winjay.practice.utils.LogUtil;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Test {
 
@@ -55,10 +58,18 @@ public class Test {
         ////////////////////
 
         ////////////////////
-        for (int i = 0; i < 14; i++) {
-            boolean isCurrentLineFinish = (i % 7 == 0);
-            System.out.println(isCurrentLineFinish);
-        }
+        // 取余
+//        for (int i = 0; i < 14; i++) {
+//            boolean isCurrentLineFinish = (i % 7 == 0);
+//            System.out.println(isCurrentLineFinish);
+//        }
+        ////////////////////
+
+        ////////////////////
+//        ArrayList<String> listA = new ArrayList<>(Arrays.asList("1", "2"));
+//        String[] listB = new String[]{"3", "4"};
+//        listA.addAll(Arrays.asList(listB));
+//        System.out.println(listA.toString());
         ////////////////////
     }
 
