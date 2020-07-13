@@ -1,2 +1,1 @@
-include ':ioclibrary'
-include ':app', ':biometricprompt', ':virus_broadcast'
+include ':app', ':biometricprompt', ':virus_broadcast', ':ioclibrary'
