@@ -4,6 +4,8 @@ package com.winjay.practice.utils;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.winjay.practice.BuildConfig;
+
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -15,12 +17,12 @@ import java.util.regex.Pattern;
  */
 public class LogUtil {
     private static String LOG_PREFIX = "Winjay-";
-    //    private static final boolean DEBUG = Log.isLoggable(TAG, Log.VERBOSE) || "debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE);
+    private static boolean DEBUG = Log.isLoggable(LOG_PREFIX, Log.VERBOSE) || "debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE);
+
     /**
      * 设置日志模式 true:可打印所有级别日志，false:不会打印v、d级别日志
      */
-    private static boolean DEBUG = false;
-
+//    private static boolean DEBUG = false;
     public static void setDebugSwitch(boolean debugSwitch) {
         DEBUG = debugSwitch;
     }

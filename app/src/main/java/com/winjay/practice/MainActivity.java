@@ -17,6 +17,7 @@ import com.winjay.practice.content_provider.ProviderActivity;
 import com.winjay.practice.design_mode.DesignModeActivity;
 import com.winjay.practice.directory_structure.DirectoryStructureActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
+import com.winjay.practice.ioc.IOCActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
 import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.so.SOActivity;
@@ -220,6 +221,16 @@ public class MainActivity extends BaseActivity {
      */
     public void viewPager(View view) {
         Intent intent = new Intent(this, ViewPagerActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * IOC-Test
+     *
+     * @param view
+     */
+    public void iocTest(View view) {
+        Intent intent = new Intent(this, IOCActivity.class);
         startActivity(intent);
     }
 

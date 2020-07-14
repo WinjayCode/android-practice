@@ -138,6 +138,8 @@
         <activity android:name=".surfaceview_animation.SurfaceViewAnimationActivity" />
 
         <activity android:name=".viewpager_fragment.ViewPagerActivity" />
+
+        <activity android:name=".ioc.IOCActivity" />
     </application>
 
 </manifest>

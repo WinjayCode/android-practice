@@ -81,30 +81,38 @@ public class BindViewUtils {
 
                     // 扩展功能：网络检测
                     boolean isCheckNet = method.getAnnotation(CheckNet.class) != null;
+                    // 扩展功能：防暴力点击
+                    NoDoubleClick noDoubleClick = method.getAnnotation(NoDoubleClick.class);
+                    int delayTime = 0;
+                    if (noDoubleClick != null) {
+                        delayTime = noDoubleClick.value();
+                    }
+
                     if (view != null) {
-                        view.setOnClickListener(new DeclaredOnClickListener(method, object, isCheckNet));
+                        view.setOnClickListener(new DeclaredOnClickListener(method, object, isCheckNet, delayTime));
                     }
                 }
             }
         }
     }
 
-    private static class DeclaredOnClickListener implements View.OnClickListener {
+    private static class DeclaredOnClickListener extends NoDoubleClickListener {
         private Object mObject;
         private Method mMethod;
         private boolean mIsCheckNet;
 
-        public DeclaredOnClickListener(Method method, Object object, boolean isCheckNet) {
+        public DeclaredOnClickListener(Method method, Object object, boolean isCheckNet, long delayTime) {
+            super(delayTime);
             this.mMethod = method;
             this.mObject = object;
             this.mIsCheckNet = isCheckNet;
         }
 
         @Override
-        public void onClick(View v) {
+        protected void onNoDoubleClick(View v) {
             if (mIsCheckNet) {
                 if (!networkAvailable(v.getContext())) {
-                    // 提示语需要可配置
+                    // TODO 提示语需要可配置
                     Toast.makeText(v.getContext(), "网络连接失败，请检查网络！", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -125,6 +133,12 @@ public class BindViewUtils {
         }
     }
 
+    /**
+     * 网络检测
+     *
+     * @param context
+     * @return
+     */
     private static boolean networkAvailable(Context context) {
         try {
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
