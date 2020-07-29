@@ -44,19 +44,32 @@ ext {
             espresso_core       : 'androidx.test.espresso:espresso-core:3.1.0',
             cardview            : 'androidx.cardview:cardview:1.0.0',
 
-            okhttp              : 'com.squareup.okhttp3:okhttp:3.10.0',
-            mockwebserver       : 'com.squareup.okhttp3:mockwebserver:3.10.0',
+            // kotlin
             kotlin_stdlib_jdk7  : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
-            // butterknife
-            butterknife         : 'com.jakewharton:butterknife:10.1.0',
-            butterknife_compiler: 'com.jakewharton:butterknife-compiler:10.1.0',
+
+            // butterknife（已停止更新）
+            butterknife         : 'com.jakewharton:butterknife:10.2.1',
+            butterknife_compiler: 'com.jakewharton:butterknife-compiler:10.2.1',
+
             // multidex
             multidex            : 'com.android.support:multidex:1.0.3',
+
             // permission
             permission          : 'pub.devrel:easypermissions:3.0.0',
+
             // fastjson
-            fastjson            : 'com.alibaba:fastjson:1.2.31',
+            fastjson            : 'com.alibaba:fastjson:1.2.72',
+
             // viewpager2
-            viewpager2          : "androidx.viewpager2:viewpager2:1.0.0"
+            viewpager2          : "androidx.viewpager2:viewpager2:1.0.0",
+
+            // okhttp
+            okhttp              : 'com.squareup.okhttp3:okhttp:3.10.0',
+            mockwebserver       : 'com.squareup.okhttp3:mockwebserver:3.10.0',
+            logging_interceptor : "com.squareup.okhttp3:logging-interceptor:3.3.1",
+
+            // retrofit
+            retrofit            : "com.squareup.retrofit2:retrofit:2.1.0",
+            converter_gson      : "com.squareup.retrofit2:converter-gson:2.1.0"
     ]
 }

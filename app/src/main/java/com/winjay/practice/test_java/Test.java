@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class Test {
 
@@ -71,6 +72,9 @@ public class Test {
 //        listA.addAll(Arrays.asList(listB));
 //        System.out.println(listA.toString());
         ////////////////////
+
+        System.out.println(UUID.randomUUID().toString());
+        System.out.println(UUID.randomUUID().toString());
     }
 
     static class B extends A {

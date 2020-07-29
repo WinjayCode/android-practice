@@ -59,7 +59,7 @@
 
         <activity android:name=".TestActivity" />
 
-        <activity android:name=".constrain_layout.ConstrainLayoutActivity" />
+        <activity android:name=".constraint_layout.ConstraintLayoutActivity" />
 
         <activity android:name=".location.LocationActivity" />
 

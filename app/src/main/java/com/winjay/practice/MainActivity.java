@@ -1,18 +1,15 @@
 package com.winjay.practice;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.winjay.practice.app_compat_text.AppCompatTextActivity;
 import com.winjay.practice.audio.AudioRecordActivity;
 import com.winjay.practice.cardview.CardViewActivity;
 import com.winjay.practice.common.BaseActivity;
-import com.winjay.practice.constrain_layout.ConstrainLayoutActivity;
+import com.winjay.practice.constraint_layout.ConstraintLayoutActivity;
 import com.winjay.practice.content_provider.ProviderActivity;
 import com.winjay.practice.design_mode.DesignModeActivity;
 import com.winjay.practice.directory_structure.DirectoryStructureActivity;
@@ -111,7 +108,7 @@ public class MainActivity extends BaseActivity {
      * @param view
      */
     public void constrainLayout(View view) {
-        Intent intent = new Intent(this, ConstrainLayoutActivity.class);
+        Intent intent = new Intent(this, ConstraintLayoutActivity.class);
         startActivity(intent);
     }
 

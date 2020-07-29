@@ -88,23 +88,53 @@ dependencies {
     testImplementation rootDependencies.junit
     androidTestImplementation rootDependencies.runner
     androidTestImplementation rootDependencies.espresso_core
-
-    implementation rootDependencies.okhttp
-    implementation rootDependencies.mockwebserver
-    implementation rootDependencies.kotlin_stdlib_jdk7
     implementation rootDependencies.cardview
+
+    // kotlin
+    implementation rootDependencies.kotlin_stdlib_jdk7
+
+    // butterknife
     implementation rootDependencies.butterknife
     annotationProcessor rootDependencies.butterknife_compiler
+
     // 指纹识别
     api project(':biometricprompt')
+
     // 申请权限
     implementation rootDependencies.permission
+
     // fastjson
     api rootDependencies.fastjson
 
     implementation project(':ioclibrary')
+
+    // okhttp
+    implementation rootDependencies.okhttp
+    implementation rootDependencies.mockwebserver
+    implementation rootDependencies.logging_interceptor
+
+    // retrofit
+    implementation rootDependencies.retrofit
+    implementation rootDependencies.converter_gson
 }
 
 repositories {
     mavenCentral()
 }
+
+
+//project.afterEvaluate {
+//    Task assembleReleaseTask = project.tasks.findByPath("assembleRelease")
+//    if (assembleReleaseTask != null) {
+//        assembleReleaseTask.doLast {
+//            println("hahahah")
+////            project.rootProject.findProject("kui_pad").tasks.findByPath("assembleDebug").execute()
+//
+//            project.rootProject.findProject("kui_pad").exec {
+////                commandLine 'gradle', 'assembleDebug'
+//                executable = 'gradle'
+//                args += 'assembleDebug'
+//            }
+//        }
+//    }
+//}

@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -31,6 +32,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.winjay.ioclibrary.BindView;
 import com.winjay.ioclibrary.BindViewUtils;
@@ -38,6 +40,7 @@ import com.winjay.ioclibrary.CheckNet;
 import com.winjay.ioclibrary.OnClick;
 import com.winjay.practice.hook.HookSetOnClickListenerHelper;
 import com.winjay.practice.utils.LogUtil;
+import com.winjay.practice.utils.SoundPoolUtil;
 import com.winjay.practice.utils.VolumeUtil;
 import com.winjay.practice.view.RecognitionView;
 
@@ -77,6 +80,9 @@ public class TestActivity extends AppCompatActivity {
     @BindView(R.id.animation)
     Button animation;
 
+    @BindView(R.id.root_rl)
+    ConstraintLayout root_rl;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,9 +100,9 @@ public class TestActivity extends AppCompatActivity {
             Toast.makeText(TestActivity.this, "测试点击", Toast.LENGTH_SHORT).show();
             LogUtil.d("HookSetOnClickListener", "222");
 
-            HashMap<String, Object> map = new HashMap<>(1);
-            map.put("type", "本地视频");
-            openPage("com.yhkmedia.yhk", "com.yhkmedia.yhk.activity.VideoPlayActivity", map);
+//            HashMap<String, Object> map = new HashMap<>(1);
+//            map.put("type", "本地视频");
+//            openPage("com.yhkmedia.yhk", "com.yhkmedia.yhk.activity.VideoPlayActivity", map);
         });
         // Hook
         HookSetOnClickListenerHelper.hook(this, testBtn);
@@ -129,14 +135,14 @@ public class TestActivity extends AppCompatActivity {
 //                mBrightnessObserver);
 //        setActivityBrightness(1.0f);
 
-        mTestSV.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                LogUtil.d(TAG, "222");
-                Toast.makeText(TestActivity.this, "3s后", Toast.LENGTH_SHORT).show();
-            }
-        }, 3000);
-        LogUtil.d(TAG, "111");
+//        mTestSV.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                LogUtil.d(TAG, "222");
+//                Toast.makeText(TestActivity.this, "3s后", Toast.LENGTH_SHORT).show();
+//            }
+//        }, 3000);
+//        LogUtil.d(TAG, "111");
 
         // 播放本地歌曲
 //        mMediaPlayer = new MediaPlayer();
@@ -160,15 +166,17 @@ public class TestActivity extends AppCompatActivity {
 
 
 
-        Intent intent = new Intent();
-        intent.setAction("aispeech.intent.action.WAKEUP_SERVICE");
-        intent.setComponent(new ComponentName("com.aispeech.kui","com.aispeech.kui.service.WakeupService"));
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+//        Intent intent = new Intent();
+//        intent.setAction("aispeech.intent.action.WAKEUP_SERVICE");
+//        intent.setComponent(new ComponentName("com.aispeech.kui","com.aispeech.kui.service.WakeupService"));
+//        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
 
-        mHandler = new Handler(Looper.myLooper());
-        mHandler.post(myRunnable);
-        LogUtil.d(TAG, "after post!");
+//        mHandler = new Handler(Looper.myLooper());
+//        mHandler.post(myRunnable);
+//        LogUtil.d(TAG, "after post!");
+
+        SoundPoolUtil.getInstance(this).playSoundFromAssets("audio/0.mp3");
     }
 
     @OnClick(R.id.animation)

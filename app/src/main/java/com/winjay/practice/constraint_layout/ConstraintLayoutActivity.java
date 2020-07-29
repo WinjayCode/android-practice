@@ -1,4 +1,4 @@
-package com.winjay.practice.constrain_layout;
+package com.winjay.practice.constraint_layout;
 
 import android.os.Bundle;
 
@@ -13,7 +13,7 @@ import com.winjay.practice.R;
  * @author winjay
  * @date 2019-08-09
  */
-public class ConstrainLayoutActivity extends AppCompatActivity {
+public class ConstraintLayoutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
@@ -23,14 +25,20 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
     @BindView(R.id.fsv)
     FrameSurfaceView mFrameSurfaceView;
 
-//    @BindView(R.id.fsv_2)
-//    FrameSurfaceView mFrameSurfaceView2;
+    @BindView(R.id.fsv_2)
+    FrameSurfaceView mFrameSurfaceView2;
 
     @BindView(R.id.pause)
     Button pauseBtn;
 
     @BindView(R.id.resume)
     Button resumeBtn;
+
+    @BindView(R.id.test)
+    ConstraintLayout testCL;
+
+    @BindView(R.id.root_rl)
+    ConstraintLayout root_rl;
 
     private List<Integer> mBitmapList = Arrays.asList(
             R.raw._8_hanbao00,
@@ -116,15 +124,28 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
 
         mFrameSurfaceView.start();
 
-//        List<FrameSurfaceView.FrameAnimation> frameAnimationList = new ArrayList<>();
-//        FrameSurfaceView.FrameAnimation frameAnimation1 = new FrameSurfaceView.FrameAnimation(AnimationResUtil.getOneStar(), 2);
-//        FrameSurfaceView.FrameAnimation frameAnimation2 = new FrameSurfaceView.FrameAnimation(AnimationResUtil.getTwoStar(), 1);
-//        FrameSurfaceView.FrameAnimation frameAnimation3 = new FrameSurfaceView.FrameAnimation(AnimationResUtil.getThreeStar(), FrameSurfaceView.INFINITE);
-//        frameAnimationList.add(frameAnimation1);
-//        frameAnimationList.add(frameAnimation2);
-//        frameAnimationList.add(frameAnimation3);
-//        mFrameSurfaceView2.playSequentially(frameAnimationList);
-//        mFrameSurfaceView2.start();
+        List<FrameSurfaceView.FrameAnimation> frameAnimationList = new ArrayList<>();
+        FrameSurfaceView.FrameAnimation frameAnimation1 = new FrameSurfaceView.FrameAnimation(AnimationResUtil.getOneStar(), 2);
+        FrameSurfaceView.FrameAnimation frameAnimation2 = new FrameSurfaceView.FrameAnimation(AnimationResUtil.getTwoStar(), 1);
+        FrameSurfaceView.FrameAnimation frameAnimation3 = new FrameSurfaceView.FrameAnimation(AnimationResUtil.getThreeStar(), FrameSurfaceView.INFINITE);
+        frameAnimationList.add(frameAnimation1);
+        frameAnimationList.add(frameAnimation2);
+        frameAnimationList.add(frameAnimation3);
+        mFrameSurfaceView2.playSequentially(frameAnimationList);
+        mFrameSurfaceView2.start();
+
+
+//        testCL.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                ConstraintSet set = new ConstraintSet();
+//                set.clone(root_rl);
+//                set.setMargin(testCL.getId(), ConstraintSet.TOP, 100);
+//                set.applyTo(root_rl);
+//
+//                testCL.setVisibility(View.VISIBLE);
+//            }
+//        }, 5000);
     }
 
     @OnClick(R.id.pause)
@@ -160,6 +181,6 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mFrameSurfaceView.destroy();
-//        mFrameSurfaceView2.destroy();
+        mFrameSurfaceView2.destroy();
     }
 }
