@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.net.Uri;
@@ -107,11 +106,19 @@ public class SoundPoolUtil {
                         // 第五个参数loop为音频重复播放次数，0为值播放一次，-1为无限循环，其他值为播放loop+1次
                         // 第六个参数rate为播放的速率，范围0.5-2.0(0.5为一半速率，1.0为正常速率，2.0为两倍速率)
                         mStreamID = mSoundPool.play(mSoundID, 1, 1, 1, 0, 1);
+                        LogUtil.d(TAG, "onLoadComplete():mStreamID=" + mStreamID + ", mSoundID=" + mSoundID);
                         // load完一个音效，unload它，再load后，soundID会增加，待增到300左右时音效放不出，play返回的streamid为0.只能release掉后再new一个soundpool。
                         if (mStreamID == 0) {
+                            int replaySoundID = mSoundID;
                             release();
                             getInstance(mContext);
-                            return;
+                            mStreamID = mSoundPool.play(replaySoundID, 1, 1, 1, 0, 1);
+                            if (mStreamID == 0) {
+                                if (mOnPlayerStatusListener != null) {
+                                    mOnPlayerStatusListener.onError();
+                                    return;
+                                }
+                            }
                         }
 
                         if (mOnPlayerStatusListener != null) {
@@ -273,6 +280,9 @@ public class SoundPoolUtil {
             try {
                 mediaPlayer.reset();
                 mediaPlayer.setDataSource(path);
+                mediaPlayer.setOnPreparedListener(null);
+                mediaPlayer.setOnCompletionListener(null);
+                mediaPlayer.setOnErrorListener(null);
                 mediaPlayer.prepare();
                 duration = mediaPlayer.getDuration();
             } catch (IOException e) {

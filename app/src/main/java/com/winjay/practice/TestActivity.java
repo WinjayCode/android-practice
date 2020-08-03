@@ -277,7 +277,7 @@ public class TestActivity extends AppCompatActivity {
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
-        unbindService(mConnection);
+//        unbindService(mConnection);
     }
 
     /*
