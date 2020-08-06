@@ -1,4 +1,4 @@
-package com.winjay.practice.java_design_pattern;
+package com.winjay.practice.design_pattern;
 
 /**
  * 策略模式
