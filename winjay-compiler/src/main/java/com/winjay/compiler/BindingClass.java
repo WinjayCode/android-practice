@@ -10,9 +10,10 @@ import com.winjay.annotations.ListenerClass;
 import com.winjay.annotations.ListenerMethod;
 import com.winjay.annotations.OnClick;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
@@ -27,7 +28,7 @@ import javax.lang.model.util.Elements;
 public class BindingClass {
     private Elements mElementUtils;
     private List<Element> viewElementList = new ArrayList<>();
-    private List<Element> onClickElementList = new ArrayList<>();
+    private Map<String, List<Element>> onClickElementMap = new HashMap<>();
 
     public BindingClass(Elements elements) {
         mElementUtils = elements;
@@ -37,8 +38,10 @@ public class BindingClass {
         viewElementList.add(element);
     }
 
-    public void addBindingClick(Element element) {
+    public void addBindingClick(String executableMethodName, Element element) {
+        List<Element> onClickElementList = new ArrayList<>();
         onClickElementList.add(element);
+        onClickElementMap.put(executableMethodName, onClickElementList);
     }
 
     public JavaFile generateJavaFile() {
@@ -84,65 +87,43 @@ public class BindingClass {
 
             // target.appCompatTextView = null;
             unbindMethodBuilder.addStatement("target.$L = null", filedName);
+            unbindMethodBuilder.addCode("\n");
         }
 
         // setOnClickListener
-        if (!onClickElementList.isEmpty()) {
+        if (!onClickElementMap.isEmpty()) {
             constructorMethodBuilder.addStatement("View view");
         }
-        for (Element onClickElement : onClickElementList) {
-//            private View view7f07006e;
+        for (Map.Entry<String, List<Element>> entry : onClickElementMap.entrySet()) {
+            String executableMethodName = entry.getKey();
+            List<Element> onClickElementList = entry.getValue();
+            for (Element onClickElement : onClickElementList) {
+                OnClick onClick = onClickElement.getAnnotation(OnClick.class);
+                int[] resIdArr = onClick.value();
+                ListenerClass mListenerClass = onClick.annotationType().getAnnotation(ListenerClass.class);
+                ListenerMethod method = mListenerClass.method()[0];
+                for (int resId : resIdArr) {
+                    String fieldName = "view" + resId;
+                    String bindName = "view";
+                    TypeSpec.Builder callback = TypeSpec.anonymousClassBuilder("")
+                            .superclass(ClassName.bestGuess(mListenerClass.type()))
+                            .addMethod(MethodSpec.methodBuilder(method.name())
+                                    .addAnnotation(Override.class)
+                                    .addModifiers(Modifier.PUBLIC)
+                                    .returns(TypeName.VOID)
+                                    .addParameter(ClassNameUtil.VIEW, bindName)
+                                    .addStatement("target.$L($L)", executableMethodName, bindName)
+                                    .build());
+                    classBuilder.addField(ClassNameUtil.VIEW, fieldName, Modifier.PRIVATE);
+                    constructorMethodBuilder.addStatement("$N = $T.findViewById(target, $L)", bindName, ClassNameUtil.UTILS, resId);
+                    constructorMethodBuilder.addStatement("$L = $N", fieldName, bindName);
+                    constructorMethodBuilder.addStatement("$N.$L($L)", bindName, mListenerClass.setter(), callback.build());
 
-//            View view;
-
-//            view = Utils.findViewById(target, xxx);
-//            view7f07006e = view;
-//            view.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    target.onClick(v);
-//                }
-//            });
-
-
-            OnClick onClick = onClickElement.getAnnotation(OnClick.class);
-            int[] resIdArr = onClick.value();
-            ListenerClass mListenerClass = onClick.annotationType().getAnnotation(ListenerClass.class);
-            ListenerMethod method = mListenerClass.method()[0];
-
-//            try {
-//                List<ListenerMethod> methods = new ArrayList<>();
-//                Class<? extends Enum<?>> callbacks = mListenerClass.callbacks();
-//                for (Enum<?> callbackMethod : callbacks.getEnumConstants()) {
-//                    Field callbackField = callbacks.getField(callbackMethod.name());
-//                    ListenerMethod method = callbackField.getAnnotation(ListenerMethod.class);
-//                    if (method == null) {
-//                        throw new IllegalStateException(String.format("@%s's %s.%s missing @%s annotation.",
-//                                callbacks.getEnclosingClass().getSimpleName(), callbacks.getSimpleName(),
-//                                callbackMethod.name(), ListenerMethod.class.getSimpleName()));
-//                    }
-//                    methods.add(method);
-//                }
-//            } catch (NoSuchFieldException e) {
-//                e.printStackTrace();
-//            }
-
-            for (int resId : resIdArr) {
-                String fieldName = "view" + resId;
-                String bindName = "view";
-                TypeSpec.Builder callback = TypeSpec.anonymousClassBuilder("")
-                        .superclass(ClassName.bestGuess(mListenerClass.type()))
-                        .addMethod(MethodSpec.methodBuilder(method.name())
-                                .addAnnotation(Override.class)
-                                .addModifiers(Modifier.PUBLIC)
-                                .returns(TypeName.VOID)
-                                .addParameter(ClassNameUtil.VIEW, bindName)
-                                .addStatement("target.$L($L)", "onClick", bindName)
-                                .build());
-                classBuilder.addField(ClassNameUtil.VIEW, fieldName, Modifier.PRIVATE);
-                constructorMethodBuilder.addStatement("$N = $T.findViewById(target, $L)", bindName, ClassNameUtil.UTILS, resId);
-                constructorMethodBuilder.addStatement("$L = $N", fieldName, bindName);
-                constructorMethodBuilder.addStatement("$N.$L($L)", bindName, mListenerClass.setter(), callback.build());
+                    // unbind
+                    unbindMethodBuilder.addStatement("$N.setOnClickListener(null)", fieldName);
+                    unbindMethodBuilder.addStatement("$N = null", fieldName);
+                    unbindMethodBuilder.addCode("\n");
+                }
             }
         }
 

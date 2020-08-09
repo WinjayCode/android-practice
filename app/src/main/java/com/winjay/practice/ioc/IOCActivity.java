@@ -44,7 +44,7 @@ public class IOCActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.ioc_tv, R.id.ioc_iv})
-    void onClick(View view) {
+    void hahaha(View view) {
         if (view.getId()  == R.id.ioc_tv) {
             Toast.makeText(this, "文本点击事件", Toast.LENGTH_SHORT).show();
         } else if (view.getId()  == R.id.ioc_iv) {
@@ -53,12 +53,12 @@ public class IOCActivity extends AppCompatActivity {
     }
 
 //    @OnClick(R.id.ioc_tv)
-//    void onClick(View view) {
+//    void haha(View view) {
 //        Toast.makeText(this, "文本点击事件", Toast.LENGTH_SHORT).show();
 //    }
 //
 //    @OnClick(R.id.ioc_iv)
-//    void onClick(View view) {
+//    void hehe(View view) {
 //        Toast.makeText(this, "图片点击事件", Toast.LENGTH_SHORT).show();
 //    }
 
