@@ -47,10 +47,6 @@ ext {
             // kotlin
             kotlin_stdlib_jdk7  : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
 
-            // butterknife（已停止更新）
-            butterknife         : 'com.jakewharton:butterknife:10.2.1',
-            butterknife_compiler: 'com.jakewharton:butterknife-compiler:10.2.1',
-
             // multidex
             multidex            : 'com.android.support:multidex:1.0.3',
 

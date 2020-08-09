@@ -2,17 +2,19 @@ package com.winjay.practice.ioc;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.winjay.ioclibrary.BindView;
-import com.winjay.ioclibrary.BindViewUtils;
-import com.winjay.ioclibrary.CheckNet;
-import com.winjay.ioclibrary.NoDoubleClick;
-import com.winjay.ioclibrary.OnClick;
+import com.winjay.annotations.BindView;
+import com.winjay.annotations.OnClick;
+import com.winjay.bind.BindHelper;
+import com.winjay.bind.Unbinder;
 import com.winjay.practice.R;
+import com.winjay.practice.utils.DebouncingOnClickListener;
 import com.winjay.practice.utils.LogUtil;
 
 /**
@@ -25,19 +27,44 @@ public class IOCActivity extends AppCompatActivity {
     private static final String TAG = IOCActivity.class.getSimpleName();
 
     @BindView(R.id.ioc_tv)
-    TextView ioc_tv;
+    TextView mIOCTV;
+
+    @BindView(R.id.ioc_iv)
+    ImageView mIOCIV;
+
+    private Unbinder mUnbinder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ioc_activity);
-        BindViewUtils.bind(this);
+        mUnbinder = BindHelper.bind(this);
+
+        mIOCTV.setText("注解测试");
     }
 
-    @OnClick(R.id.ioc_tv)
-    @NoDoubleClick(1000)
-    @CheckNet
-    private void OnClick(View view) {
-        LogUtil.d(TAG, "111");
+    @OnClick({R.id.ioc_tv, R.id.ioc_iv})
+    void onClick(View view) {
+        if (view.getId()  == R.id.ioc_tv) {
+            Toast.makeText(this, "文本点击事件", Toast.LENGTH_SHORT).show();
+        } else if (view.getId()  == R.id.ioc_iv) {
+            Toast.makeText(this, "图片点击事件", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+//    @OnClick(R.id.ioc_tv)
+//    void onClick(View view) {
+//        Toast.makeText(this, "文本点击事件", Toast.LENGTH_SHORT).show();
+//    }
+//
+//    @OnClick(R.id.ioc_iv)
+//    void onClick(View view) {
+//        Toast.makeText(this, "图片点击事件", Toast.LENGTH_SHORT).show();
+//    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mUnbinder.unbind();
     }
 }

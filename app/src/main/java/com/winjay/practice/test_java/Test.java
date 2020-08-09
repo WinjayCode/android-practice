@@ -73,8 +73,13 @@ public class Test {
 //        System.out.println(listA.toString());
         ////////////////////
 
-        System.out.println(UUID.randomUUID().toString());
-        System.out.println(UUID.randomUUID().toString());
+//        System.out.println(UUID.randomUUID().toString());
+//        System.out.println(UUID.randomUUID().toString());
+
+//        int[] a = new int[]{110, 111};
+//        for (int i : a) {
+//            System.out.println(i);
+//        }
     }
 
     static class B extends A {

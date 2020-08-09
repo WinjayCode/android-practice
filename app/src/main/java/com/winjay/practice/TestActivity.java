@@ -12,7 +12,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
@@ -24,7 +23,6 @@ import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -34,10 +32,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.winjay.ioclibrary.BindView;
-import com.winjay.ioclibrary.BindViewUtils;
-import com.winjay.ioclibrary.CheckNet;
-import com.winjay.ioclibrary.OnClick;
 import com.winjay.practice.hook.HookSetOnClickListenerHelper;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.SoundPoolUtil;
@@ -46,6 +40,8 @@ import com.winjay.practice.view.RecognitionView;
 
 import java.io.File;
 import java.util.HashMap;
+
+import butterknife.BindView;
 
 /**
  * 测试练习使用
@@ -87,8 +83,6 @@ public class TestActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity);
-
-        BindViewUtils.bind(this);
 
         mTestSV = findViewById(R.id.test_sv);
         testRL = findViewById(R.id.re_rl);
@@ -177,12 +171,6 @@ public class TestActivity extends AppCompatActivity {
 //        LogUtil.d(TAG, "after post!");
 
         SoundPoolUtil.getInstance(this).playSoundFromAssets("audio/0.mp3");
-    }
-
-    @OnClick(R.id.animation)
-    @CheckNet
-    private void OnClick(View view) {
-
     }
 
     /**

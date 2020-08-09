@@ -140,6 +140,7 @@
         <activity android:name=".viewpager_fragment.ViewPagerActivity" />
 
         <activity android:name=".ioc.IOCActivity" />
+        <activity android:name=".ioc.IOCActivity2" />
     </application>
 
 </manifest>

@@ -1,6 +1,8 @@
 package com.winjay.practice.app_compat_text;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -10,6 +12,7 @@ import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * AppCompatTextView使用
@@ -41,8 +44,17 @@ public class AppCompatTextActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         test();
+    }
+
+    @OnClick(R.id.hehe)
+    void hehe(View view) {
+        Toast.makeText(this, "hehe", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.haha)
+    void haha(View view) {
+        Toast.makeText(this, "haha", Toast.LENGTH_SHORT).show();
     }
 
     private void test() {

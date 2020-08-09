@@ -1,0 +1,12 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':winjay-annotations')
+
+    compileOnly 'com.google.auto.service:auto-service:1.0-rc4'
+    compileOnly 'com.squareup:javapoet:1.10.0'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8

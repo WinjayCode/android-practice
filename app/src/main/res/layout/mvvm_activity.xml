@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
+    <!--<data>
 
         <import type="com.winjay.practice.design_mode.mvvm.MVVMBean" />
 
@@ -29,10 +29,10 @@
             android:id="@+id/mvvm_data_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{bean.data, default=这是MVP模式的默认数据}"
+            android:text="@{bean.data, default=这是MVVM模式的默认数据}"
             android:textColor="@color/black_color"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mvvm_btn" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
 </layout>

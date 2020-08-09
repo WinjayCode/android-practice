@@ -46,7 +46,7 @@ android {
     }
 
     dataBinding {
-        enabled = true
+        enabled = false
     }
 
     // 差异化、多渠道打包
@@ -93,10 +93,6 @@ dependencies {
     // kotlin
     implementation rootDependencies.kotlin_stdlib_jdk7
 
-    // butterknife
-    implementation rootDependencies.butterknife
-    annotationProcessor rootDependencies.butterknife_compiler
-
     // 指纹识别
     api project(':biometricprompt')
 
@@ -106,8 +102,6 @@ dependencies {
     // fastjson
     api rootDependencies.fastjson
 
-    implementation project(':ioclibrary')
-
     // okhttp
     implementation rootDependencies.okhttp
     implementation rootDependencies.mockwebserver
@@ -116,6 +110,17 @@ dependencies {
     // retrofit
     implementation rootDependencies.retrofit
     implementation rootDependencies.converter_gson
+
+    //    implementation project(':ioclibrary')
+
+    // butterknife
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+
+    // winjay-bind
+    implementation project(':winjay-bind')
+    implementation project(':winjay-annotations')
+    annotationProcessor project(':winjay-compiler')
 }
 
 repositories {
