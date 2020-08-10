@@ -84,14 +84,6 @@ public class EmptyActivity extends AppCompatActivity {
                 }
             }
         }, 2000);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG, "11111111111111111");
-                startActivity(new Intent(EmptyActivity.this, MainActivity.class));
-            }
-        }, 10000);
     }
 
     private TextView generateHistoricalEventsTextView(String text) {

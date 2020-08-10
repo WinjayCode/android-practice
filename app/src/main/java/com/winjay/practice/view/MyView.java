@@ -3,6 +3,7 @@ package com.winjay.practice.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -88,5 +89,26 @@ public class MyView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         LogUtil.d(TAG, "onDraw()");
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        // 从XML加载组件后回调
+        LogUtil.d(TAG, "onFinishInflate()");
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        // 组件大小改变时回调
+        LogUtil.d(TAG, "onSizeChanged():w=" + w + ", h=" + h + ", oldw=" + oldw + ", oldh=" + oldh);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // 监听到触摸事件时回调
+        LogUtil.d(TAG, "onTouchEvent:event=" + event.getAction());
+        return super.onTouchEvent(event);
     }
 }
