@@ -5,13 +5,7 @@ import android.os.Build;
 
 import java.lang.reflect.Field;
 
-/**
- * Created by zengp on 2017/12/2.
- */
-
 public class Utils {
-
-
     /**
      * dp2px
      */

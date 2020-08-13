@@ -53,10 +53,12 @@ public class MyView extends View {
         int specMode = MeasureSpec.getMode(measureSpec);
         // 获得大小
         int specSize = MeasureSpec.getSize(measureSpec);
+        // 具体数值或者match_parent
         if (specMode == MeasureSpec.EXACTLY) {
             result = specSize;
         } else {
             result = 200;
+            // wrap_parent
             if (specMode == MeasureSpec.AT_MOST) {
                 result = Math.min(result, specSize);
             }
