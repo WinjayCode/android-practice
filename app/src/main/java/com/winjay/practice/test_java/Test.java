@@ -87,8 +87,8 @@ public class Test {
 
         @Override
         protected void a() {
-            super.a();
-//            LogUtil.d(TAG, "222");
+//            super.a();
+            System.out.println("222");
             System.out.println(TAG);
         }
     }
@@ -97,7 +97,7 @@ public class Test {
         private final String TAG = getClass().getSimpleName();
 
         protected void a() {
-//            LogUtil.d(TAG, "111");
+            System.out.println("111");
             System.out.println(TAG);
         }
     }

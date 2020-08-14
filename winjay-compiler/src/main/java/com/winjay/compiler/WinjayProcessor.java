@@ -28,6 +28,11 @@ import javax.tools.Diagnostic;
 import static javax.lang.model.element.ElementKind.METHOD;
 
 /**
+ * 对使用注解的地方，生成模板代码
+ * <p>
+ * TODO 1.非androidx适配 2.library库适配
+ * </p>
+ *
  * @author Winjay
  * @date 2020/7/29
  */

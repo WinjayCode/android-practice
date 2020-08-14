@@ -20,7 +20,10 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -32,6 +35,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.winjay.annotations.BindView;
+import com.winjay.bind.BindHelper;
+import com.winjay.bind.Unbinder;
 import com.winjay.practice.hook.HookSetOnClickListenerHelper;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.SoundPoolUtil;
@@ -40,8 +46,6 @@ import com.winjay.practice.view.RecognitionView;
 
 import java.io.File;
 import java.util.HashMap;
-
-import butterknife.BindView;
 
 /**
  * 测试练习使用
@@ -79,10 +83,13 @@ public class TestActivity extends AppCompatActivity {
     @BindView(R.id.root_rl)
     ConstraintLayout root_rl;
 
+    private Unbinder mUnbinder;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity);
+        mUnbinder = BindHelper.bind(this);
 
         mTestSV = findViewById(R.id.test_sv);
         testRL = findViewById(R.id.re_rl);
@@ -159,7 +166,6 @@ public class TestActivity extends AppCompatActivity {
 //        getFilesAllName("system/media/Music");
 
 
-
 //        Intent intent = new Intent();
 //        intent.setAction("aispeech.intent.action.WAKEUP_SERVICE");
 //        intent.setComponent(new ComponentName("com.aispeech.kui","com.aispeech.kui.service.WakeupService"));
@@ -171,6 +177,12 @@ public class TestActivity extends AppCompatActivity {
 //        LogUtil.d(TAG, "after post!");
 
         SoundPoolUtil.getInstance(this).playSoundFromAssets("audio/0.mp3");
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        LogUtil.d(TAG, "onUserInteraction()");
     }
 
     /**
@@ -266,6 +278,10 @@ public class TestActivity extends AppCompatActivity {
             mMediaPlayer = null;
         }
 //        unbindService(mConnection);
+
+        if (mUnbinder != null) {
+            mUnbinder.unbind();
+        }
     }
 
     /*
@@ -369,30 +385,42 @@ public class TestActivity extends AppCompatActivity {
     }
 
     public void animation(View view) {
-        objectAnimator = ObjectAnimator.ofFloat(testBtn, "translationX", 0, -100, 0);
-        objectAnimator.setDuration(1000);
-        objectAnimator.setInterpolator(new LinearInterpolator());
-        objectAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+        LogUtil.d(TAG, "animation()");
+        // 补间动画
+        // 只是改变了view的显示位置，但是没有改变view的属性，点击view在屏幕上的显示位置，是不会有事件响应的
+        TranslateAnimation translateAnimation = new TranslateAnimation(0, -200, 0, 0);
+        translateAnimation.setDuration(1000);
+        translateAnimation.setFillAfter(true);
+        translateAnimation.setInterpolator(new LinearInterpolator());
+        testBtn.startAnimation(translateAnimation);
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                objectAnimator.setCurrentFraction(0);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        objectAnimator.start();
+        // 属性动画
+        // 会改变view的真实物理位置，点击view以前的位置是不会响应点击事件的
+//        objectAnimator = ObjectAnimator.ofFloat(testBtn, "translationX", 0, -100, 0);
+//        objectAnimator.setDuration(1000);
+//        objectAnimator.setInterpolator(new LinearInterpolator());
+//        objectAnimator.addListener(new Animator.AnimatorListener() {
+//            @Override
+//            public void onAnimationStart(Animator animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                // 使动画回到最初状态
+//                objectAnimator.setCurrentFraction(0);
+//            }
+//
+//            @Override
+//            public void onAnimationCancel(Animator animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animator animation) {
+//
+//            }
+//        });
+//        objectAnimator.start();
     }
 }
