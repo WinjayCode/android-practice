@@ -11,6 +11,7 @@ import com.winjay.practice.cardview.CardViewActivity;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.constraint_layout.ConstraintLayoutActivity;
 import com.winjay.practice.content_provider.ProviderActivity;
+import com.winjay.practice.custom_view.CustomViewActivity;
 import com.winjay.practice.design_mode.DesignModeActivity;
 import com.winjay.practice.directory_structure.DirectoryStructureActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
@@ -228,6 +229,11 @@ public class MainActivity extends BaseActivity {
      */
     public void iocTest(View view) {
         Intent intent = new Intent(this, IOCActivity.class);
+        startActivity(intent);
+    }
+
+    public void customView(View view) {
+        Intent intent = new Intent(this, CustomViewActivity.class);
         startActivity(intent);
     }
 

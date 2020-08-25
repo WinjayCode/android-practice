@@ -35,6 +35,7 @@ public class XfermodeView extends View {
     private void init() {
         mPaint = new Paint();
         mPaint.setAlpha(0);
+        // 16种mode
         mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
@@ -43,9 +44,9 @@ public class XfermodeView extends View {
 
         mPath = new Path();
 
-        mBgBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.shadow);
+        mBgBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bird);
 
-        mFgBitmap = Bitmap.createBitmap(mBgBitmap, getWidth(), mBgBitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        mFgBitmap = Bitmap.createBitmap(mBgBitmap.getWidth(), mBgBitmap.getHeight(), Bitmap.Config.ARGB_8888);
 
         mCanvas = new Canvas(mFgBitmap);
         mCanvas.drawColor(Color.GRAY);
