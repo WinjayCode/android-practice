@@ -8,12 +8,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <com.winjay.practice.view.DrawingBoardView
+            android:id="@+id/drawing_board_view"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.winjay.practice.view.SinusoidView
+            android:id="@+id/surface_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/drawing_board_view"/>
+
         <com.winjay.practice.view.XfermodeView
             android:id="@+id/x_fermode_view"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/surface_view" />
 
         <com.winjay.practice.view.ReflectView
             android:id="@+id/reflect_view"
@@ -22,19 +36,26 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/x_fermode_view"/>
 
-        <View
-            android:id="@+id/test_shadow_view"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/shadow"
+        <com.winjay.practice.view.PathEffectView
+            android:id="@+id/path_effect_view"
+            android:layout_width="match_parent"
+            android:layout_height="700dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/reflect_view" />
 
-        <com.winjay.practice.view.DialPlateView
-            android:id="@+id/dial_plate_view"
+        <View
+            android:id="@+id/test_shadow_view"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/shadow"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/path_effect_view" />
+
+        <com.winjay.practice.view.DialPlateView
+            android:id="@+id/dial_plate_view"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/test_shadow_view" />
 
