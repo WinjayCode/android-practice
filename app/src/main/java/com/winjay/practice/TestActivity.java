@@ -176,7 +176,7 @@ public class TestActivity extends AppCompatActivity {
 //        mHandler.post(myRunnable);
 //        LogUtil.d(TAG, "after post!");
 
-        SoundPoolUtil.getInstance(this).playSoundFromAssets("audio/0.mp3");
+//        SoundPoolUtil.getInstance(this).playSoundFromAssets("audio/0.mp3");
     }
 
     @Override

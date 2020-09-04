@@ -117,6 +117,9 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
 
+    // exoplayer
+    implementation 'com.google.android.exoplayer:exoplayer:2.6.0'
+
     // winjay-bind
     implementation project(':winjay-bind')
     implementation project(':winjay-annotations')

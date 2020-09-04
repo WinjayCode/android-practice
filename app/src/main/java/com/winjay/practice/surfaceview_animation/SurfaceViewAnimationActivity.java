@@ -14,6 +14,7 @@ import com.winjay.practice.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -110,6 +111,10 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
 //            R.raw._8_hanbao31
     );
 
+    private List<Integer> mBitmapList3 = Collections.singletonList(
+            R.raw._8_hanbao20
+    );
+
     @Override
     protected int getLayoutId() {
         return R.layout.surfaceview_animation_activity;
@@ -160,12 +165,22 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
         mFrameSurfaceView.resume();
     }
 
+    private boolean mSwitch = false;
+
     @OnClick(R.id.replace)
     void replaceAnim() {
         LogUtil.d(TAG, "replaceAnim()");
-        mFrameSurfaceView.reset();
-        mFrameSurfaceView.setBitmapIds(mBitmapList2);
-        mFrameSurfaceView.start();
+        if (mSwitch) {
+            mSwitch = false;
+            mFrameSurfaceView.reset();
+            mFrameSurfaceView.setBitmapIds(mBitmapList);
+            mFrameSurfaceView.start();
+        } else {
+            mSwitch = true;
+            mFrameSurfaceView.reset();
+            mFrameSurfaceView.setBitmapIds(mBitmapList3);
+            mFrameSurfaceView.start();
+        }
     }
 
     @OnClick(R.id.show_hide)

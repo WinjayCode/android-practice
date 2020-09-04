@@ -142,6 +142,8 @@
         <activity android:name=".ioc.IOCActivity" />
         <activity android:name=".ioc.IOCActivity2" />
 
+        <activity android:name=".exoplayer.ExoPlayerActivity" />
+
         <activity android:name=".custom_view.CustomViewActivity" />
     </application>
 

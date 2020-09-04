@@ -15,6 +15,7 @@ import com.winjay.practice.custom_view.CustomViewActivity;
 import com.winjay.practice.design_mode.DesignModeActivity;
 import com.winjay.practice.directory_structure.DirectoryStructureActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
+import com.winjay.practice.exoplayer.ExoPlayerActivity;
 import com.winjay.practice.ioc.IOCActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
 import com.winjay.practice.location.LocationActivity;
@@ -232,6 +233,21 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    /**
+     * exoplayer
+     *
+     * @param view
+     */
+    public void exoplayer(View view) {
+        Intent intent = new Intent(this, ExoPlayerActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * customView
+     *
+     * @param view
+     */
     public void customView(View view) {
         Intent intent = new Intent(this, CustomViewActivity.class);
         startActivity(intent);

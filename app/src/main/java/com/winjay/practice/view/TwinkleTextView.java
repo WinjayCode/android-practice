@@ -61,7 +61,7 @@ public class TwinkleTextView extends AppCompatTextView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        LogUtil.d(TAG, "onDraw()");
+//        LogUtil.d(TAG, "onDraw()");
         if (mGradientMatrix != null) {
             mTranslate += mViewWidth / 5;
             if (mTranslate > 2 * mViewWidth) {
