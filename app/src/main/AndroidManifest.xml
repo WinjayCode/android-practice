@@ -3,14 +3,20 @@
     package="com.winjay.practice">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" /> <!-- 地理位置相关 -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!--地理位置相关-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" /> <!-- 读取和写入存储权限 -->
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+
+    <!--读取和写入存储权限-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 音频录制权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!--音频录制权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
@@ -31,11 +37,11 @@
                 android:resource="@xml/clock_widget_info" />
         </receiver>
 
-        <!-- configChanges：配置中的属性发生变化时，activity不会重建 -->
-        <!-- launchMode：activity启动模式（standard、singleTop、singleTask、singleInstance） -->
-        <!-- excludeFromRecents：activity不会出现在历史activity列表中 -->
-        <!-- taskAffinity：activity所需要的任务栈的名字（默认和包名一致） -->
-        <!-- process：指定进程名（默认进程名为包名）（adb shell ps、adb shell ps|grep xxx.xxx命令查看进程） -->
+        <!--configChanges：配置中的属性发生变化时，activity不会重建-->
+        <!--launchMode：activity启动模式（standard、singleTop、singleTask、singleInstance）-->
+        <!--excludeFromRecents：activity不会出现在历史activity列表中-->
+        <!--taskAffinity：activity所需要的任务栈的名字（默认和包名一致）-->
+        <!--process：指定进程名（默认进程名为包名）（adb shell ps、adb shell ps|grep xxx.xxx命令查看进程）-->
         <activity
             android:name=".LauncherActivity"
             android:configChanges="orientation|screenSize"
@@ -48,16 +54,31 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--android:clearTaskOnLaunch="true"表示：当返回到这个Task时（如按home，之后再回到到这个Task时），除了root activity其他的activity都会被销毁。-->
+        <!--android:clearTaskOnLaunch=true 只放在一个activity Task 的root activity有效，在其他activity设置就无效。-->
+
+        <!--android:finishOnTaskLaunch="true"表示：当返回到这个Task时，该activity会被销毁，其他的不会被销毁。-->
+        <!--android:finishOnTaskLaunch=true 放 root activity就无效，放在一个 Task 的其他activity就有效。-->
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleInstance"
+            android:clearTaskOnLaunch="true"/>
+
         <activity android:name=".so.SOActivity" />
+
         <activity android:name=".kotlin.KotlinTestActivity" />
+
         <activity android:name=".content_provider.ProviderActivity" />
+
         <activity android:name=".TestActivity" />
+
         <activity android:name=".constraint_layout.ConstraintLayoutActivity" />
-        <activity android:name=".location.LocationActivity" /> <!-- 隐式启动activity，action、category、data必须同时匹配，才能隐式启动（android.intent.category.DEFAULT必须有） -->
+
+        <activity android:name=".location.LocationActivity" />
+
+        <!--隐式启动activity，action、category、data必须同时匹配，才能隐式启动（android.intent.category.DEFAULT必须有）-->
         <activity android:name=".intent_filter.IntentFilterActivity">
             <intent-filter>
                 <action android:name="com.winjay.practice.action_1" />
@@ -70,17 +91,24 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
+
         <activity android:name=".cardview.CardViewActivity" />
+
         <activity android:name=".aidl_test.AIDLActivity" />
+
         <activity
             android:name=".TransparentActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:launchMode="singleInstance"
             android:screenOrientation="landscape"
             android:theme="@style/NoTitleTranslucentTheme" />
+
         <activity android:name=".app_compat_text.AppCompatTextActivity" />
+
         <activity android:name=".download_manager.DownloadManagerActivity" />
+
         <activity android:name=".directory_structure.DirectoryStructureActivity" />
+
         <activity android:name=".design_mode.DesignModeActivity" />
         <activity android:name=".design_mode.mvc.controller.MVCActivity" />
         <activity android:name=".design_mode.mvp.view.MVPActivity" />
@@ -91,6 +119,7 @@
             android:authorities="com.winjay.info" />
 
         <service android:name=".TestService" />
+
         <service
             android:name=".ipc.messenger.MessengerService"
             android:process=":remote" />
@@ -102,7 +131,9 @@
             android:process=":remote" />
 
         <activity android:name=".ipc.aidl.BookManagerActivity" />
+
         <activity android:name=".audio.AudioRecordActivity" />
+
         <activity
             android:name=".EmptyActivity"
             android:configChanges="orientation|screenSize"
@@ -121,7 +152,9 @@
         </service>
 
         <activity android:name=".surfaceview_animation.SurfaceViewAnimationActivity" />
+
         <activity android:name=".viewpager_fragment.ViewPagerActivity" />
+
         <activity android:name=".ioc.IOCActivity" />
         <activity android:name=".ioc.IOCActivity2" />
         <activity android:name=".exoplayer.ExoPlayerActivity" />
@@ -135,6 +168,8 @@
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".system_info.SystemInfoActivity" />
     </application>
 
 </manifest>

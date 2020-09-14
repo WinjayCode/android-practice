@@ -21,6 +21,7 @@ import com.winjay.practice.kotlin.KotlinTestActivity;
 import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.so.SOActivity;
 import com.winjay.practice.surfaceview_animation.SurfaceViewAnimationActivity;
+import com.winjay.practice.system_info.SystemInfoActivity;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.viewpager_fragment.ViewPagerActivity;
 import com.winjay.practice.websocket.WebsocketTest;
@@ -250,6 +251,16 @@ public class MainActivity extends BaseActivity {
      */
     public void customView(View view) {
         Intent intent = new Intent(this, CustomViewActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * SystemInfo
+     *
+     * @param view
+     */
+    public void systemInfo(View view) {
+        Intent intent = new Intent(this, SystemInfoActivity.class);
         startActivity(intent);
     }
 
