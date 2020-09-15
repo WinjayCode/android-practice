@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/all_app_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="All App"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/system_app_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="System App"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/all_app_btn" />
+
+    <Button
+        android:id="@+id/third_app_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Third App"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/system_app_btn" />
+
+    <Button
+        android:id="@+id/sdcard_app_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="SDCard App"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/third_app_btn" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/app_list_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sdcard_app_btn" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

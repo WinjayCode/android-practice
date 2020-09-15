@@ -170,6 +170,7 @@
         </receiver>
 
         <activity android:name=".system_info.SystemInfoActivity" />
+        <activity android:name=".package_manager.PackageManagerActivity" />
     </application>
 
 </manifest>
