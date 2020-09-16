@@ -17,6 +17,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+/**
+ * PackageManager学习
+ *
+ * @author Winjay
+ * @date 2020/9/15
+ */
 public class PackageManagerActivity extends BaseActivity {
     private PackageManager pm;
     private final static int ALL_APP = 1;
@@ -35,6 +41,7 @@ public class PackageManagerActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pm = getPackageManager();
         app_list_rv.setLayoutManager(new LinearLayoutManager(this));
     }
 
@@ -62,18 +69,25 @@ public class PackageManagerActivity extends BaseActivity {
         app_list_rv.setAdapter(adapter);
     }
 
-
+    /**
+     * 获取已安装的app信息
+     *
+     * @param flag
+     * @return
+     */
     private List<PMAppInfo> getAppInfo(int flag) {
-        pm = getPackageManager();
+        // GET_UNINSTALLED_PACKAGES == MATCH_UNINSTALLED_PACKAGES 即使是应用被uninstall了，但只要保留了数据，也可以被搜出来。
         List<ApplicationInfo> listApplications = pm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
         List<PMAppInfo> appInfos = new ArrayList<>();
         switch (flag) {
+            // 所有app
             case ALL_APP:
                 appInfos.clear();
                 for (ApplicationInfo app : listApplications) {
                     appInfos.add(makeAppInfo(app));
                 }
                 break;
+            // 系统app
             case SYSTEM_APP:
                 appInfos.clear();
                 for (ApplicationInfo app : listApplications) {
@@ -82,6 +96,7 @@ public class PackageManagerActivity extends BaseActivity {
                     }
                 }
                 break;
+            // 第三方app
             case THIRD_APP:
                 appInfos.clear();
                 for (ApplicationInfo app : listApplications) {
@@ -92,6 +107,7 @@ public class PackageManagerActivity extends BaseActivity {
                     }
                 }
                 break;
+            // 安装在sdcard app
             case SDCARD_APP:
                 appInfos.clear();
                 for (ApplicationInfo app : listApplications) {
