@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
+import com.winjay.practice.activity_manager.ActivityManagerActivity;
 import com.winjay.practice.app_compat_text.AppCompatTextActivity;
 import com.winjay.practice.audio.AudioRecordActivity;
 import com.winjay.practice.cardview.CardViewActivity;
@@ -272,6 +273,11 @@ public class MainActivity extends BaseActivity {
      */
     public void packageManager(View view) {
         Intent intent = new Intent(this, PackageManagerActivity.class);
+        startActivity(intent);
+    }
+
+    public void activityManager(View view) {
+        Intent intent = new Intent(this, ActivityManagerActivity.class);
         startActivity(intent);
     }
 
