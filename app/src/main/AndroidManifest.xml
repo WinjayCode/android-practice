@@ -172,6 +172,8 @@
         <activity android:name=".system_info.SystemInfoActivity" />
         <activity android:name=".package_manager.PackageManagerActivity" />
         <activity android:name=".activity_manager.ActivityManagerActivity" />
+
+        <activity android:name=".material_design.MaterialDesignActivity" android:theme="@style/MyMaterialDesignTheme" />
     </application>
 
 </manifest>

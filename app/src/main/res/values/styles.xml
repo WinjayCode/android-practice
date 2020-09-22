@@ -18,4 +18,15 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@color/black_color_transparent_50</item>
     </style>
+
+    <!-- inherit from the material theme -->
+    <style name="MyMaterialDesignTheme" parent="android:Theme.Material">
+        <!-- Main theme colors -->
+        <!-- your app branding color for the app bar -->
+        <item name="colorPrimary">#BEBEBE</item>
+        <!-- darker variant for the status bar and contextual app bars -->
+        <item name="colorPrimaryDark">#FF5AEBFF</item>
+        <!-- theme UI controls like checkboxes and text fields -->
+        <item name="android:navigationBarColor">#FFFF4130</item>
+    </style>
 </resources>

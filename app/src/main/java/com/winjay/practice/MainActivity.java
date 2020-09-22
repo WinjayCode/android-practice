@@ -20,6 +20,7 @@ import com.winjay.practice.exoplayer.ExoPlayerActivity;
 import com.winjay.practice.ioc.IOCActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
 import com.winjay.practice.location.LocationActivity;
+import com.winjay.practice.material_design.MaterialDesignActivity;
 import com.winjay.practice.package_manager.PackageManagerActivity;
 import com.winjay.practice.so.SOActivity;
 import com.winjay.practice.surfaceview_animation.SurfaceViewAnimationActivity;
@@ -276,8 +277,23 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    /**
+     * ActivityManager
+     *
+     * @param view
+     */
     public void activityManager(View view) {
         Intent intent = new Intent(this, ActivityManagerActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Material Design
+     *
+     * @param view
+     */
+    public void materialDesign(View view) {
+        Intent intent = new Intent(this, MaterialDesignActivity.class);
         startActivity(intent);
     }
 
