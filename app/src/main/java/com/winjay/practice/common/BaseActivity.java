@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.winjay.practice.R;
 import com.winjay.practice.utils.LogUtil;
+
 import android.view.View;
 import android.view.WindowManager;
 
@@ -11,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * 公共基类Activity
@@ -20,6 +22,7 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseActivity extends AppCompatActivity {
     private final String TAG = BaseActivity.class.getSimpleName();
+    private Unbinder unbinder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +47,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 //        }
 
         setContentView(getLayoutId());
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
     }
 
     protected abstract int getLayoutId();
@@ -60,6 +63,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 //        LogUtil.d(TAG, "onDestroy()");
+        unbinder.unbind();
     }
 
     /**

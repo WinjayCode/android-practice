@@ -80,6 +80,22 @@ public class Test {
 //        for (int i : a) {
 //            System.out.println(i);
 //        }
+
+        System.out.println(secondToTime(800));
+    }
+
+    public static String secondToTime(long second) {
+        long days = second / 86400;//转换天数
+        second = second % 86400;//剩余秒数
+        long hours = second / 3600;//转换小时数
+        second = second % 3600;//剩余秒数
+        long minutes = second / 60;//转换分钟
+        second = second % 60;//剩余秒数
+        if (0 < days) {
+            return days + ":" + hours + ":" + minutes + ":" + second;
+        } else {
+            return hours + ":" + minutes + ":" + second;
+        }
     }
 
     static class B extends A {

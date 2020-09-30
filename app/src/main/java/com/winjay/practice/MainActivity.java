@@ -8,6 +8,7 @@ import android.view.View;
 import com.winjay.practice.activity_manager.ActivityManagerActivity;
 import com.winjay.practice.app_compat_text.AppCompatTextActivity;
 import com.winjay.practice.audio.AudioRecordActivity;
+import com.winjay.practice.camera.CameraActivity;
 import com.winjay.practice.cardview.CardViewActivity;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.constraint_layout.ConstraintLayoutActivity;
@@ -294,6 +295,16 @@ public class MainActivity extends BaseActivity {
      */
     public void materialDesign(View view) {
         Intent intent = new Intent(this, MaterialDesignActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Camera
+     *
+     * @param view
+     */
+    public void camera(View view) {
+        Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
     }
 
