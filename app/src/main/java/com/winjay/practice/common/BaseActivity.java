@@ -5,7 +5,9 @@ import android.os.Bundle;
 import com.winjay.practice.R;
 import com.winjay.practice.utils.LogUtil;
 
+import android.transition.Explode;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
@@ -21,13 +23,26 @@ import butterknife.Unbinder;
  * @date 2019-08-24
  */
 public abstract class BaseActivity extends AppCompatActivity {
-    private final String TAG = BaseActivity.class.getSimpleName();
+    private static final String TAG = BaseActivity.class.getSimpleName();
     private Unbinder unbinder;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
+
+        // 使用Activity过渡动画
+//        supportRequestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        getWindow().setEnterTransition(new Explode());
+        getWindow().setExitTransition(new Explode());
+
+//        getWindow().setEnterTransition(new Slide());
+//        getWindow().setExitTransition(new Slide());
+
+//        getWindow().setEnterTransition(new Fade());
+//        getWindow().setExitTransition(new Fade());
+
 //        LogUtil.d(TAG, "onCreate()");
         // 此种方式针对Activity或FragmentActivity
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);

@@ -62,7 +62,8 @@
             android:layout_height="wrap_content"
             android:onClick="cardview"
             android:text="CardView"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:transitionName="share" />
 
         <Button
             android:layout_width="wrap_content"

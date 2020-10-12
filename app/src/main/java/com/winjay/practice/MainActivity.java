@@ -1,8 +1,10 @@
 package com.winjay.practice;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 
 import com.winjay.practice.activity_manager.ActivityManagerActivity;
@@ -150,6 +152,12 @@ public class MainActivity extends BaseActivity {
     public void cardview(View view) {
         Intent intent = new Intent(this, CardViewActivity.class);
         startActivity(intent);
+        // 使用Activity过渡动画
+//        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        // 使用单个共享元素过渡动画
+//        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this, view, "share").toBundle());
+        // 使用多个共享元素过渡动画
+//        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this, Pair.create(view, "share")).toBundle());
     }
 
     /**

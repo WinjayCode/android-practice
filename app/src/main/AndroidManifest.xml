@@ -66,7 +66,6 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
-            android:launchMode="singleInstance"
             android:clearTaskOnLaunch="true"/>
 
         <activity android:name=".so.SOActivity" />
