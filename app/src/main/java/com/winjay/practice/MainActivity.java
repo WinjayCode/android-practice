@@ -28,6 +28,7 @@ import com.winjay.practice.package_manager.PackageManagerActivity;
 import com.winjay.practice.so.SOActivity;
 import com.winjay.practice.surfaceview_animation.SurfaceViewAnimationActivity;
 import com.winjay.practice.system_info.SystemInfoActivity;
+import com.winjay.practice.toolbar.ToolbarActivity;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.viewpager_fragment.ViewPagerActivity;
 import com.winjay.practice.websocket.WebsocketTest;
@@ -313,6 +314,16 @@ public class MainActivity extends BaseActivity {
      */
     public void camera(View view) {
         Intent intent = new Intent(this, CameraActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Toolbar
+     *
+     * @param view
+     */
+    public void toolbar(View view) {
+        Intent intent = new Intent(this, ToolbarActivity.class);
         startActivity(intent);
     }
 

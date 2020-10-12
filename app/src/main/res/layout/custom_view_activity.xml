@@ -8,7 +8,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.winjay.practice.view.DrawingBoardView
+        <ImageView
+            android:id="@+id/oval"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/oval"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/rect"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/rect"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/oval" />
+
+        <!--<com.winjay.practice.view.DrawingBoardView
             android:id="@+id/drawing_board_view"
             android:layout_width="match_parent"
             android:layout_height="500dp"
@@ -64,7 +80,7 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dial_plate_view" />
+            app:layout_constraintTop_toBottomOf="@+id/dial_plate_view" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
