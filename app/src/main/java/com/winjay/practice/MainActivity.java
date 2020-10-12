@@ -24,6 +24,7 @@ import com.winjay.practice.ioc.IOCActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
 import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.material_design.MaterialDesignActivity;
+import com.winjay.practice.notification.NotificationActivity;
 import com.winjay.practice.package_manager.PackageManagerActivity;
 import com.winjay.practice.so.SOActivity;
 import com.winjay.practice.surfaceview_animation.SurfaceViewAnimationActivity;
@@ -324,6 +325,16 @@ public class MainActivity extends BaseActivity {
      */
     public void toolbar(View view) {
         Intent intent = new Intent(this, ToolbarActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Notification
+     *
+     * @param view
+     */
+    public void notification(View view) {
+        Intent intent = new Intent(this, NotificationActivity.class);
         startActivity(intent);
     }
 
