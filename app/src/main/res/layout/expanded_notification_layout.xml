@@ -4,20 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/collapsed_notification_iv_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/kui_icon"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/collapsed_notification_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:text="I am now expanded"
         android:textColor="#ff43aebe"
+        android:textSize="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/collapsed_notification_iv_1" />
 
     <ImageView
         android:id="@+id/collapsed_notification_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/kui_icon"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
