@@ -1,10 +1,8 @@
 package com.winjay.practice;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.View;
 
 import com.winjay.practice.activity_manager.ActivityManagerActivity;
@@ -28,6 +26,7 @@ import com.winjay.practice.notification.NotificationActivity;
 import com.winjay.practice.package_manager.PackageManagerActivity;
 import com.winjay.practice.so.SOActivity;
 import com.winjay.practice.surfaceview_animation.SurfaceViewAnimationActivity;
+import com.winjay.practice.svg.SVGActivity;
 import com.winjay.practice.system_info.SystemInfoActivity;
 import com.winjay.practice.toolbar.ToolbarActivity;
 import com.winjay.practice.utils.LogUtil;
@@ -335,6 +334,16 @@ public class MainActivity extends BaseActivity {
      */
     public void notification(View view) {
         Intent intent = new Intent(this, NotificationActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * SVG
+     *
+     * @param view
+     */
+    public void svg(View view) {
+        Intent intent = new Intent(this, SVGActivity.class);
         startActivity(intent);
     }
 

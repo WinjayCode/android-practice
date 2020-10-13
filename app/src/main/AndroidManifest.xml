@@ -186,6 +186,8 @@
             android:theme="@style/ToolbarTheme" />
 
         <activity android:name=".notification.NotificationActivity" />
+
+        <activity android:name=".svg.SVGActivity" />
     </application>
 
 </manifest>
