@@ -32,6 +32,7 @@ import com.winjay.practice.toolbar.ToolbarActivity;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.viewpager_fragment.ViewPagerActivity;
 import com.winjay.practice.websocket.WebsocketTest;
+import com.winjay.puzzle.activity.PuzzleMainActivity;
 
 import butterknife.OnClick;
 
@@ -344,6 +345,16 @@ public class MainActivity extends BaseActivity {
      */
     public void svg(View view) {
         Intent intent = new Intent(this, SVGActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Puzzle
+     *
+     * @param view
+     */
+    public void puzzle(View view) {
+        Intent intent = new Intent(this, PuzzleMainActivity.class);
         startActivity(intent);
     }
 

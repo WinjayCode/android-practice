@@ -136,6 +136,9 @@ dependencies {
     implementation project(':winjay-bind')
     implementation project(':winjay-annotations')
     annotationProcessor project(':winjay-compiler')
+
+    // 拼图游戏
+    implementation project(':puzzle')
 }
 
 repositories {

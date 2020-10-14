@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.winjay.puzzle">
+    <!--读取和写入存储权限-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application>
+        <activity android:name=".activity.PuzzleMainActivity" />
+        <activity android:name=".activity.PuzzleActivity" />
+    </application>
+</manifest>
