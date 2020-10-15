@@ -73,8 +73,7 @@ public class PuzzleMainActivity extends AppCompatActivity implements View.OnClic
         mGvPicList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> arg0, View view,
-                                    int position, long arg3) {
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
                 if (position == mResPicId.length - 1) {
                     // 选择本地图库 相机
                     showDialogCustom();
@@ -146,8 +145,7 @@ public class PuzzleMainActivity extends AppCompatActivity implements View.OnClic
                 Cursor cursor = this.getContentResolver().query(
                         data.getData(), null, null, null, null);
                 cursor.moveToFirst();
-                String imagePath = cursor.getString(
-                        cursor.getColumnIndex("_data"));
+                String imagePath = cursor.getString(cursor.getColumnIndex("_data"));
                 Intent intent = new Intent(this, PuzzleActivity.class);
                 intent.putExtra("picPath", imagePath);
                 intent.putExtra("mType", mType);
@@ -171,8 +169,7 @@ public class PuzzleMainActivity extends AppCompatActivity implements View.OnClic
     private void popupShow(View view) {
         int density = (int) ScreenUtil.getDeviceDensity(this);
         // 显示popup window
-        mPopupWindow = new PopupWindow(mPopupView,
-                200 * density, 50 * density);
+        mPopupWindow = new PopupWindow(mPopupView, 200 * density, 50 * density);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setOutsideTouchable(true);
         // 透明背景
@@ -192,23 +189,19 @@ public class PuzzleMainActivity extends AppCompatActivity implements View.OnClic
      * 初始化Views
      */
     private void initViews() {
-        mGvPicList = (GridView) findViewById(
-                R.id.gv_xpuzzle_main_pic_list);
+        mGvPicList = (GridView) findViewById(R.id.gv_xpuzzle_main_pic_list);
         // 初始化Bitmap数据
         mResPicId = new int[]{
                 R.drawable.angel, R.drawable.bird, R.drawable.clock_dial,
                 R.drawable.marvel, R.drawable.kui_icon};
         Bitmap[] bitmaps = new Bitmap[mResPicId.length];
         for (int i = 0; i < bitmaps.length; i++) {
-            bitmaps[i] = BitmapFactory.decodeResource(
-                    getResources(), mResPicId[i]);
+            bitmaps[i] = BitmapFactory.decodeResource(getResources(), mResPicId[i]);
             mPicList.add(bitmaps[i]);
         }
         // 显示type
-        mTvPuzzleMainTypeSelected = (TextView) findViewById(
-                R.id.tv_puzzle_main_type_selected);
-        mLayoutInflater = (LayoutInflater) getSystemService(
-                LAYOUT_INFLATER_SERVICE);
+        mTvPuzzleMainTypeSelected = (TextView) findViewById(R.id.tv_puzzle_main_type_selected);
+        mLayoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         // mType view
         mPopupView = mLayoutInflater.inflate(R.layout.puzzle_main_type_selected, null);
         mTvType2 = (TextView) mPopupView.findViewById(R.id.tv_main_type_2);

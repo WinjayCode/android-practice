@@ -28,10 +28,9 @@ public class ImagesUtil {
      * @param picSelected 选择的图片
      * @param context     context
      */
-    public void createInitBitmaps(int type, Bitmap picSelected,
-                                  Context context) {
+    public void createInitBitmaps(int type, Bitmap picSelected, Context context) {
         Bitmap bitmap = null;
-        List<Bitmap> bitmapItems = new ArrayList<Bitmap>();
+        List<Bitmap> bitmapItems = new ArrayList<>();
         // 每个Item的宽高
         int itemWidth = picSelected.getWidth() / type;
         int itemHeight = picSelected.getHeight() / type;
@@ -44,10 +43,7 @@ public class ImagesUtil {
                         itemWidth,
                         itemHeight);
                 bitmapItems.add(bitmap);
-                itemBean = new ItemBean(
-                        (i - 1) * type + j,
-                        (i - 1) * type + j,
-                        bitmap);
+                itemBean = new ItemBean((i - 1) * type + j, (i - 1) * type + j, bitmap);
                 GameUtil.mItemBeans.add(itemBean);
             }
         }
@@ -74,9 +70,7 @@ public class ImagesUtil {
      */
     public Bitmap resizeBitmap(float newWidth, float newHeight, Bitmap bitmap) {
         Matrix matrix = new Matrix();
-        matrix.postScale(
-                newWidth / bitmap.getWidth(),
-                newHeight / bitmap.getHeight());
+        matrix.postScale(newWidth / bitmap.getWidth(), newHeight / bitmap.getHeight());
         Bitmap newBitmap = Bitmap.createBitmap(
                 bitmap, 0, 0,
                 bitmap.getWidth(),
