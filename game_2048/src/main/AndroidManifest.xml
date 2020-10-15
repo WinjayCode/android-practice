@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.winjay.g2048">
+
+    <application>
+        <activity android:name=".activity.Game2048Activity" />
+        <activity android:name=".activity.ConfigActivity" />
+    </application>
+</manifest>

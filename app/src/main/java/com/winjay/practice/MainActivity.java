@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
+import com.winjay.g2048.activity.Game2048Activity;
 import com.winjay.practice.activity_manager.ActivityManagerActivity;
 import com.winjay.practice.app_compat_text.AppCompatTextActivity;
 import com.winjay.practice.audio.AudioRecordActivity;
@@ -355,6 +356,16 @@ public class MainActivity extends BaseActivity {
      */
     public void puzzle(View view) {
         Intent intent = new Intent(this, PuzzleMainActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * 2048
+     *
+     * @param view
+     */
+    public void g2048(View view) {
+        Intent intent = new Intent(this, Game2048Activity.class);
         startActivity(intent);
     }
 

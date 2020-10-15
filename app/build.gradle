@@ -139,6 +139,8 @@ dependencies {
 
     // 拼图游戏
     implementation project(':puzzle')
+    // 2048游戏
+    implementation project(':game_2048')
 }
 
 repositories {

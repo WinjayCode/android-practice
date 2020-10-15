@@ -60,7 +60,6 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
             android:onClick="cardview"
             android:text="CardView"
             android:textAllCaps="false"
@@ -69,7 +68,6 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:onClick="textview"
             android:text="AppCompatTextView"
             android:textAllCaps="false" />
@@ -77,7 +75,6 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ripple"
             android:onClick="download"
             android:text="DownloadManager"
             android:textAllCaps="false" />
@@ -206,6 +203,13 @@
             android:layout_height="wrap_content"
             android:onClick="puzzle"
             android:text="Puzzle"
+            android:textAllCaps="false" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="g2048"
+            android:text="2048"
             android:textAllCaps="false" />
 
         <Button
