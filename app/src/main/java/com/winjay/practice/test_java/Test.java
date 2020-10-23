@@ -81,7 +81,10 @@ public class Test {
 //            System.out.println(i);
 //        }
 
-        System.out.println(secondToTime(800));
+//        System.out.println(secondToTime(800));
+
+        int a = 0x16;
+        System.out.println(a);
     }
 
     public static String secondToTime(long second) {

@@ -28,6 +28,8 @@ public class LauncherActivity extends AppCompatActivity {
 //        finish();
         FingerprintVerifyManager.Builder builder = new FingerprintVerifyManager.Builder(LauncherActivity.this);
         builder.callback(new FingerprintCallback() {
+
+            // 无指纹硬件或者指纹硬件不可用
             @Override
             public void onHwUnavailable() {
                 LogUtil.d(TAG, "onHwUnavailable()");
@@ -36,9 +38,13 @@ public class LauncherActivity extends AppCompatActivity {
                 finish();
             }
 
+            // 未添加指纹
             @Override
             public void onNoneEnrolled() {
                 LogUtil.d(TAG, "onNoneEnrolled()");
+                Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
 
             @Override
@@ -55,6 +61,7 @@ public class LauncherActivity extends AppCompatActivity {
                 Toast.makeText(LauncherActivity.this, "你是谁？", Toast.LENGTH_SHORT).show();
             }
 
+            // 密码登录
             @Override
             public void onUsepwd() {
                 LogUtil.d(TAG, "onUsepwd()");

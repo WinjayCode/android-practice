@@ -20,6 +20,7 @@ import com.winjay.practice.directory_structure.DirectoryStructureActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
 import com.winjay.practice.exoplayer.ExoPlayerActivity;
 import com.winjay.practice.ioc.IOCActivity;
+import com.winjay.practice.ipc.aidl.BookManagerActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
 import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.material_design.MaterialDesignActivity;
@@ -246,6 +247,15 @@ public class MainActivity extends BaseActivity {
      */
     public void iocTest(View view) {
         Intent intent = new Intent(this, IOCActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * IPC
+     */
+    @OnClick(R.id.ipc)
+    void ipc() {
+        Intent intent = new Intent(this, BookManagerActivity.class);
         startActivity(intent);
     }
 

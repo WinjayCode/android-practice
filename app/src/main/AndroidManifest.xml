@@ -96,8 +96,6 @@
 
         <activity android:name=".cardview.CardViewActivity" />
 
-        <activity android:name=".aidl_test.AIDLActivity" />
-
         <activity
             android:name=".TransparentActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
