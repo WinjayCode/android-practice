@@ -2,13 +2,11 @@ package com.winjay.practice;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
-import com.winjay.practice.utils.LogUtil;
 
 import androidx.annotation.Nullable;
 
-import com.winjay.practice.cardview.CardViewActivity;
+import com.winjay.practice.utils.LogUtil;
 
 public class TestService extends Service {
     private final String TAG = TestService.class.getSimpleName();

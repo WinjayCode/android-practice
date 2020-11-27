@@ -1,10 +1,11 @@
 package com.winjay.practice;
 
-import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.ContentObserver;
 import android.media.AudioManager;
@@ -20,8 +21,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
@@ -40,12 +39,12 @@ import com.winjay.bind.BindHelper;
 import com.winjay.bind.Unbinder;
 import com.winjay.practice.hook.HookSetOnClickListenerHelper;
 import com.winjay.practice.utils.LogUtil;
-import com.winjay.practice.utils.SoundPoolUtil;
 import com.winjay.practice.utils.VolumeUtil;
-import com.winjay.practice.view.RecognitionView;
+import com.winjay.practice.ui.view.RecognitionView;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Scanner;
 
 /**
  * 测试练习使用
@@ -85,6 +84,8 @@ public class TestActivity extends AppCompatActivity {
 
     private Unbinder mUnbinder;
 
+    private boolean isTest = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +101,14 @@ public class TestActivity extends AppCompatActivity {
             LogUtil.d("HookSetOnClickListener", "111");
             Toast.makeText(TestActivity.this, "测试点击", Toast.LENGTH_SHORT).show();
             LogUtil.d("HookSetOnClickListener", "222");
+
+            if (isTest) {
+                fullscreen(false);
+                isTest = false;
+            } else {
+                fullscreen(true);
+                isTest = true;
+            }
 
 //            HashMap<String, Object> map = new HashMap<>(1);
 //            map.put("type", "本地视频");
@@ -422,5 +431,68 @@ public class TestActivity extends AppCompatActivity {
 //            }
 //        });
 //        objectAnimator.start();
+    }
+
+    private void fullscreen(boolean enable) {
+        if (enable) { //显示状态栏
+            LogUtil.d(TAG, "111");
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setAttributes(lp);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        } else { //隐藏状态栏
+            LogUtil.d(TAG, "222");
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+            getWindow().setAttributes(lp);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
+    }
+
+
+
+    private static final String ACTION_HDMI_PLUGGED = "android.intent.action.HDMI_PLUGGED";
+    private static final String EXTRA_HDMI_PLUGGED_STATE = "state";
+    private boolean mIsHDMIPlugged = false;
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (ACTION_HDMI_PLUGGED.equals(action)) {
+                mIsHDMIPlugged = intent.getBooleanExtra(EXTRA_HDMI_PLUGGED_STATE, false);
+                LogUtil.d(TAG, "onReceive:mIsHDMIPlugged =  " + mIsHDMIPlugged);
+            }
+        }
+    };
+
+    private void registerHDMI() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION_HDMI_PLUGGED);
+        registerReceiver(mReceiver, intentFilter);
+    }
+
+    private void unregisterHDMI() {
+        unregisterReceiver(mReceiver);
+    }
+
+    /**
+     * Checks device switch files to see if an HDMI device/MHL device is plugged in, returning true if so.
+     */
+    private boolean isHdmiSwitchSet() {
+        // The file '/sys/devices/virtual/switch/hdmi/state' holds an int -- if it's 1 then an HDMI device is connected.
+        // An alternative file to check is '/sys/class/switch/hdmi/state' which exists instead on certain devices.
+        File switchFile = new File("/sys/devices/virtual/switch/hdmi/state");
+        if (!switchFile.exists()) {
+            switchFile = new File("/sys/class/switch/hdmi/state");
+        }
+        try {
+            Scanner switchFileScanner = new Scanner(switchFile);
+            int switchValue = switchFileScanner.nextInt();
+            switchFileScanner.close();
+            return switchValue > 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

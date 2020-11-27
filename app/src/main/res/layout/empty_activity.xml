@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.winjay.practice.view.MyVerticalTextView
+    <com.winjay.practice.ui.view.MyVerticalTextView
         android:id="@+id/aaa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,7 +15,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.winjay.practice.view.MyVerticalTextView
+    <com.winjay.practice.ui.view.MyVerticalTextView
         android:id="@+id/vt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,18 +26,35 @@
         app:layout_constraintRight_toLeftOf="@+id/aaa"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.winjay.practice.view.MyView
+    <com.winjay.practice.ui.view.MyView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/biometricprompt_color_82C785"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.winjay.practice.view.TwinkleTextView
+    <com.winjay.practice.ui.view.TwinkleTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Twinkle TextView"
         android:textSize="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/test_shadow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:shadowColor="#ff000000"
+        android:shadowDx="5"
+        android:shadowDy="5"
+        android:shadowRadius="10"
+        android:text="Test Shadow"
+        android:textColor="#ffffffff"
+        android:textSize="60sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
