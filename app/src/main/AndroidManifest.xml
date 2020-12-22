@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <!--地理位置相关-->
+    <!-- 地理位置相关 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -12,15 +12,17 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 
-    <!--读取和写入存储权限-->
+    <!-- 读取和写入存储权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <!--音频录制权限 -->
+    <!-- 音频录制权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <!--相机权限 -->
+    <!-- 相机权限 -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 开机广播 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".AppApplication"
@@ -30,15 +32,6 @@
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".launcher_widget.ClockWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/clock_widget_info" />
-        </receiver>
 
         <!--configChanges：配置中的属性发生变化时，activity不会重建-->
         <!--launchMode：activity启动模式（standard、singleTop、singleTask、singleInstance）-->
@@ -68,17 +61,116 @@
             android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize" />
 
-        <activity android:name=".so.SOActivity" />
-
-        <activity android:name=".kotlin.KotlinTestActivity" />
-
+        <!-- content provider start -->
         <activity android:name=".content_provider.ProviderActivity" />
 
-        <activity android:name=".TestActivity" />
+        <provider
+            android:name=".content_provider.UserinfoProvider"
+            android:authorities="com.winjay.info" />
+        <!-- content provider end -->
 
+        <!-- design mode start -->
+        <activity android:name=".design_mode.DesignModeActivity" />
+
+        <activity android:name=".design_mode.mvc.controller.MVCActivity" />
+
+        <activity android:name=".design_mode.mvp.view.MVPActivity" />
+
+        <activity android:name=".design_mode.mvvm.MVVMActivity" />
+        <!-- design mode end -->
+
+        <!-- ipc start -->
+        <service
+            android:name=".ipc.messenger.MessengerService"
+            android:process=":remote" />
+
+        <activity android:name=".ipc.messenger.MessengerActivity" />
+
+        <service
+            android:name=".ipc.aidl.BookManagerService"
+            android:process=":remote" />
+
+        <activity android:name=".ipc.aidl.BookManagerClientActivity" />
+        <!-- ipc end -->
+
+        <!-- ioc start -->
+        <activity android:name=".ioc.IOCActivity" />
+        <activity android:name=".ioc.IOCActivity2" />
+        <!-- ioc end -->
+
+        <!-- widget start -->
+        <receiver android:name=".launcher_widget.ClockWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/clock_widget_info" />
+        </receiver>
+        <!-- widget end -->
+
+        <!-- ui start -->
         <activity android:name=".ui.constraint_layout.ConstraintLayoutActivity" />
 
-        <activity android:name=".location.LocationActivity" />
+        <activity android:name=".ui.cardview.CardViewActivity" />
+
+        <activity android:name=".ui.app_compat_text.AppCompatTextActivity" />
+
+        <activity
+            android:name=".ui.toolbar.ToolbarActivity"
+            android:theme="@style/ToolbarTheme" />
+
+        <activity android:name=".ui.surfaceview_animation.SurfaceViewAnimationActivity" />
+
+        <activity android:name=".ui.viewpager_fragment.ViewPagerActivity" />
+
+        <activity android:name=".ui.custom_view.CustomViewActivity" />
+
+        <activity
+            android:name=".ui.material_design.MaterialDesignActivity"
+            android:theme="@style/MyMaterialDesignTheme" />
+
+        <activity android:name=".ui.svg.SVGActivity" />
+
+        <activity
+            android:name=".ui.TransparentActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
+            android:launchMode="singleInstance"
+            android:screenOrientation="landscape"
+            android:theme="@style/NoTitleTranslucentTheme" />
+        <!-- ui end -->
+
+        <!-- media start-->
+        <activity android:name=".media.audio.AudioRecordActivity" />
+
+        <activity android:name=".media.video.VideoActivity" />
+
+        <activity android:name=".media.exoplayer.ExoPlayerActivity" />
+
+        <activity android:name=".media.camera.CameraActivity" />
+        <!-- media end-->
+
+        <!-- usb start -->
+        <activity android:name=".usb.UsbActivity" />
+
+        <receiver android:name=".usb.MediaMountedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+
+                <data android:scheme="file" />
+
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
+
+                <action android:name="android.intent.action.MEDIA_SCANNER_STARTED" />
+                <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED" />
+
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <!-- usb end -->
 
         <!--隐式启动activity，action、category、data必须同时匹配，才能隐式启动（android.intent.category.DEFAULT必须有）-->
         <activity android:name=".intent_filter.IntentFilterActivity">
@@ -94,51 +186,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.cardview.CardViewActivity" />
-
-        <activity
-            android:name=".TransparentActivity"
-            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
-            android:launchMode="singleInstance"
-            android:screenOrientation="landscape"
-            android:theme="@style/NoTitleTranslucentTheme" />
-
-        <activity android:name=".ui.app_compat_text.AppCompatTextActivity" />
-
-        <activity android:name=".download_manager.DownloadManagerActivity" />
-
-        <activity android:name=".directory_structure.DirectoryStructureActivity" />
-
-        <activity android:name=".design_mode.DesignModeActivity" />
-        <activity android:name=".design_mode.mvc.controller.MVCActivity" />
-        <activity android:name=".design_mode.mvp.view.MVPActivity" />
-        <activity android:name=".design_mode.mvvm.MVVMActivity" />
-
-        <provider
-            android:name=".content_provider.UserinfoProvider"
-            android:authorities="com.winjay.info" />
-
-        <service android:name=".TestService" />
-
-        <service
-            android:name=".ipc.messenger.MessengerService"
-            android:process=":remote" />
-
-        <activity android:name=".ipc.messenger.MessengerActivity" />
-
-        <service
-            android:name=".ipc.aidl.BookManagerService"
-            android:process=":remote" />
-
-        <activity android:name=".ipc.aidl.BookManagerClientActivity" />
-
-        <activity android:name=".audio.AudioRecordActivity" />
-
-        <activity
-            android:name=".EmptyActivity"
-            android:configChanges="orientation|screenSize"
-            android:launchMode="singleTask" />
-
         <service
             android:name=".accessibility.AccessibilityServiceHelper"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
@@ -151,41 +198,32 @@
                 android:resource="@xml/accessibility_helper" />
         </service>
 
-        <activity android:name=".ui.surfaceview_animation.SurfaceViewAnimationActivity" />
+        <activity android:name=".download_manager.DownloadManagerActivity" />
 
-        <activity android:name=".ui.viewpager_fragment.ViewPagerActivity" />
+        <activity android:name=".directory_structure.DirectoryStructureActivity" />
 
-        <activity android:name=".ioc.IOCActivity" />
-        <activity android:name=".ioc.IOCActivity2" />
-        <activity android:name=".exoplayer.ExoPlayerActivity" />
-        <activity android:name=".ui.custom_view.CustomViewActivity" />
+        <activity android:name=".location.LocationActivity" />
 
-        <receiver android:name=".launcher_widget.ClockWidget">
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/clock_widget_info" />
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-        </receiver>
+        <activity android:name=".so.SOActivity" />
+
+        <activity android:name=".kotlin.KotlinTestActivity" />
 
         <activity android:name=".system_info.SystemInfoActivity" />
+
         <activity android:name=".package_manager.PackageManagerActivity" />
+
         <activity android:name=".activity_manager.ActivityManagerActivity" />
-
-        <activity
-            android:name=".ui.material_design.MaterialDesignActivity"
-            android:theme="@style/MyMaterialDesignTheme" />
-
-        <activity android:name=".camera.CameraActivity" />
-
-        <activity
-            android:name=".ui.toolbar.ToolbarActivity"
-            android:theme="@style/ToolbarTheme" />
 
         <activity android:name=".notification.NotificationActivity" />
 
-        <activity android:name=".ui.svg.SVGActivity" />
+        <activity
+            android:name=".EmptyActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask" />
+
+        <activity android:name=".TestActivity" />
+
+        <service android:name=".TestService" />
     </application>
 
 </manifest>

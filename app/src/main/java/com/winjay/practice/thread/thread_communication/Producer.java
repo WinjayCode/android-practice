@@ -1,4 +1,4 @@
-package com.winjay.practice.thread_communication;
+package com.winjay.practice.thread.thread_communication;
 
 public class Producer implements Runnable {
     //获得面包的类

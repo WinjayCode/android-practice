@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -724,5 +725,189 @@ public class FileUtil {
 //                    }
 //                })
 //                .setCompressListener(listener).launch();
+//    }
+
+    public static boolean copyFolder(String oldPath, String newPath) {
+        File newFile = new File(newPath);
+        if (!newFile.exists()) {
+            if (!newFile.mkdirs()) {
+                Log.e(TAG, "copyFolder: cannot create directory.");
+                return false;
+            }
+        }
+        File oldFile = new File(oldPath);
+        String[] files = oldFile.list();
+        File temp;
+        for (String file : files) {
+            if (oldPath.endsWith(File.separator)) {
+                temp = new File(oldPath + file);
+            } else {
+                temp = new File(oldPath + File.separator + file);
+            }
+
+            if (temp.isDirectory()) {   //如果是子文件夹
+                boolean result = copyFolder(oldPath + "/" + file, newPath + "/" + file);
+                if (!result) {
+                    Log.e(TAG, "copy subfolder error!");
+                    return false;
+                }
+            } else if (!temp.exists()) {
+                Log.e(TAG, "copyFolder:  oldFile not exist.");
+                return false;
+            } else if (!temp.isFile()) {
+                Log.e(TAG, "copyFolder:  oldFile not file.");
+                return false;
+            } else if (!temp.canRead()) {
+                Log.e(TAG, "copyFolder:  oldFile cannot read.");
+                return false;
+            } else {
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(temp);
+                    FileOutputStream fileOutputStream = new FileOutputStream(newPath + "/" + temp.getName());
+                    byte[] buffer = new byte[1024];
+                    int byteRead;
+                    while ((byteRead = fileInputStream.read(buffer)) != -1) {
+                        fileOutputStream.write(buffer, 0, byteRead);
+                    }
+                    fileInputStream.close();
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "copy error!");
+                    return false;
+                }
+            }
+        }
+        Log.d(TAG, "copy success!");
+        return true;
+    }
+
+    /**
+     * 获取文件夹大小
+     *
+     * @param file File实例
+     * @return long
+     */
+    public static long getFolderSize(File file) {
+        long size = 0;
+        try {
+            File[] fileList = file.listFiles();
+            for (int i = 0; i < fileList.length; i++) {
+                if (fileList[i].isDirectory()) {
+                    size = size + getFolderSize(fileList[i]);
+                } else {
+                    size = size + fileList[i].length();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return size;
+    }
+
+    /****
+     * 计算文件大小
+     *
+     * @param length
+     * @return
+     */
+    public String showLongFileSize(Long length) {
+        if (length >= 1048576) {
+            return (length / 1048576) + "MB";
+        } else if (length >= 1024) {
+            return (length / 1024) + "KB";
+        } else if (length < 1024) {
+            return length + "B";
+        } else {
+            return "0KB";
+        }
+    }
+
+    /**
+     * 计算U盘剩余空间大小
+     *
+     * @return B
+     */
+    public static long getAvailableSize(String path) {
+        //sd卡大小相关变量
+        StatFs statFs;
+        File file = new File(path);
+        statFs = new StatFs(file.getPath());
+        //获得Sdcard上每个block的size
+        long blockSize = statFs.getBlockSize();
+        //获取可供程序使用的Block数量
+        long blockavailable = statFs.getAvailableBlocks();
+        //计算标准大小使用：1024，当然使用1000也可以
+//        long blockavailableTotal = blockSize * blockavailable / 1024 / 1024;
+        long blockavailableTotal = blockSize * blockavailable;
+        return blockavailableTotal;
+    }
+
+//    /**
+//     * 删除单个文件
+//     * @param   filePath    被删除文件的文件名
+//     * @return 文件删除成功返回true，否则返回false
+//     */
+//    public static boolean deleteFile(String filePath) {
+//        File file = new File(filePath);
+//        if (file.isFile() && file.exists()) {
+//            return file.delete();
+//        }
+//        return false;
+//    }
+//
+//    /**
+//     * 删除文件夹以及目录下的文件
+//     * @param   filePath 被删除目录的文件路径
+//     * @return  目录删除成功返回true，否则返回false
+//     */
+//    public static boolean deleteDirectory(String filePath) {
+//        boolean flag = false;
+//        //如果filePath不以文件分隔符结尾，自动添加文件分隔符
+//        if (!filePath.endsWith(File.separator)) {
+//            filePath = filePath + File.separator;
+//        }
+//        File dirFile = new File(filePath);
+//        if (!dirFile.exists() || !dirFile.isDirectory()) {
+//            return false;
+//        }
+//        flag = true;
+//        File[] files = dirFile.listFiles();
+//        //遍历删除文件夹下的所有文件(包括子目录)
+//        for (int i = 0; i < files.length; i++) {
+//            if (files[i].isFile()) {
+//                //删除子文件
+//                flag = deleteFile(files[i].getAbsolutePath());
+//                if (!flag) break;
+//            } else {
+//                //删除子目录
+//                flag = deleteDirectory(files[i].getAbsolutePath());
+//                if (!flag) break;
+//            }
+//        }
+//        if (!flag) return false;
+//        //删除当前空目录
+//        return dirFile.delete();
+//    }
+//
+//    /**
+//     *  根据路径删除指定的目录或文件，无论存在与否
+//     *@param filePath  要删除的目录或文件
+//     *@return 删除成功返回 true，否则返回 false。
+//     */
+//    public static boolean deleteFolder(String filePath) {
+//        File file = new File(filePath);
+//        if (!file.exists()) {
+//            return false;
+//        } else {
+//            if (file.isFile()) {
+//                // 为文件时调用删除文件方法
+//                return deleteFile(filePath);
+//            } else {
+//                // 为目录时调用删除目录方法
+//                return deleteDirectory(filePath);
+//            }
+//        }
 //    }
 }

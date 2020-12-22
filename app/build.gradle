@@ -98,6 +98,9 @@ dependencies {
     // kotlin
     implementation rootDependencies.kotlin_stdlib_jdk7
 
+    // Worker
+    implementation 'androidx.work:work-runtime:2.3.4'
+
     // 指纹识别
     api project(':biometricprompt')
 

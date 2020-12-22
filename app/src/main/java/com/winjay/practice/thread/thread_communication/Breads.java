@@ -1,4 +1,4 @@
-package com.winjay.practice.thread_communication;
+package com.winjay.practice.thread.thread_communication;
 
 public class Breads {
     //面包的id

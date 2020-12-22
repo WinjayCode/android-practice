@@ -1,4 +1,4 @@
-package com.winjay.practice.camera;
+package com.winjay.practice.media.camera;
 
 import android.Manifest;
 import android.content.Context;

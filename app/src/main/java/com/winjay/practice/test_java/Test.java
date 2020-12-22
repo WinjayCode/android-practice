@@ -1,12 +1,10 @@
 package com.winjay.practice.test_java;
 
-import com.winjay.practice.utils.LogUtil;
+import android.util.Log;
 
+import java.math.BigInteger;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 public class Test {
 
@@ -92,6 +90,35 @@ public class Test {
 //        }
 //        System.out.println(Arrays.toString(hexToByteArray(sixteen)));
 //        System.out.println(bytesToHex(a));
+
+//        byte[] channel = new byte[2];
+//        channel[0] = 0x01;
+//        channel[1] = 0x40;
+////        System.out.println(Integer.parseInt(bytesToHex(channel), 16));
+//
+//        int ten = Integer.parseInt(bytesToHex(channel), 16);
+//        String radioQualityCondition = new DecimalFormat("##.#").format((double) ten / 10);
+//        System.out.println(radioQualityCondition);
+
+
+//        System.out.println(Integer.parseInt("38", 16) + 56);
+
+        byte[] value = new byte[3];
+        value[0] = 0x1;
+        value[1] = 0x63;
+        value[2] = 0x31;
+
+        int speedLow = value[2] & 0xFF;
+        System.out.println(speedLow);
+        int speedHigh = value[1] & 0xFF;
+        System.out.println(speedHigh);
+        int mCarSpeed1 = (int) ((speedLow | (speedHigh << 8)) * 0.0313);
+        System.out.println(mCarSpeed1);
+
+        byte[] speed = new byte[2];
+        System.arraycopy(value, 1, speed, 0, 2);
+        int mCarSpeed2 = (int) (Integer.valueOf(bytesToInt(speed)) * 0.0313);
+        System.out.println(mCarSpeed2);
     }
 
     public static String secondToTime(long second) {
@@ -191,7 +218,8 @@ public class Test {
      * @return  转换后的Hex字符串
      */
     public static String bytesToHex(byte[] bytes) {
-        StringBuffer sb = new StringBuffer();
+        // 1
+        /*StringBuffer sb = new StringBuffer();
         for(int i = 0; i < bytes.length; i++) {
             String hex = Integer.toHexString(bytes[i] & 0xFF);
             if(hex.length() < 2){
@@ -199,6 +227,31 @@ public class Test {
             }
             sb.append(hex);
         }
-        return sb.toString();
+        return sb.toString();*/
+
+        // 2
+        return new BigInteger(1, bytes).toString(16);
+
+        // 3
+        /*StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();*/
+
+        // 4
+        /*char[] hexDigits = {'0','1','2','3','4','5','6','7','8','9', 'a','b','c','d','e','f'};
+        // 一个字节对应两个16进制数，所以长度为字节数组乘2
+        char[] resultCharArray = new char[bytes.length * 2];
+        int index = 0;
+        for (byte b : bytes) {
+            resultCharArray[index++] = hexDigits[b>>>4 & 0xf];
+            resultCharArray[index++] = hexDigits[b & 0xf];
+        }
+        return new String(resultCharArray);*/
+    }
+
+    public static String bytesToInt(byte[] bytes) {
+        return new BigInteger(1, bytes).toString(10);
     }
 }

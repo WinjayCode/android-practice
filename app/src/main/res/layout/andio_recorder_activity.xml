@@ -29,4 +29,22 @@
         android:text="保存地址："
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/start_record" />
+
+    <Button
+        android:id="@+id/record_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="按住录音"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recorder_save_path" />
+
+    <Button
+        android:id="@+id/play_wav_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="播放WAV音频"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/record_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

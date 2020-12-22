@@ -38,6 +38,7 @@ import com.winjay.annotations.BindView;
 import com.winjay.bind.BindHelper;
 import com.winjay.bind.Unbinder;
 import com.winjay.practice.hook.HookSetOnClickListenerHelper;
+import com.winjay.practice.utils.CountDownTimerUtil;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.VolumeUtil;
 import com.winjay.practice.ui.view.RecognitionView;
@@ -102,17 +103,35 @@ public class TestActivity extends AppCompatActivity {
             Toast.makeText(TestActivity.this, "测试点击", Toast.LENGTH_SHORT).show();
             LogUtil.d("HookSetOnClickListener", "222");
 
-            if (isTest) {
-                fullscreen(false);
-                isTest = false;
-            } else {
-                fullscreen(true);
-                isTest = true;
-            }
+//            if (isTest) {
+//                fullscreen(true);
+//                isTest = false;
+//            } else {
+//                fullscreen(false);
+//                isTest = true;
+//            }
+
+//            Intent intent = new Intent();
+//            intent.setClassName("com.mobiledrivetech.car_engineer_mode", "com.mobiledrivetech.car_engineer_mode.MainActivity");
+//            startActivity(intent);
 
 //            HashMap<String, Object> map = new HashMap<>(1);
 //            map.put("type", "本地视频");
 //            openPage("com.yhkmedia.yhk", "com.yhkmedia.yhk.activity.VideoPlayActivity", map);
+
+//            CountDownTimerUtil countDownTimerUtil = new CountDownTimerUtil();
+//            countDownTimerUtil.setOnCountDownListener(new CountDownTimerUtil.OnCountDownListener() {
+//                @Override
+//                public void onTick(long millisUntilFinished) {
+//                    LogUtil.i(TAG, "millisUntilFinished=" + millisUntilFinished);
+//                }
+//
+//                @Override
+//                public void onFinish() {
+//                    LogUtil.i(TAG, "");
+//                }
+//            });
+//            countDownTimerUtil.start();
         });
         // Hook
         HookSetOnClickListenerHelper.hook(this, testBtn);
@@ -433,24 +452,23 @@ public class TestActivity extends AppCompatActivity {
 //        objectAnimator.start();
     }
 
-    private void fullscreen(boolean enable) {
-        if (enable) { //显示状态栏
-            LogUtil.d(TAG, "111");
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getWindow().setAttributes(lp);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        } else { //隐藏状态栏
-            LogUtil.d(TAG, "222");
+    private void fullscreen(boolean isFullScreen) {
+        if (isFullScreen) { //隐藏状态栏
             WindowManager.LayoutParams lp = getWindow().getAttributes();
             lp.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
             getWindow().setAttributes(lp);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+        } else { //显示状态栏
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setAttributes(lp);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
     }
 
 
-
+    // ------------------------------ HDMI-IN ------------------------------
     private static final String ACTION_HDMI_PLUGGED = "android.intent.action.HDMI_PLUGGED";
     private static final String EXTRA_HDMI_PLUGGED_STATE = "state";
     private boolean mIsHDMIPlugged = false;

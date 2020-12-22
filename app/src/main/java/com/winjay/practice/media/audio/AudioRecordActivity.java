@@ -1,10 +1,12 @@
-package com.winjay.practice.audio;
+package com.winjay.practice.media.audio;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -35,11 +37,11 @@ public class AudioRecordActivity extends BaseActivity {
     /**
      * 音频源 这里选择使用麦克风：MediaRecorder.AudioSource.MIC
      */
-    private int mAudioSource = MediaRecorder.AudioSource.VOICE_RECOGNITION;
+    private int mAudioSource = MediaRecorder.AudioSource.MIC;
     /**
      * 采样率（赫兹）与初始化获取每一帧流的Size保持一致
      */
-    private int mSampleRateInHz = 16000;
+    private int mSampleRateInHz = 44100;
     /**
      * 声道配置  描述音频声道的配置,例如左声道/右声道/前声道/后声道。与初始化获取每一帧流的Size保持一致
      */
@@ -64,6 +66,12 @@ public class AudioRecordActivity extends BaseActivity {
     @BindView(R.id.recorder_save_path)
     TextView mSavePath;
 
+    @BindView(R.id.record_btn)
+    Button mRecordBtn;
+
+    @BindView(R.id.play_wav_btn)
+    Button mPlayWavBtn;
+
     @Override
     protected int getLayoutId() {
         return R.layout.andio_recorder_activity;
@@ -73,6 +81,24 @@ public class AudioRecordActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initAudioRecord();
+
+        mRecordBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        startRecord();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        stopRecord();
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     /**
@@ -93,7 +119,7 @@ public class AudioRecordActivity extends BaseActivity {
      * 开始录音
      */
     private void startRecord() {
-        pcmFile = new File(AudioRecordActivity.this.getExternalCacheDir().getPath(), System.currentTimeMillis() + ".pcm");
+        pcmFile = new File(getExternalCacheDir().getPath(), System.currentTimeMillis() + ".pcm");
         mWhetherRecord = true;
         new Thread(new Runnable() {
             @Override
@@ -143,12 +169,4 @@ public class AudioRecordActivity extends BaseActivity {
         pcmToWavUtil.pcmToWav(pcmFile.toString(), handlerWavFile.toString());
     }
 
-    public void startRecord(View view) {
-        startRecord();
-        mSavePath.setText(pcmFile.getAbsolutePath());
-    }
-
-    public void stopRecord(View view) {
-        stopRecord();
-    }
 }

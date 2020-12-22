@@ -12,13 +12,13 @@ import com.winjay.practice.R;
 import com.winjay.practice.utils.LogUtil;
 
 /**
- * 唐诗考评竖向文字view
+ * 古诗竖向文字view
  *
  * @author Winjay
  * @date 2020/5/27
  */
-public class MyVerticalTextView extends AppCompatTextView {
-    private static String TAG = MyVerticalTextView.class.getSimpleName();
+public class AncientPoetryTextView extends AppCompatTextView {
+    private static String TAG = AncientPoetryTextView.class.getSimpleName();
     /**
      * 每列最多显示文字个数
      */
@@ -36,15 +36,15 @@ public class MyVerticalTextView extends AppCompatTextView {
      */
     private float mLineSpacingExtra;
 
-    public MyVerticalTextView(Context context) {
+    public AncientPoetryTextView(Context context) {
         this(context, null);
     }
 
-    public MyVerticalTextView(Context context, AttributeSet attrs) {
+    public AncientPoetryTextView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public MyVerticalTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AncientPoetryTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray mTypedArray = context.obtainStyledAttributes(attrs, R.styleable.VerticalTextView);
         mLineSpacingExtra = mTypedArray.getDimension(R.styleable.VerticalTextView_lineSpacingExtra, 0);

@@ -1,0 +1,73 @@
+package com.winjay.practice.usb;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
+import android.text.TextUtils;
+
+import com.winjay.practice.utils.LogUtil;
+
+/**
+ * U盘插拔状态监听
+ * <p>
+ * sd卡被插入，且已经挂载	Intent.ACTION_MEDIA_MOUNTED
+ * sd卡存在，但还没有挂载	Intent.ACTION_MEDIA_UNMOUNTED
+ * sd卡被移除	Intent.ACTION_MEDIA_REMOVED
+ * sd卡作为 USB大容量存储被共享，挂载被解除	Intent.ACTION_MEDIA_SHARED
+ * sd卡已经从sd卡插槽拔出，但是挂载点还没解除	Intent.ACTION_MEDIA_BAD_REMOVAL
+ * 开始扫描	Intent.ACTION_MEDIA_SCANNER_STARTED
+ * 扫描完成	Intent.ACTION_MEDIA_SCANNER_FINISHED
+ *
+ * @author Winjay
+ * @date 2020/12/4
+ */
+public class MediaMountedReceiver extends BroadcastReceiver {
+    private static final String TAG = MediaMountedReceiver.class.getSimpleName();
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        // 这里可以拿到插入的USB设备对象
+        UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+        if (usbDevice != null) {
+            LogUtil.d(TAG, "device name=" + usbDevice.getDeviceName());
+        }
+        if (!TextUtils.isEmpty(action)) {
+            switch (action) {
+                // 外部媒体资源挂载
+                case Intent.ACTION_MEDIA_MOUNTED:
+                    String pathMounted = intent.getData().getPath();
+                    LogUtil.d(TAG, "ACTION_MEDIA_MOUNTED: path=" + pathMounted);
+                    break;
+                // 外部媒体资源未挂载
+                case Intent.ACTION_MEDIA_UNMOUNTED:
+                    LogUtil.i(TAG, "ACTION_MEDIA_UNMOUNTED");
+                    break;
+                //
+                case Intent.ACTION_MEDIA_SCANNER_STARTED:
+                    LogUtil.i(TAG, "ACTION_MEDIA_SCANNER_STARTED");
+                    break;
+                //
+                case Intent.ACTION_MEDIA_SCANNER_FINISHED:
+                    LogUtil.i(TAG, "ACTION_MEDIA_SCANNER_FINISHED");
+                    break;
+                // USB插入
+                case UsbManager.ACTION_USB_DEVICE_ATTACHED:
+                    LogUtil.i(TAG, "ACTION_USB_DEVICE_ATTACHED");
+                    break;
+                // USB拔出
+                case UsbManager.ACTION_USB_DEVICE_DETACHED:
+                    LogUtil.i(TAG, "ACTION_USB_DEVICE_DETACHED");
+                    break;
+                // 开机广播
+                case Intent.ACTION_BOOT_COMPLETED:
+                    LogUtil.i(TAG, "ACTION_BOOT_COMPLETED");
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+}

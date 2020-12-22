@@ -1,4 +1,4 @@
-package com.winjay.practice.thread_communication;
+package com.winjay.practice.thread.thread_communication;
 
 /**
  * 线程间通讯

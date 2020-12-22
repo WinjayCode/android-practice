@@ -2,12 +2,18 @@ package com.winjay.practice.directory_structure;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.os.Environment;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.winjay.practice.MainAdapter;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -19,29 +25,10 @@ import butterknife.BindView;
  */
 public class DirectoryStructureActivity extends BaseActivity {
 
-    @BindView(R.id.one)
-    TextView one;
+    @BindView(R.id.directory_structure_rv)
+    RecyclerView mRecyclerView;
 
-    @BindView(R.id.two)
-    TextView two;
-
-    @BindView(R.id.three)
-    TextView three;
-
-    @BindView(R.id.four)
-    TextView four;
-
-    @BindView(R.id.five)
-    TextView five;
-
-    @BindView(R.id.six)
-    TextView six;
-
-    @BindView(R.id.seven)
-    TextView seven;
-
-    @BindView(R.id.eight)
-    TextView eight;
+    private List<String> mList = new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
@@ -51,24 +38,47 @@ public class DirectoryStructureActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // app的私有目录
         // data/data/xxx/files 或者 data/user/0/xxx/files
-        one.setText("getFilesDir()：" + getFilesDir());
+        mList.add("getFilesDir()：" + getFilesDir());
         // data/data/xxx/cache 或者 data/user/0/xxx/cache
-        two.setText("getCacheDir()：" + getCacheDir());
-
-        // storage/emulated/0/Android/obb/xxx 或者 sdcard/Android/obb/xxx
-        three.setText("getObbDir()：" + getObbDir());
-
+        mList.add("getCacheDir()：" + getCacheDir());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            four.setText("getDataDir()：" + getDataDir());
-            five.setText("getCodeCacheDir()：" + getCodeCacheDir());
-            six.setText("getNoBackupFilesDir()：" + getNoBackupFilesDir());
+            // data/data/xxx 或者 data/user/0/xxx (Android不建议使用)
+            mList.add("getDataDir()：" + getDataDir());
+            // data/data/xxx/code_cache 或者 data/user/0/xxx/code_cache
+            mList.add("getCodeCacheDir()：" + getCodeCacheDir());
+            // data/data/xxx/no_backup 或者 data/user/0/xxx/no_backup
+            mList.add("getNoBackupFilesDir()：" + getNoBackupFilesDir());
         }
 
+        mList.add("");
+
+        // storage/emulated/0
+        mList.add("Environment.getExternalStorageDirectory()：" + Environment.getExternalStorageDirectory());
+
+        mList.add("");
+
         // storage/emulated/0/Android/data/xxx/cache 或者 sdcard/Android/data/xxx/cache
-        seven.setText("getExternalCacheDir()：" + getExternalCacheDir());
+        mList.add("getExternalCacheDir()：" + getExternalCacheDir());
         // storage/emulated/0/Android/data/xxx/files 或者 sdcard/Android/data/xxx/files
-        eight.setText("getExternalFilesDir()：" + getExternalFilesDir(null));
+        mList.add("getExternalFilesDir()：" + getExternalFilesDir(null));
+
+        mList.add("");
+
+        // storage/emulated/0/Android/obb/xxx 或者 sdcard/Android/obb/xxx
+        mList.add("getObbDir()：" + getObbDir());
+
+        mList.add("");
+
+        // data
+        mList.add("Environment.getDataDirectory()：" + Environment.getDataDirectory());
+        // data/cache
+        mList.add("Environment.getDownloadCacheDirectory()：" + Environment.getDownloadCacheDirectory());
+        // system
+        mList.add("Environment.getRootDirectory()：" + Environment.getRootDirectory());
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(new MainAdapter(mList));
     }
 }

@@ -1,4 +1,4 @@
-package com.winjay.practice;
+package com.winjay.practice.ui;
 
 import android.os.Bundle;
 import android.view.Gravity;
@@ -7,6 +7,7 @@ import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 
+import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
 
