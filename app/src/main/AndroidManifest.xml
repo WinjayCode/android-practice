@@ -24,6 +24,8 @@
     <!-- 开机广播 -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- android:persistent="true"：1.在系统刚起来的时候，该App也会被启动起来 2.该App被强制杀掉后，系统会重启该App。这种情况只针对系统内置的App，第三方安装的App不会被重启。 -->
+    <!-- android:usesCleartextTraffic="true"：指示应用程序是否打算使用明文网络流量，例如明文HTTP -->
     <application
         android:name=".AppApplication"
         android:allowBackup="true"
@@ -142,13 +144,27 @@
         <!-- ui end -->
 
         <!-- media start-->
-        <activity android:name=".media.audio.AudioRecordActivity" />
+        <activity android:name=".media.ModuleMediaListActivity" />
+
+        <activity android:name=".media.record.AudioRecordActivity" />
 
         <activity android:name=".media.video.VideoActivity" />
+
+        <activity
+            android:name=".media.music.MusicActivity"
+            android:launchMode="singleTask" />
 
         <activity android:name=".media.exoplayer.ExoPlayerActivity" />
 
         <activity android:name=".media.camera.CameraActivity" />
+
+        <activity android:name=".media.audio_focus.AudioFocusTestActivity" />
+
+        <receiver android:name=".media.receiver.MediaButtonIntentReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
         <!-- media end-->
 
         <!-- usb start -->

@@ -131,9 +131,8 @@ public class LogUtil {
         StackTraceElement[] trace = new Throwable().fillInStackTrace().getStackTrace();
 
         String caller = "<unknown>";
-        for (int i = 2; i < trace.length; i++) {
-            Class<?> clazz = trace[i].getClass();
-            if (!clazz.equals(LogUtil.class)) {
+        for (StackTraceElement stackTraceElement : trace) {
+            if (!stackTraceElement.getClassName().equals(LogUtil.class.getName())) {
 //                String callingClass = trace[i].getClassName();
 //                callingClass = callingClass.substring(callingClass.lastIndexOf('.') + 1);
 //                String endWords = callingClass.substring(callingClass.lastIndexOf('$') + 1);
@@ -143,14 +142,18 @@ public class LogUtil {
 //                // 打印类名和方法名
 //                caller = callingClass + "." + trace[i].getMethodName();
                 // 只打印方法名
-                caller = trace[i].getMethodName() + "()";
+                caller = stackTraceElement.getMethodName() + "()";
                 break;
             }
         }
         // 打印线程ID、类名、方法名
 //        return String.format(Locale.US, "[%d] %s: %s", Thread.currentThread().getId(), caller, args);
         // 打印方法名
-        return String.format(Locale.US, "%s: %s", caller, args);
+        if (TextUtils.isEmpty(args)) {
+            return String.format(Locale.US, "%s", caller);
+        } else {
+            return String.format(Locale.US, "%s: %s", caller, args);
+        }
     }
 
     private static boolean isNumeric(String str) {

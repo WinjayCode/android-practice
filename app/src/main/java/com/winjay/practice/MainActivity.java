@@ -3,6 +3,8 @@ package com.winjay.practice;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
+import android.util.Printer;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,19 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.winjay.g2048.activity.Game2048Activity;
 import com.winjay.practice.activity_manager.ActivityManagerActivity;
-import com.winjay.practice.media.audio.AudioRecordActivity;
-import com.winjay.practice.media.camera.CameraActivity;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.content_provider.ProviderActivity;
 import com.winjay.practice.design_mode.DesignModeActivity;
 import com.winjay.practice.directory_structure.DirectoryStructureActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
-import com.winjay.practice.media.exoplayer.ExoPlayerActivity;
 import com.winjay.practice.ioc.IOCActivity;
 import com.winjay.practice.ipc.aidl.BookManagerClientActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
 import com.winjay.practice.location.LocationActivity;
-import com.winjay.practice.media.video.VideoActivity;
+import com.winjay.practice.media.ModuleMediaListActivity;
 import com.winjay.practice.notification.NotificationActivity;
 import com.winjay.practice.package_manager.PackageManagerActivity;
 import com.winjay.practice.so.SOActivity;
@@ -37,7 +36,6 @@ import com.winjay.practice.ui.surfaceview_animation.SurfaceViewAnimationActivity
 import com.winjay.practice.ui.svg.SVGActivity;
 import com.winjay.practice.ui.toolbar.ToolbarActivity;
 import com.winjay.practice.ui.viewpager_fragment.ViewPagerActivity;
-import com.winjay.practice.usb.UsbActivity;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.websocket.WebsocketTest;
 import com.winjay.puzzle.activity.PuzzleMainActivity;
@@ -59,6 +57,7 @@ public class MainActivity extends BaseActivity {
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
         {
+            put("Media", ModuleMediaListActivity.class);
             put("WebSocket", null);
             put("so_use", SOActivity.class);
             put("kotlin", KotlinTestActivity.class);
@@ -71,24 +70,19 @@ public class MainActivity extends BaseActivity {
             put("DownloadManager", DownloadManagerActivity.class);
             put("Directory Structure", DirectoryStructureActivity.class);
             put("Design Mode", DesignModeActivity.class);
-            put("AudioRecorder", AudioRecordActivity.class);
             put("EmptyPage", EmptyActivity.class);
             put("SurfaceViewAnimation", SurfaceViewAnimationActivity.class);
             put("ViewPager+Fragment", ViewPagerActivity.class);
             put("IOC", IOCActivity.class);
             put("IPC", BookManagerClientActivity.class);
-            put("exoplayer", ExoPlayerActivity.class);
-            put("VideoView", VideoActivity.class);
             put("CustomView", CustomViewActivity.class);
             put("SystemInfo", SystemInfoActivity.class);
             put("PackageManager", PackageManagerActivity.class);
             put("ActivityManager", ActivityManagerActivity.class);
             put("MaterialDesign", MaterialDesignActivity.class);
-            put("Camera", CameraActivity.class);
             put("Toolbar", ToolbarActivity.class);
             put("Notification", NotificationActivity.class);
             put("SVG", SVGActivity.class);
-            put("USB", UsbActivity.class);
             put("Puzzle", PuzzleMainActivity.class);
             put("2048", Game2048Activity.class);
             put("Test", TestActivity.class);
@@ -157,12 +151,18 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        LogUtil.i(TAG);
+        LogUtil.d(TAG, "onPause()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LogUtil.d(TAG, "onStop()");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogUtil.i(TAG);
+        LogUtil.d(TAG, "onDestroy()");
     }
 }

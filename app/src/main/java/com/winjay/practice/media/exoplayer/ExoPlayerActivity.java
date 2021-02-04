@@ -1,5 +1,6 @@
 package com.winjay.practice.media.exoplayer;
 
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
+import com.winjay.practice.media.audio_focus.AudioFocusManager;
 import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.LogUtil;
 
@@ -46,6 +48,8 @@ public class ExoPlayerActivity extends BaseActivity {
 //    private String url = "http://apis.dui.ai/resource/ae4a3a1c0c8817?productId=278579724";
     private String url = "http://apis.dui.ai/resource/ae4a3a1c0d8310?productId=278579724";
 
+    private AudioFocusManager mAudioFocusManager;
+
     @Override
     protected int getLayoutId() {
         return R.layout.exoplayer_activity;
@@ -54,14 +58,29 @@ public class ExoPlayerActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initializePlayer();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        clearCache();
-        release();
+        mAudioFocusManager = new AudioFocusManager(this);
+        mAudioFocusManager.setOnAudioFocusChangeListener(new AudioFocusManager.OnAudioFocusChangeListener() {
+            @Override
+            public void onAudioFocusChange(int focusChange) {
+                switch (focusChange) {
+                    case AudioManager.AUDIOFOCUS_GAIN:
+                        LogUtil.d(TAG, "AUDIOFOCUS_GAIN");
+                        break;
+                    case AudioManager.AUDIOFOCUS_LOSS:
+                        LogUtil.d(TAG, "AUDIOFOCUS_LOSS");
+                        break;
+                    case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                        LogUtil.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
+                        break;
+                    case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                        LogUtil.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
+                        break;
+                }
+            }
+        });
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioFocusManager.requestFocus()) {
+            initializePlayer();
+        };
     }
 
     @OnClick(R.id.start)
@@ -150,6 +169,7 @@ public class ExoPlayerActivity extends BaseActivity {
                     break;
                 // 结束
                 case Player.STATE_ENDED:
+                    mAudioFocusManager.releaseAudioFocus();
                     break;
                 default:
                     break;
@@ -217,5 +237,13 @@ public class ExoPlayerActivity extends BaseActivity {
             exoPlayer.release();
             exoPlayer = null;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        clearCache();
+        release();
+        mAudioFocusManager.releaseAudioFocus();
     }
 }

@@ -100,6 +100,55 @@ public class VideoActivity extends BaseActivity {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
                 LogUtil.e(TAG, "onError():what=" + what + ", extra=" + extra);
+                switch (what) {
+                    case -1004:
+                        Log.d(TAG, "MEDIA_ERROR_IO");
+                        break;
+                    case -1007:
+                        Log.d(TAG, "MEDIA_ERROR_MALFORMED");
+                        break;
+                    case 200:
+                        Log.d(TAG, "MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK");
+                        break;
+                    case 100:
+                        Log.d(TAG, "MEDIA_ERROR_SERVER_DIED");
+                        break;
+                    case -110:
+                        Log.d(TAG, "MEDIA_ERROR_TIMED_OUT");
+                        break;
+                    case 1:
+                        Log.d(TAG, "MEDIA_ERROR_UNKNOWN");
+                        break;
+                    case -1010:
+                        Log.d(TAG, "MEDIA_ERROR_UNSUPPORTED");
+                        break;
+                }
+                switch (extra) {
+                    case 800:
+                        Log.d(TAG, "MEDIA_INFO_BAD_INTERLEAVING");
+                        break;
+                    case 702:
+                        Log.d(TAG, "MEDIA_INFO_BUFFERING_END");
+                        break;
+                    case 701:
+                        Log.d(TAG, "MEDIA_INFO_METADATA_UPDATE");
+                        break;
+                    case 802:
+                        Log.d(TAG, "MEDIA_INFO_METADATA_UPDATE");
+                        break;
+                    case 801:
+                        Log.d(TAG, "MEDIA_INFO_NOT_SEEKABLE");
+                        break;
+                    case 1:
+                        Log.d(TAG, "MEDIA_INFO_UNKNOWN");
+                        break;
+                    case 3:
+                        Log.d(TAG, "MEDIA_INFO_VIDEO_RENDERING_START");
+                        break;
+                    case 700:
+                        Log.d(TAG, "MEDIA_INFO_VIDEO_TRACK_LAGGING");
+                        break;
+                }
                 //异常回调
                 return false;//如果方法处理了错误，则为true；否则为false。返回false或根本没有OnErrorListener，将导致调用OnCompletionListener。
             }

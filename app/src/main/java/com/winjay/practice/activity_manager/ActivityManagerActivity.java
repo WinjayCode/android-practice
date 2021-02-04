@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
+import com.winjay.practice.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ import butterknife.BindView;
  * @date 2020/9/16
  */
 public class ActivityManagerActivity extends BaseActivity {
+    private static final String TAG = ActivityManagerActivity.class.getSimpleName();
     private ActivityManager mActivityManager;
 
     @BindView(R.id.app_process_rv)
@@ -40,7 +42,17 @@ public class ActivityManagerActivity extends BaseActivity {
         mActivityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         app_process_rv.setLayoutManager(new LinearLayoutManager(this));
         app_process_rv.setAdapter(new AppProcessAdapter(this, getRunningProcessInfo()));
+
+        app_process_rv.postDelayed(testRunnable, 2000);
     }
+
+    private Runnable testRunnable = new Runnable() {
+        @Override
+        public void run() {
+            getRunningProcessInfo();
+            app_process_rv.postDelayed(testRunnable, 2000);
+        }
+    };
 
     private List<AMProcessInfo> getRunningProcessInfo() {
         List<AMProcessInfo> amProcessInfoList = new ArrayList<>();
@@ -50,6 +62,7 @@ public class ActivityManagerActivity extends BaseActivity {
             AMProcessInfo amProcessInfo = new AMProcessInfo();
             amProcessInfo.setPid("Pid:" + appProcessInfo.pid);
             amProcessInfo.setUid("Uid:" + appProcessInfo.uid);
+            LogUtil.d(TAG, "processName=" + appProcessInfo.processName);
             amProcessInfo.setProcessName(appProcessInfo.processName);
             Debug.MemoryInfo[] processMemoryInfo = mActivityManager.getProcessMemoryInfo(new int[]{appProcessInfo.pid});
             amProcessInfo.setMemorySize("memsize:" + processMemoryInfo[0].getTotalPss() + "KB");

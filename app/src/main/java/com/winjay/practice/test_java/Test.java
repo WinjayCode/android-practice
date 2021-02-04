@@ -5,6 +5,7 @@ import android.util.Log;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class Test {
 
@@ -103,22 +104,41 @@ public class Test {
 
 //        System.out.println(Integer.parseInt("38", 16) + 56);
 
-        byte[] value = new byte[3];
-        value[0] = 0x1;
-        value[1] = 0x63;
-        value[2] = 0x31;
+//        byte[] value = new byte[3];
+//        value[0] = 0x1;
+//        value[1] = 0x63;
+//        value[2] = 0x31;
+//
+//        int speedLow = value[2] & 0xFF;
+//        System.out.println(speedLow);
+//        int speedHigh = value[1] & 0xFF;
+//        System.out.println(speedHigh);
+//        int mCarSpeed1 = (int) ((speedLow | (speedHigh << 8)) * 0.0313);
+//        System.out.println(mCarSpeed1);
+//
+//        byte[] speed = new byte[2];
+//        System.arraycopy(value, 1, speed, 0, 2);
+//        int mCarSpeed2 = (int) (Integer.valueOf(bytesToInt(speed)) * 0.0313);
+//        System.out.println(mCarSpeed2);
 
-        int speedLow = value[2] & 0xFF;
-        System.out.println(speedLow);
-        int speedHigh = value[1] & 0xFF;
-        System.out.println(speedHigh);
-        int mCarSpeed1 = (int) ((speedLow | (speedHigh << 8)) * 0.0313);
-        System.out.println(mCarSpeed1);
+//        System.out.println(Integer.parseInt("21700803", 16));
 
-        byte[] speed = new byte[2];
-        System.arraycopy(value, 1, speed, 0, 2);
-        int mCarSpeed2 = (int) (Integer.valueOf(bytesToInt(speed)) * 0.0313);
-        System.out.println(mCarSpeed2);
+//        byte a = 0x35;
+//        System.out.println(byteTobit(a));
+//
+//        System.out.println(Integer.toBinaryString(0x35));
+
+
+//        log();
+    }
+
+    public static void log() {
+        StackTraceElement[] trace = new Throwable().fillInStackTrace().getStackTrace();
+        for (StackTraceElement stackTraceElement : trace) {
+//            Class<?> clazz = trace[i].getClass();
+//            System.out.println(trace[i].getMethodName());
+            System.out.println(String.format(Locale.US, "%s: ()", stackTraceElement.getMethodName()));
+        }
     }
 
     public static String secondToTime(long second) {
@@ -178,8 +198,10 @@ public class Test {
         return exp;
     }
     ////////////////////////
+
     /**
      * hex字符串转byte数组
+     *
      * @param inHex 待转换的Hex字符串
      * @return 转换后的byte数组结果
      */
@@ -205,17 +227,19 @@ public class Test {
 
     /**
      * Hex字符串转byte
+     *
      * @param inHex 待转换的Hex字符串
      * @return 转换后的byte
      */
-    public static byte hexToByte(String inHex){
-        return (byte)Integer.parseInt(inHex,16);
+    public static byte hexToByte(String inHex) {
+        return (byte) Integer.parseInt(inHex, 16);
     }
 
     /**
      * 字节数组转16进制
+     *
      * @param bytes 需要转换的byte数组
-     * @return  转换后的Hex字符串
+     * @return 转换后的Hex字符串
      */
     public static String bytesToHex(byte[] bytes) {
         // 1
@@ -253,5 +277,18 @@ public class Test {
 
     public static String bytesToInt(byte[] bytes) {
         return new BigInteger(1, bytes).toString(10);
+    }
+
+    public static String byteTobit(byte by) {
+        StringBuffer sb = new StringBuffer();
+        sb.append((by >> 7) & 0x1)
+                .append((by >> 6) & 0x1)
+                .append((by >> 5) & 0x1)
+                .append((by >> 4) & 0x1)
+                .append((by >> 3) & 0x1)
+                .append((by >> 2) & 0x1)
+                .append((by >> 1) & 0x1)
+                .append((by >> 0) & 0x1);
+        return sb.toString();
     }
 }

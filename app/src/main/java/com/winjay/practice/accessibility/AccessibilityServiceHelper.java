@@ -17,7 +17,7 @@ public class AccessibilityServiceHelper extends AccessibilityService {
     public static final String TAG = AccessibilityServiceHelper.class.getSimpleName();
 
     private static String mForegroundPackageName;
-    private static AccessibilityServiceHelper mInstance = null;
+    private static volatile AccessibilityServiceHelper mInstance = null;
 
     public AccessibilityServiceHelper() {
     }

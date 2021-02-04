@@ -149,20 +149,3 @@ dependencies {
 repositories {
     mavenCentral()
 }
-
-
-//project.afterEvaluate {
-//    Task assembleReleaseTask = project.tasks.findByPath("assembleRelease")
-//    if (assembleReleaseTask != null) {
-//        assembleReleaseTask.doLast {
-//            println("hahahah")
-////            project.rootProject.findProject("kui_pad").tasks.findByPath("assembleDebug").execute()
-//
-//            project.rootProject.findProject("kui_pad").exec {
-////                commandLine 'gradle', 'assembleDebug'
-//                executable = 'gradle'
-//                args += 'assembleDebug'
-//            }
-//        }
-//    }
-//}

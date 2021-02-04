@@ -7,9 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.res.AssetFileDescriptor;
 import android.database.ContentObserver;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -38,14 +40,18 @@ import com.winjay.annotations.BindView;
 import com.winjay.bind.BindHelper;
 import com.winjay.bind.Unbinder;
 import com.winjay.practice.hook.HookSetOnClickListenerHelper;
+import com.winjay.practice.ui.dialog.MyDialog;
 import com.winjay.practice.utils.CountDownTimerUtil;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.VolumeUtil;
 import com.winjay.practice.ui.view.RecognitionView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
+
+import butterknife.OnClick;
 
 /**
  * 测试练习使用
@@ -90,6 +96,13 @@ public class TestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 打印线程Looper消息
+//        Looper.getMainLooper().setMessageLogging(new Printer() {
+//            @Override
+//            public void println(String x) {
+//                LogUtil.d(TAG, "x" + x);
+//            }
+//        });
         setContentView(R.layout.test_activity);
         mUnbinder = BindHelper.bind(this);
 
@@ -102,6 +115,9 @@ public class TestActivity extends AppCompatActivity {
             LogUtil.d("HookSetOnClickListener", "111");
             Toast.makeText(TestActivity.this, "测试点击", Toast.LENGTH_SHORT).show();
             LogUtil.d("HookSetOnClickListener", "222");
+
+            MyDialog dialog = new MyDialog(TestActivity.this);
+            dialog.show();
 
 //            if (isTest) {
 //                fullscreen(true);
@@ -174,22 +190,24 @@ public class TestActivity extends AppCompatActivity {
 //        LogUtil.d(TAG, "111");
 
         // 播放本地歌曲
-//        mMediaPlayer = new MediaPlayer();
-//        try {
-////            mMediaPlayer.setDataSource("system/media/audio/ringtones/Basic_Bell.ogg");
-////            mMediaPlayer.setDataSource("system/media/Music/guniang.mp3");
+        mMediaPlayer = new MediaPlayer();
+        try {
+//            mMediaPlayer.setDataSource("system/media/audio/ringtones/Basic_Bell.ogg");
+//            mMediaPlayer.setDataSource("system/media/Music/guniang.mp3");
 //            mMediaPlayer.setDataSource(this, Uri.parse("system/media/Music/guniang.mp3"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        mMediaPlayer.prepareAsync();
-//        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//            @Override
-//            public void onPrepared(MediaPlayer mp) {
-//                LogUtil.d(TAG, "duration=" + mMediaPlayer.getDuration());
-//                mMediaPlayer.start();
-//            }
-//        });
+            AssetFileDescriptor afd = getAssets().openFd("audio/chengdu.mp3");
+            mMediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mMediaPlayer.prepareAsync();
+        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                LogUtil.d(TAG, "duration=" + mMediaPlayer.getDuration());
+                mMediaPlayer.start();
+            }
+        });
 //
 //        getFilesAllName("system/media/Music");
 
@@ -211,6 +229,18 @@ public class TestActivity extends AppCompatActivity {
     public void onUserInteraction() {
         super.onUserInteraction();
         LogUtil.d(TAG, "onUserInteraction()");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LogUtil.d(TAG, "onStart()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogUtil.d(TAG, "onResume()");
     }
 
     /**
@@ -341,11 +371,13 @@ public class TestActivity extends AppCompatActivity {
         }
     };
 
-    private void mute(View view) {
+    @OnClick(R.id.mute)
+    void mute(View view) {
         VolumeUtil.muteVolume(this, AudioManager.STREAM_MUSIC);
     }
 
-    private void unmute(View view) {
+    @OnClick(R.id.unmute)
+    void unmute(View view) {
         VolumeUtil.unMuteVolume(this, AudioManager.STREAM_MUSIC);
     }
 

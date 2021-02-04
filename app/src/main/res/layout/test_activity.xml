@@ -12,7 +12,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/root_rl"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/animation"
@@ -68,7 +68,6 @@
                 android:id="@+id/mute"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="mute"
                 android:text="Mute"
                 app:layout_constraintTop_toBottomOf="@+id/setVolume" />
 
