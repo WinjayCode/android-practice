@@ -193,8 +193,9 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        // view销毁放到super.onDestroy();之前，因为super.onDestroy();中调用了unbinder.unbind();销毁了view
         mFrameSurfaceView.destroy();
         mFrameSurfaceView2.destroy();
+        super.onDestroy();
     }
 }
