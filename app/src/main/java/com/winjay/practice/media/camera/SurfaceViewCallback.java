@@ -20,7 +20,7 @@ import java.io.File;
 
 
 public class SurfaceViewCallback implements SurfaceHolder.Callback {
-
+    private static final String TAG = SurfaceViewCallback.class.getSimpleName();
     private Activity activity;
 
     boolean previewing;
@@ -62,7 +62,7 @@ public class SurfaceViewCallback implements SurfaceHolder.Callback {
             mCamera.setPreviewCallback(new Camera.PreviewCallback() {
                 @Override
                 public void onPreviewFrame(byte[] bytes, Camera camera) {
-                    LogUtil.i("onPreviewFrame " + canTake);
+                    LogUtil.i(TAG, "onPreviewFrame " + canTake);
                     if (canTake) {
                         getSurfacePic(bytes, camera);
                         canTake = false;
@@ -85,6 +85,7 @@ public class SurfaceViewCallback implements SurfaceHolder.Callback {
             previewing = true;
             setCameraDisplayOrientation(activity, mCurrentCamIndex, mCamera);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -145,14 +146,28 @@ public class SurfaceViewCallback implements SurfaceHolder.Callback {
         Camera cam = null;
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         cameraCount = Camera.getNumberOfCameras();
-
+        LogUtil.d(TAG, "cameraCount=" + cameraCount);
         for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
             Camera.getCameraInfo(camIdx, cameraInfo);
-            try {
-                cam = Camera.open(camIdx);
-                mCurrentCamIndex = camIdx;
-            } catch (RuntimeException e) {
-                LogUtil.e("Camera failed to open: " + e.getLocalizedMessage());
+            LogUtil.d(TAG, "cameraInfo.facing=" + cameraInfo.facing);
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                LogUtil.d(TAG, "CAMERA_FACING_FRONT");
+//                try {
+//                    cam = Camera.open(camIdx);
+//                    mCurrentCamIndex = camIdx;
+//                } catch (RuntimeException e) {
+//                    LogUtil.e(TAG, "Camera failed to open: " + e.getLocalizedMessage());
+//                }
+//                break;
+            } else if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                LogUtil.d(TAG, "CAMERA_FACING_BACK");
+                try {
+                    cam = Camera.open(camIdx);
+                    mCurrentCamIndex = camIdx;
+                } catch (RuntimeException e) {
+                    LogUtil.e(TAG, "Camera failed to open: " + e.getLocalizedMessage());
+                }
+                break;
             }
         }
 

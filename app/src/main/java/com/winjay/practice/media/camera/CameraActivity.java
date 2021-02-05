@@ -19,9 +19,11 @@ import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
 
 import java.io.File;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
@@ -30,21 +32,17 @@ import pub.devrel.easypermissions.EasyPermissions;
  * @author Winjay
  * @date 2020/9/30
  */
-public class CameraActivity extends BaseActivity {
+public class CameraActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
     private static final String TAG = CameraActivity.class.getSimpleName();
     private Context mContext;
-
-    /**
-     * 权限相关
-     */
-    private static final int GETPERMS = 100;
-    private String[] perms;
-    private Handler permissionsHandler = new Handler();
+    private final int RC_PERMISSION = 100;
 
     @BindView(R.id.surfaceview)
     SurfaceView previewView;
+
     @BindView(R.id.img_pic)
     ImageView imgPic;
+
     @BindView(R.id.tv_pic_dir)
     TextView tvPicDir;
 
@@ -59,51 +57,64 @@ public class CameraActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        perms = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
-        checkPermission();
-    }
-
-    public void checkPermission() {
-        //判断是否有相关权限，并申请权限
-        if (EasyPermissions.hasPermissions(mContext, perms)) {
-            permissionsHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    init();
-                }
-            });
-        } else {
-            ActivityCompat.requestPermissions(CameraActivity.this, perms, GETPERMS);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        init();
+        requiresPermissions();
     }
 
     private void init() {
-        LogUtil.d(TAG, "init()");
+        LogUtil.d(TAG);
         manager = new CameraTakeManager(this, previewView, new CameraTakeManager.CameraTakeListener() {
             @Override
             public void onSuccess(File bitmapFile, Bitmap mBitmap) {
-                LogUtil.d(TAG, "onSuccess()_bitmapFile=" + bitmapFile.getPath());
+                LogUtil.d(TAG, "bitmapFile=" + bitmapFile.getPath());
                 imgPic.setImageBitmap(mBitmap);
                 tvPicDir.setText("图片路径：" + bitmapFile.getPath());
             }
 
             @Override
             public void onFail(String error) {
-                LogUtil.e(TAG, "onFail()_error=" + error);
+                LogUtil.e(TAG, "error=" + error);
             }
         });
     }
 
     @OnClick({R.id.btn_take_photo})
-    public void onClick(View view) {
-        LogUtil.d(TAG, "takePhoto()");
+    void takePhoto() {
+        LogUtil.d(TAG);
         manager.takePhoto();
+    }
+
+    ////////////////////////////////////////// permission //////////////////////////////////////////
+    @AfterPermissionGranted(RC_PERMISSION)
+    private void requiresPermissions() {
+        String[] perms = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            LogUtil.d(TAG, "Already have permission, scan files!");
+            // Already have permission, do the thing
+            init();
+        } else {
+            LogUtil.w(TAG, "Do not have permissions, request them now!");
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, "请授予权限，否则影响部分使用功能。", RC_PERMISSION, perms);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        LogUtil.d(TAG);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        LogUtil.d(TAG, "Some permissions have been granted: " + perms.toString());
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        LogUtil.w(TAG, "Some permissions have been denied: " + perms.toString());
+        finish();
     }
 
     @Override

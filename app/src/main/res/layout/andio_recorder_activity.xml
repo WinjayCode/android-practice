@@ -8,7 +8,6 @@
         android:id="@+id/start_record"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="startRecord"
         android:text="开始录音"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -17,8 +16,17 @@
         android:id="@+id/stop_record"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="stopRecord"
         android:text="停止录音"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/recording_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="录音中..."
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

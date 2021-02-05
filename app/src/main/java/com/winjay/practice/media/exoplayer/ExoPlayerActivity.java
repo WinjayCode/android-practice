@@ -27,6 +27,7 @@ import com.google.android.exoplayer2.util.Util;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.media.audio_focus.AudioFocusManager;
+import com.winjay.practice.media.interfaces.MediaType;
 import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.LogUtil;
 
@@ -58,7 +59,7 @@ public class ExoPlayerActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAudioFocusManager = new AudioFocusManager(this);
+        mAudioFocusManager = new AudioFocusManager(this, MediaType.MUSIC);
         mAudioFocusManager.setOnAudioFocusChangeListener(new AudioFocusManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
