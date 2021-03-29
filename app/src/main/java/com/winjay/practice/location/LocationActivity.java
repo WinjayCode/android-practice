@@ -3,7 +3,10 @@ package com.winjay.practice.location;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
+import android.location.GnssStatus;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -25,7 +28,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.winjay.practice.R;
 import com.winjay.practice.utils.NoDoubleClickListener;
@@ -43,7 +48,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * @date 2019-08-15
  */
 public class LocationActivity extends AppCompatActivity implements LocationListener, EasyPermissions.PermissionCallbacks {
-    private final String TAG = getClass().getSimpleName();
+    private final String TAG = LocationActivity.class.getSimpleName();
 
     private final int RC_PERMISSION = 100;
 
@@ -70,6 +75,8 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
     private EditText mMockLongitudeET;
     private EditText mMockLatitudeET;
 
+    private GPSCallback mGPSCallback;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +84,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
         findView();
         setListener();
         init();
-        mThread = new Thread(new RunnableMockLocation());
+        requiresPermissions();
     }
 
     private void findView() {
@@ -102,7 +109,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
         @Override
         protected void onNoDoubleClick(View v) {
             if (v == getLocation) {
-                requiresPermissions();
+                getLocation();
                 return;
             }
             if (v == startLocationMock) {
@@ -125,6 +132,8 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
 
     private void init() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mThread = new Thread(new RunnableMockLocation());
+        mGPSCallback = new GPSCallback();
     }
 
     @AfterPermissionGranted(RC_PERMISSION)
@@ -132,7 +141,8 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
         String[] perms = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
         if (EasyPermissions.hasPermissions(this, perms)) {
             // Already have permission, do the thing
-            getLocation();
+//            getLocation();
+            getGPS();
         } else {
             // Do not have permissions, request them now
             EasyPermissions.requestPermissions(this, "请授予权限，否则影响部分使用功能。", RC_PERMISSION, perms);
@@ -162,33 +172,68 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
     }
 
     private void getLocation() {
-        String locationProvider = null;
-        //获取所有可用的位置提供器
-        List<String> providers = locationManager.getProviders(true);
-        LogUtil.d(TAG, "providers=" + JsonUtil.getInstance().toJson(providers));
-        if (providers.contains(LocationManager.GPS_PROVIDER)) {
-            //如果是GPS
-            locationProvider = LocationManager.GPS_PROVIDER;
-        } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
-            //如果是Network
-            locationProvider = LocationManager.NETWORK_PROVIDER;
-        } else {
-            Intent i = new Intent();
-            i.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(i);
-        }
-        LogUtil.d(TAG, "getLocation()_locationProvider=" + locationProvider);
-        if (!TextUtils.isEmpty(locationProvider)) {
-            //获取Location
-            Location location = locationManager.getLastKnownLocation(locationProvider);
-            if (location != null) {
-                longitudeTV.setText("经度：" + location.getLongitude());
-                latitudeTV.setText("纬度：" + location.getLatitude());
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            String locationProvider = null;
+            //获取所有可用的位置提供器
+            List<String> providers = locationManager.getProviders(true);
+            LogUtil.d(TAG, "providers=" + JsonUtil.getInstance().toJson(providers));
+            if (providers.contains(LocationManager.GPS_PROVIDER)) {
+                //如果是GPS
+                locationProvider = LocationManager.GPS_PROVIDER;
+            } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+                //如果是Network
+                locationProvider = LocationManager.NETWORK_PROVIDER;
+            } else {
+                Intent i = new Intent();
+                i.setAction(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(i);
             }
+            LogUtil.d(TAG, "getLocation()_locationProvider=" + locationProvider);
+            if (!TextUtils.isEmpty(locationProvider)) {
+                //获取Location
+                Location location = locationManager.getLastKnownLocation(locationProvider);
+                if (location != null) {
+                    longitudeTV.setText("经度：" + location.getLongitude());
+                    latitudeTV.setText("纬度：" + location.getLatitude());
+                }
 
-            locationManager.requestLocationUpdates(locationProvider, 2000, 1, this);
-        } else {
-            Toast.makeText(this, "没有可用的定位服务提供", Toast.LENGTH_SHORT).show();
+                locationManager.requestLocationUpdates(locationProvider, 2000, 1, this);
+            } else {
+                Toast.makeText(this, "没有可用的定位服务提供", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void getGPS() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.registerGnssStatusCallback(mGPSCallback);
+        }
+    }
+
+    private class GPSCallback extends GnssStatus.Callback {
+        @Override
+        public void onStarted() {
+            super.onStarted();
+            LogUtil.d(TAG);
+        }
+
+        @Override
+        public void onStopped() {
+            super.onStopped();
+            LogUtil.d(TAG);
+        }
+
+        @Override
+        public void onFirstFix(int ttffMillis) {
+            super.onFirstFix(ttffMillis);
+            LogUtil.d(TAG, "ttffMillis=" + ttffMillis);
+        }
+
+        @Override
+        public void onSatelliteStatusChanged(GnssStatus status) {
+            super.onSatelliteStatusChanged(status);
+            LogUtil.d(TAG, "SatelliteCount=" + status.getSatelliteCount());
         }
     }
 
@@ -303,5 +348,14 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
             }
         }
         return canMockPosition;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mGPSCallback != null) {
+            locationManager.unregisterGnssStatusCallback(mGPSCallback);
+            mGPSCallback = null;
+        }
     }
 }

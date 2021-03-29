@@ -11,8 +11,11 @@ import android.content.res.AssetFileDescriptor;
 import android.database.ContentObserver;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -41,13 +44,20 @@ import com.winjay.bind.BindHelper;
 import com.winjay.bind.Unbinder;
 import com.winjay.practice.hook.HookSetOnClickListenerHelper;
 import com.winjay.practice.ui.dialog.MyDialog;
+import com.winjay.practice.utils.ByteUtil;
 import com.winjay.practice.utils.CountDownTimerUtil;
 import com.winjay.practice.utils.LogUtil;
+import com.winjay.practice.utils.NetUtil;
 import com.winjay.practice.utils.VolumeUtil;
 import com.winjay.practice.ui.view.RecognitionView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -190,24 +200,24 @@ public class TestActivity extends AppCompatActivity {
 //        LogUtil.d(TAG, "111");
 
         // 播放本地歌曲
-        mMediaPlayer = new MediaPlayer();
-        try {
-//            mMediaPlayer.setDataSource("system/media/audio/ringtones/Basic_Bell.ogg");
-//            mMediaPlayer.setDataSource("system/media/Music/guniang.mp3");
-//            mMediaPlayer.setDataSource(this, Uri.parse("system/media/Music/guniang.mp3"));
-            AssetFileDescriptor afd = getAssets().openFd("audio/chengdu.mp3");
-            mMediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mMediaPlayer.prepareAsync();
-        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                LogUtil.d(TAG, "duration=" + mMediaPlayer.getDuration());
-                mMediaPlayer.start();
-            }
-        });
+//        mMediaPlayer = new MediaPlayer();
+//        try {
+////            mMediaPlayer.setDataSource("system/media/audio/ringtones/Basic_Bell.ogg");
+////            mMediaPlayer.setDataSource("system/media/Music/guniang.mp3");
+////            mMediaPlayer.setDataSource(this, Uri.parse("system/media/Music/guniang.mp3"));
+//            AssetFileDescriptor afd = getAssets().openFd("audio/chengdu.mp3");
+//            mMediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        mMediaPlayer.prepareAsync();
+//        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mp) {
+//                LogUtil.d(TAG, "duration=" + mMediaPlayer.getDuration());
+//                mMediaPlayer.start();
+//            }
+//        });
 //
 //        getFilesAllName("system/media/Music");
 
@@ -241,6 +251,16 @@ public class TestActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         LogUtil.d(TAG, "onResume()");
+
+        LogUtil.d(TAG, "" + ByteUtil.hexToByte("0xff"));
+
+//        boolean result = copyFileToDir(Environment.getExternalStorageDirectory() + File.separator + "test.wav",
+//                Environment.getExternalStorageDirectory() + File.separator + "test2.wav");
+//        LogUtil.d(TAG, "result=" + result);
+
+        LogUtil.d(TAG, "isOnline=" + NetUtil.isOnline());
+        LogUtil.d(TAG, "isEthernetConnected=" + NetUtil.isEthernetConnected(this));
+        LogUtil.d(TAG, "networkAvailable=" + NetUtil.networkAvailable(this));
     }
 
     /**

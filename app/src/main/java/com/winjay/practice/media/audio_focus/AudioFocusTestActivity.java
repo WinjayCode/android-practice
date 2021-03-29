@@ -151,7 +151,10 @@ public class AudioFocusTestActivity extends BaseActivity {
 
     @OnClick(R.id.system_btn)
     void system() {
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mSystemAudioFocusManager.requestFocus(AudioFocusManagerLib.AudioType.SYSTEM)) {
+//        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mSystemAudioFocusManager.requestFocus(AudioFocusManagerLib.AudioType.SYSTEM)) {
+//            playSystem();
+//        }
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mSystemAudioFocusManager.requestFocus(AudioFocusManagerLib.AudioType.SPEECH)) {
             playSystem();
         }
     }

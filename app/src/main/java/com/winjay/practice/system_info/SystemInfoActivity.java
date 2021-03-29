@@ -88,7 +88,7 @@ public class SystemInfoActivity extends BaseActivity {
         // OS架构
         stringBuilder.append("os.arch: " + System.getProperty("os.arch") + "\n");
         // Home属性
-        stringBuilder.append("os.arch: " + System.getProperty("user.home") + "\n");
+        stringBuilder.append("user.home: " + System.getProperty("user.home") + "\n");
         // Name属性
         stringBuilder.append("user.name: " + System.getProperty("user.name") + "\n");
         // Dir属性

@@ -1,5 +1,6 @@
 package com.winjay.practice.download_manager;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,14 +13,19 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * DownloadManager学习
@@ -32,7 +38,7 @@ import butterknife.OnClick;
  * @author Winjay
  * @date 2019-12-26
  */
-public class DownloadManagerActivity extends BaseActivity {
+public class DownloadManagerActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
     private final String TAG = DownloadManagerActivity.class.getSimpleName();
 
     private DownloadManager mDownloadManager;
@@ -44,6 +50,8 @@ public class DownloadManagerActivity extends BaseActivity {
     ImageView mImg;
 
     private DownloadReceiver mDownloadReceiver;
+
+    private final int RC_PERMISSION = 100;
 
     @Override
     protected int getLayoutId() {
@@ -57,11 +65,13 @@ public class DownloadManagerActivity extends BaseActivity {
         mDownloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 
         registerReceiver();
+
+        requiresPermissions();
     }
 
     @OnClick(R.id.download_btn)
     void download() {
-        LogUtil.d(TAG, "download()");
+        LogUtil.d(TAG);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(mDownloadUrl));
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
@@ -141,6 +151,38 @@ public class DownloadManagerActivity extends BaseActivity {
                 Toast.makeText(DownloadManagerActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    ////////////////////////////////////////// permission //////////////////////////////////////////
+    @AfterPermissionGranted(RC_PERMISSION)
+    private void requiresPermissions() {
+        String[] perms = {Manifest.permission.INTERNET};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            LogUtil.d(TAG, "Already have permission!");
+            // Already have permission, do the thing
+        } else {
+            LogUtil.w(TAG, "Do not have permissions, request them now!");
+            // Do not have permissions, request them now
+            EasyPermissions.requestPermissions(this, "请授予权限，否则影响部分使用功能。", RC_PERMISSION, perms);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        LogUtil.d(TAG);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        LogUtil.d(TAG, "Some permissions have been granted: " + perms.toString());
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        LogUtil.w(TAG, "Some permissions have been denied: " + perms.toString());
+        finish();
     }
 
     @Override

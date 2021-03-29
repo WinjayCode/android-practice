@@ -1,12 +1,18 @@
 package com.winjay.practice.media.record;
 
 import android.Manifest;
+import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
+import android.media.AudioTrack;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -14,21 +20,24 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.media.audio_focus.AudioFocusManager;
 import com.winjay.practice.media.interfaces.MediaType;
-import com.winjay.practice.media.music.MusicActivity;
-import com.winjay.practice.media.notification.MusicNotificationManager;
 import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.PcmToWavUtil;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import butterknife.BindView;
@@ -94,6 +103,8 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
 
     private MediaPlayer mediaPlayer;
     private AudioFocusManager mAudioFocusManager;
+
+    private AudioTrackThread mAudioTrackThread;
 
     @Override
     protected int getLayoutId() {
@@ -235,7 +246,7 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
 
     @OnClick(R.id.play_wav_btn)
     void playWav() {
-        if (new File(filePath + ".wav").exists()) {
+        if (handlerWavFile != null && handlerWavFile.exists()) {
             if (mediaPlayer.isPlaying()) {
                 return;
             }
@@ -262,6 +273,166 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
                     }
                 });
             }
+        }
+    }
+
+    @OnClick(R.id.system_play_wav_btn)
+    public void playWavBySystem() {
+        if (handlerWavFile != null && handlerWavFile.exists()) {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            Uri uri;
+            //Android 7.0 以上，需要使用 FileProvider
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+                uri = FileProvider.getUriForFile(this, "com.winjay.practice.fileprovider", handlerWavFile);
+            } else {
+                uri = Uri.fromFile(handlerWavFile.getAbsoluteFile());
+            }
+            intent.setDataAndType(uri, "audio");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            startActivity(intent);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @OnClick(R.id.play_pcm_static_btn)
+    public void playPcmStatic() {
+        if (pcmFile != null && pcmFile.exists()) {
+            try {
+                InputStream is = new FileInputStream(pcmFile);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                int len;
+                //创建一个数组
+                byte[] buffer = new byte[1024];
+                while ((len = is.read(buffer)) > 0) {
+                    //把数据存到ByteArrayOutputStream中
+                    baos.write(buffer, 0, len);
+                }
+                //拿到音频数据
+                byte[] bytes = baos.toByteArray();
+
+                /**
+                 * 设置音频信息属性
+                 * 1.设置支持多媒体属性，比如audio，video
+                 * 2.设置音频格式，比如 music
+                 */
+                AudioAttributes attributes = new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .build();
+                /**
+                 * 设置音频哥特式
+                 * 1. 设置采样率
+                 * 2. 设置采样位数
+                 * 3. 设置声道
+                 */
+                AudioFormat format = new AudioFormat.Builder()
+                        .setSampleRate(mSampleRateInHz)
+                        .setEncoding(mAudioFormat)
+                        .setChannelMask(mChannelConfig)
+                        .build();
+                //注意 bufferSizeInBytes 使用音频的大小
+                AudioTrack audioTrack = new AudioTrack(
+                        attributes,
+                        format,
+                        bytes.length,
+                        AudioTrack.MODE_STATIC, //设置为静态模式
+                        AudioManager.AUDIO_SESSION_ID_GENERATE //音频识别id
+                );
+                //一次性写入
+                audioTrack.write(bytes, 0, bytes.length);
+                //开始播放
+                audioTrack.play();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtil.e(TAG, "AudioTrack method static e=" + e);
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @OnClick(R.id.play_pcm_stream_btn)
+    public void playPcmStream() {
+        if (pcmFile != null && pcmFile.exists()) {
+            if (mAudioTrackThread != null) {
+                mAudioTrackThread.down();
+                mAudioTrackThread = null;
+            }
+            //播放pcm文件
+            mAudioTrackThread = new AudioTrackThread();
+            mAudioTrackThread.start();
+        }
+    }
+
+    class AudioTrackThread extends Thread {
+        AudioTrack audioTrack;
+        private final int bufferSize;
+        private boolean isDone;
+
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        public AudioTrackThread() {
+            /**
+             * 设置音频信息属性
+             * 1.设置支持多媒体属性，比如audio，video
+             * 2.设置音频格式，比如 music
+             */
+            AudioAttributes attributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build();
+            /**
+             * 设置音频哥特式
+             * 1. 设置采样率
+             * 2. 设置采样位数
+             * 3. 设置声道
+             */
+            AudioFormat format = new AudioFormat.Builder()
+                    .setSampleRate(mSampleRateInHz)
+                    .setEncoding(mAudioFormat)
+                    .setChannelMask(mChannelConfig)
+                    .build();
+            //拿到一帧的最小buffer大小
+            bufferSize = AudioTrack.getMinBufferSize(mSampleRateInHz, mChannelConfig, mAudioFormat);
+            audioTrack = new AudioTrack(
+                    attributes,
+                    format,
+                    bufferSize,
+                    AudioTrack.MODE_STREAM,
+                    AudioManager.AUDIO_SESSION_ID_GENERATE
+            );
+
+            audioTrack.play();
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(pcmFile);
+                byte[] buffer = new byte[bufferSize];
+                int len;
+                while (!isDone && (len = fis.read(buffer)) > 0) {
+                    audioTrack.write(buffer, 0, len);
+                }
+
+                audioTrack.stop();
+                audioTrack.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        void down() {
+            isDone = true;
         }
     }
 
@@ -299,6 +470,7 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
         LogUtil.w(TAG, "Some permissions have been denied: " + perms.toString());
         finish();
     }
+    ////////////////////////////////////////// permission end //////////////////////////////////////////
 
     @Override
     protected void onDestroy() {

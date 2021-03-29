@@ -4,6 +4,8 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -24,12 +26,14 @@ import java.io.OutputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 
 public class FileUtil {
 
     private static String TAG = FileUtil.class.getSimpleName();
     private static String pattern = "null\\/.*";
+    private static String APP_DIR = "Winjay";
 
     private FileUtil() {
         throw new UnsupportedOperationException("can't instantiate class" + TAG);
@@ -342,7 +346,8 @@ public class FileUtil {
      */
     public static boolean copyFileToDir(String srcFile, String destDir) {
         if (!createOrExistsDir(destDir)) {
-            throw new UnknownError("创建目录失败");
+//            throw new UnknownError("创建目录失败");
+            return false;
         }
         String destFile = destDir + "/" + new File(srcFile).getName();
         try {
@@ -646,15 +651,17 @@ public class FileUtil {
      * @param bitmap
      * @return
      */
-    public static File saveBitmap(Bitmap bitmap) {
-        String savePath;
-        File filePic;
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            savePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + File.separator;
-        } else {
-            LogUtil.d("saveBitmap: 1return");
+    public static File saveBitmap(Bitmap bitmap, String savePath) {
+        if (TextUtils.isEmpty(savePath) || bitmap == null) {
             return null;
         }
+        File filePic;
+//        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//            savePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString() + File.separator;
+//        } else {
+//            LogUtil.d("saveBitmap: 1return");
+//            return null;
+//        }
         try {
             filePic = new File(savePath + "Pic_" + System.currentTimeMillis() + ".jpg");
             if (!filePic.exists()) {
@@ -667,10 +674,9 @@ public class FileUtil {
             fos.close();
         } catch (IOException e) {
             e.printStackTrace();
-            LogUtil.d("saveBitmap: 2return");
             return null;
         }
-        LogUtil.d("saveBitmap: " + filePic.getAbsolutePath());
+        LogUtil.d(TAG, "saveBitmap: " + filePic.getAbsolutePath());
         return filePic;
     }
 
@@ -682,13 +688,12 @@ public class FileUtil {
      */
     public static Bitmap compressImage(Bitmap image) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        /** 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中*/
+        // 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        /** 把压缩后的数据baos存放到ByteArrayInputStream中*/
+        // 把压缩后的数据baos存放到ByteArrayInputStream中
         ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
-        /** 把ByteArrayInputStream数据生成图片*/
-        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);
-        return bitmap;
+        // 把ByteArrayInputStream数据生成图片
+        return BitmapFactory.decodeStream(isBm, null, null);
     }
 
     /**
@@ -943,6 +948,26 @@ public class FileUtil {
                 is.close();
                 fos.close();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 通知android媒体库更新文件夹
+     *
+     * @param context
+     * @param filePath 文件绝对路径
+     */
+    public void scanFile(Context context, String filePath) {
+        try {
+            MediaScannerConnection.scanFile(context, new String[]{filePath}, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        public void onScanCompleted(String path, Uri uri) {
+                            Log.d(TAG, "path=" + path);
+                            Log.d(TAG, "uri=" + uri);
+                        }
+                    });
         } catch (Exception e) {
             e.printStackTrace();
         }

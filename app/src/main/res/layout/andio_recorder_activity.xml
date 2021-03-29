@@ -51,8 +51,39 @@
         android:id="@+id/play_wav_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="播放WAV音频"
+        android:text="MediaPlayer播放WAV音频"
+        android:textAllCaps="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/record_btn" />
+
+    <Button
+        android:id="@+id/system_play_wav_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="系统方式播放WAV音频"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/play_wav_btn" />
+
+    <Button
+        android:id="@+id/play_pcm_static_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="播放PCM音频(AudioTrack STATIC模式)"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/system_play_wav_btn" />
+
+    <Button
+        android:id="@+id/play_pcm_stream_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="播放PCM音频(AudioTrack STREAM模式)"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/play_pcm_static_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

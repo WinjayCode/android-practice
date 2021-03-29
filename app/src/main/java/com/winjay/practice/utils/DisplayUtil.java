@@ -1,7 +1,9 @@
 package com.winjay.practice.utils;
 
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.WindowManager;
 
 /**
  * 显示相关工具类
@@ -10,6 +12,7 @@ import android.util.TypedValue;
  * @date 2020/8/12
  */
 public class DisplayUtil {
+    private static final String TAG = DisplayUtil.class.getSimpleName();
 
     public static int px2dip(Context context, float pxValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
@@ -37,5 +40,21 @@ public class DisplayUtil {
 
     protected int sp2px(Context context, int sp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
+    }
+
+    /**
+     * 获取屏幕分辨率
+     *
+     * @return
+     */
+    private int[] getScreenSize(Context context) {
+        int[] size = new int[2];
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        ((WindowManager) (context.getSystemService(Context.WINDOW_SERVICE))).getDefaultDisplay().getRealMetrics(outMetrics);
+        size[0] = outMetrics.widthPixels;
+        LogUtil.d(TAG, "width=" + size[0]);
+        size[1] = outMetrics.heightPixels;
+        LogUtil.d(TAG, "height=" + size[1]);
+        return size;
     }
 }

@@ -3,6 +3,7 @@ package com.winjay.practice.utils;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 
 /**
  * Bitmap工具类
@@ -20,8 +21,7 @@ public class BitmapUtil {
      * @param reqHeight
      * @return
      */
-    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-                                                         int reqWidth, int reqHeight) {
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(res, resId, options);
@@ -40,8 +40,7 @@ public class BitmapUtil {
      * @param reqHeight
      * @return
      */
-    public static int calculateInSampledSize(BitmapFactory.Options options,
-                                             int reqWidth, int reqHeight) {
+    public static int calculateInSampledSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
@@ -49,12 +48,32 @@ public class BitmapUtil {
         if (height > reqHeight || width > reqWidth) {
             final int halfHeight = height / 2;
             final int halfWidth = width / 2;
-            while (halfHeight / inSampleSize >= reqHeight
-                    && halfWidth / inSampleSize >= reqWidth) {
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
                 inSampleSize *= 2;
             }
         }
 
         return inSampleSize;
+    }
+
+    /**
+     * 镜像翻转
+     *
+     * @param bitmap
+     * @return
+     */
+    public static Bitmap convertBitmap(Bitmap bitmap) {
+        Matrix matrix = new Matrix();
+        matrix.postScale(-1, 1);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+    /**
+     * 旋转图片
+     */
+    public static Bitmap rotateBitmap(Bitmap bmp, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
     }
 }

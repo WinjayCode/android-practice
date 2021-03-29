@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <SurfaceView
-        android:id="@+id/surfaceview"
+        android:id="@+id/preview_sv"
         android:layout_width="320dp"
         android:layout_height="240dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -18,11 +18,29 @@
         android:layout_height="wrap_content"
         android:text="拍照"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/switch_camera_btn"
+        app:layout_constraintTop_toBottomOf="@+id/preview_sv" />
+
+    <Button
+        android:id="@+id/switch_camera_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="切换摄像头"
+        app:layout_constraintLeft_toRightOf="@+id/btn_take_photo"
+        app:layout_constraintRight_toLeftOf="@+id/switch_flash_btn"
+        app:layout_constraintTop_toTopOf="@+id/btn_take_photo" />
+
+    <Button
+        android:id="@+id/switch_flash_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="开关闪光灯"
+        app:layout_constraintLeft_toRightOf="@+id/switch_camera_btn"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/surfaceview" />
+        app:layout_constraintTop_toTopOf="@+id/btn_take_photo" />
 
     <TextView
-        android:id="@+id/tv_pic_dir"
+        android:id="@+id/pic_path_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="图片路径："
@@ -34,10 +52,10 @@
 
     <ImageView
         android:id="@+id/img_pic"
-        android:layout_width="160dp"
-        android:layout_height="120dp"
+        android:layout_width="320dp"
+        android:layout_height="240dp"
         android:background="#000000"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_pic_dir" />
+        app:layout_constraintTop_toBottomOf="@+id/pic_path_tv" />
 </androidx.constraintlayout.widget.ConstraintLayout>

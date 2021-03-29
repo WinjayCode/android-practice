@@ -24,6 +24,7 @@ import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.media.ModuleMediaListActivity;
 import com.winjay.practice.notification.NotificationActivity;
 import com.winjay.practice.package_manager.PackageManagerActivity;
+import com.winjay.practice.plugin.PluginActivity;
 import com.winjay.practice.so.SOActivity;
 import com.winjay.practice.system_info.SystemInfoActivity;
 import com.winjay.practice.thread.HandlerManager;
@@ -58,6 +59,7 @@ public class MainActivity extends BaseActivity {
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
         {
             put("Media", ModuleMediaListActivity.class);
+            put("Plugin", PluginActivity.class);
             put("WebSocket", null);
             put("so_use", SOActivity.class);
             put("kotlin", KotlinTestActivity.class);

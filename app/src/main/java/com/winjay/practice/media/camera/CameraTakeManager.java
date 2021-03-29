@@ -44,6 +44,20 @@ public class CameraTakeManager {
         surfaceViewCallback.takePhoto();
     }
 
+    /**
+     * 切换摄像头
+     */
+    public void switchCamera() {
+        surfaceViewCallback.switchCamera();
+    }
+
+    /**
+     * 开关闪光灯
+     */
+    public void switchFlashlight() {
+        surfaceViewCallback.switchFlashlight();
+    }
+
     public void destroy() {
         surfaceViewCallback.destroy();
     }

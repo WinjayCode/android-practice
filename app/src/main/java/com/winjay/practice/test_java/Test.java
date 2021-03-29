@@ -3,6 +3,7 @@ package com.winjay.practice.test_java;
 import android.util.Log;
 
 import java.math.BigInteger;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Locale;
@@ -130,6 +131,27 @@ public class Test {
 
 
 //        log();
+
+//        int checkValue = 0;
+//        int type = 0;
+//        checkValue |= 1 << type;
+//        int result = checkValue ^ 127;
+//        System.out.println(result);
+
+
+//        System.out.println("isOnline=" + isOnline());
+//        System.out.println("aaa=" + (0x1 << 1));
+
+        System.out.println(Arrays.toString(hexToByteArray("FF")));
+    }
+
+    public static boolean isOnline() {
+        try {
+            new URL("https://www.baidu.com").openStream();
+            return true;
+        } catch (Exception unused) {
+            return false;
+        }
     }
 
     public static void log() {

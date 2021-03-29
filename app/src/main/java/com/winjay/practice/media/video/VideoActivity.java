@@ -55,6 +55,8 @@ public class VideoActivity extends BaseActivity {
     private static final String TAG = VideoActivity.class.getSimpleName();
     private VideoView mVideoView;
 
+    private MediaPlayer mediaPlayer;
+
     @Override
     protected int getLayoutId() {
         return R.layout.video_activity;
@@ -70,30 +72,27 @@ public class VideoActivity extends BaseActivity {
                 playVideo(video.getPath());
             }
         }
+//        playVideo("");
     }
 
     private void playVideo(String path) {
-//        File file = new File(Environment.getExternalStorageDirectory(), "U2.mp4");
+//        File file = new File(Environment.getExternalStorageDirectory(), "Xvid_1920_1088.mp4");
 //        if (!file.exists()) {
 //            Toast.makeText(this, "视频不存在", Toast.LENGTH_SHORT).show();
 //            finish();
 //            return;
 //        }
+//        path = file.getAbsolutePath();
+
+        LogUtil.d(TAG, "path=" + path);
         mVideoView.setVideoPath(path);//设置视频文件
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 LogUtil.i(TAG, "onPrepared()");
+                mediaPlayer = mp;
                 //视频加载完成,准备好播放视频的回调
                 mVideoView.start();
-            }
-        });
-        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                LogUtil.i(TAG, "onCompletion()");
-                //视频播放完成后的回调
-
             }
         });
         mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
@@ -153,6 +152,14 @@ public class VideoActivity extends BaseActivity {
                 return false;//如果方法处理了错误，则为true；否则为false。返回false或根本没有OnErrorListener，将导致调用OnCompletionListener。
             }
         });
+        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                LogUtil.i(TAG, "onCompletion()");
+                //视频播放完成后的回调
+
+            }
+        });
         mVideoView.setOnInfoListener(new MediaPlayer.OnInfoListener() {
             @Override
             public boolean onInfo(MediaPlayer mp, int what, int extra) {
@@ -186,6 +193,21 @@ public class VideoActivity extends BaseActivity {
         });
 
         mVideoView.setMediaController(new MediaController(this));
+
+        mVideoView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LogUtil.d(TAG, "1111");
+                mediaPlayer.setVolume(0, 0);
+            }
+        }, 5000);
+        mVideoView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LogUtil.d(TAG, "2222");
+                mediaPlayer.setVolume(1, 1);
+            }
+        }, 10000);
     }
 
     @Override

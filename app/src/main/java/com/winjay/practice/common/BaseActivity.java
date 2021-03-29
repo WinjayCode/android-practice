@@ -61,7 +61,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 //        }
 
-        setContentView(getLayoutId());
+        if (getLayoutId() != 0) {
+            setContentView(getLayoutId());
+        }
         unbinder = ButterKnife.bind(this);
     }
 

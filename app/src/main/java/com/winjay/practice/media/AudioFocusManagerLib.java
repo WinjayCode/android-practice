@@ -30,32 +30,52 @@ public class AudioFocusManagerLib implements AudioManager.OnAudioFocusChangeList
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (mFocusRequest == null) {
                 if (mAudioAttributes == null) {
-                    if (type == AudioType.MEDIA) {
-                        mAudioAttributes = new AudioAttributes.Builder()
-                                .setUsage(AudioAttributes.USAGE_MEDIA)
-                                .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
-                                .build();
-                    } else if (type == AudioType.SYSTEM) {
-                        mAudioAttributes = new AudioAttributes.Builder()
-                                .setUsage(AudioAttributes.USAGE_NOTIFICATION_EVENT)
-                                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                                .build();
+                    switch (type) {
+                        case AudioType.MEDIA:
+                            mAudioAttributes = new AudioAttributes.Builder()
+                                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
+                                    .build();
+                            break;
+                        case AudioType.SYSTEM:
+                            mAudioAttributes = new AudioAttributes.Builder()
+                                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_EVENT)
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                                    .build();
+                            break;
+                        case AudioType.SPEECH:
+                            mAudioAttributes = new AudioAttributes.Builder()
+                                    .setUsage(AudioAttributes.USAGE_ASSISTANT)
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                                    .build();
+                            break;
                     }
                 }
-                if (type == AudioType.MEDIA) {
-                    mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
-                            .setAudioAttributes(mAudioAttributes)
-                            .setAcceptsDelayedFocusGain(true) // 允许延迟获得焦点
-                            .setWillPauseWhenDucked(true) // 不希望系统自动降低音量
-                            .setOnAudioFocusChangeListener(this)
-                            .build();
-                } else if (type == AudioType.SYSTEM) {
-                    mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
-                            .setAudioAttributes(mAudioAttributes)
-                            .setAcceptsDelayedFocusGain(true) // 允许延迟获得焦点
-                            .setWillPauseWhenDucked(true) // 不希望系统自动降低音量
-                            .setOnAudioFocusChangeListener(this)
-                            .build();
+                switch (type) {
+                    case AudioType.MEDIA:
+                        mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                                .setAudioAttributes(mAudioAttributes)
+                                .setAcceptsDelayedFocusGain(true) // 允许延迟获得焦点
+                                .setWillPauseWhenDucked(true) // 不希望系统自动降低音量
+                                .setOnAudioFocusChangeListener(this)
+                                .build();
+                        break;
+                    case AudioType.SYSTEM:
+                        mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+                                .setAudioAttributes(mAudioAttributes)
+                                .setAcceptsDelayedFocusGain(true) // 允许延迟获得焦点
+                                .setWillPauseWhenDucked(true) // 不希望系统自动降低音量
+                                .setOnAudioFocusChangeListener(this)
+                                .build();
+                        break;
+                    case AudioType.SPEECH:
+                        mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
+                                .setAudioAttributes(mAudioAttributes)
+                                .setAcceptsDelayedFocusGain(true) // 允许延迟获得焦点
+                                .setWillPauseWhenDucked(true) // 不希望系统自动降低音量
+                                .setOnAudioFocusChangeListener(this)
+                                .build();
+                        break;
                 }
             }
             return mAudioManager.requestAudioFocus(mFocusRequest);
@@ -98,12 +118,13 @@ public class AudioFocusManagerLib implements AudioManager.OnAudioFocusChangeList
         mAudioFocusChangeListener = listener;
     }
 
-    public boolean isMusicActive () {
+    public boolean isMusicActive() {
         return mAudioManager.isMusicActive();
     }
 
     public interface AudioType {
         int MEDIA = 1;
         int SYSTEM = 2;
+        int SPEECH = 3;
     }
 }

@@ -37,13 +37,13 @@ public class CameraActivity extends BaseActivity implements EasyPermissions.Perm
     private Context mContext;
     private final int RC_PERMISSION = 100;
 
-    @BindView(R.id.surfaceview)
+    @BindView(R.id.preview_sv)
     SurfaceView previewView;
 
     @BindView(R.id.img_pic)
     ImageView imgPic;
 
-    @BindView(R.id.tv_pic_dir)
+    @BindView(R.id.pic_path_tv)
     TextView tvPicDir;
 
     CameraTakeManager manager;
@@ -83,13 +83,25 @@ public class CameraActivity extends BaseActivity implements EasyPermissions.Perm
         manager.takePhoto();
     }
 
+    @OnClick(R.id.switch_camera_btn)
+    void switchCamera() {
+        LogUtil.d(TAG);
+        manager.switchCamera();
+    }
+
+    @OnClick(R.id.switch_flash_btn)
+    void switchFlashlight() {
+        LogUtil.d(TAG);
+        manager.switchFlashlight();
+    }
+
     ////////////////////////////////////////// permission //////////////////////////////////////////
     @AfterPermissionGranted(RC_PERMISSION)
     private void requiresPermissions() {
         String[] perms = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE};
         if (EasyPermissions.hasPermissions(this, perms)) {
-            LogUtil.d(TAG, "Already have permission, scan files!");
+            LogUtil.d(TAG, "Already have permission, do the thing!");
             // Already have permission, do the thing
             init();
         } else {
@@ -116,6 +128,7 @@ public class CameraActivity extends BaseActivity implements EasyPermissions.Perm
         LogUtil.w(TAG, "Some permissions have been denied: " + perms.toString());
         finish();
     }
+    ////////////////////////////////////////// permission end //////////////////////////////////////////
 
     @Override
     protected void onDestroy() {

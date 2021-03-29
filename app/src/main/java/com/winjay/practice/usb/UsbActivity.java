@@ -2,8 +2,10 @@ package com.winjay.practice.usb;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +25,7 @@ import com.winjay.practice.media.bean.AudioBean;
 import com.winjay.practice.media.bean.VideoBean;
 import com.winjay.practice.media.video.VideoActivity;
 import com.winjay.practice.utils.LogUtil;
+import com.winjay.practice.utils.UsbUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +57,8 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
     private List<VideoBean> mVideoListData;
     private List<AudioBean> mMusicListData;
 
+    private USBDeviceReceiver usbDeviceReceiver;
+
     @Override
     protected int getLayoutId() {
         return R.layout.usb_activity;
@@ -64,6 +69,7 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
         super.onCreate(savedInstanceState);
         mVideoListData = new ArrayList<>();
         mMusicListData = new ArrayList<>();
+        registerUSBReceiver();
         registerObserver();
         initView();
         requiresPermissions();
@@ -143,10 +149,10 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
 
 //        StringBuilder where = new StringBuilder();
 //        where.delete(0, where.length());
-//        where.append(MediaStore.Audio.Media.TITLE + " != ''");
-//        where.append(" AND (" + MediaStore.Audio.Media.MIME_TYPE + " LIKE '%video/%')");
+//        where.append(MediaStore.Video.Media.TITLE + " != ''");
+//        where.append(" AND (" + MediaStore.Video.Media.MIME_TYPE + " LIKE '%video/%')");
 //        // 不读取内置sd卡
-//        where.append(" AND (" + MediaStore.Audio.Media.DATA + " NOT LIKE '%" + INTERNAL_STORAGE_PATH + "%')");
+//        where.append(" AND (" + MediaStore.Video.Media.DATA + " NOT LIKE '%" + INTERNAL_STORAGE_PATH + "%')");
 //        LogUtil.d(TAG, "where: " + where.toString());
 
         sortOrder = MediaStore.Video.VideoColumns.DATE_TAKEN + " DESC, " + BaseColumns._ID + " DESC ";
@@ -156,9 +162,9 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
 
         if (cursor != null && cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
+                String path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE));
+                String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
                 int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID));
 
                 String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.MIME_TYPE));
@@ -187,15 +193,15 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
         String sortOrder;
         String[] cursorCols;
 
-        cursorCols = new String[]{MediaStore.Video.Media._ID,
-                MediaStore.Video.Media.DATA,
-                MediaStore.Video.Media.DISPLAY_NAME,
-                MediaStore.Video.Media.MIME_TYPE,
-                MediaStore.Video.Media.DATE_ADDED,
-                MediaStore.Video.Media.DATE_MODIFIED,
-                MediaStore.Video.Media.TITLE,
-                MediaStore.Video.Media.DURATION,
-                MediaStore.Video.Media.SIZE};
+        cursorCols = new String[]{MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.MIME_TYPE,
+                MediaStore.Audio.Media.DATE_ADDED,
+                MediaStore.Audio.Media.DATE_MODIFIED,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.SIZE};
 
 //        StringBuilder where = new StringBuilder();
 //        where.delete(0, where.length());
@@ -218,8 +224,8 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
                 String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
                 int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID));
 
-                String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.MIME_TYPE));
-                long dateModified = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.DATE_MODIFIED));
+                String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
+                long dateModified = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));
                 int orientation = 0;//cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
 
                 LogUtil.d(TAG, "path=" + path);
@@ -239,6 +245,25 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
         }
         cursor.close();
         mMusicListAdapter.setData(mMusicListData);
+    }
+
+    private void registerUSBReceiver() {
+        if (usbDeviceReceiver == null) {
+            usbDeviceReceiver = new USBDeviceReceiver();
+        }
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
+        intentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+        intentFilter.addAction(UsbUtil.ACTION_USB_PERMISSION);
+        intentFilter.addAction(VolumeInfo.ACTION_VOLUME_STATE_CHANGED);
+        registerReceiver(usbDeviceReceiver, intentFilter);
+    }
+
+    private void unregisterUSBReceiver() {
+        if (usbDeviceReceiver != null) {
+            unregisterReceiver(usbDeviceReceiver);
+            usbDeviceReceiver = null;
+        }
     }
 
     @AfterPermissionGranted(RC_PERMISSION)
@@ -292,6 +317,7 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
         super.onDestroy();
         LogUtil.d(TAG);
         unRegisterObserver();
+        unregisterUSBReceiver();
     }
 
 }
