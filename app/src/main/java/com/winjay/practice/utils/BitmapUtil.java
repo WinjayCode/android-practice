@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
 /**
  * Bitmap工具类
  *
@@ -75,5 +78,21 @@ public class BitmapUtil {
         Matrix matrix = new Matrix();
         matrix.postRotate(degrees);
         return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+    }
+
+    /**
+     * 压缩图片
+     *
+     * @param image
+     * @return
+     */
+    public static Bitmap compress(Bitmap image) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        // 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        // 把压缩后的数据baos存放到ByteArrayInputStream中
+        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+        // 把ByteArrayInputStream数据生成图片
+        return BitmapFactory.decodeStream(isBm, null, null);
     }
 }

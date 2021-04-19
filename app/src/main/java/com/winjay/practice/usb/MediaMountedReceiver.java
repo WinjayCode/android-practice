@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.LogUtil;
 
 /**
@@ -42,6 +44,11 @@ public class MediaMountedReceiver extends BroadcastReceiver {
                 case Intent.ACTION_MEDIA_MOUNTED:
                     String pathMounted = intent.getData().getPath();
                     LogUtil.d(TAG, "ACTION_MEDIA_MOUNTED: path=" + pathMounted);
+                    // test code
+                    Toast.makeText(context, "usb=" + pathMounted, Toast.LENGTH_SHORT).show();
+                    boolean result = FileUtil.copyFile(Environment.getExternalStorageDirectory() + "Log.txt", pathMounted + "/Log.txt");
+                    LogUtil.d(TAG, "result=" + result);
+                    Toast.makeText(context, "result=" + result, Toast.LENGTH_SHORT).show();
                     break;
                 // 外部媒体资源未挂载
                 case Intent.ACTION_MEDIA_UNMOUNTED:

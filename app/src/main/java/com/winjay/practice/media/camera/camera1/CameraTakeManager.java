@@ -1,4 +1,4 @@
-package com.winjay.practice.media.camera;
+package com.winjay.practice.media.camera.camera1;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

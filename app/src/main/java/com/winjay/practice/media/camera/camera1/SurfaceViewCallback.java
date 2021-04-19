@@ -1,10 +1,9 @@
-package com.winjay.practice.media.camera;
+package com.winjay.practice.media.camera.camera1;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
-import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
@@ -344,8 +343,7 @@ public class SurfaceViewCallback implements SurfaceHolder.Callback {
         try {
             Camera.Parameters parameters = mCamera.getParameters();
             if (!isFlashOpen) {
-                LogUtil.d(TAG, "FLASH_MODE_AUTO");
-                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 isFlashOpen = true;
             } else {
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);

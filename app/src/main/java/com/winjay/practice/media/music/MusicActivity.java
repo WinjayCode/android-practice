@@ -43,8 +43,6 @@ import butterknife.OnClick;
  * <p>
  * assets目录下的资源无法直接获取资源本身信息(最好拷贝到具体目录下)
  * <p>
- * 通知系统数据库刷新单个文件
- * sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(sdPath + "0.mp3"))));
  *
  * @author Winjay
  * @date 2021-02-05

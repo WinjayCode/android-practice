@@ -1,18 +1,15 @@
-package com.winjay.practice.media.camera;
+package com.winjay.practice.media.camera.camera1;
 
 import android.Manifest;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.SurfaceView;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;

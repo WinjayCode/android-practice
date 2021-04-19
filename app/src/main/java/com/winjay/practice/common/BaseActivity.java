@@ -1,20 +1,26 @@
 package com.winjay.practice.common;
 
 import android.os.Bundle;
-
-import com.winjay.practice.R;
-import com.winjay.practice.utils.LogUtil;
-
+import android.text.TextUtils;
 import android.transition.Explode;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.winjay.practice.R;
+import com.winjay.practice.utils.LogUtil;
+
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * 公共基类Activity
@@ -22,9 +28,10 @@ import butterknife.Unbinder;
  * @author Winjay
  * @date 2019-08-24
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
     private static final String TAG = BaseActivity.class.getSimpleName();
     private Unbinder unbinder;
+    private final int RC_PERMISSION = 100;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,4 +100,58 @@ public abstract class BaseActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
     }
+
+    protected void toast(String text) {
+        if (!TextUtils.isEmpty(text)) {
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    ////////////////////////////////////////// permission //////////////////////////////////////////
+    protected String[] permissions() {
+        return new String[]{};
+    }
+
+    protected void permissionGranted() {}
+
+    protected boolean hasPermissions() {
+        if (permissions().length > 0) {
+            return EasyPermissions.hasPermissions(this, permissions());
+        }
+        return false;
+    }
+
+    @AfterPermissionGranted(RC_PERMISSION)
+    public void requestPermissions() {
+        if (permissions().length > 0) {
+            if (EasyPermissions.hasPermissions(this, permissions())) {
+                LogUtil.d(TAG, "Already have permission, do the thing!");
+                // Already have permission, do the thing
+                permissionGranted();
+            } else {
+                LogUtil.w(TAG, "Do not have permissions, request them now!");
+                // Do not have permissions, request them now
+                EasyPermissions.requestPermissions(this, "请授予权限，否则影响部分使用功能。", RC_PERMISSION, permissions());
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        LogUtil.d(TAG);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        LogUtil.d(TAG, "Some permissions have been granted: " + perms.toString());
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        LogUtil.w(TAG, "Some permissions have been denied: " + perms.toString());
+        finish();
+    }
+    ////////////////////////////////////////// permission end //////////////////////////////////////////
 }

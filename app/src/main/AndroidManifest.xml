@@ -17,17 +17,20 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.usb.host" />
-    <uses-permission android:name="android.hardware.usb.host"/>
+    <uses-permission android:name="android.hardware.usb.host" />
 
     <!-- 音频录制权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <!-- 相机权限 -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.any" />
     <!-- 支持相机才能运行 -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <!-- 开机广播 -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
@@ -61,6 +64,7 @@
             android:configChanges="orientation|screenSize"
             android:excludeFromRecents="false"
             android:launchMode="standard"
+            android:screenOrientation="portrait"
             android:taskAffinity="com.winjay.practice">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -77,10 +81,13 @@
         <activity
             android:name=".MainActivity"
             android:clearTaskOnLaunch="true"
-            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize" />
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
+            android:screenOrientation="portrait" />
 
         <!-- content provider start -->
-        <activity android:name=".content_provider.ProviderActivity" />
+        <activity
+            android:name=".content_provider.ProviderActivity"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name=".content_provider.UserinfoProvider"
@@ -88,13 +95,21 @@
         <!-- content provider end -->
 
         <!-- design mode start -->
-        <activity android:name=".design_mode.DesignModeActivity" />
+        <activity
+            android:name=".design_mode.DesignModeActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".design_mode.mvc.controller.MVCActivity" />
+        <activity
+            android:name=".design_mode.mvc.controller.MVCActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".design_mode.mvp.view.MVPActivity" />
+        <activity
+            android:name=".design_mode.mvp.view.MVPActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".design_mode.mvvm.MVVMActivity" />
+        <activity
+            android:name=".design_mode.mvvm.MVVMActivity"
+            android:screenOrientation="portrait" />
         <!-- design mode end -->
 
         <!-- ipc start -->
@@ -102,18 +117,26 @@
             android:name=".ipc.messenger.MessengerService"
             android:process=":remote" />
 
-        <activity android:name=".ipc.messenger.MessengerActivity" />
+        <activity
+            android:name=".ipc.messenger.MessengerActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".ipc.aidl.BookManagerService"
             android:process=":remote" />
 
-        <activity android:name=".ipc.aidl.BookManagerClientActivity" />
+        <activity
+            android:name=".ipc.aidl.BookManagerClientActivity"
+            android:screenOrientation="portrait" />
         <!-- ipc end -->
 
         <!-- ioc start -->
-        <activity android:name=".ioc.IOCActivity" />
-        <activity android:name=".ioc.IOCActivity2" />
+        <activity
+            android:name=".ioc.IOCActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ioc.IOCActivity2"
+            android:screenOrientation="portrait" />
         <!-- ioc end -->
 
         <!-- widget start -->
@@ -129,52 +152,97 @@
         <!-- widget end -->
 
         <!-- ui start -->
-        <activity android:name=".ui.constraint_layout.ConstraintLayoutActivity" />
+        <activity
+            android:name=".ui.constraint_layout.ConstraintLayoutActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.cardview.CardViewActivity" />
+        <activity
+            android:name=".ui.cardview.CardViewActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.app_compat_text.AppCompatTextActivity" />
+        <activity
+            android:name=".ui.app_compat_text.AppCompatTextActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.toolbar.ToolbarActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/ToolbarTheme" />
 
-        <activity android:name=".ui.surfaceview_animation.SurfaceViewAnimationActivity" />
+        <activity
+            android:name=".ui.surfaceview_animation.SurfaceViewAnimationActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.viewpager_fragment.ViewPagerActivity" />
+        <activity
+            android:name=".ui.viewpager_fragment.ViewPagerActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.custom_view.CustomViewActivity" />
+        <activity
+            android:name=".ui.custom_view.CustomViewActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.material_design.MaterialDesignActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/MyMaterialDesignTheme" />
 
-        <activity android:name=".ui.svg.SVGActivity" />
+        <activity
+            android:name=".ui.svg.SVGActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.TransparentActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:launchMode="singleInstance"
-            android:screenOrientation="landscape"
+            android:screenOrientation="portrait"
             android:theme="@style/NoTitleTranslucentTheme" />
         <!-- ui end -->
 
         <!-- media start-->
-        <activity android:name=".media.ModuleMediaListActivity" />
+        <activity
+            android:name=".media.ModuleMediaListActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".media.record.AudioRecordActivity" />
+        <activity
+            android:name=".media.record.AudioRecordActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".media.video.VideoActivity" />
+        <activity
+            android:name=".media.video.VideoActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".media.music.MusicActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".media.exoplayer.ExoPlayerActivity" />
+        <activity
+            android:name=".media.exoplayer.ExoPlayerActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".media.camera.CameraActivity" />
+        <activity
+            android:name=".media.camera.CameraListActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".media.audio_focus.AudioFocusTestActivity" />
+        <activity
+            android:name=".media.camera.camera1.CameraActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".media.camera.camera2.Camera2Activity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".media.camera.camerax.CameraXActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".media.extractor_muxer.MediaExtractorAndMuxerActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".media.audio_focus.AudioFocusTestActivity"
+            android:screenOrientation="portrait" />
 
         <receiver android:name=".media.receiver.MediaButtonIntentReceiver">
             <intent-filter>
@@ -195,7 +263,9 @@
         <!-- media end-->
 
         <!-- usb start -->
-        <activity android:name=".usb.UsbActivity" />
+        <activity
+            android:name=".usb.UsbActivity"
+            android:screenOrientation="portrait" />
 
         <receiver android:name=".usb.MediaMountedReceiver">
             <intent-filter>
@@ -216,7 +286,9 @@
         <!-- usb end -->
 
         <!--隐式启动activity，action、category、data必须同时匹配，才能隐式启动（android.intent.category.DEFAULT必须有）-->
-        <activity android:name=".intent_filter.IntentFilterActivity">
+        <activity
+            android:name=".intent_filter.IntentFilterActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.winjay.practice.action_1" />
                 <action android:name="com.winjay.practice.action_2" />
@@ -241,32 +313,55 @@
                 android:resource="@xml/accessibility_helper" />
         </service>
 
-        <activity android:name=".download_manager.DownloadManagerActivity" />
+        <activity
+            android:name=".download_manager.DownloadManagerActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".directory_structure.DirectoryStructureActivity" />
+        <activity
+            android:name=".directory_structure.DirectoryStructureActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".location.LocationActivity" />
+        <activity
+            android:name=".location.LocationActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".so.SOActivity" />
+        <activity
+            android:name=".so.SOActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".kotlin.KotlinTestActivity" />
+        <activity
+            android:name=".kotlin.KotlinTestActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".system_info.SystemInfoActivity" />
+        <activity
+            android:name=".system_info.SystemInfoActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".package_manager.PackageManagerActivity" />
+        <activity
+            android:name=".package_manager.PackageManagerActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity_manager.ActivityManagerActivity" />
+        <activity
+            android:name=".activity_manager.ActivityManagerActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".notification.NotificationActivity" />
+        <activity
+            android:name=".notification.NotificationActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".plugin.PluginActivity" />
+        <activity
+            android:name=".plugin.PluginActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".EmptyActivity"
             android:configChanges="orientation|screenSize"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".TestActivity" />
+        <activity
+            android:name=".TestActivity"
+            android:screenOrientation="portrait" />
 
         <service android:name=".TestService" />
     </application>

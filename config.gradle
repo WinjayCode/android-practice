@@ -10,7 +10,7 @@ ext {
             buildToolsVersion  : "27.0.3",
 
             // 最小sdk版本
-            minSdkVersion      : 19,
+            minSdkVersion      : 21,
             // 目标sdk版本
             targetSdkVersion   : 29,
 

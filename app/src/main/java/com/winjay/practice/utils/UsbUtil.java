@@ -10,7 +10,11 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
+import android.os.storage.StorageManager;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,6 +30,7 @@ import java.util.Map;
 public class UsbUtil {
     private static final String TAG = UsbUtil.class.getSimpleName();
     public static final String ACTION_USB_PERMISSION = "com.android.usb.USB_PERMISSION";
+    public static final String INTERNAL_STORAGE_PATH = "/storage/emulated/0";
 
     public static boolean hasUsbDevices(Context mContext) {
         UsbManager usbManager = (UsbManager) mContext.getSystemService(Context.USB_SERVICE);
@@ -113,5 +118,47 @@ public class UsbUtil {
         int in = connection.bulkTransfer(inEndpoint, receiveMsgBytes, receiveMsgBytes.length, 10000);
         String receiveMsgString = ByteUtil.bytesToHex(receiveMsgBytes);
         LogUtil.d(TAG, "应答：" + in + " # " + receiveMsgString + " # " + receiveMsgBytes.length);
+    }
+
+    /**
+     * 获取当前连接的U盘设备路径
+     *
+     * @param mContext
+     * @return
+     */
+    public static String getUSBPath(Context mContext) {
+        String targetpath = "";
+        StorageManager mStorageManager = (StorageManager) mContext.getSystemService(Context.STORAGE_SERVICE);
+        Class<?> storageVolumeClazz = null;
+        try {
+            storageVolumeClazz = Class.forName("android.os.storage.StorageVolume");
+            Method getVolumeList = mStorageManager.getClass().getMethod("getVolumeList");
+            Method getPath = storageVolumeClazz.getMethod("getPath");
+
+            Object result = getVolumeList.invoke(mStorageManager);
+            final int length = Array.getLength(result);
+            Method getUserLabel = storageVolumeClazz.getMethod("getUserLabel");
+
+            for (int i = 0; i < length; i++) {
+                Object storageVolumeElement = Array.get(result, i);
+                String userLabel = (String) getUserLabel.invoke(storageVolumeElement);
+                String path = (String) getPath.invoke(storageVolumeElement);
+                LogUtil.d(TAG, "userLabel=" + userLabel);
+                LogUtil.d(TAG, "path=" + path);
+                if (!INTERNAL_STORAGE_PATH.equals(path)) {
+                    targetpath = path.replace("storage", "mnt/media_rw");
+                    return targetpath;
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return targetpath;
     }
 }

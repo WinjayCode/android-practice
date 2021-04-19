@@ -31,10 +31,16 @@ public class AudioFocusManagerLib implements AudioManager.OnAudioFocusChangeList
             if (mFocusRequest == null) {
                 if (mAudioAttributes == null) {
                     switch (type) {
+                        case AudioType.TEST:
+                            mAudioAttributes = new AudioAttributes.Builder()
+                                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                    .build();
+                            break;
                         case AudioType.MEDIA:
                             mAudioAttributes = new AudioAttributes.Builder()
                                     .setUsage(AudioAttributes.USAGE_MEDIA)
-                                    .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                                     .build();
                             break;
                         case AudioType.SYSTEM:
@@ -52,6 +58,14 @@ public class AudioFocusManagerLib implements AudioManager.OnAudioFocusChangeList
                     }
                 }
                 switch (type) {
+                    case AudioType.TEST:
+                        mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+                                .setAudioAttributes(mAudioAttributes)
+                                .setAcceptsDelayedFocusGain(true) // 允许延迟获得焦点
+                                .setWillPauseWhenDucked(true) // 不希望系统自动降低音量
+                                .setOnAudioFocusChangeListener(this)
+                                .build();
+                        break;
                     case AudioType.MEDIA:
                         mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
                                 .setAudioAttributes(mAudioAttributes)
@@ -123,6 +137,7 @@ public class AudioFocusManagerLib implements AudioManager.OnAudioFocusChangeList
     }
 
     public interface AudioType {
+        int TEST = 0;
         int MEDIA = 1;
         int SYSTEM = 2;
         int SPEECH = 3;

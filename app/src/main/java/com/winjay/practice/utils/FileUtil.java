@@ -3,9 +3,6 @@ package com.winjay.practice.utils;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -13,7 +10,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +22,6 @@ import java.io.OutputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 
 public class FileUtil {
@@ -334,7 +329,28 @@ public class FileUtil {
                 e.printStackTrace();
             }
         }
+    }
 
+    public static boolean copyFile(String srcPath, String destPath) {
+        if (!new File(srcPath).exists()) {
+            return false;
+        }
+        try {
+            FileInputStream fileInputStream = new FileInputStream(srcPath);
+            FileOutputStream fileOutputStream = new FileOutputStream(destPath);
+            byte[] buffer = new byte[1024];
+            int byteRead;
+            while ((byteRead = fileInputStream.read(buffer)) != -1) {
+                fileOutputStream.write(buffer, 0, byteRead);
+            }
+            fileInputStream.close();
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -681,22 +697,6 @@ public class FileUtil {
     }
 
     /**
-     * 压缩图片
-     *
-     * @param image
-     * @return
-     */
-    public static Bitmap compressImage(Bitmap image) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        // 质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        // 把压缩后的数据baos存放到ByteArrayInputStream中
-        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
-        // 把ByteArrayInputStream数据生成图片
-        return BitmapFactory.decodeStream(isBm, null, null);
-    }
-
-    /**
      * 文件夹删除
      */
     public static void deleteFile(File file) {
@@ -948,26 +948,6 @@ public class FileUtil {
                 is.close();
                 fos.close();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 通知android媒体库更新文件夹
-     *
-     * @param context
-     * @param filePath 文件绝对路径
-     */
-    public void scanFile(Context context, String filePath) {
-        try {
-            MediaScannerConnection.scanFile(context, new String[]{filePath}, null,
-                    new MediaScannerConnection.OnScanCompletedListener() {
-                        public void onScanCompleted(String path, Uri uri) {
-                            Log.d(TAG, "path=" + path);
-                            Log.d(TAG, "uri=" + uri);
-                        }
-                    });
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 def rootDependencies = rootProject.ext.dependencies
 def rootAndroid = rootProject.ext.android
 def rootVersions = rootProject.ext.versions
+// camerax
+def camerax_version = "1.0.0-beta06"
 
 android {
     compileSdkVersion rootAndroid.compileSdkVersion
@@ -89,6 +91,9 @@ dependencies {
     testImplementation rootDependencies.junit
     androidTestImplementation rootDependencies.runner
     androidTestImplementation rootDependencies.espresso_core
+    // multidex
+    implementation 'androidx.multidex:multidex:2.0.1'
+
     // cardview
     implementation 'androidx.cardview:cardview:1.0.0'
 
@@ -100,6 +105,13 @@ dependencies {
 
     // Worker
     implementation 'androidx.work:work-runtime:2.3.4'
+
+    // CameraX 核心库
+    implementation "androidx.camera:camera-camera2:$camerax_version"
+    // CameraX 生命周期
+    implementation "androidx.camera:camera-lifecycle:$camerax_version"
+    // CameraX view 集合，比如 cameraview，preview等
+    implementation "androidx.camera:camera-view:1.0.0-alpha10"
 
     // 指纹识别
     api project(':biometricprompt')

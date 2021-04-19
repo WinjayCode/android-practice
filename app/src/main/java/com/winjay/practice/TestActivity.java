@@ -23,6 +23,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -252,7 +253,7 @@ public class TestActivity extends AppCompatActivity {
         super.onResume();
         LogUtil.d(TAG, "onResume()");
 
-        LogUtil.d(TAG, "" + ByteUtil.hexToByte("0xff"));
+//        LogUtil.d(TAG, "" + ByteUtil.hexToByte("0xff"));
 
 //        boolean result = copyFileToDir(Environment.getExternalStorageDirectory() + File.separator + "test.wav",
 //                Environment.getExternalStorageDirectory() + File.separator + "test2.wav");
@@ -519,6 +520,22 @@ public class TestActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        LogUtil.d(TAG, "keyCode=" + keyCode);
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+            case KeyEvent.KEYCODE_VOLUME_MUTE:
+            case KeyEvent.KEYCODE_CALL:
+            case KeyEvent.KEYCODE_VOICE_ASSIST:
+                return true;
+            default:
+                return super.onKeyDown(keyCode, event);
+        }
+    }
 
     // ------------------------------ HDMI-IN ------------------------------
     private static final String ACTION_HDMI_PLUGGED = "android.intent.action.HDMI_PLUGGED";
