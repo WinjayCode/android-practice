@@ -17,7 +17,8 @@ import com.winjay.practice.media.camera.CameraListActivity;
 import com.winjay.practice.media.exoplayer.ExoPlayerActivity;
 import com.winjay.practice.media.extractor_muxer.MediaExtractorAndMuxerActivity;
 import com.winjay.practice.media.music.MusicActivity;
-import com.winjay.practice.media.record.AudioRecordActivity;
+import com.winjay.practice.media.projection.MediaProjectionActivity;
+import com.winjay.practice.media.audio_record.AudioRecordActivity;
 import com.winjay.practice.media.video.VideoActivity;
 import com.winjay.practice.usb.UsbActivity;
 
@@ -42,10 +43,11 @@ public class ModuleMediaListActivity extends BaseActivity {
             put("Camera", CameraListActivity.class);
             put("Music", MusicActivity.class);
             put("Video", VideoActivity.class);
-            put("MediaExtractor解析视频 And MediaMuxer封装视频", MediaExtractorAndMuxerActivity.class);
             put("AudioFocusTest", AudioFocusTestActivity.class);
             put("USB", UsbActivity.class);
             put("Exoplayer", ExoPlayerActivity.class);
+            put("MediaExtractor解析视频 And MediaMuxer封装视频", MediaExtractorAndMuxerActivity.class);
+            put("MediaProjection截屏和录屏", MediaProjectionActivity.class);
         }
     };
 

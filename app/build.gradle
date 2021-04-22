@@ -1,11 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 def rootDependencies = rootProject.ext.dependencies
 def rootAndroid = rootProject.ext.android
 def rootVersions = rootProject.ext.versions
 // camerax
-def camerax_version = "1.0.0-beta06"
+def camerax_version = "1.0.0-rc04"
 
 android {
     compileSdkVersion rootAndroid.compileSdkVersion
@@ -48,8 +50,9 @@ android {
         abortOnError false
     }
 
-    dataBinding {
-        enabled = false
+    buildFeatures {
+        viewBinding true
+        dataBinding true
     }
 
     // 差异化、多渠道打包
@@ -101,17 +104,21 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
     // kotlin
-    implementation rootDependencies.kotlin_stdlib_jdk7
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
 
     // Worker
     implementation 'androidx.work:work-runtime:2.3.4'
 
     // CameraX 核心库
+    implementation "androidx.camera:camera-core:${camerax_version}"
     implementation "androidx.camera:camera-camera2:$camerax_version"
     // CameraX 生命周期
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
     // CameraX view 集合，比如 cameraview，preview等
-    implementation "androidx.camera:camera-view:1.0.0-alpha10"
+    implementation "androidx.camera:camera-view:1.0.0-alpha23"
+//    implementation "androidx.camera:camera-extensions:1.0.0-alpha23"
 
     // 指纹识别
     api project(':biometricprompt')
@@ -135,22 +142,22 @@ dependencies {
 
     // butterknife
     implementation 'com.jakewharton:butterknife:10.2.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+    kapt 'com.jakewharton:butterknife-compiler:10.2.1'
 
     // exoplayer
-    implementation 'com.google.android.exoplayer:exoplayer:2.6.0'
+    implementation 'com.google.android.exoplayer:exoplayer:2.13.3'
 
     // palette
     implementation 'com.android.support:palette-v7:28.0.0'
 
     // glide
     implementation 'com.github.bumptech.glide:glide:4.8.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    kapt 'com.github.bumptech.glide:compiler:4.8.0'
 
     // winjay-bind
     implementation project(':winjay-bind')
     implementation project(':winjay-annotations')
-    annotationProcessor project(':winjay-compiler')
+    kapt project(':winjay-compiler')
 
     // 拼图游戏
     implementation project(':puzzle')

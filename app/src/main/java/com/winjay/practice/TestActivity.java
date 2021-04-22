@@ -41,6 +41,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.winjay.annotations.BindView;
+import com.winjay.annotations.OnClick;
 import com.winjay.bind.BindHelper;
 import com.winjay.bind.Unbinder;
 import com.winjay.practice.hook.HookSetOnClickListenerHelper;
@@ -61,8 +62,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Scanner;
-
-import butterknife.OnClick;
 
 /**
  * 测试练习使用

@@ -1,10 +1,13 @@
 package com.winjay.practice.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
 
 import com.winjay.practice.accessibility.AccessibilityServiceHelper;
+
+import java.util.List;
 
 /**
  * 应用前后台判断
@@ -34,5 +37,25 @@ public class AppForegroundUtil {
             context.startActivity(intent);
             return false;
         }
+    }
+
+    /**
+     * 判断app是否在后台啊
+     *
+     * @return 0 在后台 1 在前台 2 不存在
+     */
+    public static int isBackground(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.processName.equals(context.getPackageName())) {
+                if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_CACHED) {
+                    return 2;
+                } else if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    return 1;
+                }
+            }
+        }
+        return 2;
     }
 }

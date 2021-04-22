@@ -204,7 +204,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".media.record.AudioRecordActivity"
+            android:name=".media.audio_record.AudioRecordActivity"
             android:screenOrientation="portrait" />
 
         <activity
@@ -238,6 +238,10 @@
 
         <activity
             android:name=".media.extractor_muxer.MediaExtractorAndMuxerActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".media.projection.MediaProjectionActivity"
             android:screenOrientation="portrait" />
 
         <activity

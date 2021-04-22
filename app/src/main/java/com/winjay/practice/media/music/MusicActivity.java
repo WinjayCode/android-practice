@@ -80,6 +80,7 @@ public class MusicActivity extends BaseActivity implements IMediaStatus {
         registerReceiver();
         musicPlayer = new MediaPlayer();
         mAudioFocusManager = new AudioFocusManager(this, MediaType.MUSIC);
+        musicPlayer.setAudioAttributes(mAudioFocusManager.getAudioAttributes());
         mMediaSessionHelper = new MediaSessionHelper(this);
         mAudioFocusManager.setOnAudioFocusChangeListener(new AudioFocusManager.OnAudioFocusChangeListener() {
             @Override

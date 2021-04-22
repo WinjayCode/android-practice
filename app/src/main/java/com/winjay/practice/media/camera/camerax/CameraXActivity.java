@@ -96,7 +96,7 @@ public class CameraXActivity extends BaseActivity {
                     //将数据绑定到相机的生命周期中
                     Camera camera = cameraProvider.bindToLifecycle(CameraXActivity.this, cameraSelector, preview, mImageCapture);
                     //将previewView 的 surface 给相机预览
-                    preview.setSurfaceProvider(previewView.createSurfaceProvider(camera.getCameraInfo()));
+                    preview.setSurfaceProvider(previewView.getSurfaceProvider());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

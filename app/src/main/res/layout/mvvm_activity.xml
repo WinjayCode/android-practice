@@ -2,13 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!--<data>
-
-        <import type="com.winjay.practice.design_mode.mvvm.MVVMBean" />
+    <data>
 
         <variable
             name="bean"
-            type="MVVMBean" />
+            type="com.winjay.practice.design_mode.mvvm.MVVMBean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,5 +32,5 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mvvm_btn" />
-    </androidx.constraintlayout.widget.ConstraintLayout>-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

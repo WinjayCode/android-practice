@@ -20,12 +20,24 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
     private AudioFocusRequest mFocusRequest;
     private AudioAttributes mAudioAttributes;
     private OnAudioFocusChangeListener mAudioFocusChangeListener;
-    private int mediaType;
-    private int contentType;
 
     public AudioFocusManager(Context context, int mediaType) {
         mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        this.mediaType = mediaType;
+        int contentType = AudioAttributes.CONTENT_TYPE_UNKNOWN;
+        if (mediaType == MediaType.MUSIC) {
+            contentType = AudioAttributes.CONTENT_TYPE_MUSIC;
+
+        } else if (mediaType == MediaType.MOVIE) {
+            contentType = AudioAttributes.CONTENT_TYPE_MOVIE;
+        }
+        mAudioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(contentType)
+                .build();
+    }
+
+    public AudioAttributes getAudioAttributes() {
+        return mAudioAttributes;
     }
 
     /**
@@ -41,18 +53,6 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
     public int requestFocus() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (mFocusRequest == null) {
-                if (mAudioAttributes == null) {
-                    if (mediaType == MediaType.MUSIC) {
-                        contentType = AudioAttributes.CONTENT_TYPE_MUSIC;
-
-                    } else if (mediaType == MediaType.MOVIE) {
-                        contentType = AudioAttributes.CONTENT_TYPE_MOVIE;
-                    }
-                    mAudioAttributes = new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_MEDIA)
-                            .setContentType(contentType)
-                            .build();
-                }
                 mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
                         .setAudioAttributes(mAudioAttributes)
                         .setAcceptsDelayedFocusGain(true) // 允许延迟获得焦点
