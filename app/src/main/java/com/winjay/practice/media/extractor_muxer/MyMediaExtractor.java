@@ -124,8 +124,8 @@ public class MyMediaExtractor {
      */
     public int readBuffer(ByteBuffer buffer) {
         buffer.clear();
-        int bufferCount = mMediaExtractor.readSampleData(buffer, 0);
-        if (bufferCount < 0) {
+        int bufferSize = mMediaExtractor.readSampleData(buffer, 0);
+        if (bufferSize < 0) {
             return -1;
         }
         // 记录当前时间戳
@@ -134,7 +134,7 @@ public class MyMediaExtractor {
         mCurrentSampleFlags = mMediaExtractor.getSampleFlags();
         // 进入下一帧
         mMediaExtractor.advance();
-        return bufferCount;
+        return bufferSize;
     }
 
     public long getSampleTime() {

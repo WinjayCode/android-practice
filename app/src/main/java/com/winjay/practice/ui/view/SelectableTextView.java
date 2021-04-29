@@ -25,11 +25,11 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.winjay.practice.R;
+import com.winjay.practice.utils.DisplayUtil;
 import com.winjay.practice.utils.Utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
@@ -102,8 +102,8 @@ public class SelectableTextView extends EditText {
     private void init() {
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         mScreenHeight = wm.getDefaultDisplay().getHeight();
-        mStatusBarHeight = Utils.getStatusBarHeight(mContext);
-        mActionMenuHeight = Utils.dp2px(mContext, 45);
+        mStatusBarHeight = DisplayUtil.getStatusBarHeight(mContext);
+        mActionMenuHeight = DisplayUtil.dip2px(mContext, 45);
 
         mVibrator = (Vibrator) mContext.getSystemService(VIBRATOR_SERVICE);
 

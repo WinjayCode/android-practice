@@ -14,6 +14,7 @@ import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.media.audio_focus.AudioFocusTestActivity;
 import com.winjay.practice.media.camera.CameraListActivity;
+import com.winjay.practice.media.codec.MediaCodecActivity;
 import com.winjay.practice.media.exoplayer.ExoPlayerActivity;
 import com.winjay.practice.media.extractor_muxer.MediaExtractorAndMuxerActivity;
 import com.winjay.practice.media.music.MusicActivity;
@@ -48,6 +49,7 @@ public class ModuleMediaListActivity extends BaseActivity {
             put("Exoplayer", ExoPlayerActivity.class);
             put("MediaExtractor解析视频 And MediaMuxer封装视频", MediaExtractorAndMuxerActivity.class);
             put("MediaProjection截屏和录屏", MediaProjectionActivity.class);
+            put("MediaCodec多媒体编解码器", MediaCodecActivity.class);
         }
     };
 

@@ -14,6 +14,8 @@ import butterknife.BindView;
 
 /**
  * 系统信息
+ * System.getProperty：Java属性
+ * SystemProperties.get：Android属性
  *
  * @author Winjay
  * @date 2020/9/8

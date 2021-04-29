@@ -23,11 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.winjay.practice.R;
+import com.winjay.practice.utils.DisplayUtil;
 import com.winjay.practice.utils.Utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 import static android.content.Context.VIBRATOR_SERVICE;
 import static android.view.MotionEvent.ACTION_MOVE;
@@ -137,8 +137,8 @@ public class VerticalTextView extends TextView {
         mLinesOffsetArray = new SparseArray<>();
         mLinesTextIndex = new SparseArray<>();
         mTextAreaRoughBound = new int[]{0, 0};
-        mStatusBarHeight = Utils.getStatusBarHeight(mContext);
-        mActionMenuHeight = Utils.dp2px(mContext, 45);
+        mStatusBarHeight = DisplayUtil.getStatusBarHeight(mContext);
+        mActionMenuHeight = DisplayUtil.dip2px(mContext, 45);
         mVibrator = (Vibrator) mContext.getSystemService(VIBRATOR_SERVICE);
     }
 
@@ -148,12 +148,12 @@ public class VerticalTextView extends TextView {
     }
 
     public VerticalTextView setLineSpacingExtra(float lineSpacingExtra) {
-        this.mLineSpacingExtra = Utils.dp2px(mContext, lineSpacingExtra);
+        this.mLineSpacingExtra = DisplayUtil.dip2px(mContext, lineSpacingExtra);
         return this;
     }
 
     public VerticalTextView setCharSpacingExtra(float charSpacingExtra) {
-        this.mCharSpacingExtra = Utils.dp2px(mContext, charSpacingExtra);
+        this.mCharSpacingExtra = DisplayUtil.dip2px(mContext, charSpacingExtra);
         return this;
     }
 
@@ -173,7 +173,7 @@ public class VerticalTextView extends TextView {
     }
 
     public VerticalTextView setUnderLineOffset(float underLineOffset) {
-        this.mUnderLineOffset = Utils.dp2px(mContext, underLineOffset);
+        this.mUnderLineOffset = DisplayUtil.dip2px(mContext, underLineOffset);
         return this;
     }
 

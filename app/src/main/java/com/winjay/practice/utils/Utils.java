@@ -3,16 +3,10 @@ package com.winjay.practice.utils;
 import android.content.Context;
 import android.os.Build;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class Utils {
-    /**
-     * dp2px
-     */
-    public static int dp2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
+    private static final String TAG = Utils.class.getSimpleName();
 
     /**
      * 实现文本复制功能
@@ -33,27 +27,21 @@ public class Utils {
     }
 
     /**
-     * 状态栏高度
+     * 获取Android属性
      *
-     * @param context
+     * @param key
      * @return
      */
-    public static int getStatusBarHeight(Context context) {
-        Class<?> c = null;
-        Object obj = null;
-        Field field = null;
-        int x = 0, statusBarHeight = 0;
+    private String getSystemProperty(String key) {
+        String property = "";
         try {
-            c = Class.forName("com.android.internal.R$dimen");
-            obj = c.newInstance();
-            field = c.getField("status_bar_height");
-            x = Integer.parseInt(field.get(obj).toString());
-            statusBarHeight = context.getResources().getDimensionPixelSize(x);
-
-        } catch (Exception e1) {
-            statusBarHeight = 0;
-            e1.printStackTrace();
+            Class clazz = Class.forName("android.os.SystemProperties");
+            Method method = clazz.getMethod("get", String.class);
+            property = (String) method.invoke(clazz, key);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return statusBarHeight;
+        LogUtil.d(TAG, "property=" + property);
+        return property;
     }
 }

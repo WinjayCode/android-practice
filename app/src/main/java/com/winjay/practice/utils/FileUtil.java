@@ -774,6 +774,8 @@ public class FileUtil {
                         fileOutputStream.write(buffer, 0, byteRead);
                     }
                     fileInputStream.close();
+                    // 防止文件流因为拷贝结束立即拔出U盘导致的未完全写入文件的问题
+                    fileOutputStream.getFD().sync();
                     fileOutputStream.flush();
                     fileOutputStream.close();
                 } catch (Exception e) {

@@ -245,6 +245,14 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".media.codec.MediaCodecActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".media.codec.decode.DecodeMediaActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".media.audio_focus.AudioFocusTestActivity"
             android:screenOrientation="portrait" />
 
