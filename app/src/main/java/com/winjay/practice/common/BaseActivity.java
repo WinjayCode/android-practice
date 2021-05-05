@@ -58,7 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
             getSupportActionBar().hide();
         }
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         // 沉浸效果
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

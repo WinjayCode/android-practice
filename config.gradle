@@ -5,7 +5,7 @@ ext {
     // android 相关公共配置
     android = [
             // 编译工具版本
-            compileSdkVersion  : 28,
+            compileSdkVersion  : 29,
             // 构建工具版本
             buildToolsVersion  : "27.0.3",
 

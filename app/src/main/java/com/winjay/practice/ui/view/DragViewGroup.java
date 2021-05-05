@@ -1,4 +1,4 @@
-package com.winjay.practice.view;
+package com.winjay.practice.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

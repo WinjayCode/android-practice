@@ -40,6 +40,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
+    <!-- 蓝牙 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- If your app targets Android 9 or lower, you can declare ACCESS_COARSE_LOCATION instead. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <!-- android:persistent="true"：1.在系统刚起来的时候，该App也会被启动起来 2.该App被强制杀掉后，系统会重启该App。这种情况只针对系统内置的App，第三方安装的App不会被重启。 -->
     <!-- android:usesCleartextTraffic="true"：指示应用程序是否打算使用明文网络流量，例如明文HTTP -->
     <application
@@ -153,6 +160,10 @@
 
         <!-- ui start -->
         <activity
+            android:name=".ui.UIListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".ui.constraint_layout.ConstraintLayoutActivity"
             android:screenOrientation="portrait" />
 
@@ -196,6 +207,12 @@
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/NoTitleTranslucentTheme" />
+
+        <activity
+            android:name=".EmptyActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
         <!-- ui end -->
 
         <!-- media start-->
@@ -273,6 +290,24 @@
                 android:resource="@xml/file_paths" />
         </provider>
         <!-- media end-->
+
+        <!-- bluetooth start -->
+        <activity
+            android:name=".bluetooth.BluetoothListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".bluetooth.bt.BtClientActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".bluetooth.bt.BtServerActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".bluetooth.a2dp.A2dpActivity"
+            android:screenOrientation="portrait" />
+        <!-- bluetooth end -->
 
         <!-- usb start -->
         <activity
@@ -363,12 +398,6 @@
 
         <activity
             android:name=".plugin.PluginActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".EmptyActivity"
-            android:configChanges="orientation|screenSize"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
         <activity
