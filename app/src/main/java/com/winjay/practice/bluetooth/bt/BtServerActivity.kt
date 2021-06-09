@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import butterknife.OnClick
 import com.winjay.practice.R
+import com.winjay.practice.bluetooth.BtUtil
 import com.winjay.practice.common.BaseActivity
 import com.winjay.practice.utils.LogUtil
 import kotlinx.android.synthetic.main.bt_server_activity.*

@@ -89,19 +89,29 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation rootDependencies.appcompat_androidx
-    implementation rootDependencies.constraint_layout
+
+    // test
     testImplementation rootDependencies.junit
     androidTestImplementation rootDependencies.runner
     androidTestImplementation rootDependencies.espresso_core
+
+    //
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+
     // multidex
     implementation 'androidx.multidex:multidex:2.0.1'
+
+    // constraintlayout
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
     // cardview
     implementation 'androidx.cardview:cardview:1.0.0'
 
     // recyclerview
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    //
+    implementation 'com.google.android.material:material:1.2.1'
 
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

@@ -26,7 +26,6 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
         int contentType = AudioAttributes.CONTENT_TYPE_UNKNOWN;
         if (mediaType == MediaType.MUSIC) {
             contentType = AudioAttributes.CONTENT_TYPE_MUSIC;
-
         } else if (mediaType == MediaType.MOVIE) {
             contentType = AudioAttributes.CONTENT_TYPE_MOVIE;
         }

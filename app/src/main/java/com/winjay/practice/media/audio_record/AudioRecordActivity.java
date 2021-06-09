@@ -107,7 +107,7 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
 
     @Override
     protected int getLayoutId() {
-        return R.layout.andio_recorder_activity;
+        return R.layout.audio_recorder_activity;
     }
 
     @Override

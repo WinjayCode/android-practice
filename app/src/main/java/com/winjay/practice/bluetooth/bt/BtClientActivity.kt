@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.OnClick
 import com.winjay.practice.R
+import com.winjay.practice.bluetooth.BtUtil
 import com.winjay.practice.common.BaseActivity
 import com.winjay.practice.utils.LogUtil
 import kotlinx.android.synthetic.main.bt_client_activity.*

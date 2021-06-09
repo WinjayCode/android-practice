@@ -32,7 +32,7 @@ public class Utils {
      * @param key
      * @return
      */
-    private String getSystemProperty(String key) {
+    public static String getSystemProperty(String key) {
         String property = "";
         try {
             Class clazz = Class.forName("android.os.SystemProperties");
@@ -43,5 +43,25 @@ public class Utils {
         }
         LogUtil.d(TAG, "property=" + property);
         return property;
+    }
+
+    /**
+     * 解决android10反射不能用
+     */
+    public static void handleReflect() {
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            return;
+        }
+        try {
+            Method forName = Class.class.getDeclaredMethod("forName", String.class);
+            Method getDeclaredMethod = Class.class.getDeclaredMethod("getDeclaredMethod", String.class, Class[].class);
+            Class<?> vmRuntimeClass = (Class<?>) forName.invoke(null, "dalvik.system.VMRuntime");
+            Method getRuntime = (Method) getDeclaredMethod.invoke(vmRuntimeClass, "getRuntime", null);
+            Method setHiddenApiExemptions = (Method) getDeclaredMethod.invoke(vmRuntimeClass, "setHiddenApiExemptions", new Class[]{String[].class});
+            Object sVmRuntime = getRuntime.invoke(null);
+            setHiddenApiExemptions.invoke(sVmRuntime, new Object[]{new String[]{"L"}});
+        } catch (Throwable e) {
+            LogUtil.e(TAG, "reflect bootstrap failed:" + e);
+        }
     }
 }

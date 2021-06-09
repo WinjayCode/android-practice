@@ -307,6 +307,18 @@
         <activity
             android:name=".bluetooth.a2dp.A2dpActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".bluetooth.ble.BleClientActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".bluetooth.ble.BleServerActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".bluetooth.call.BluetoothCallActivity"
+            android:screenOrientation="portrait" />
         <!-- bluetooth end -->
 
         <!-- usb start -->

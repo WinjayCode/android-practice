@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.OnClick
 import com.winjay.practice.R
 import com.winjay.practice.bluetooth.bt.BluetoothListAdapter
-import com.winjay.practice.bluetooth.bt.BtUtil
+import com.winjay.practice.bluetooth.BtUtil
 import com.winjay.practice.common.BaseActivity
 import com.winjay.practice.utils.LogUtil
 import kotlinx.android.synthetic.main.a2dp_activity.*
@@ -57,12 +57,14 @@ class A2dpActivity : BaseActivity() {
         BtUtil.bluetooth.getProfileProxy(this, object : BluetoothProfile.ServiceListener {
             override fun onServiceConnected(profile: Int, proxy: BluetoothProfile?) {
                 if (profile == BluetoothProfile.A2DP) {
+                    LogUtil.d(TAG)
                     bluetoothA2dp = proxy as BluetoothA2dp
                 }
             }
 
             override fun onServiceDisconnected(profile: Int) {
                 if (profile == BluetoothProfile.A2DP) {
+                    LogUtil.d(TAG)
                     bluetoothA2dp = null
                 }
             }
@@ -201,6 +203,7 @@ class A2dpActivity : BaseActivity() {
 
     inner class BluetoothBroadcast : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            LogUtil.d(TAG, "action=${intent?.action}")
             when (intent?.action) {
                 BluetoothDevice.ACTION_FOUND -> {
                     val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
@@ -216,6 +219,7 @@ class A2dpActivity : BaseActivity() {
                 }
                 BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED -> {
                     val state = intent.getIntExtra(BluetoothA2dp.EXTRA_STATE, BluetoothA2dp.STATE_DISCONNECTED)
+                    LogUtil.d(TAG, "state=$state")
                     if (state == BluetoothA2dp.STATE_CONNECTING) {
                         itemStateTV?.text = "正在连接..."
                     } else if (state == BluetoothA2dp.STATE_CONNECTED) {
@@ -224,6 +228,7 @@ class A2dpActivity : BaseActivity() {
                 }
                 BluetoothA2dp.ACTION_PLAYING_STATE_CHANGED -> {
                     val state = intent.getIntExtra(BluetoothA2dp.EXTRA_STATE, BluetoothA2dp.STATE_NOT_PLAYING)
+                    LogUtil.d(TAG, "state=$state")
                     if (state == BluetoothA2dp.STATE_PLAYING) {
                         itemStateTV?.text = "正在播放"
                     } else if (state == BluetoothA2dp.STATE_NOT_PLAYING) {

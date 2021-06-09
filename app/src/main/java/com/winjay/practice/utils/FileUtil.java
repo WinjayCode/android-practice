@@ -335,22 +335,33 @@ public class FileUtil {
         if (!new File(srcPath).exists()) {
             return false;
         }
+        FileInputStream fileInputStream = null;
+        FileOutputStream fileOutputStream = null;
         try {
-            FileInputStream fileInputStream = new FileInputStream(srcPath);
-            FileOutputStream fileOutputStream = new FileOutputStream(destPath);
+            fileInputStream = new FileInputStream(srcPath);
+            fileOutputStream = new FileOutputStream(destPath);
             byte[] buffer = new byte[1024];
             int byteRead;
             while ((byteRead = fileInputStream.read(buffer)) != -1) {
                 fileOutputStream.write(buffer, 0, byteRead);
             }
-            fileInputStream.close();
             fileOutputStream.flush();
-            fileOutputStream.close();
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+            try {
+                if (fileInputStream != null) {
+                    fileInputStream.close();
+                }
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        return true;
     }
 
     /**

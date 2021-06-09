@@ -12,8 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.winjay.practice.MainAdapter
 import com.winjay.practice.R
 import com.winjay.practice.bluetooth.a2dp.A2dpActivity
+import com.winjay.practice.bluetooth.ble.BleClientActivity
+import com.winjay.practice.bluetooth.ble.BleServerActivity
 import com.winjay.practice.bluetooth.bt.BtClientActivity
 import com.winjay.practice.bluetooth.bt.BtServerActivity
+import com.winjay.practice.bluetooth.call.BluetoothCallActivity
 import com.winjay.practice.common.BaseActivity
 import com.winjay.practice.utils.LogUtil
 import kotlinx.android.synthetic.main.main_activity.*
@@ -33,6 +36,9 @@ class BluetoothListActivity : BaseActivity() {
             put("传统蓝牙A2DP模式", A2dpActivity::class.java)
             put("传统蓝牙客户端(流模式)", BtClientActivity::class.java)
             put("传统蓝牙服务端(流模式)", BtServerActivity::class.java)
+            put("低功耗蓝牙客户端(中心设备)", BleClientActivity::class.java)
+            put("低功耗蓝牙服务端(外围设备)", BleServerActivity::class.java)
+            put("蓝牙电话(车机)", BluetoothCallActivity::class.java)
         }
     }
 

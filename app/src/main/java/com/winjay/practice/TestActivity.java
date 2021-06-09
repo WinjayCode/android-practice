@@ -45,6 +45,7 @@ import com.winjay.annotations.OnClick;
 import com.winjay.bind.BindHelper;
 import com.winjay.bind.Unbinder;
 import com.winjay.practice.hook.HookSetOnClickListenerHelper;
+import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.ui.dialog.MyDialog;
 import com.winjay.practice.utils.ByteUtil;
 import com.winjay.practice.utils.CountDownTimerUtil;
@@ -115,6 +116,8 @@ public class TestActivity extends AppCompatActivity {
 //        });
         setContentView(R.layout.test_activity);
         mUnbinder = BindHelper.bind(this);
+
+        registerHDMI();
 
         mTestSV = findViewById(R.id.test_sv);
         testRL = findViewById(R.id.re_rl);
@@ -233,6 +236,15 @@ public class TestActivity extends AppCompatActivity {
 //        LogUtil.d(TAG, "after post!");
 
 //        SoundPoolUtil.getInstance(this).playSoundFromAssets("audio/0.mp3");
+
+        HandlerManager.getInstance().postDelayedOnSubThread(new Runnable() {
+            @Override
+            public void run() {
+                LogUtil.d(TAG, "send broadcast");
+//                sendBroadcast(new Intent("test"));
+                sendBroadcast(new Intent("test"), "haha");
+            }
+        }, 2000);
     }
 
     @Override
@@ -360,6 +372,8 @@ public class TestActivity extends AppCompatActivity {
         if (mUnbinder != null) {
             mUnbinder.unbind();
         }
+
+        unregisterHDMI();
     }
 
     /*
@@ -545,6 +559,9 @@ public class TestActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            if ("test".equals(action)) {
+                LogUtil.d(TAG, "test!!!");
+            }
             if (ACTION_HDMI_PLUGGED.equals(action)) {
                 mIsHDMIPlugged = intent.getBooleanExtra(EXTRA_HDMI_PLUGGED_STATE, false);
                 LogUtil.d(TAG, "onReceive:mIsHDMIPlugged =  " + mIsHDMIPlugged);
@@ -555,7 +572,9 @@ public class TestActivity extends AppCompatActivity {
     private void registerHDMI() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ACTION_HDMI_PLUGGED);
-        registerReceiver(mReceiver, intentFilter);
+        intentFilter.addAction("test");
+//        registerReceiver(mReceiver, intentFilter);
+        registerReceiver(mReceiver, intentFilter, "haha", HandlerManager.getInstance().getSubHandler());
     }
 
     private void unregisterHDMI() {
