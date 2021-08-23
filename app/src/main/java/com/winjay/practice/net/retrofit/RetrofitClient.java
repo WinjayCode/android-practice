@@ -1,10 +1,9 @@
-package com.winjay.practice.net;
+package com.winjay.practice.net.retrofit;
 
 import android.text.TextUtils;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 

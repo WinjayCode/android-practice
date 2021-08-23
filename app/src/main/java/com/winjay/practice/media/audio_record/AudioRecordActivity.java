@@ -243,6 +243,38 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
         pcmToWavUtil.pcmToWav(pcmFile.toString(), handlerWavFile.toString());
     }
 
+    // 分离左右声道
+    private void splitStereoPcm(byte[] data) {
+        int monoLength = data.length / 2;
+        byte[] leftData = new byte[monoLength];
+        byte[] rightData = new byte[monoLength];
+        for (int i = 0; i < monoLength; i++) {
+            if (i % 2 == 0) {
+                System.arraycopy(data, i * 2, leftData, i, 2);
+            } else {
+                System.arraycopy(data, i * 2, rightData, i - 1, 2);
+            }
+        }
+        //TODO 使用leftData、rightData 进行其他处理
+    }
+
+    /**
+     * 左右声道进行反转
+     * @param data
+     * @return
+     *      反转后的数据
+     */
+    private byte[] getReversedData(byte[] data) {
+        byte[] reversed = new byte[data.length];
+        for (int i = 0; i < data.length - 3; i = i + 4) {
+            reversed[i] = data[i+2];
+            reversed[i+1] = data[i+3];
+            reversed[i+2] = data[i];
+            reversed[i+3] = data[i+1];
+        }
+        return reversed;
+    }
+
     @OnClick(R.id.play_wav_btn)
     void playWav() {
         if (handlerWavFile != null && handlerWavFile.exists()) {

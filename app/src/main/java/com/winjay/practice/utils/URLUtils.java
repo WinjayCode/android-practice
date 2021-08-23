@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class URLUtils {
     private static String TAG = "URLUtils";
@@ -75,5 +77,23 @@ public class URLUtils {
         }
         LogUtil.d(TAG, "key = " + key);
         return key;
+    }
+
+    /**
+     * 获取Url的md5值
+     *
+     * @param url
+     * @return
+     */
+    public static String hashKeyFormUrl(String url) {
+        String cacheKey;
+        try {
+            final MessageDigest mDigest = MessageDigest.getInstance("MD5");
+            mDigest.update(url.getBytes());
+            cacheKey = ByteUtil.bytesToHex(mDigest.digest());
+        } catch (NoSuchAlgorithmException e) {
+            cacheKey = String.valueOf(url.hashCode());
+        }
+        return cacheKey;
     }
 }

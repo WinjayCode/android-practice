@@ -11,7 +11,7 @@ import android.os.Build;
 import android.text.TextUtils;
 
 import com.winjay.practice.interfaces.DoanloadCallback;
-import com.winjay.practice.net.RetrofitManager;
+import com.winjay.practice.net.retrofit.RetrofitManager;
 import com.winjay.practice.thread.HandlerManager;
 
 import java.io.File;

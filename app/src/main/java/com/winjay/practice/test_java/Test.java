@@ -1,7 +1,12 @@
 package com.winjay.practice.test_java;
 
+import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 
+import com.winjay.practice.utils.FileUtil;
+
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -142,7 +147,38 @@ public class Test {
 //        System.out.println("isOnline=" + isOnline());
 //        System.out.println("aaa=" + (0x1 << 1));
 
-        System.out.println(Arrays.toString(hexToByteArray("FF")));
+//        System.out.println(Arrays.toString(hexToByteArray("FF")));
+
+        // string互转byte[]
+//        String str = "hello";
+//        byte[] strBytes = str.getBytes();
+//        String des = new String(strBytes);
+//        System.out.println("des=" + des);
+
+
+//        System.out.println(Arrays.toString(hexToByteArray("8001")));
+
+//        byte[] bytes = new byte[]{0x4C,0x5A,0x59,0x54,0x47,0x47,0x41,0x57,0x39,0x4D,0x31,0x30,0x31,0x38,0x38,0x39,0x33};
+//        byte[] bytes = new byte[]{0x32, 0x31,0x48,0x37,0x37,0x42,0x4E,0x2D,0x30,0x30,0x30,0x31};
+//        byte[] bytes = new byte[]{0x2f, 0x6f, 0x70, 0x74, 0x2f, 0x6d, 0x32, 0x6d, 0x66, 0x69, 0x6c, 0x65, 0x2f, 0x66, 0x74, 0x70, 0x2f, 0x61, 0x64, 0x73, 0x52, 0x6f, 0x75, 0x74, 0x65, 0x53, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x32, 0x30, 0x32, 0x31, 0x30, 0x31, 0x32, 0x30, 0x30, 0x39, 0x31, 0x33, 0x35, 0x30};
+//        byte[] bytes = new byte[]{0x72, 0x6f, 0x75, 0x74, 0x65, 0x5f, 0x64, 0x61, 0x74, 0x61, 0x2e, 0x6a, 0x73, 0x6f, 0x6e};
+//        byte[] bytes = new byte[]{0x77, 0x66, 0x74, 0x70, 0x73, 0x61, 0x66, 0x65};
+//        byte[] bytes = new byte[]{0x77, 0x6f, 0x72, 0x6b, 0x32, 0x2e, 0x68, 0x61, 0x72, 0x64};
+//        byte[] bytes = new byte[]{0x66, 0x74, 0x70, 0x2e, 0x61, 0x78, 0x78, 0x63, 0x2e, 0x63, 0x6e};
+//        byte[] bytes = new byte[]{0x00, 0x15};
+//        String re = new String(bytes);
+//        System.out.println(re);
+
+//        byte[] bytes = new byte[]{0x66, 0x74, 0x70, 0x2e, 0x61, 0x78, 0x78, 0x63, 0x2e, 0x63, 0x6e};
+//        byte[] body = new byte[]{};
+//        System.arraycopy(bytes, 3, body, 0, 5);
+//        System.out.println(bytesToHex(body));
+
+        // String to bytes
+//        String fileDir = "/iCard/icard1s";
+//        String fileName = "iCard1S.eng.V1.2.0.ntp.20180608.zip";
+//        System.out.println("dir=" + bytesToHex(fileDir.getBytes()));
+//        System.out.println("name=" + bytesToHex(fileName.getBytes()));
     }
 
     public static boolean isOnline() {
@@ -265,18 +301,18 @@ public class Test {
      */
     public static String bytesToHex(byte[] bytes) {
         // 1
-        /*StringBuffer sb = new StringBuffer();
-        for(int i = 0; i < bytes.length; i++) {
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < bytes.length; i++) {
             String hex = Integer.toHexString(bytes[i] & 0xFF);
-            if(hex.length() < 2){
+            if (hex.length() < 2) {
                 sb.append(0);
             }
             sb.append(hex);
         }
-        return sb.toString();*/
+        return sb.toString();
 
         // 2
-        return new BigInteger(1, bytes).toString(16);
+//        return new BigInteger(1, bytes).toString(16);
 
         // 3
         /*StringBuilder sb = new StringBuilder();

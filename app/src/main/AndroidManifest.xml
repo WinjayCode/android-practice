@@ -344,6 +344,24 @@
         </receiver>
         <!-- usb end -->
 
+        <!-- socket start -->
+        <activity
+            android:name=".net.NetListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".net.ftp.FtpTestActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".net.socket.udp.UdpMainActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".net.socket.SocketListActivity"
+            android:screenOrientation="portrait" />
+        <!-- socket end -->
+
         <!--隐式启动activity，action、category、data必须同时匹配，才能隐式启动（android.intent.category.DEFAULT必须有）-->
         <activity
             android:name=".intent_filter.IntentFilterActivity"

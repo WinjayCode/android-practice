@@ -1,4 +1,4 @@
-package com.winjay.practice.net;
+package com.winjay.practice.net.retrofit;
 
 
 import com.winjay.practice.entity.FileDownloadEntity;

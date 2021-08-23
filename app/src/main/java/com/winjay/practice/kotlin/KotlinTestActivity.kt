@@ -11,6 +11,7 @@ import com.winjay.practice.R
  * @date 2019/4/19
  */
 class KotlinTestActivity : AppCompatActivity() {
+    private val TAG = javaClass.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

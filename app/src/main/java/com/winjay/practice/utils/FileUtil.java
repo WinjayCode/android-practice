@@ -9,19 +9,29 @@ import android.os.StatFs;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 
 public class FileUtil {
@@ -742,6 +752,7 @@ public class FileUtil {
 //                })
 //                .setCompressListener(listener).launch();
 //    }
+
     public static boolean copyFolder(String oldPath, String newPath) {
         File newFile = new File(newPath);
         if (!newFile.exists()) {
@@ -752,6 +763,9 @@ public class FileUtil {
         }
         File oldFile = new File(oldPath);
         String[] files = oldFile.list();
+        if (files == null || files.length == 0) {
+            return true;
+        }
         File temp;
         for (String file : files) {
             if (oldPath.endsWith(File.separator)) {
@@ -964,5 +978,139 @@ public class FileUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getFileMD5(File file) {
+        if (!file.isFile()) {
+            Log.w(TAG, "is not file!");
+            return null;
+        }
+        MessageDigest digest = null;
+        FileInputStream in = null;
+        byte buffer[] = new byte[1024];
+        int len;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+            in = new FileInputStream(file);
+            while ((len = in.read(buffer, 0, 1024)) != -1) {
+                digest.update(buffer, 0, len);
+            }
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, "md5 calculate error!");
+            return null;
+        }
+        BigInteger bigInt = new BigInteger(1, digest.digest());
+        return bigInt.toString(16);
+    }
+
+    //过滤在mac上压缩时自动生成的__MACOSX文件夹
+    private static final String MAC_IGNORE = "__MACOSX/";
+
+    public static boolean upZipFile(String zipFile, String folderPath) {
+        ZipFile zfile = null;
+        try {
+            // 转码为GBK格式，支持中文
+            zfile = new ZipFile(zipFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        Enumeration zList = zfile.entries();
+        ZipEntry ze = null;
+        byte[] buf = new byte[1024];
+        while (zList.hasMoreElements()) {
+            ze = (ZipEntry) zList.nextElement();
+            if (ze.getName().contains(MAC_IGNORE)) {
+                continue;
+            }
+            // 列举的压缩文件里面的各个文件，判断是否为目录
+            if (ze.isDirectory()) {
+                String dirstr = folderPath + File.separator + ze.getName();
+//                Log.d(TAG, "dirstr=" + dirstr);
+                dirstr.trim();
+                File f = new File(dirstr);
+                f.mkdir();
+                continue;
+            }
+            OutputStream os = null;
+            FileOutputStream fos = null;
+            // ze.getName()会返回 script/start.script这样的，是为了返回实体的File
+            File realFile = getRealFileName(folderPath, ze.getName());
+//            Log.d(TAG, "realFile=" + realFile.getAbsolutePath());
+            try {
+                fos = new FileOutputStream(realFile);
+            } catch (FileNotFoundException e) {
+                Log.e(TAG, e.getMessage());
+                return false;
+            }
+            os = new BufferedOutputStream(fos);
+            InputStream is = null;
+            try {
+                is = new BufferedInputStream(zfile.getInputStream(ze));
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
+                return false;
+            }
+            int readLen = 0;
+            // 进行一些内容复制操作
+            try {
+                while ((readLen = is.read(buf, 0, 1024)) != -1) {
+                    os.write(buf, 0, readLen);
+                }
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
+                return false;
+            }
+            try {
+                is.close();
+                os.close();
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
+                return false;
+            }
+        }
+        try {
+            zfile.close();
+        } catch (IOException e) {
+            Log.e(TAG, e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 给定根目录，返回一个相对路径所对应的实际文件名.
+     *
+     * @param baseDir
+     *            指定根目录
+     * @param absFileName
+     *            相对路径名，来自于ZipEntry中的name
+     * @return java.io.File 实际的文件
+     */
+    public static File getRealFileName(String baseDir, String absFileName) {
+//        Log.d(TAG, "baseDir=" + baseDir + "------absFileName=" + absFileName);
+        absFileName = absFileName.replace("\\", "/");
+//        Log.d(TAG, "absFileName=" + absFileName);
+        String[] dirs = absFileName.split("/");
+//        Log.d(TAG, "dirs=" + Arrays.toString(dirs));
+        File ret = new File(baseDir);
+        String substr = null;
+        if (dirs.length > 1) {
+            for (int i = 0; i < dirs.length - 1; i++) {
+                substr = dirs[i];
+                ret = new File(ret, substr);
+            }
+
+            if (!ret.exists())
+                ret.mkdirs();
+            substr = dirs[dirs.length - 1];
+            ret = new File(ret, substr);
+            return ret;
+        } else {
+            ret = new File(ret, absFileName);
+        }
+        return ret;
     }
 }

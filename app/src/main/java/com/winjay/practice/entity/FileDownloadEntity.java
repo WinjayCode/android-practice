@@ -1,8 +1,8 @@
 package com.winjay.practice.entity;
 
 
-import com.winjay.practice.net.BaseFileDownload;
-import com.winjay.practice.net.IApiService;
+import com.winjay.practice.net.retrofit.BaseFileDownload;
+import com.winjay.practice.net.retrofit.IApiService;
 
 import retrofit2.Call;
 

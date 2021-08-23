@@ -24,10 +24,33 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
+    signingConfigs {
+        release {
+            storeFile file('../keystore/winjayappkeystore')
+            storePassword 'winjayandroid'
+            keyPassword 'winjayandroid'
+            keyAlias 'winjayappkeystore'
+        }
+
+        debug {
+            storeFile file('../keystore/winjayappkeystore')
+            storePassword 'winjayandroid'
+            keyPassword 'winjayandroid'
+            keyAlias 'winjayappkeystore'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.debug
         }
     }
 

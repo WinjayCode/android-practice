@@ -1,4 +1,4 @@
-package com.winjay.practice.websocket;
+package com.winjay.practice.net.socket.websocket;
 
 import android.os.Handler;
 import android.os.Looper;
