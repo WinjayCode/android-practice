@@ -358,6 +358,10 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".net.socket.udp.UdpTestActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".net.socket.SocketListActivity"
             android:screenOrientation="portrait" />
         <!-- socket end -->
