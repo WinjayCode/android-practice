@@ -192,6 +192,9 @@ dependencies {
     implementation project(':winjay-annotations')
     kapt project(':winjay-compiler')
 
+    // winjay-imageloader
+    implementation project(':winjay-imageloader')
+
     // 拼图游戏
     implementation project(':puzzle')
     // 2048游戏

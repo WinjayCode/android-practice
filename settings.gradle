@@ -1,3 +1,4 @@
+include ':winjay-imageloader'
 include ':app'
 include ':biometricprompt'
 include ':virus_broadcast'
