@@ -36,7 +36,7 @@ public class DisplayUtil {
         return (int) (spValue * fontScale + 0.5f);
     }
 
-    protected int dp2px(Context context, int dp) {
+    public static int dp2px(Context context, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
 
@@ -44,12 +44,19 @@ public class DisplayUtil {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
     }
 
+    public static DisplayMetrics getScreenMetrics(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics dm = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(dm);
+        return dm;
+    }
+
     /**
      * 获取屏幕分辨率
      *
      * @return
      */
-    private int[] getScreenSize(Context context) {
+    public static int[] getScreenSize(Context context) {
         int[] size = new int[2];
         DisplayMetrics outMetrics = new DisplayMetrics();
         ((WindowManager) (context.getSystemService(Context.WINDOW_SERVICE))).getDefaultDisplay().getRealMetrics(outMetrics);

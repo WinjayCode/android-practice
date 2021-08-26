@@ -16,6 +16,7 @@ import com.winjay.practice.ui.app_compat_text.AppCompatTextActivity;
 import com.winjay.practice.ui.cardview.CardViewActivity;
 import com.winjay.practice.ui.constraint_layout.ConstraintLayoutActivity;
 import com.winjay.practice.ui.custom_view.CustomViewActivity;
+import com.winjay.practice.ui.imageloader.ImageLoaderActivity;
 import com.winjay.practice.ui.material_design.MaterialDesignActivity;
 import com.winjay.practice.ui.surfaceview_animation.SurfaceViewAnimationActivity;
 import com.winjay.practice.ui.svg.SVGActivity;
@@ -48,6 +49,7 @@ public class UIListActivity extends BaseActivity {
             put("Toolbar", ToolbarActivity.class);
             put("SVG", SVGActivity.class);
             put("CustomView", CustomViewActivity.class);
+            put("ImageLoader", ImageLoaderActivity.class);
             put("EmptyPage", EmptyActivity.class);
         }
     };

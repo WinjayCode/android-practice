@@ -202,6 +202,10 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".ui.imageloader.ImageLoaderActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".ui.TransparentActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:launchMode="singleInstance"
