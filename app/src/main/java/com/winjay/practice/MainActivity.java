@@ -13,6 +13,7 @@ import com.winjay.practice.activity_manager.ActivityManagerActivity;
 import com.winjay.practice.bluetooth.BluetoothListActivity;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.content_provider.ProviderActivity;
+import com.winjay.practice.crash.CrashTestActivity;
 import com.winjay.practice.design_mode.DesignModeActivity;
 import com.winjay.practice.directory_structure.DirectoryStructureActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
@@ -70,6 +71,7 @@ public class MainActivity extends BaseActivity {
             put("Puzzle", PuzzleMainActivity.class);
             put("2048", Game2048Activity.class);
             put("Test", TestActivity.class);
+            put("Crash Test", CrashTestActivity.class);
         }
     };
 

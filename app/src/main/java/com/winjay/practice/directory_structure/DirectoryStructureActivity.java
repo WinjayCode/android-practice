@@ -13,6 +13,7 @@ import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -77,6 +78,8 @@ public class DirectoryStructureActivity extends BaseActivity {
         mList.add("getExternalCacheDir()：" + getExternalCacheDir());
         // storage/emulated/0/Android/data/xxx/files 或者 sdcard/Android/data/xxx/files  外部存储私有目录,一般存储长时间保存的数据
         mList.add("getExternalFilesDir()：" + getExternalFilesDir(null));
+        // storage/emulated/0/Android/media/xxx
+        mList.add("getExternalMediaDirs()：" + Arrays.toString(getExternalMediaDirs()));
 
         mList.add("");
 

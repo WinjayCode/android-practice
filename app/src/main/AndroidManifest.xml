@@ -442,6 +442,10 @@
             android:name=".TestActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".crash.CrashTestActivity"
+            android:screenOrientation="portrait" />
+
         <service android:name=".TestService" />
     </application>
 

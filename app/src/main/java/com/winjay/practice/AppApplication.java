@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.multidex.MultiDexApplication;
 
+import com.winjay.practice.crash.CrashHandler;
 import com.winjay.practice.utils.ActivityListUtil;
 import com.winjay.practice.utils.LogUtil;
 
@@ -24,6 +25,10 @@ public class AppApplication extends MultiDexApplication {
         super.onCreate();
         mActivityLifeCycle = new ActivityLifeCycle();
         registerActivityLifecycleCallbacks(mActivityLifeCycle);
+
+        // 设置异常处理
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(this);
     }
 
     public static class ActivityLifeCycle implements Application.ActivityLifecycleCallbacks {

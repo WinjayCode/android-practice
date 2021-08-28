@@ -10,6 +10,8 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 
+import java.util.Arrays;
+
 import butterknife.BindView;
 
 /**
@@ -44,7 +46,7 @@ public class SystemInfoActivity extends BaseActivity {
         // Android系统定制商
         stringBuilder.append("brand: " + Build.BRAND + "\n");
         // CPU指令集
-        stringBuilder.append("supported_abis: " + Build.SUPPORTED_ABIS + "\n");
+        stringBuilder.append("supported_abis: " + Arrays.toString(Build.SUPPORTED_ABIS) + "\n");
         // 设备参数
         stringBuilder.append("device: " + Build.DEVICE + "\n");
         // 显示屏参数

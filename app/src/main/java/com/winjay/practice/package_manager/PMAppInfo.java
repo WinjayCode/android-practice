@@ -3,16 +3,16 @@ package com.winjay.practice.package_manager;
 import android.graphics.drawable.Drawable;
 
 public class PMAppInfo {
-    private String appLable;
+    private String appLabel;
     private Drawable appIcon;
     private String pkgName;
 
-    public String getAppLable() {
-        return appLable;
+    public String getAppLabel() {
+        return appLabel;
     }
 
-    public void setAppLable(String appLable) {
-        this.appLable = appLable;
+    public void setAppLabel(String appLabel) {
+        this.appLabel = appLabel;
     }
 
     public Drawable getAppIcon() {

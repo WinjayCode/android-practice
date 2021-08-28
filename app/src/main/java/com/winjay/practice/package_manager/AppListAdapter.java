@@ -37,7 +37,7 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.MyHolder
         if (listData.get(position).getAppIcon() != null) {
             holder.app_icon_iv.setImageDrawable(listData.get(position).getAppIcon());
         }
-        holder.app_name_tv.setText(listData.get(position).getAppLable());
+        holder.app_name_tv.setText(listData.get(position).getAppLabel());
         holder.pkg_name_tv.setText(listData.get(position).getPkgName());
     }
 

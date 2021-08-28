@@ -124,7 +124,7 @@ public class PackageManagerActivity extends BaseActivity {
 
     private PMAppInfo makeAppInfo(ApplicationInfo app) {
         PMAppInfo appInfo = new PMAppInfo();
-        appInfo.setAppLable((String) app.loadLabel(pm));
+        appInfo.setAppLabel((String) app.loadLabel(pm));
         appInfo.setAppIcon(app.loadIcon(pm));
         appInfo.setPkgName(app.packageName);
         return appInfo;
