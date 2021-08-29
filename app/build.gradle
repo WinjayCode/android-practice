@@ -22,6 +22,20 @@ android {
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
+
+        //Android目前支持7种ABIs：mips, mips64, X86, X86–64, arm64-v8a, armeabi, armeabi-v7a
+        //
+        //arm64-v8a: 第8代、64位ARM处理器，目前主流版本。
+        //armeabi-v7a: 第7代及以上的 ARM 处理器，2011年15月以后的生产的大部分Android设备，现在以arm64-v8a为多。
+        //armeabi: 第5代、第6代的ARM处理器，早期的手机用的比较多，可以兼容所有ARM设备，速度比较慢。
+        //x86/x86_64: 平板、模拟器用得比较多，x86 架构的手机都会包含由 Intel 提供的称为 Houdini 的指令集动态转码工具，实现对 arm .so 的兼容，而且目前 x86市场占有率很低，可能只有1%，所以x86相关的两个so文件是可以忽略的。
+        //mips/mips64: NDK 以前支持 ARMv5 (armeabi) 以及 32 位和 64 位 MIPS，但 NDK r17 已不再支持，极少用于手机，可以忽略。
+        ndk {
+            // studio自动编译so
+            moduleName "jni-test"
+            // 适配指定CPU架构
+            abiFilters 'arm64-v8a'
+        }
     }
 
     signingConfigs {
@@ -62,6 +76,9 @@ android {
 
     sourceSets {
         main {
+            // 指定JNI代码目录（jni为studio默认识别目录）
+            jni.srcDirs = ['src/main/jni']
+            // 指定jni库的存放位置（jniLibs为studio默认识别目录）
             jniLibs.srcDirs = ['src/main/jniLibs']
             // src/main/java路径下的代码需要引用src/main/aidl路径下的代码时，需要以下三项配置
             aidl.srcDirs = ['src/main/aidl']
@@ -124,7 +141,7 @@ dependencies {
     androidTestImplementation rootDependencies.runner
     androidTestImplementation rootDependencies.espresso_core
 
-    //
+    // appcompat
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
     // multidex
@@ -139,7 +156,7 @@ dependencies {
     // recyclerview
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
 
-    //
+    // material
     implementation 'com.google.android.material:material:1.2.1'
 
     // kotlin

@@ -29,7 +29,7 @@ cd build/
 
 ### javah生成头文件
 
-然后我们使用javah命令：
+然后我们使用javah命令：（不能在class文件目录下使用javah命令，需要在包名根目录下使用）
 
 ```
 javah cn.scnu.MainActivity // 注意这里是英文句号而不是/，简单的说就是javah+包名+类名

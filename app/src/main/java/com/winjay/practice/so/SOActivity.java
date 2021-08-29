@@ -12,8 +12,10 @@ import com.winjay.practice.R;
  * so库调用学习
  *
  * 注意几个地方，一、包名要和so库中的包名一样；二、类名也要一致。
- * 函数名为Java_包名类名函数名。所以我们创建的Android工程的包名也要一致。
+ * 函数名为Java_包名+类名+函数名。所以我们创建的Android工程的包名也要一致。
  * 同时，负责加载并且提供native方法的类的类名也要相同，SOActivity，否则调用不成功，提示找不到方法。
+ *
+ * 具体开发流程见so_use库总README.md讲解
  *
  * @author Winjay
  * @date 2019/4/17

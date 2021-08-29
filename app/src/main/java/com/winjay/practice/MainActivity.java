@@ -19,6 +19,7 @@ import com.winjay.practice.directory_structure.DirectoryStructureActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
 import com.winjay.practice.ioc.IOCActivity;
 import com.winjay.practice.ipc.aidl.BookManagerClientActivity;
+import com.winjay.practice.jni.JniTestActivity;
 import com.winjay.practice.kotlin.KotlinTestActivity;
 import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.media.ModuleMediaListActivity;
@@ -55,6 +56,7 @@ public class MainActivity extends BaseActivity {
             put("Plugin", PluginActivity.class);
             put("Net", NetListActivity.class);
             put("so_use", SOActivity.class);
+            put("JNI", JniTestActivity.class);
             put("Kotlin", KotlinTestActivity.class);
             put("ContentProvider", ProviderActivity.class);
             put("Location", LocationActivity.class);

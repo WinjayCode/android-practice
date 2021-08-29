@@ -398,6 +398,16 @@
                 android:resource="@xml/accessibility_helper" />
         </service>
 
+        <!-- jni_ndk start -->
+        <activity
+            android:name=".so.SOActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".jni.JniTestActivity"
+            android:screenOrientation="portrait" />
+        <!-- jni_ndk end -->
+
         <activity
             android:name=".download_manager.DownloadManagerActivity"
             android:screenOrientation="portrait" />
@@ -408,10 +418,6 @@
 
         <activity
             android:name=".location.LocationActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".so.SOActivity"
             android:screenOrientation="portrait" />
 
         <activity
