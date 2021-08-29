@@ -14,7 +14,6 @@ import com.winjay.practice.utils.LogUtil;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -28,8 +27,7 @@ import java.util.Date;
  */
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private static final String TAG = "CrashHandler";
-    private static final boolean DEBUG = true;
-    private static CrashHandler sInstance = new CrashHandler();
+    private static final CrashHandler sInstance = new CrashHandler();
     private Thread.UncaughtExceptionHandler mDefaultCrashHandler;
     private Context mContext;
 
@@ -59,14 +57,10 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      */
     @Override
     public void uncaughtException(@NonNull Thread thread, @NonNull Throwable ex) {
-        try {
-            // 导出异常信息到SD卡中
-            dumpExceptionToSDCard(ex);
-            // 上传异常信息到服务器
-            uploadExceptionToServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // 导出异常信息到SD卡中
+        dumpExceptionToSDCard(ex);
+        // 上传异常信息到服务器
+        uploadExceptionToServer();
 
         // 如果系统提供了默认的异常处理器，则交给系统去结束程序，否则就有自己结束自己
         if (mDefaultCrashHandler != null) {
@@ -76,12 +70,10 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         }
     }
 
-    private void dumpExceptionToSDCard(Throwable ex) throws IOException {
+    private void dumpExceptionToSDCard(Throwable ex) {
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            if (DEBUG) {
-                LogUtil.w(TAG, "sdcard unmounted, skip dump exception");
-                return;
-            }
+            LogUtil.w(TAG, "sdcard unmounted, skip dump exception");
+            return;
         }
 
         File dir = new File(PATH);

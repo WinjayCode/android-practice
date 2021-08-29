@@ -51,6 +51,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 //            signingConfig signingConfigs.debug
+
+            // 如果您收到 java.lang.NoClassDefFoundError，则必须使用构建类型中的 multiDexKeepFile 或
+            // multiDexKeepProguard 属性声明这些其他类，以手动将这些类指定为主要 DEX 文件中的必需类。如果在
+            // multiDexKeepFile 或 multiDexKeepProguard 文件中匹配了某个类，则会将该类添加到主要 DEX 文件。
+            multiDexKeepFile file('multidex-config.txt')
+            multiDexKeepProguard file('multidex-config.pro')
         }
     }
 

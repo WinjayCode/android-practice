@@ -6,8 +6,6 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.android.minSdkVersion
         targetSdkVersion rootProject.ext.android.targetSdkVersion
-        versionCode rootProject.ext.versions.versionCode
-        versionName rootProject.ext.versions.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -23,14 +21,8 @@ android {
         sourceCompatibility rootProject.ext.android.sourceCompatibility
         targetCompatibility rootProject.ext.android.targetCompatibility
     }
-}
 
-allprojects {
-    afterEvaluate {
-        android {
-            resourcePrefix "${project.name}_"
-        }
-    }
+    resourcePrefix "${project.name}_"
 }
 
 dependencies {

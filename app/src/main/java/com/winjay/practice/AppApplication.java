@@ -2,8 +2,10 @@ package com.winjay.practice;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
 import com.winjay.practice.crash.CrashHandler;
@@ -19,6 +21,16 @@ import com.winjay.practice.utils.LogUtil;
 public class AppApplication extends MultiDexApplication {
     private static final String TAG = AppApplication.class.getSimpleName();
     private ActivityLifeCycle mActivityLifeCycle;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        // multiDex方案三选一即可
+        // 1.manifest文件中指定Application为MultiDexApplication(android:name="androidx.multidex.MultiDexApplication")
+        // 2.应用的Application继承MultiDexApplication
+        // 3.重写attachBaseContext方法，并且调用MultiDex.install(this);
+//        MultiDex.install(this);
+    }
 
     @Override
     public void onCreate() {
