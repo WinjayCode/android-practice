@@ -400,10 +400,6 @@
 
         <!-- jni_ndk start -->
         <activity
-            android:name=".so.SOActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:name=".jni.JniTestActivity"
             android:screenOrientation="portrait" />
         <!-- jni_ndk end -->

@@ -27,7 +27,6 @@ import com.winjay.practice.net.NetListActivity;
 import com.winjay.practice.notification.NotificationActivity;
 import com.winjay.practice.package_manager.PackageManagerActivity;
 import com.winjay.practice.plugin.PluginActivity;
-import com.winjay.practice.so.SOActivity;
 import com.winjay.practice.system_info.SystemInfoActivity;
 import com.winjay.practice.ui.UIListActivity;
 import com.winjay.practice.utils.LogUtil;
@@ -55,7 +54,6 @@ public class MainActivity extends BaseActivity {
             put("Bluetooth", BluetoothListActivity.class);
             put("Plugin", PluginActivity.class);
             put("Net", NetListActivity.class);
-            put("so_use", SOActivity.class);
             put("JNI", JniTestActivity.class);
             put("Kotlin", KotlinTestActivity.class);
             put("ContentProvider", ProviderActivity.class);
