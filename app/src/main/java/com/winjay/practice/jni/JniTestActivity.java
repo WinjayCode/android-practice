@@ -20,8 +20,10 @@ import butterknife.BindView;
 public class JniTestActivity extends BaseActivity {
     private static final String TAG = "JniTestActivity";
 
-    @BindView(R.id.jni_test_tv)
-    TextView jni_test_tv;
+    private static TextView jni_call_java_tv;
+
+    @BindView(R.id.java_call_jni_tv)
+    TextView java_call_jni_tv;
 
     static {
         LogUtil.d(TAG, "load so library: jni-test.so");
@@ -40,7 +42,19 @@ public class JniTestActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        jni_test_tv.setText(get());
+        jni_call_java_tv = findViewById(R.id.jni_call_java_tv);
+        java_call_jni_tv.setText(get());
         set("jni ndk");
+    }
+
+    public static void methodCalledByJni(String msgFromJni) {
+        LogUtil.d(TAG, "msg=" + msgFromJni);
+        jni_call_java_tv.setText(msgFromJni);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        jni_call_java_tv = null;
     }
 }
