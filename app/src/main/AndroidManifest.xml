@@ -404,6 +404,12 @@
             android:screenOrientation="portrait" />
         <!-- jni_ndk end -->
 
+        <!-- performance_optimize start -->
+        <activity
+            android:name=".performance_optimize.PerformanceOptimizeActivity"
+            android:screenOrientation="portrait" />
+        <!-- performance_optimize end -->
+
         <activity
             android:name=".download_manager.DownloadManagerActivity"
             android:screenOrientation="portrait" />

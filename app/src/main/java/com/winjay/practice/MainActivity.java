@@ -26,6 +26,7 @@ import com.winjay.practice.media.ModuleMediaListActivity;
 import com.winjay.practice.net.NetListActivity;
 import com.winjay.practice.notification.NotificationActivity;
 import com.winjay.practice.package_manager.PackageManagerActivity;
+import com.winjay.practice.performance_optimize.PerformanceOptimizeActivity;
 import com.winjay.practice.plugin.PluginActivity;
 import com.winjay.practice.system_info.SystemInfoActivity;
 import com.winjay.practice.ui.UIListActivity;
@@ -42,7 +43,7 @@ import butterknife.BindView;
  * @date 2019/3/21
  */
 public class MainActivity extends BaseActivity {
-    private final String TAG = MainActivity.class.getSimpleName();
+    private final String TAG = "MainActivity";
 
     @BindView(R.id.main_rv)
     RecyclerView main_rv;
@@ -68,6 +69,7 @@ public class MainActivity extends BaseActivity {
             put("PackageManager", PackageManagerActivity.class);
             put("ActivityManager", ActivityManagerActivity.class);
             put("Notification", NotificationActivity.class);
+            put("Performance Optimization", PerformanceOptimizeActivity.class);
             put("Puzzle", PuzzleMainActivity.class);
             put("2048", Game2048Activity.class);
             put("Test", TestActivity.class);
@@ -83,7 +85,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtil.d(TAG, "onCreate()");
+        LogUtil.d(TAG);
         main_rv.setLayoutManager(new LinearLayoutManager(this));
         MainAdapter mainAdapter = new MainAdapter(new ArrayList<>(mainMap.keySet()));
         main_rv.setAdapter(mainAdapter);
@@ -118,7 +120,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        LogUtil.d(TAG, "onResume()");
+        LogUtil.d(TAG);
 
 //        Intent intent = new Intent(this, TestService.class);
 //        startService(intent);
@@ -127,18 +129,18 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        LogUtil.d(TAG, "onPause()");
+        LogUtil.d(TAG);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        LogUtil.d(TAG, "onStop()");
+        LogUtil.d(TAG);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogUtil.d(TAG, "onDestroy()");
+        LogUtil.d(TAG);
     }
 }

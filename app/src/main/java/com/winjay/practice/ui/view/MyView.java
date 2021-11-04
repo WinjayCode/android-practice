@@ -81,12 +81,20 @@ public class MyView extends View {
         return result;
     }
 
+    // layout过程
+    // 1.通过setFrame方法设定View的四个顶点的位置
+    // 2.调用onLayout方法
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         LogUtil.d(TAG, "onLayout()");
     }
 
+    // draw过程
+    // 1.绘制背景 background.draw(canvas)
+    // 2.绘制自己 (onDraw)
+    // 3.绘制children (dispatchDraw:遍历调用所有子元素的draw方法，这样draw事件就一层层传递下去了)
+    // 4.绘制装饰 (onDrawScrollBars)
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);

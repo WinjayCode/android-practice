@@ -31,7 +31,7 @@ android {
             //x86/x86_64: 平板、模拟器用得比较多，x86 架构的手机都会包含由 Intel 提供的称为 Houdini 的指令集动态转码工具，实现对 arm .so 的兼容，而且目前 x86市场占有率很低，可能只有1%，所以x86相关的两个so文件是可以忽略的。
             //mips/mips64: NDK 以前支持 ARMv5 (armeabi) 以及 32 位和 64 位 MIPS，但 NDK r17 已不再支持，极少用于手机，可以忽略。
             // 适配指定CPU架构（配合Application.mk中APP_ABI配置一起约束指定架构）
-            abiFilters 'arm64-v8a'
+            abiFilters 'arm64-v8a', 'armeabi-v7a'
         }
 
         externalNativeBuild {
