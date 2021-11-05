@@ -5,13 +5,23 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/tips"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="模拟定位必须要到开发者选项中打开应用模拟定位权限!\n"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/longitude_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="经度："
         android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tips" />
 
     <TextView
         android:id="@+id/latitude_tv"

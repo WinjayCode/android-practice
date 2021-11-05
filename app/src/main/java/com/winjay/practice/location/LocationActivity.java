@@ -34,6 +34,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.winjay.practice.R;
 import com.winjay.practice.utils.NoDoubleClickListener;
+import com.winjay.practice.utils.ToastUtils;
 
 import java.util.List;
 
@@ -120,6 +121,8 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
                             mThread.start();
                         }
                     }
+                } else {
+                    ToastUtils.show(LocationActivity.this, "输入要模拟的经纬度信息！");
                 }
                 return;
             }
@@ -300,7 +303,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
     private boolean hasAddTestProvider = false;
 
     public void stopMockLocation() {
-        LogUtil.d(TAG, "stopMockLocation()");
+        LogUtil.d(TAG);
         if (hasAddTestProvider) {
             try {
                 locationManager.removeTestProvider(LocationManager.GPS_PROVIDER);

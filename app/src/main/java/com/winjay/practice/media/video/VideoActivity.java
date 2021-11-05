@@ -1,23 +1,27 @@
 package com.winjay.practice.media.video;
 
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.MediaController;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.Nullable;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
+import com.winjay.practice.directory_structure.AssetHelper;
+import com.winjay.practice.directory_structure.MyMediaCollection;
 import com.winjay.practice.media.bean.VideoBean;
 import com.winjay.practice.utils.LogUtil;
 
 import java.io.File;
-import java.io.Serializable;
+import java.util.List;
+
+import kotlinx.coroutines.Dispatchers;
+import kotlinx.coroutines.GlobalScope;
 
 /**
  * VideoView
@@ -55,8 +59,6 @@ public class VideoActivity extends BaseActivity {
     private static final String TAG = VideoActivity.class.getSimpleName();
     private VideoView mVideoView;
 
-    private MediaPlayer mediaPlayer;
-
     @Override
     protected int getLayoutId() {
         return R.layout.video_activity;
@@ -66,31 +68,55 @@ public class VideoActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mVideoView = findViewById(R.id.video_view);
+
         if (getIntent().hasExtra("video")) {
             VideoBean video = (VideoBean) getIntent().getSerializableExtra("video");
             if (video != null && !TextUtils.isEmpty(video.getPath())) {
-                playVideo(video.getPath());
+                setVideoPath(video.getPath());
             }
+        } else {
+            File videoFile = new File(getExternalFilesDir(Environment.DIRECTORY_MOVIES), "3G2.3g2");
+            // ok
+//            File videoFile = new File(getExternalFilesDir(null), "3G2.3g2");
+            AssetHelper.Companion.copyAssetSingleFile(this, "3G2.3g2", videoFile);
+//            MyMediaCollection myMediaCollection = new MyMediaCollection();
+//            myMediaCollection.insertVideoToCollection(this, "MP4.mp4");
+//            List<MyMediaCollection.VideoBean> videoBeans = myMediaCollection.queryVideoCollection(this);
+//            LogUtil.d(TAG, "video.size=" + videoBeans.size());
+//            setVideoUri(videoBeans.get(videoBeans.size() - 1).getUri());
+            setVideoPath(videoFile.getAbsolutePath());
         }
-//        playVideo("");
     }
 
-    private void playVideo(String path) {
-//        File file = new File(Environment.getExternalStorageDirectory(), "Xvid_1920_1088.mp4");
+    private void setVideoPath(String path) {
+////        File file = new File(Environment.getExternalStorageDirectory() + "/Movies/", "3G2.3g2");
+////        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), "3G2.3g2");
+//        File file = new File(getExternalFilesDir(Environment.DIRECTORY_MOVIES), "3G2.3g2");
+////        File file = new File("/sdcard/Movies/M4V.m4v");
+//        LogUtil.d(TAG, "11path=" + file.getAbsolutePath());
 //        if (!file.exists()) {
-//            Toast.makeText(this, "视频不存在", Toast.LENGTH_SHORT).show();
+//            toast("视频不存在");
 //            finish();
 //            return;
 //        }
 //        path = file.getAbsolutePath();
-
+//
         LogUtil.d(TAG, "path=" + path);
+
         mVideoView.setVideoPath(path);//设置视频文件
+        playVideo();
+    }
+
+    private void setVideoUri(Uri uri) {
+        mVideoView.setVideoURI(uri);
+        playVideo();
+    }
+
+    private void playVideo() {
         mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 LogUtil.i(TAG, "onPrepared()");
-                mediaPlayer = mp;
                 //视频加载完成,准备好播放视频的回调
                 mVideoView.start();
             }
@@ -101,51 +127,51 @@ public class VideoActivity extends BaseActivity {
                 LogUtil.e(TAG, "onError():what=" + what + ", extra=" + extra);
                 switch (what) {
                     case -1004:
-                        Log.d(TAG, "MEDIA_ERROR_IO");
+                        LogUtil.d(TAG, "MEDIA_ERROR_IO");
                         break;
                     case -1007:
-                        Log.d(TAG, "MEDIA_ERROR_MALFORMED");
+                        LogUtil.d(TAG, "MEDIA_ERROR_MALFORMED");
                         break;
                     case 200:
-                        Log.d(TAG, "MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK");
+                        LogUtil.d(TAG, "MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK");
                         break;
                     case 100:
-                        Log.d(TAG, "MEDIA_ERROR_SERVER_DIED");
+                        LogUtil.d(TAG, "MEDIA_ERROR_SERVER_DIED");
                         break;
                     case -110:
-                        Log.d(TAG, "MEDIA_ERROR_TIMED_OUT");
+                        LogUtil.d(TAG, "MEDIA_ERROR_TIMED_OUT");
                         break;
                     case 1:
-                        Log.d(TAG, "MEDIA_ERROR_UNKNOWN");
+                        LogUtil.d(TAG, "MEDIA_ERROR_UNKNOWN");
                         break;
                     case -1010:
-                        Log.d(TAG, "MEDIA_ERROR_UNSUPPORTED");
+                        LogUtil.d(TAG, "MEDIA_ERROR_UNSUPPORTED");
                         break;
                 }
                 switch (extra) {
                     case 800:
-                        Log.d(TAG, "MEDIA_INFO_BAD_INTERLEAVING");
+                        LogUtil.d(TAG, "MEDIA_INFO_BAD_INTERLEAVING");
                         break;
                     case 702:
-                        Log.d(TAG, "MEDIA_INFO_BUFFERING_END");
+                        LogUtil.d(TAG, "MEDIA_INFO_BUFFERING_END");
                         break;
                     case 701:
-                        Log.d(TAG, "MEDIA_INFO_METADATA_UPDATE");
+                        LogUtil.d(TAG, "MEDIA_INFO_METADATA_UPDATE");
                         break;
                     case 802:
-                        Log.d(TAG, "MEDIA_INFO_METADATA_UPDATE");
+                        LogUtil.d(TAG, "MEDIA_INFO_METADATA_UPDATE");
                         break;
                     case 801:
-                        Log.d(TAG, "MEDIA_INFO_NOT_SEEKABLE");
+                        LogUtil.d(TAG, "MEDIA_INFO_NOT_SEEKABLE");
                         break;
                     case 1:
-                        Log.d(TAG, "MEDIA_INFO_UNKNOWN");
+                        LogUtil.d(TAG, "MEDIA_INFO_UNKNOWN");
                         break;
                     case 3:
-                        Log.d(TAG, "MEDIA_INFO_VIDEO_RENDERING_START");
+                        LogUtil.d(TAG, "MEDIA_INFO_VIDEO_RENDERING_START");
                         break;
                     case 700:
-                        Log.d(TAG, "MEDIA_INFO_VIDEO_TRACK_LAGGING");
+                        LogUtil.d(TAG, "MEDIA_INFO_VIDEO_TRACK_LAGGING");
                         break;
                 }
                 //异常回调
@@ -165,7 +191,7 @@ public class VideoActivity extends BaseActivity {
             public boolean onInfo(MediaPlayer mp, int what, int extra) {
                 LogUtil.d(TAG, "onInfo():what=" + what + ", extra=" + extra);
                 if (what == 805 && extra == -1007) {
-                    Log.w(TAG, "Video coding anomaly, fast forward 5 sec!");
+                    LogUtil.w(TAG, "Video coding anomaly, fast forward 5 sec!");
                     LogUtil.d(TAG, "isPlaying=" + mVideoView.isPlaying());
                     LogUtil.d(TAG, "current position=" + mp.getCurrentPosition());
                     int currentPosition = mp.getCurrentPosition();
@@ -193,21 +219,6 @@ public class VideoActivity extends BaseActivity {
         });
 
         mVideoView.setMediaController(new MediaController(this));
-
-        mVideoView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                LogUtil.d(TAG, "1111");
-                mediaPlayer.setVolume(0, 0);
-            }
-        }, 5000);
-        mVideoView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                LogUtil.d(TAG, "2222");
-                mediaPlayer.setVolume(1, 1);
-            }
-        }, 10000);
     }
 
     @Override

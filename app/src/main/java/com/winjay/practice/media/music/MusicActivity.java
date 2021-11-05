@@ -90,21 +90,30 @@ public class MusicActivity extends BaseActivity implements IMediaStatus {
                         LogUtil.d(TAG, "media:AUDIOFOCUS_GAIN");
                         if (musicPlayer != null) {
                             musicPlayer.start();
+                            play_pause_iv.setImageResource(android.R.drawable.ic_media_pause);
                         }
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS:
                         LogUtil.d(TAG, "media:AUDIOFOCUS_LOSS");
+                        if (musicPlayer != null) {
+                            musicPlayer.stop();
+                            musicPlayer.release();
+                            mAudioFocusManager.releaseAudioFocus();
+                            play_pause_iv.setImageResource(android.R.drawable.ic_media_play);
+                        }
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                         LogUtil.d(TAG, "media:AUDIOFOCUS_LOSS_TRANSIENT");
                         if (musicPlayer != null) {
                             musicPlayer.pause();
+                            play_pause_iv.setImageResource(android.R.drawable.ic_media_play);
                         }
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                         LogUtil.d(TAG, "media:AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
                         if (musicPlayer != null) {
                             musicPlayer.pause();
+                            play_pause_iv.setImageResource(android.R.drawable.ic_media_play);
                         }
                         break;
                 }

@@ -37,6 +37,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -104,6 +105,8 @@ public class TestActivity extends AppCompatActivity {
 
     private boolean isTest = false;
 
+    private AlertDialog mAlertDialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,8 +132,13 @@ public class TestActivity extends AppCompatActivity {
             Toast.makeText(TestActivity.this, "测试点击", Toast.LENGTH_SHORT).show();
             LogUtil.d("HookSetOnClickListener", "222");
 
-            MyDialog dialog = new MyDialog(TestActivity.this);
-            dialog.show();
+//            MyDialog dialog = new MyDialog(TestActivity.this);
+//            dialog.show();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(TestActivity.this);
+            builder.setMessage("测试弹窗！");
+            mAlertDialog = builder.create();
+            mAlertDialog.show();
 
 //            if (isTest) {
 //                fullscreen(true);
@@ -355,6 +363,14 @@ public class TestActivity extends AppCompatActivity {
 //            s.add(files[i].getAbsolutePath());
         }
 //        return s;
+    }
+
+    @Override
+    protected void onPause() {
+        if (mAlertDialog != null) {
+            mAlertDialog.dismiss();
+        }
+        super.onPause();
     }
 
     @Override

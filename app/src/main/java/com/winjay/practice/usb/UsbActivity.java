@@ -1,6 +1,7 @@
 package com.winjay.practice.usb;
 
 import android.Manifest;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
@@ -73,6 +74,20 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
         registerObserver();
         initView();
         requiresPermissions();
+
+        // 系统应用可以监听已连接的卷发生的变化。每当卷的状态发生变化时（包括正在检查或移除卷以及装载或卸载卷时），StorageEventListener 都会收到通知。
+        // 此方法只能在正在运行的进程中使用。
+//        StorageEventListener mStorageEventListener = new StorageEventListener() {
+//            @Override
+//            public void onVolumeStateChanged(VolumeInfo vol, int oldState, int newState) {
+//                if (isResumed()) {
+//                    // take action here
+//                }
+//            }
+//        };
+//
+//        StorageManager mStorageManager = context.getSystemService(StorageManager.class);
+//        mStorageManager.registerListener(mStorageEventListener);
     }
 
     private void initView() {
@@ -166,6 +181,9 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
                 String title = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE));
                 String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
                 int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID));
+                // 可针对特定光标项生成 URI：
+//                Uri volumeAudioUri = MediaStore.Video.Media.getContentUri(volumeName);
+//                Uri mediaUri = ContentUris.withAppendedId(volumeAudioUri, id);
 
                 String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.MIME_TYPE));
                 long dateModified = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.DATE_MODIFIED));

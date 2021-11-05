@@ -62,7 +62,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         // 上传异常信息到服务器
         uploadExceptionToServer();
 
-        // 如果系统提供了默认的异常处理器，则交给系统去结束程序，否则就有自己结束自己
+        // 如果系统提供了默认的异常处理器，则交给系统去结束程序，否则就自己结束自己
         if (mDefaultCrashHandler != null) {
             mDefaultCrashHandler.uncaughtException(thread, ex);
         } else {
