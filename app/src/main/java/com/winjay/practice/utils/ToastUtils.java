@@ -37,7 +37,7 @@ public class ToastUtils {
             return;
         }
         //后setText 兼容小米默认会显示app名称的问题
-        Toast toast = Toast.makeText(context, null, duration);
+        Toast toast = Toast.makeText(context, "", duration);
         toast.setText(message);
         if (isNotificationEnabled(context)) {
             toast.show();
@@ -84,7 +84,7 @@ public class ToastUtils {
      *
      * @return
      */
-    private static boolean isNotificationEnabled(Context context) {
+    public static boolean isNotificationEnabled(Context context) {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         return notificationManagerCompat.areNotificationsEnabled();
     }

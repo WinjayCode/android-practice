@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 import android.widget.RemoteViews;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
@@ -81,7 +82,7 @@ public class NotificationActivity extends BaseActivity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         // 创建通知
-        Notification.Builder builder = new Notification.Builder(this);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1");
         builder.setSmallIcon(R.drawable.kui_icon);
         builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);
@@ -96,12 +97,10 @@ public class NotificationActivity extends BaseActivity {
 
     /**
      * 折叠类型的通知
-     *
-     * @param view
      */
     @OnClick(R.id.collapsed_notification)
-    void collapsed(View view) {
-        LogUtil.d(TAG, "collapsed()");
+    void collapsed() {
+        LogUtil.d(TAG);
         // 通过RemoteViews来创建自定义的Collapsed Notification视图
         RemoteViews collapsedView = new RemoteViews(getPackageName(), R.layout.collapsed_notification_layout);
         collapsedView.setTextViewText(R.id.collapsed_notification_tv, "show me when collapsed");
@@ -114,17 +113,17 @@ public class NotificationActivity extends BaseActivity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         // 创建通知
-        Notification.Builder builder = new Notification.Builder(this);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1");
         builder.setSmallIcon(R.drawable.kui_icon);
         builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.kui_icon));
-//        builder.setCustomContentView(collapsedView);
-//        builder.setCustomBigContentView(expandedView);
+        builder.setCustomContentView(collapsedView);
+        builder.setCustomBigContentView(expandedView);
 
-        Notification notification = builder.build();
-        notification.contentView = collapsedView;
-        notification.bigContentView = expandedView;
+//        Notification notification = builder.build();
+//        notification.contentView = collapsedView;
+//        notification.bigContentView = expandedView;
 
         // 发出通知
         mNotificationManager.notify(++NOTIFICATION_ID, builder.build());
@@ -132,14 +131,12 @@ public class NotificationActivity extends BaseActivity {
 
     /**
      * 悬挂类型的通知
-     *
-     * @param view
      */
     @OnClick(R.id.headsup_notification)
-    void headsup(View view) {
-        LogUtil.d(TAG, "headsup()");
+    void headsup() {
+        LogUtil.d(TAG);
         // 创建通知
-        Notification.Builder builder = new Notification.Builder(this)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1")
                 .setSmallIcon(R.drawable.kui_icon)
                 .setPriority(Notification.PRIORITY_DEFAULT)
                 .setCategory(Notification.CATEGORY_MESSAGE)
@@ -159,27 +156,25 @@ public class NotificationActivity extends BaseActivity {
 
     /**
      * Notification显示等级
-     *
-     * @param view
      */
     @OnClick(R.id.visibility_btn)
-    void visibility(View view) {
-        LogUtil.d(TAG, "visibility()");
+    void visibility() {
+        LogUtil.d(TAG);
         // 创建通知
-        Notification.Builder builder = new Notification.Builder(this)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1")
                 .setContentTitle("Notification for Visibility Test")
                 .setSmallIcon(R.drawable.kui_icon);
         if (notificationGrade == 1) {
             // 任何情况下都会显示
-            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+            builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
             builder.setContentText("Public");
         } else if (notificationGrade == 2) {
             // 只有当没有锁屏的时候会显示
-            builder.setVisibility(Notification.VISIBILITY_PRIVATE);
+            builder.setVisibility(NotificationCompat.VISIBILITY_PRIVATE);
             builder.setContentText("Private");
         } else if (notificationGrade == 3) {
             // 在pin、password等安全锁和没有锁屏的情况下才能够显示
-            builder.setVisibility(Notification.VISIBILITY_SECRET);
+            builder.setVisibility(NotificationCompat.VISIBILITY_SECRET);
             builder.setContentText("Secret");
         }
 

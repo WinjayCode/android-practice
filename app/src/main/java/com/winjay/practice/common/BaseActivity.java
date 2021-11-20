@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.winjay.practice.R;
 import com.winjay.practice.utils.LogUtil;
+import com.winjay.practice.utils.ToastUtils;
 
 import java.util.List;
 
@@ -103,7 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
 
     protected void toast(String text) {
         if (!TextUtils.isEmpty(text)) {
-            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+            ToastUtils.show(this, text);
         }
     }
 

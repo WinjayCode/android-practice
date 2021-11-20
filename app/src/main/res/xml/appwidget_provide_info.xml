@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialLayout="@layout/remote_views_widget"
+    android:minWidth="84dp"
+    android:minHeight="84dp"
+    android:updatePeriodMillis="86400000">
+    <!--updatePeriodMillis 自动更新周期-->
+</appwidget-provider>

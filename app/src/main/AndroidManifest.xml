@@ -149,18 +149,6 @@
             android:screenOrientation="portrait" />
         <!-- ioc end -->
 
-        <!-- widget start -->
-        <receiver android:name=".launcher_widget.ClockWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/clock_widget_info" />
-        </receiver>
-        <!-- widget end -->
-
         <!-- ui start -->
         <activity
             android:name=".ui.UIListActivity"
@@ -209,6 +197,21 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".ui.remote_views.RemoteViewsNotificationActivity"
+            android:screenOrientation="portrait" />
+
+        <receiver android:name=".ui.remote_views.RemoteViewsAppWidgetProvider">
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/appwidget_provide_info" />
+
+            <intent-filter>
+                <action android:name="com.winjay.practice.action.CLICK" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+        </receiver>
+
+        <activity
             android:name=".ui.TransparentActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:launchMode="singleInstance"
@@ -220,6 +223,18 @@
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+
+        <!-- widget start -->
+        <receiver android:name=".ui.launcher_widget.ClockWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/clock_widget_info" />
+        </receiver>
+        <!-- widget end -->
         <!-- ui end -->
 
         <!-- media start-->

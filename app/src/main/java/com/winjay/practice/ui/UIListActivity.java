@@ -18,6 +18,7 @@ import com.winjay.practice.ui.constraint_layout.ConstraintLayoutActivity;
 import com.winjay.practice.ui.custom_view.CustomViewActivity;
 import com.winjay.practice.ui.imageloader.ImageLoaderActivity;
 import com.winjay.practice.ui.material_design.MaterialDesignActivity;
+import com.winjay.practice.ui.remote_views.RemoteViewsNotificationActivity;
 import com.winjay.practice.ui.surfaceview_animation.SurfaceViewAnimationActivity;
 import com.winjay.practice.ui.svg.SVGActivity;
 import com.winjay.practice.ui.toolbar.ToolbarActivity;
@@ -48,6 +49,7 @@ public class UIListActivity extends BaseActivity {
             put("MaterialDesign", MaterialDesignActivity.class);
             put("Toolbar", ToolbarActivity.class);
             put("SVG", SVGActivity.class);
+            put("RemoteViews", RemoteViewsNotificationActivity.class);
             put("CustomView", CustomViewActivity.class);
             put("ImageLoader", ImageLoaderActivity.class);
             put("EmptyPage", EmptyActivity.class);

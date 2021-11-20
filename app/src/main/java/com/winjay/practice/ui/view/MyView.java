@@ -12,6 +12,12 @@ import com.winjay.practice.utils.LogUtil;
 
 /**
  * 自定义view学习
+ * 注意点：
+ * 1.让View支持wrap_content
+ * 2.如果有必要，让你的View支持padding，如果不在draw方法中处理padding，那么padding属性无法起作用
+ * 3.尽量不要再View中使用Handler，没必要
+ * 4.View中如果有动画或者线程，需要及时停止，参考View#onDetchedFromWindow
+ * 5.View带有滑动嵌套情形时，需要处理好滑动冲突
  *
  * @author Winjay
  * @date 2020/5/26
