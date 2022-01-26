@@ -7,7 +7,7 @@ def rootDependencies = rootProject.ext.dependencies
 def rootAndroid = rootProject.ext.android
 def rootVersions = rootProject.ext.versions
 // camerax
-def camerax_version = "1.0.0-rc04"
+def camerax_version = "1.1.0-alpha03"
 
 android {
     compileSdkVersion rootAndroid.compileSdkVersion
@@ -116,7 +116,7 @@ android {
         targetCompatibility rootAndroid.targetCompatibility
     }
 
-    lintOptions {//设置编译的lint开关，程序在buid的时候，会执行lint检查，有任何的错误或者警告提示，都会终止构建
+    lintOptions {//设置编译的lint开关，程序在build的时候，会执行lint检查，有任何的错误或者警告提示，都会终止构建
         abortOnError false
     }
 

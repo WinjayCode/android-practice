@@ -106,7 +106,7 @@
 
         <!-- design mode start -->
         <activity
-            android:name=".design_mode.DesignModeActivity"
+            android:name=".design_mode.DesignModeListActivity"
             android:screenOrientation="portrait" />
 
         <activity

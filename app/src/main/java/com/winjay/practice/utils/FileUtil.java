@@ -773,7 +773,7 @@ public class FileUtil {
             } else {
                 temp = new File(oldPath + File.separator + file);
             }
-
+            Log.d(TAG, "temp=" + temp.getName());
             if (temp.isDirectory()) {   //如果是子文件夹
                 boolean result = copyFolder(oldPath + "/" + file, newPath + "/" + file);
                 if (!result) {

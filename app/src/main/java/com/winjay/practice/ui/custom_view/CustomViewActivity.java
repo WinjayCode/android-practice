@@ -1,6 +1,7 @@
 package com.winjay.practice.ui.custom_view;
 
 import android.animation.Animator;
+import android.os.Bundle;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -8,8 +9,11 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
+import com.winjay.practice.ui.view.AncientPoetryTextView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -27,9 +31,21 @@ public class CustomViewActivity extends BaseActivity {
     @BindView(R.id.rect)
     ImageView rectIV;
 
+    @BindView(R.id.ap_tv)
+    AncientPoetryTextView apTV;
+
     @Override
     protected int getLayoutId() {
         return R.layout.custom_view_activity;
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        apTV.setLineMaxCharNum(6);
+        apTV.setMaxLine(4);
+        apTV.setText("床前明月光，疑是地上霜。举头望明月，低头思故乡。");
     }
 
     @OnClick(R.id.oval)

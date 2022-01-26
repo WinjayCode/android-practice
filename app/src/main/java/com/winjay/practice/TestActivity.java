@@ -50,6 +50,7 @@ import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.ui.dialog.MyDialog;
 import com.winjay.practice.utils.ByteUtil;
 import com.winjay.practice.utils.CountDownTimerUtil;
+import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.NetUtil;
 import com.winjay.practice.utils.VolumeUtil;
@@ -135,10 +136,10 @@ public class TestActivity extends AppCompatActivity {
 //            MyDialog dialog = new MyDialog(TestActivity.this);
 //            dialog.show();
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(TestActivity.this);
-            builder.setMessage("测试弹窗！");
-            mAlertDialog = builder.create();
-            mAlertDialog.show();
+//            AlertDialog.Builder builder = new AlertDialog.Builder(TestActivity.this);
+//            builder.setMessage("测试弹窗！");
+//            mAlertDialog = builder.create();
+//            mAlertDialog.show();
 
 //            if (isTest) {
 //                fullscreen(true);
@@ -169,6 +170,27 @@ public class TestActivity extends AppCompatActivity {
 //                }
 //            });
 //            countDownTimerUtil.start();
+
+            String savedPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            boolean result = FileUtil.copyFolder(savedPath + File.separator + "sync", savedPath);
+            LogUtil.d(TAG, "result=" + result);
+
+//            boolean result = false;
+//            boolean isExists = false;
+//            File videoFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/video/");
+//            if (videoFolder.exists()) {
+//                for (File folder : videoFolder.listFiles()) {
+//                    LogUtil.d(TAG, "folder=" + folder.getPath());
+//                    File resourceFile = new File(folder.getPath() + File.separator + "3G2.3g2");
+//                    LogUtil.d(TAG, "resourceFile=" + resourceFile.getName());
+//                    if (resourceFile.exists()) {
+//                        isExists = true;
+//                        result = resourceFile.delete();
+//                    }
+//                }
+//            }
+//            LogUtil.d(TAG, "result=" + result);
+//            LogUtil.d(TAG, "isExists=" + isExists);
         });
         // Hook
         HookSetOnClickListenerHelper.hook(this, testBtn);

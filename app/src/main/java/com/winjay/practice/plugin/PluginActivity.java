@@ -50,7 +50,7 @@ public class PluginActivity extends BaseActivity {
 
     @OnClick(R.id.merge_plugin_btn)
     void mergeDex() {
-        loadClass(this);
+        loadClass(this, "/sdcard/PluginTest.dex");
         try {
             Class<?> clazz = Class.forName("com.winjay.practice.plugin.PluginTest");
             Method method = clazz.getMethod("print");
@@ -60,7 +60,7 @@ public class PluginActivity extends BaseActivity {
         }
     }
 
-    public void loadClass(Context context) {
+    public void loadClass(Context context, String apkPath) {
         //合并dexElements
         try {
             //获取BaseDexClassLoader中的pathList（DexPathList）
@@ -80,8 +80,6 @@ public class PluginActivity extends BaseActivity {
             //宿主的dexElements
             Object[] hostDexElements = (Object[]) dexElementsField.get(hostPathList);
 
-
-            String apkPath = "/sdcard/PluginTest.dex";
             //插件的类加载器
             ClassLoader dexClassLoader = new DexClassLoader(apkPath
                     , context.getCacheDir().getAbsolutePath()
