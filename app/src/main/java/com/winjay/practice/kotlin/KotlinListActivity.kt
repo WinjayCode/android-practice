@@ -1,4 +1,4 @@
-package com.winjay.practice.design_mode
+package com.winjay.practice.kotlin
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,22 +6,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.winjay.practice.MainAdapter
 import com.winjay.practice.R
 import com.winjay.practice.common.BaseActivity
-import com.winjay.practice.design_mode.mvc.controller.MVCActivity
-import com.winjay.practice.design_mode.mvp.view.MVPActivity
-import com.winjay.practice.design_mode.mvvm.databinding.MVVMDataBindingActivity
-import com.winjay.practice.design_mode.mvvm.view.UserListActivity
+import com.winjay.practice.kotlin.coroutines.KotlinCoroutinesTestActivity
 import kotlinx.android.synthetic.main.main_activity.*
 import java.util.*
 
-class DesignModeListActivity : BaseActivity() {
+class KotlinListActivity : BaseActivity() {
 
     private val mainMap: LinkedHashMap<String?, Class<*>?> =
         object : LinkedHashMap<String?, Class<*>?>() {
             init {
-                put("MVC", MVCActivity::class.java)
-                put("MVP", MVPActivity::class.java)
-                put("MVVM(DataBinding)", MVVMDataBindingActivity::class.java)
-                put("MVVM", UserListActivity::class.java)
+                put("Test", KotlinTestActivity::class.java)
+                put("Coroutines", KotlinCoroutinesTestActivity::class.java)
             }
         }
 
@@ -35,7 +30,7 @@ class DesignModeListActivity : BaseActivity() {
         val mainAdapter = MainAdapter(ArrayList(mainMap.keys))
         main_rv!!.adapter = mainAdapter
         mainAdapter.setOnItemClickListener { view, key ->
-            val intent = Intent(this@DesignModeListActivity, mainMap[key])
+            val intent = Intent(this@KotlinListActivity, mainMap[key])
             startActivity(intent)
         }
     }

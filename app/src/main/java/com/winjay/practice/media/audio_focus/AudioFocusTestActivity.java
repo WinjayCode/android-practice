@@ -251,12 +251,13 @@ public class AudioFocusTestActivity extends BaseActivity {
 
     @OnClick(R.id.system_btn)
     void system() {
-//        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mSystemAudioFocusManager.requestFocus(AudioFocusManagerLib.AudioType.SYSTEM)) {
-//            playSystem();
-//        }
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mSystemAudioFocusManager.requestFocus(AudioFocusManagerLib.AudioType.SPEECH)) {
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mSystemAudioFocusManager.requestFocus(AudioFocusManagerLib.AudioType.SYSTEM)) {
             playSystem();
         }
+
+//        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mSystemAudioFocusManager.requestFocus(AudioFocusManagerLib.AudioType.SPEECH)) {
+//            playSystem();
+//        }
     }
 
     private void playSystem() {
@@ -294,7 +295,7 @@ public class AudioFocusTestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_1)
     void btn1() {
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManagerLib1.requestFocus(AudioFocusManagerLib.AudioType.TEST)) {
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManagerLib1.requestFocus(AudioFocusManagerLib.AudioType.MEDIA)) {
             playMediaNum(1);
         }
     }

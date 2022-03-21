@@ -1,4 +1,4 @@
-package com.winjay.practice.design_mode.mvvm;
+package com.winjay.practice.design_mode.mvvm.databinding;
 
 public class MVVMBean {
     public String data;

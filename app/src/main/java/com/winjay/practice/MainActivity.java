@@ -19,8 +19,9 @@ import com.winjay.practice.directory_structure.DirectoryStructureActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
 import com.winjay.practice.ioc.IOCActivity;
 import com.winjay.practice.ipc.aidl.BookManagerClientActivity;
+import com.winjay.practice.jetpack.JetpackLibListActivity;
 import com.winjay.practice.jni.JniTestActivity;
-import com.winjay.practice.kotlin.KotlinTestActivity;
+import com.winjay.practice.kotlin.KotlinListActivity;
 import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.media.ModuleMediaListActivity;
 import com.winjay.practice.net.NetListActivity;
@@ -50,13 +51,14 @@ public class MainActivity extends BaseActivity {
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
         {
+            put("Jetpack", JetpackLibListActivity.class);
             put("UI", UIListActivity.class);
             put("Media", ModuleMediaListActivity.class);
             put("Bluetooth", BluetoothListActivity.class);
             put("Plugin", PluginActivity.class);
             put("Net", NetListActivity.class);
             put("JNI", JniTestActivity.class);
-            put("Kotlin", KotlinTestActivity.class);
+            put("Kotlin", KotlinListActivity.class);
             put("ContentProvider", ProviderActivity.class);
             put("Location", LocationActivity.class);
             put("Intent Filter", null);

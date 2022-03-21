@@ -14,7 +14,7 @@ import com.winjay.practice.design_mode.mvc.model.MVCModel;
 import butterknife.BindView;
 
 /**
- * Controller层
+ * MVC中的View和Controller层
  *
  * @author Winjay
  * @date 2020-01-10
@@ -40,7 +40,12 @@ public class MVCActivity extends BaseActivity {
         mMVCBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMVCTV.setText(mMVCModel.getData());
+                mMVCModel.getData(new MVCModel.GetDataListener() {
+                    @Override
+                    public void onComplete(String data) {
+                        mMVCTV.setText(data);
+                    }
+                });
             }
         });
     }
