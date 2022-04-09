@@ -106,7 +106,7 @@
 
         <!-- design mode start -->
         <activity
-            android:name=".design_mode.DesignModeActivity"
+            android:name=".design_mode.DesignModeListActivity"
             android:screenOrientation="portrait" />
 
         <activity
@@ -118,8 +118,10 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".design_mode.mvvm.MVVMActivity"
+            android:name=".design_mode.mvvm.databinding.MVVMDataBindingActivity"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".design_mode.mvvm.view.UserListActivity" />
         <!-- design mode end -->
 
         <!-- ipc start -->
@@ -294,6 +296,11 @@
             android:name=".media.audio_focus.AudioFocusTestActivity"
             android:screenOrientation="portrait" />
 
+        <service
+            android:name=".media.audio_focus.AudioFocusTestService"
+            android:enabled="true"
+            android:exported="true" />
+
         <receiver android:name=".media.receiver.MediaButtonIntentReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
@@ -415,11 +422,35 @@
                 android:resource="@xml/accessibility_helper" />
         </service>
 
+        <!-- jetpack start -->
+        <activity
+            android:name=".jetpack.JetpackLibListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".jetpack.lifecycle.LifecycleTestActivity"
+            android:screenOrientation="portrait" />
+        <!-- jetpack end -->
+
         <!-- jni_ndk start -->
         <activity
             android:name=".jni.JniTestActivity"
             android:screenOrientation="portrait" />
         <!-- jni_ndk end -->
+
+        <!-- kotlin start -->
+        <activity
+            android:name=".kotlin.KotlinListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".kotlin.KotlinTestActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".kotlin.coroutines.KotlinCoroutinesTestActivity"
+            android:screenOrientation="portrait" />
+        <!-- kotlin end -->
 
         <!-- performance_optimize start -->
         <activity
@@ -437,10 +468,6 @@
 
         <activity
             android:name=".location.LocationActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".kotlin.KotlinTestActivity"
             android:screenOrientation="portrait" />
 
         <activity

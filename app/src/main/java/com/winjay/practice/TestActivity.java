@@ -14,6 +14,7 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -50,6 +51,7 @@ import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.ui.dialog.MyDialog;
 import com.winjay.practice.utils.ByteUtil;
 import com.winjay.practice.utils.CountDownTimerUtil;
+import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.NetUtil;
 import com.winjay.practice.utils.VolumeUtil;
@@ -135,10 +137,10 @@ public class TestActivity extends AppCompatActivity {
 //            MyDialog dialog = new MyDialog(TestActivity.this);
 //            dialog.show();
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(TestActivity.this);
-            builder.setMessage("测试弹窗！");
-            mAlertDialog = builder.create();
-            mAlertDialog.show();
+//            AlertDialog.Builder builder = new AlertDialog.Builder(TestActivity.this);
+//            builder.setMessage("测试弹窗！");
+//            mAlertDialog = builder.create();
+//            mAlertDialog.show();
 
 //            if (isTest) {
 //                fullscreen(true);
@@ -169,9 +171,58 @@ public class TestActivity extends AppCompatActivity {
 //                }
 //            });
 //            countDownTimerUtil.start();
+
+//            String savedPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+//            boolean result = FileUtil.copyFolder(savedPath + File.separator + "sync", savedPath);
+//            LogUtil.d(TAG, "result=" + result);
+
+//            boolean result = false;
+//            boolean isExists = false;
+//            File videoFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/video/");
+//            if (videoFolder.exists()) {
+//                for (File folder : videoFolder.listFiles()) {
+//                    LogUtil.d(TAG, "folder=" + folder.getPath());
+//                    File resourceFile = new File(folder.getPath() + File.separator + "3G2.3g2");
+//                    LogUtil.d(TAG, "resourceFile=" + resourceFile.getName());
+//                    if (resourceFile.exists()) {
+//                        isExists = true;
+//                        result = resourceFile.delete();
+//                    }
+//                }
+//            }
+//            LogUtil.d(TAG, "result=" + result);
+//            LogUtil.d(TAG, "isExists=" + isExists);
+
+
+            // android12版本无法启动
+//            Intent intent = new Intent();
+//            intent.setComponent(new ComponentName("com.winjay.myapplication", "com.winjay.myapplication.TestService"));
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                startForegroundService(intent);
+//            }
+//            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+
+//            String savedPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+//            boolean result = FileUtil.copyFolder(savedPath + File.separator + "test", savedPath + File.separator + "test2");
+//            LogUtil.d(TAG, "result=" + result);
         });
         // Hook
         HookSetOnClickListenerHelper.hook(this, testBtn);
+
+        Button testBtn2 = findViewById(R.id.test_btn2);
+        testBtn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String savedPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+                String oldPath = savedPath + File.separator + "test" + File.separator;
+                String newPath = savedPath + File.separator + "test2" + File.separator;
+                LogUtil.d(TAG, "oldPath=" + oldPath);
+                LogUtil.d(TAG, "newPath=" + newPath);
+                boolean result = copyFolder(oldPath, newPath);
+                LogUtil.d(TAG, "result=" + result);
+            }
+        });
 
         audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
 
@@ -245,14 +296,14 @@ public class TestActivity extends AppCompatActivity {
 
 //        SoundPoolUtil.getInstance(this).playSoundFromAssets("audio/0.mp3");
 
-        HandlerManager.getInstance().postDelayedOnSubThread(new Runnable() {
-            @Override
-            public void run() {
-                LogUtil.d(TAG, "send broadcast");
-//                sendBroadcast(new Intent("test"));
-                sendBroadcast(new Intent("test"), "haha");
-            }
-        }, 2000);
+//        HandlerManager.getInstance().postDelayedOnSubThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                LogUtil.d(TAG, "send broadcast");
+////                sendBroadcast(new Intent("test"));
+//                sendBroadcast(new Intent("test"), "haha");
+//            }
+//        }, 2000);
     }
 
     @Override
@@ -615,5 +666,80 @@ public class TestActivity extends AppCompatActivity {
         } catch (Exception e) {
             return false;
         }
+    }
+
+
+
+
+    public static boolean copyFolder(String oldPath, String newPath) {
+        File newFile = new File(newPath);
+        if (!newFile.exists()) {
+            if (!newFile.mkdirs()) {
+                LogUtil.e(TAG, "copyFolder: cannot create directory.");
+                return false;
+            }
+        }
+        File oldFile = new File(oldPath);
+        String[] files = oldFile.list();
+        if (files == null || files.length == 0) {
+            LogUtil.w(TAG, "oldPath has no file.");
+            return true;
+        }
+        File temp;
+        for (String file : files) {
+            if (oldPath.endsWith(File.separator)) {
+                temp = new File(oldPath + file);
+            } else {
+                temp = new File(oldPath + File.separator + file);
+            }
+
+            if (temp.isDirectory()) {   //如果是子文件夹
+                boolean result = copyFolder(oldPath + "/" + file, newPath + "/" + file);
+                if (!result) {
+                    LogUtil.e(TAG, "copy subfolder error!");
+                    return false;
+                }
+            } else if (!temp.exists()) {
+                LogUtil.e(TAG, "copyFolder:  oldFile not exist.");
+                return false;
+            } else if (!temp.isFile()) {
+                LogUtil.e(TAG, "copyFolder:  oldFile not file.");
+                return false;
+            } else if (!temp.canRead()) {
+                LogUtil.e(TAG, "copyFolder:  oldFile cannot read.");
+                return false;
+            } else {
+                FileInputStream fileInputStream = null;
+                FileOutputStream fileOutputStream = null;
+                try {
+                    fileInputStream = new FileInputStream(temp);
+                    fileOutputStream = new FileOutputStream(newPath + "/" + temp.getName());
+                    byte[] buffer = new byte[1024];
+                    int byteRead;
+                    while ((byteRead = fileInputStream.read(buffer)) != -1) {
+                        fileOutputStream.write(buffer, 0, byteRead);
+                    }
+                    // 防止文件流因为拷贝结束立即拔出U盘导致的未完全写入文件的问题
+                    fileOutputStream.getFD().sync();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    LogUtil.e(TAG, "copy error!");
+                    return false;
+                } finally {
+                    try {
+                        if (fileInputStream != null) {
+                            fileInputStream.close();
+                        }
+                        if (fileOutputStream != null) {
+                            fileOutputStream.close();
+                        }
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+            }
+        }
+        LogUtil.d(TAG, "copy success!");
+        return true;
     }
 }

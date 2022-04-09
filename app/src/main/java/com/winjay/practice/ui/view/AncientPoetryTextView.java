@@ -1,8 +1,10 @@
 package com.winjay.practice.ui.view;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 
@@ -50,25 +52,30 @@ public class AncientPoetryTextView extends AppCompatTextView {
         mLineSpacingExtra = mTypedArray.getDimension(R.styleable.VerticalTextView_lineSpacingExtra, 0);
         mCharSpacingExtra = mTypedArray.getDimension(R.styleable.VerticalTextView_charSpacingExtra, 0);
         mTypedArray.recycle();
+
+        AssetManager mgr = context.getAssets();
+        Typeface tf = Typeface.createFromAsset(mgr, "fonts/new.ttf");
+        setTypeface(tf);
     }
 
     public void setLineMaxCharNum(int num) {
-        LogUtil.d(TAG, "setLineMaxCharNum()_num=" + num);
+        LogUtil.d(TAG, "num=" + num);
         mLineMaxCharNum = num;
     }
 
     public void setMaxLine(int num) {
-        LogUtil.d(TAG, "setMaxLine()_num=" + num);
+        LogUtil.d(TAG, "num=" + num);
         mMaxLine = num;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        LogUtil.d(TAG, "width=" + measureWidth());
         setMeasuredDimension(measureWidth(), measureHeight());
     }
 
     private int measureWidth() {
-        return (int) (getTextSize() * mMaxLine + mLineSpacingExtra);
+        return (int) (getTextSize() * mMaxLine + mLineSpacingExtra * (mMaxLine - 1));
     }
 
     private int measureHeight() {
@@ -78,45 +85,30 @@ public class AncientPoetryTextView extends AppCompatTextView {
     @Override
     protected void onDraw(Canvas canvas) {
         TextPaint textPaint = getTextPaint();
-//        TLog.d(TAG, "text=" + getText());
+        LogUtil.d(TAG, "text=" + getText());
         int textStrLength = getText().length();
         String content = getText().toString();
         if (textStrLength == 0) {
             return;
         }
-        // 单列
-        if (mMaxLine == 1) {
-            float currentLineOffsetY = Math.abs(getPaint().getFontMetricsInt().top);
-            for (int i = 0; i < textStrLength; i++) {
-                String char_i = String.valueOf(content.charAt(i));
-                canvas.drawText(char_i, 0, currentLineOffsetY, textPaint);
-                currentLineOffsetY += getPaint().getFontMetricsInt().bottom + mCharSpacingExtra + Math.abs(getPaint().getFontMetricsInt().top);
-            }
-        }
-        // 多列
-        else {
-            if (textStrLength > mMaxLine * mLineMaxCharNum) {
-                content = content.substring(textStrLength - 2 * mLineMaxCharNum, textStrLength);
-                content = content.replaceFirst(content.substring(0, 3), "...");
-                textStrLength = mMaxLine * mLineMaxCharNum;
-            }
 
-            float currentLineOffsetX = getTextSize() + mLineSpacingExtra;
-            float currentLineOffsetY = Math.abs(getPaint().getFontMetricsInt().top);
+        float currentLineOffsetX = (getTextSize() + mLineSpacingExtra) * (mMaxLine - 1);
+        float currentLineOffsetY = Math.abs(getPaint().getFontMetricsInt().top);
 
-            for (int j = 0; j < textStrLength; j++) {
-                String char_j = String.valueOf(content.charAt(j));
+        for (int j = 0; j < textStrLength; j++) {
+            String char_j = String.valueOf(content.charAt(j));
 
-                boolean isCurrentLineFinish = ((j + 1) % (mLineMaxCharNum + 1) == 0);
+            if (j != 0) {
+                boolean isCurrentLineFinish = (j % mLineMaxCharNum == 0);
 
                 if (isCurrentLineFinish) {
-                    currentLineOffsetX = 0;
+                    currentLineOffsetX = currentLineOffsetX - getTextSize() - mLineSpacingExtra;
                     currentLineOffsetY = Math.abs(getPaint().getFontMetricsInt().top);
                 }
-
-                canvas.drawText(char_j, currentLineOffsetX, currentLineOffsetY, textPaint);
-                currentLineOffsetY += getPaint().getFontMetricsInt().bottom + mCharSpacingExtra + Math.abs(getPaint().getFontMetricsInt().top);
             }
+
+            canvas.drawText(char_j, currentLineOffsetX, currentLineOffsetY, textPaint);
+            currentLineOffsetY += getPaint().getFontMetricsInt().bottom + mCharSpacingExtra + Math.abs(getPaint().getFontMetricsInt().top);
         }
     }
 

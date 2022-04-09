@@ -55,7 +55,7 @@ public class ModuleMediaListActivity extends BaseActivity {
 
     @Override
     protected String[] permissions() {
-        return new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_MEDIA_LOCATION};
+        return new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     }
 
     @Override

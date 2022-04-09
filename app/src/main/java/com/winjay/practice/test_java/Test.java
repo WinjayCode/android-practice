@@ -47,9 +47,9 @@ public class Test {
 
 
         ////////////////////
-//        String a = "xiaotiaowu.mp3";
-//        String[] b = a.split("\\.");
-//        System.out.println(b[0]);
+//        String a = "1_yutong.mp4";
+//        String[] b = a.split("_");
+//        System.out.println(b[0]); // 1
         ////////////////////
 
 

@@ -2,8 +2,6 @@ package com.winjay.practice.media.camera.camerax;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -42,7 +40,7 @@ public class CameraXActivity extends BaseActivity {
     private static final String TAG = CameraXActivity.class.getSimpleName();
 
     private ImageCapture mImageCapture;
-    private int mFacing = CameraSelector.LENS_FACING_BACK;
+    private CameraSelector mCameraSelector;
     private String savePath;
 
     @BindView(R.id.preview)
@@ -63,6 +61,10 @@ public class CameraXActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         savePath = getExternalCacheDir() + File.separator + "camera" + File.separator;
+
+        //选择后置摄像头
+        mCameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+
         startCamera();
     }
 
@@ -84,17 +86,18 @@ public class CameraXActivity extends BaseActivity {
 
                     //创建图片的 capture
                     mImageCapture = new ImageCapture.Builder()
+                            // 自动闪光
                             .setFlashMode(ImageCapture.FLASH_MODE_AUTO)
+                            // 缩短照片拍摄的延迟时间
+                            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                             .build();
-
-                    //选择后置摄像头
-                    CameraSelector cameraSelector = new CameraSelector.Builder().requireLensFacing(mFacing).build();
 
                     //预览之前先解绑
                     cameraProvider.unbindAll();
 
                     //将数据绑定到相机的生命周期中
-                    Camera camera = cameraProvider.bindToLifecycle(CameraXActivity.this, cameraSelector, preview, mImageCapture);
+                    Camera camera = cameraProvider.bindToLifecycle(CameraXActivity.this, mCameraSelector, preview, mImageCapture);
+
                     //将previewView 的 surface 给相机预览
                     preview.setSurfaceProvider(previewView.getSurfaceProvider());
                 } catch (Exception e) {
@@ -142,8 +145,12 @@ public class CameraXActivity extends BaseActivity {
                         imgPic.setImageURI(savedUri);
                         tvPicDir.setText("图片路径：" + savedUri.getPath());
                     } else {
-                        Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-                        imgPic.setImageBitmap(bitmap);
+                        // BitmapFactory.decodeFile 图片有可能被旋转
+//                        Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+//                        imgPic.setImageBitmap(bitmap);
+
+                        imgPic.setImageURI(Uri.fromFile(file));
+
                         tvPicDir.setText("图片路径：" + file.getPath());
                     }
 //                    Toast.makeText(CameraxActivity.this, "保存成功: ", Toast.LENGTH_SHORT).show();
@@ -165,8 +172,8 @@ public class CameraXActivity extends BaseActivity {
          * 白屏的问题是 PreviewView 移除所有View，且没数据到 Surface，
          * 所以只留背景色，可以对次做处理
          */
-        mFacing = mFacing == CameraSelector.LENS_FACING_FRONT ?
-                CameraSelector.LENS_FACING_BACK : CameraSelector.LENS_FACING_FRONT;
+        mCameraSelector = mCameraSelector == CameraSelector.DEFAULT_FRONT_CAMERA ?
+                CameraSelector.DEFAULT_BACK_CAMERA : CameraSelector.DEFAULT_FRONT_CAMERA;
         startCamera();
     }
 

@@ -14,13 +14,14 @@ import com.winjay.practice.bluetooth.BluetoothListActivity;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.content_provider.ProviderActivity;
 import com.winjay.practice.crash.CrashTestActivity;
-import com.winjay.practice.design_mode.DesignModeActivity;
+import com.winjay.practice.design_mode.DesignModeListActivity;
 import com.winjay.practice.directory_structure.DirectoryStructureActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
 import com.winjay.practice.ioc.IOCActivity;
 import com.winjay.practice.ipc.aidl.BookManagerClientActivity;
+import com.winjay.practice.jetpack.JetpackLibListActivity;
 import com.winjay.practice.jni.JniTestActivity;
-import com.winjay.practice.kotlin.KotlinTestActivity;
+import com.winjay.practice.kotlin.KotlinListActivity;
 import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.media.ModuleMediaListActivity;
 import com.winjay.practice.net.NetListActivity;
@@ -50,19 +51,20 @@ public class MainActivity extends BaseActivity {
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
         {
+            put("Jetpack", JetpackLibListActivity.class);
             put("UI", UIListActivity.class);
             put("Media", ModuleMediaListActivity.class);
             put("Bluetooth", BluetoothListActivity.class);
             put("Plugin", PluginActivity.class);
             put("Net", NetListActivity.class);
             put("JNI", JniTestActivity.class);
-            put("Kotlin", KotlinTestActivity.class);
+            put("Kotlin", KotlinListActivity.class);
             put("ContentProvider", ProviderActivity.class);
             put("Location", LocationActivity.class);
             put("Intent Filter", null);
             put("DownloadManager", DownloadManagerActivity.class);
             put("Directory Structure", DirectoryStructureActivity.class);
-            put("Design Mode", DesignModeActivity.class);
+            put("Design Mode", DesignModeListActivity.class);
             put("IOC", IOCActivity.class);
             put("IPC", BookManagerClientActivity.class);
             put("SystemInfo", SystemInfoActivity.class);
