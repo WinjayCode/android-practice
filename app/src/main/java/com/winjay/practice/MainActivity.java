@@ -18,7 +18,7 @@ import com.winjay.practice.design_mode.DesignModeListActivity;
 import com.winjay.practice.directory_structure.DirectoryStructureActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
 import com.winjay.practice.ioc.IOCActivity;
-import com.winjay.practice.ipc.aidl.BookManagerClientActivity;
+import com.winjay.practice.ipc.IPCListActivity;
 import com.winjay.practice.jetpack.JetpackLibListActivity;
 import com.winjay.practice.jni.JniTestActivity;
 import com.winjay.practice.kotlin.KotlinListActivity;
@@ -66,7 +66,7 @@ public class MainActivity extends BaseActivity {
             put("Directory Structure", DirectoryStructureActivity.class);
             put("Design Mode", DesignModeListActivity.class);
             put("IOC", IOCActivity.class);
-            put("IPC", BookManagerClientActivity.class);
+            put("IPC", IPCListActivity.class);
             put("SystemInfo", SystemInfoActivity.class);
             put("PackageManager", PackageManagerActivity.class);
             put("ActivityManager", ActivityManagerActivity.class);

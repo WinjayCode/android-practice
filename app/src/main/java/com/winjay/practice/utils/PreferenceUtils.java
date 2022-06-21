@@ -191,4 +191,14 @@ public class PreferenceUtils {
         getEditor(context).putInt(key, value);
         getEditor(context).apply();
     }
+
+    /**
+     * clear all data
+     *
+     * @param context
+     */
+    public static void clear(Context context) {
+        getEditor(context).clear();
+        getEditor(context).commit();
+    }
 }

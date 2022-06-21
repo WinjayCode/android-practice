@@ -111,13 +111,13 @@ public class BookManagerClientActivity extends BaseActivity {
         }
     };
 
-    private IBinder.DeathRecipient mDeathRecipient = new IBinder.DeathRecipient() {
+    private final IBinder.DeathRecipient mDeathRecipient = new IBinder.DeathRecipient() {
         @Override
         public void binderDied() {
             if (bookManager == null) {
                 return;
             }
-            bookManager.asBinder().unlinkToDeath(mDeathRecipient, 0);
+            bookManager.asBinder().unlinkToDeath(this, 0);
             bookManager = null;
             // 重新绑定远程Service
             bindBookManagerService();

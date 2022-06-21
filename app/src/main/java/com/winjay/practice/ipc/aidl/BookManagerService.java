@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 
 import com.winjay.practice.aidl.Book;
 import com.winjay.practice.aidl.IBookManager;
+import com.winjay.practice.utils.JsonUtil;
+import com.winjay.practice.utils.LogUtil;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -25,14 +27,16 @@ public class BookManagerService extends Service {
 
     private CopyOnWriteArrayList<Book> mBookList = new CopyOnWriteArrayList<>();
 
-    private Binder mBinder = new IBookManager.Stub() {
+    private final Binder mBinder = new IBookManager.Stub() {
         @Override
         public List<Book> getBookList() throws RemoteException {
+            LogUtil.d(TAG, "BookList.size=" + mBookList.size());
             return mBookList;
         }
 
         @Override
         public void addBook(Book book) throws RemoteException {
+            LogUtil.d(TAG, "book=" + JsonUtil.getInstance().toJson(book));
             mBookList.add(book);
         }
     };
@@ -40,6 +44,7 @@ public class BookManagerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        LogUtil.d(TAG);
         mBookList.add(new Book(1, "Android"));
         mBookList.add(new Book(2, "IOS"));
     }

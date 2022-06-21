@@ -2,6 +2,7 @@ package com.winjay.practice.test_java;
 
 import android.os.Build;
 import android.os.Environment;
+import android.os.HandlerThread;
 import android.util.Log;
 
 import com.winjay.practice.utils.FileUtil;
@@ -10,7 +11,9 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public class Test {
@@ -179,6 +182,26 @@ public class Test {
 //        String fileName = "iCard1S.eng.V1.2.0.ntp.20180608.zip";
 //        System.out.println("dir=" + bytesToHex(fileDir.getBytes()));
 //        System.out.println("name=" + bytesToHex(fileName.getBytes()));
+
+
+//        byte[] bytes = new byte[]{
+//                0x4c, 0x5a, 0x59, 0x54, 0x47,
+//                0x47, 0x41, 0x57, 0x35, 0x4d,
+//                0x31, 0x30, 0x31, 0x38, 0x38,
+//                0x37, 0x34, 0x09, 0x32, 0x31,
+//                0x48, 0x37, 0x37, 0x42, 0x4e,
+//                0x2d, 0x30, 0x30, 0x30, 0x33};
+//        String re = new String(bytes);
+//        System.out.println(re);
+
+//        String re = String.valueOf(96000 / 1000f);
+//        System.out.println(re);
+//        System.out.println(4200 / 20500);
+
+//        List<Integer> list = new ArrayList<>(1);
+//        list.add(1);
+//        list.add(2);
+//        System.out.println(list.size());
     }
 
     public static boolean isOnline() {
