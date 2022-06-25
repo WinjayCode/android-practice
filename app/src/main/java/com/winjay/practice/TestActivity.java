@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
@@ -667,8 +668,6 @@ public class TestActivity extends AppCompatActivity {
             return false;
         }
     }
-
-
 
 
     public static boolean copyFolder(String oldPath, String newPath) {

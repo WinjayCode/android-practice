@@ -125,6 +125,10 @@
         <!-- design mode end -->
 
         <!-- ipc start -->
+        <activity
+            android:name=".ipc.IPCListActivity"
+            android:screenOrientation="portrait" />
+
         <service
             android:name=".ipc.messenger.MessengerService"
             android:process=":remote" />
