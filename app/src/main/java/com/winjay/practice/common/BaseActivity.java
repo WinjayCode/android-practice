@@ -1,5 +1,6 @@
 package com.winjay.practice.common;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.transition.Explode;
@@ -23,7 +24,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
- * 公共基类Activity
+ * Common Activity
  *
  * @author Winjay
  * @date 2019-08-24
@@ -35,7 +36,7 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
+//        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
 
         // 使用Activity过渡动画
@@ -54,9 +55,9 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
         // 此种方式针对Activity或FragmentActivity
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         // 隐藏标题栏（针对AppCompatActivity）
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().hide();
+//        }
 
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -68,25 +69,52 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 //        }
 
-        if (getLayoutId() != 0) {
-            setContentView(getLayoutId());
+        if (isFullScreen()) {
+            fullScreen();
         }
+        if (useViewBinding()) {
+            if (viewBinding() != null) {
+                setContentView(viewBinding());
+            }
+        } else {
+            if (getLayoutId() != -1) {
+                setContentView(getLayoutId());
+            }
+        }
+
         unbinder = ButterKnife.bind(this);
     }
 
-    protected abstract int getLayoutId();
+    public boolean isFullScreen() {
+        return false;
+    }
+
+    private void fullScreen() {
+        hideBottomNav();
+    }
+
+    // use viewBinding
+    public boolean useViewBinding() {
+        return false;
+    }
+
+    public View viewBinding() {
+        return null;
+    }
+
+    // use findViewById
+    protected int getLayoutId() {
+        return -1;
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-//        LogUtil.d(TAG, "onResume()");
-//        hideBottomNav();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        LogUtil.d(TAG, "onDestroy()");
         unbinder.unbind();
     }
 
@@ -95,7 +123,7 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
      */
     public void hideBottomNav() {
         View decorView = this.getWindow().getDecorView();
-        decorView.setSystemUiVisibility(0);
+        decorView.setSystemUiVisibility(View.GONE);
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
@@ -112,7 +140,8 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
         return new String[]{};
     }
 
-    protected void permissionGranted() {}
+    protected void permissionGranted() {
+    }
 
     protected boolean hasPermissions() {
         if (permissions().length > 0) {
@@ -131,7 +160,7 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
             } else {
                 LogUtil.w(TAG, "Do not have permissions, request them now!");
                 // Do not have permissions, request them now
-                EasyPermissions.requestPermissions(this, "请授予权限，否则影响部分使用功能。", RC_PERMISSION, permissions());
+                EasyPermissions.requestPermissions(this, "请授予权限，否则影响部分功能使用！", RC_PERMISSION, permissions());
             }
         }
     }

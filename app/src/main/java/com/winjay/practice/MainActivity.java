@@ -17,6 +17,7 @@ import com.winjay.practice.crash.CrashTestActivity;
 import com.winjay.practice.design_mode.DesignModeListActivity;
 import com.winjay.practice.directory_structure.DirectoryStructureActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
+import com.winjay.practice.hardware_test.HardwareTestListActivity;
 import com.winjay.practice.ioc.IOCActivity;
 import com.winjay.practice.ipc.IPCListActivity;
 import com.winjay.practice.jetpack.JetpackLibListActivity;
@@ -71,6 +72,7 @@ public class MainActivity extends BaseActivity {
             put("PackageManager", PackageManagerActivity.class);
             put("ActivityManager", ActivityManagerActivity.class);
             put("Notification", NotificationActivity.class);
+            put("Hardware Test", HardwareTestListActivity.class);
             put("Performance Optimization", PerformanceOptimizeActivity.class);
             put("Puzzle", PuzzleMainActivity.class);
             put("2048", Game2048Activity.class);

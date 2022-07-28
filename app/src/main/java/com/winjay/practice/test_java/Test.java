@@ -1,19 +1,7 @@
 package com.winjay.practice.test_java;
 
-import android.os.Build;
-import android.os.Environment;
-import android.os.HandlerThread;
-import android.util.Log;
-
-import com.winjay.practice.utils.FileUtil;
-
-import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
 public class Test {

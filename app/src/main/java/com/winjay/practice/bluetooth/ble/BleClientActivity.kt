@@ -15,9 +15,8 @@ import butterknife.OnClick
 import com.winjay.practice.R
 import com.winjay.practice.bluetooth.BtUtil
 import com.winjay.practice.common.BaseActivity
+import com.winjay.practice.databinding.BleClientActivityBinding
 import com.winjay.practice.utils.LogUtil
-import kotlinx.android.synthetic.main.ble_client_activity.*
-import kotlinx.android.synthetic.main.bt_client_activity.*
 import java.util.*
 
 /**
@@ -49,8 +48,15 @@ class BleClientActivity : BaseActivity() {
     private var sb: StringBuilder = StringBuilder()
     private var isConnected = false
 
-    override fun getLayoutId(): Int {
-        return R.layout.ble_client_activity
+    private lateinit var binding: BleClientActivityBinding
+
+    override fun useViewBinding(): Boolean {
+        return true
+    }
+
+    override fun viewBinding(): View {
+        binding = BleClientActivityBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,12 +76,12 @@ class BleClientActivity : BaseActivity() {
     }
 
     private fun initRecyclerView() {
-        scan_result_rv.layoutManager = LinearLayoutManager(this)
-        scan_result_rv.adapter = bleListAdapter
+        binding.scanResultRv.layoutManager = LinearLayoutManager(this)
+        binding.scanResultRv.adapter = bleListAdapter
         bleListAdapter.setOnItemClickListener(object : BleListAdapter.OnItemClickListener {
             override fun onItemClick(view: View) {
                 closeConnect()
-                val position = scan_result_rv.getChildAdapterPosition(view)
+                val position = binding.scanResultRv.getChildAdapterPosition(view)
                 val bleData = mScanResult[position]
                 blueGatt = bleData.dev.connectGatt(this@BleClientActivity, false, bluetoothGattCallback)
                 showInfo("开始与 ${bleData.dev.name} 连接...")
@@ -164,7 +170,7 @@ class BleClientActivity : BaseActivity() {
         runOnUiThread {
             sb.apply {
                 append(msg).append("\n")
-                info_tv.text = toString()
+                binding.infoTv.text = toString()
             }
         }
     }
@@ -265,8 +271,8 @@ class BleClientActivity : BaseActivity() {
 
     @OnClick(R.id.write_data_btn)
     fun writeData() {
-        val msg = data_et.text.toString()
-        data_et.setText("")
+        val msg = binding.dataEt.text.toString()
+        binding.dataEt.setText("")
         val service = getGattService(BtUtil.UUID_SERVICE)
         if (service != null) {
             val characteristic = service.getCharacteristic(BtUtil.UUID_WRITE)

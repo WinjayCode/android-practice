@@ -7,12 +7,12 @@ import android.bluetooth.le.AdvertiseSettings
 import android.content.Context
 import android.os.Bundle
 import android.os.ParcelUuid
-import com.winjay.practice.R
+import android.view.View
 import com.winjay.practice.bluetooth.BluetoothUuid
 import com.winjay.practice.bluetooth.BtUtil
 import com.winjay.practice.common.BaseActivity
+import com.winjay.practice.databinding.BleServerActivityBinding
 import com.winjay.practice.utils.LogUtil
-import kotlinx.android.synthetic.main.ble_client_activity.*
 
 /**
  * 低功耗蓝牙服务端（外围设备）
@@ -29,8 +29,15 @@ class BleServerActivity : BaseActivity() {
     private var sb: StringBuilder = StringBuilder()
     private var bluetoothGattServer: BluetoothGattServer? = null
 
-    override fun getLayoutId(): Int {
-        return R.layout.ble_server_activity
+    private lateinit var binding: BleServerActivityBinding
+
+    override fun useViewBinding(): Boolean {
+        return true
+    }
+
+    override fun viewBinding(): View {
+        binding = BleServerActivityBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -249,7 +256,7 @@ class BleServerActivity : BaseActivity() {
         runOnUiThread {
             sb.apply {
                 append(msg).append("\n")
-                info_tv.text = toString()
+                binding.infoTv.text = toString()
             }
         }
     }

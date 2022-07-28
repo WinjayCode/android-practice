@@ -4,8 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.winjay.practice.R
-import kotlinx.android.synthetic.main.ble_bluetooth_list_item.view.*
+import com.winjay.practice.databinding.BleBluetoothListItemBinding
 
 /**
  * 低功耗蓝牙扫描适配器
@@ -13,7 +12,8 @@ import kotlinx.android.synthetic.main.ble_bluetooth_list_item.view.*
  * @author Winjay
  * @date 2021-06-07
  */
-class BleListAdapter(listData: MutableList<BleClientActivity.BleData>) : RecyclerView.Adapter<BleListAdapter.ViewHolder>() {
+class BleListAdapter(listData: MutableList<BleClientActivity.BleData>) :
+    RecyclerView.Adapter<BleListAdapter.ViewHolder>() {
     var itemClickListener: OnItemClickListener? = null
     var listData: MutableList<BleClientActivity.BleData>? = null
 
@@ -22,24 +22,28 @@ class BleListAdapter(listData: MutableList<BleClientActivity.BleData>) : Recycle
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BleListAdapter.ViewHolder {
-        val v: View = LayoutInflater.from(parent.context).inflate(R.layout.ble_bluetooth_list_item, parent, false)
-        return ViewHolder(v)
+        val binding =
+            BleBluetoothListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: BleListAdapter.ViewHolder, position: Int) {
-        holder.itemView.ble_name_tv.text = "名称：" + listData?.get(position)?.dev?.name
-        holder.itemView.ble_mac_tv.text = "地址：" + listData?.get(position)?.dev?.address
-        holder.itemView.ble_device_tv.text = listData?.get(position)?.scanRecord
+        holder.binding.bleNameTv.text = "名称：" + listData?.get(position)?.dev?.name
+        holder.binding.bleMacTv.text = "地址：" + listData?.get(position)?.dev?.address
+        holder.binding.bleDeviceTv.text = listData?.get(position)?.scanRecord
     }
 
     override fun getItemCount(): Int {
         return listData?.size!!
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder(binding: BleBluetoothListItemBinding) :
+        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+        var binding: BleBluetoothListItemBinding
 
         init {
             super.itemView
+            this.binding = binding
             itemView.setOnClickListener(this)
         }
 

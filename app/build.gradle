@@ -1,7 +1,8 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
 
 def rootDependencies = rootProject.ext.dependencies
 def rootAndroid = rootProject.ext.android
@@ -125,6 +126,10 @@ android {
         dataBinding true
     }
 
+    viewBinding {
+        enabled = true
+    }
+
     // 差异化、多渠道打包
     flavorDimensions "channel"
     productFlavors {
@@ -178,15 +183,16 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
 
     // recyclerview
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
     // material
     implementation 'com.google.android.material:material:1.2.1'
 
     // kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
+    implementation 'androidx.core:core-ktx:1.6.0'
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
+//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
 
     // Worker
     implementation 'androidx.work:work-runtime:2.3.4'

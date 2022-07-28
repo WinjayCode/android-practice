@@ -1,6 +1,9 @@
 package com.winjay.practice.bluetooth.a2dp
 
-import android.bluetooth.*
+import android.bluetooth.BluetoothA2dp
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothProfile
+import android.bluetooth.BluetoothSocket
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -11,11 +14,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.OnClick
 import com.winjay.practice.R
-import com.winjay.practice.bluetooth.bt.BluetoothListAdapter
 import com.winjay.practice.bluetooth.BtUtil
+import com.winjay.practice.bluetooth.bt.BluetoothListAdapter
 import com.winjay.practice.common.BaseActivity
+import com.winjay.practice.databinding.A2dpActivityBinding
 import com.winjay.practice.utils.LogUtil
-import kotlinx.android.synthetic.main.a2dp_activity.*
 
 /**
  * 连接蓝牙音箱，并播放声音
@@ -32,8 +35,15 @@ class A2dpActivity : BaseActivity() {
     private var connectThread: ConnectThread? = null
     private var bluetoothBroadcast: BluetoothBroadcast? = null
 
-    override fun getLayoutId(): Int {
-        return R.layout.a2dp_activity
+    private lateinit var binding: A2dpActivityBinding
+
+    override fun useViewBinding(): Boolean {
+        return true
+    }
+
+    override fun viewBinding(): View {
+        binding = A2dpActivityBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,12 +82,12 @@ class A2dpActivity : BaseActivity() {
     }
 
     private fun initRecyclerView() {
-        device_rv.layoutManager = LinearLayoutManager(this)
-        device_rv.adapter = bluetoothListAdapter
+        binding.deviceRv.layoutManager = LinearLayoutManager(this)
+        binding.deviceRv.adapter = bluetoothListAdapter
         bluetoothListAdapter.setOnItemClickListener(object : BluetoothListAdapter.OnItemClickListener {
             override fun onItemClick(view: View) {
                 itemStateTV = view.findViewById(R.id.blue_item_status_tv)
-                val position = device_rv.getChildAdapterPosition(view)
+                val position = binding.deviceRv.getChildAdapterPosition(view)
                 LogUtil.d(TAG, "position=$position")
                 toast("开始连接...")
                 connectThread = ConnectThread(bluetoothListData[position],

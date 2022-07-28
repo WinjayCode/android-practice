@@ -99,6 +99,11 @@ public class LogUtil {
         Log.w(LOG_PREFIX + tag, buildMessage(message));
     }
 
+    public static void w(String tag, Object arg, Throwable tr) {
+        String message = arg == null ? "null" : arg.toString();
+        Log.w(LOG_PREFIX + tag, buildMessage(message), tr);
+    }
+
     public static void e(Object arg) {
         e("", arg);
     }
