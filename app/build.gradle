@@ -207,7 +207,7 @@ dependencies {
 //    implementation "androidx.camera:camera-extensions:1.0.0-alpha23"
 
     // 指纹识别
-    api project(':biometricprompt')
+    implementation 'androidx.biometric:biometric:1.0.0'
 
     // 申请权限
     implementation rootDependencies.permission

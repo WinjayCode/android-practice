@@ -1,4 +1,4 @@
-package com.winjay.practice.hardware_test.tp_test;
+package com.winjay.practice.hardware_test.touch_panel;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -19,12 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 屏幕划线测试View
+ * 触摸面板测试View
  *
  * @author Winjay
  * @date 2022-07-27
  */
-public class TPTestView extends View {
+public class TouchPanelView extends View {
     private static final String TAG = "TPTestView";
 
     private Paint paint = new Paint();
@@ -40,15 +40,15 @@ public class TPTestView extends View {
 
     private HashMap<Rect, Boolean> mRectTouchMap;
 
-    public TPTestView(Context context) {
+    public TouchPanelView(Context context) {
         this(context, null);
     }
 
-    public TPTestView(Context context, @Nullable AttributeSet attrs) {
+    public TouchPanelView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public TPTestView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public TouchPanelView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }

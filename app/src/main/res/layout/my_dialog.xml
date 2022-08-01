@@ -7,7 +7,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/biometricprompt_color_82C785" />
+        android:background="#82C785" />
 
     <Button
         android:id="@+id/click_btn"

@@ -1,6 +1,5 @@
 package com.winjay.practice.common;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.transition.Explode;
@@ -13,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.winjay.practice.R;
 import com.winjay.practice.utils.LogUtil;
 
 import java.util.List;
@@ -30,7 +28,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * @date 2019-08-24
  */
 public abstract class BaseActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
-    private static final String TAG = BaseActivity.class.getSimpleName();
+    private static final String TAG = "BaseActivity";
     private Unbinder unbinder;
     private final int RC_PERMISSION = 100;
 
@@ -51,27 +49,10 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
 //        getWindow().setEnterTransition(new Fade());
 //        getWindow().setExitTransition(new Fade());
 
-//        LogUtil.d(TAG, "onCreate()");
-        // 此种方式针对Activity或FragmentActivity
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // 隐藏标题栏（针对AppCompatActivity）
-//        if (getSupportActionBar() != null) {
-//            getSupportActionBar().hide();
-//        }
-
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        // 沉浸效果
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            // 透明状态栏
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            // 透明导航栏
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//        }
-
         if (isFullScreen()) {
             fullScreen();
         }
+
         if (useViewBinding()) {
             if (viewBinding() != null) {
                 setContentView(viewBinding());
@@ -90,7 +71,29 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
     }
 
     private void fullScreen() {
-        hideBottomNav();
+        // action bar
+        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        // window fullscreen
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        // 默认情况，全屏页面不可用刘海区域，非全屏页面可以进行使用
+        // WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT = 0;
+        // 允许页面延伸到刘海区域
+        // WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES = 1;
+        // 不允许使用刘海区域
+        // WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER = 2;
+        lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        getWindow().setAttributes(lp);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (isFullScreen()) {
+            if (hasFocus) {
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            }
+        }
     }
 
     // use viewBinding
@@ -108,11 +111,6 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         unbinder.unbind();
@@ -127,6 +125,16 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
+    }
+
+    /**
+     * 沉浸效果
+     */
+    public void translucentStatusAndNavigation() {
+        // 透明状态栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        // 透明导航栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
     }
 
     protected void toast(String text) {

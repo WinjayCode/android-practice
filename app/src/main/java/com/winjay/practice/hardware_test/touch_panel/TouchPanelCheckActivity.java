@@ -1,4 +1,4 @@
-package com.winjay.practice.hardware_test.tp_test;
+package com.winjay.practice.hardware_test.touch_panel;
 
 import android.os.Bundle;
 
@@ -10,15 +10,15 @@ import com.winjay.practice.common.BaseActivity;
 import butterknife.BindView;
 
 /**
- * 屏幕划线测试
+ * 触摸面板测试
  *
  * @author Winjay
  * @date 2022-07-27
  */
-public class TPTestActivity extends BaseActivity {
+public class TouchPanelCheckActivity extends BaseActivity {
 
-    @BindView(R.id.tp_test_view)
-    TPTestView tp_test_view;
+    @BindView(R.id.touch_panel_check_view)
+    TouchPanelView touch_panel_check_view;
 
     @Override
     public boolean isFullScreen() {
@@ -27,12 +27,12 @@ public class TPTestActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_tp_test;
+        return R.layout.activity_touch_panel_check;
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tp_test_view.setTestSuccessListener(() -> toast("测试OK！"));
+        touch_panel_check_view.setTestSuccessListener(() -> toast("测试OK！"));
     }
 }

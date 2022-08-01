@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.winjay.practice.hardware_test.tp_test.TPTestView
-        android:id="@+id/tp_test_view"
+    <com.winjay.practice.hardware_test.touch_panel.TouchPanelView
+        android:id="@+id/touch_panel_check_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

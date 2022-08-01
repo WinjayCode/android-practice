@@ -12,9 +12,7 @@ import com.winjay.practice.MainAdapter;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.hardware_test.multi_touch.MultiTouchActivity;
-import com.winjay.practice.hardware_test.tp_test.TPTestActivity;
-import com.winjay.practice.ipc.aidl.BookManagerClientActivity;
-import com.winjay.practice.ipc.messenger.MessengerActivity;
+import com.winjay.practice.hardware_test.touch_panel.TouchPanelCheckActivity;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -34,7 +32,7 @@ public class HardwareTestListActivity extends BaseActivity {
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
         {
             put("MultiTouch", MultiTouchActivity.class);
-            put("TP Test", TPTestActivity.class);
+            put("Touch Panel Check", TouchPanelCheckActivity.class);
         }
     };
 

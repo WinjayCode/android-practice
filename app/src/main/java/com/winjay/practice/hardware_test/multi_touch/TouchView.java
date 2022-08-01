@@ -17,6 +17,7 @@ import java.util.List;
 
 public class TouchView extends View {
     private static final String TAG = "TouchView";
+    private Paint paint = new Paint();
 
     //定义个圆的集合
     private List<TouchCircleView> circles = new ArrayList<>();
@@ -40,7 +41,6 @@ public class TouchView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Paint paint = new Paint();
         for (TouchCircleView circle : circles) {
             circle.drawSelf(canvas, paint);
         }
