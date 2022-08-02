@@ -217,15 +217,19 @@ class A2dpActivity : BaseActivity() {
             when (intent?.action) {
                 BluetoothDevice.ACTION_FOUND -> {
                     val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                    if (device !in bluetoothListData && device.name != null) {
-                        bluetoothListData.add(device)
-                        bluetoothListAdapter.notifyItemInserted(bluetoothListData.size)
+                    if (device != null) {
+                        if (device !in bluetoothListData && device.name != null) {
+                            bluetoothListData.add(device)
+                            bluetoothListAdapter.notifyItemInserted(bluetoothListData.size)
+                        }
                     }
                 }
                 BluetoothDevice.ACTION_BOND_STATE_CHANGED -> {
                     val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                     val state = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, 0)
-                    LogUtil.d(TAG, "state changed:$state && ${device.name}")
+                    if (device != null) {
+                        LogUtil.d(TAG, "state changed:$state && ${device.name}")
+                    }
                 }
                 BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED -> {
                     val state = intent.getIntExtra(BluetoothA2dp.EXTRA_STATE, BluetoothA2dp.STATE_DISCONNECTED)

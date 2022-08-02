@@ -36,7 +36,7 @@ public class LauncherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         BiometricManager biometricManager = BiometricManager.from(this);
-        switch (biometricManager.canAuthenticate()) {
+        switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
             // No error detected.
             case BiometricManager.BIOMETRIC_SUCCESS:
                 LogUtil.d(TAG, "BIOMETRIC_SUCCESS");
@@ -56,6 +56,15 @@ public class LauncherActivity extends AppCompatActivity {
             case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
                 LogUtil.d(TAG, "BIOMETRIC_ERROR_NONE_ENROLLED");
                 gotoMainActivity();
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED:
+                LogUtil.d(TAG, "BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED");
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED:
+                LogUtil.d(TAG, "BIOMETRIC_ERROR_UNSUPPORTED");
+                break;
+            case BiometricManager.BIOMETRIC_STATUS_UNKNOWN:
+                LogUtil.d(TAG, "BIOMETRIC_STATUS_UNKNOWN");
                 break;
         }
     }

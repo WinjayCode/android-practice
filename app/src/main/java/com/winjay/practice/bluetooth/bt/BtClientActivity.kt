@@ -108,9 +108,11 @@ class BtClientActivity : BaseActivity() {
                 BluetoothDevice.ACTION_FOUND -> {
                     val device =
                         intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                    if (device !in bluetoothListData && device.name != null) {
-                        bluetoothListData.add(device)
-                        bluetoothListAdapter.notifyItemInserted(bluetoothListData.size)
+                    if (device != null) {
+                        if (device !in bluetoothListData && device.name != null) {
+                            bluetoothListData.add(device)
+                            bluetoothListAdapter.notifyItemInserted(bluetoothListData.size)
+                        }
                     }
                 }
                 // 检测模式改变
