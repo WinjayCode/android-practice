@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.winjay.practice.R;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.ToastUtils;
 
@@ -24,19 +23,19 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
- * 公共基类Activity
+ * Common Activity
  *
  * @author Winjay
  * @date 2019-08-24
  */
 public abstract class BaseActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
-    private static final String TAG = BaseActivity.class.getSimpleName();
+    private static final String TAG = "BaseActivity";
     private Unbinder unbinder;
     private final int RC_PERMISSION = 100;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
+//        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
 
         // 使用Activity过渡动画
@@ -51,43 +50,70 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
 //        getWindow().setEnterTransition(new Fade());
 //        getWindow().setExitTransition(new Fade());
 
-//        LogUtil.d(TAG, "onCreate()");
-        // 此种方式针对Activity或FragmentActivity
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        // 隐藏标题栏（针对AppCompatActivity）
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
+        if (isFullScreen()) {
+            fullScreen();
         }
 
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        // 沉浸效果
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            // 透明状态栏
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            // 透明导航栏
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-//        }
-
-        if (getLayoutId() != 0) {
-            setContentView(getLayoutId());
+        if (useViewBinding()) {
+            if (viewBinding() != null) {
+                setContentView(viewBinding());
+            }
+        } else {
+            if (getLayoutId() != -1) {
+                setContentView(getLayoutId());
+            }
         }
+
         unbinder = ButterKnife.bind(this);
     }
 
-    protected abstract int getLayoutId();
+    public boolean isFullScreen() {
+        return false;
+    }
+
+    private void fullScreen() {
+        // action bar
+        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        // window fullscreen
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        // 默认情况，全屏页面不可用刘海区域，非全屏页面可以进行使用
+        // WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT = 0;
+        // 允许页面延伸到刘海区域
+        // WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES = 1;
+        // 不允许使用刘海区域
+        // WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER = 2;
+        lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        getWindow().setAttributes(lp);
+    }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-//        LogUtil.d(TAG, "onResume()");
-//        hideBottomNav();
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (isFullScreen()) {
+            if (hasFocus) {
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            }
+        }
+    }
+
+    // use viewBinding
+    public boolean useViewBinding() {
+        return false;
+    }
+
+    public View viewBinding() {
+        return null;
+    }
+
+    // use findViewById
+    protected int getLayoutId() {
+        return -1;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        LogUtil.d(TAG, "onDestroy()");
         unbinder.unbind();
     }
 
@@ -96,10 +122,20 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
      */
     public void hideBottomNav() {
         View decorView = this.getWindow().getDecorView();
-        decorView.setSystemUiVisibility(0);
+        decorView.setSystemUiVisibility(View.GONE);
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
+    }
+
+    /**
+     * 沉浸效果
+     */
+    public void translucentStatusAndNavigation() {
+        // 透明状态栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        // 透明导航栏
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
     }
 
     protected void toast(String text) {
@@ -113,7 +149,8 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
         return new String[]{};
     }
 
-    protected void permissionGranted() {}
+    protected void permissionGranted() {
+    }
 
     protected boolean hasPermissions() {
         if (permissions().length > 0) {
@@ -132,7 +169,7 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
             } else {
                 LogUtil.w(TAG, "Do not have permissions, request them now!");
                 // Do not have permissions, request them now
-                EasyPermissions.requestPermissions(this, "请授予权限，否则影响部分使用功能。", RC_PERMISSION, permissions());
+                EasyPermissions.requestPermissions(this, "请授予权限，否则影响部分功能使用！", RC_PERMISSION, permissions());
             }
         }
     }

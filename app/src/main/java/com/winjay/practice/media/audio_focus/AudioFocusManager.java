@@ -79,7 +79,10 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
      */
     public int releaseAudioFocus() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return mAudioManager.abandonAudioFocusRequest(mFocusRequest);
+            if (mFocusRequest != null) {
+                return mAudioManager.abandonAudioFocusRequest(mFocusRequest);
+            }
+            return -1;
         } else {
             return mAudioManager.abandonAudioFocus(this);
         }

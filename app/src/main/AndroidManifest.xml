@@ -43,6 +43,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <!-- 蓝牙 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <!-- If your app targets Android 9 or lower, you can declare ACCESS_COARSE_LOCATION instead. -->
@@ -461,6 +462,22 @@
             android:name=".performance_optimize.PerformanceOptimizeActivity"
             android:screenOrientation="portrait" />
         <!-- performance_optimize end -->
+
+        <!-- hardware test start -->
+        <activity
+            android:name=".hardware_test.HardwareTestListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".hardware_test.multi_touch.MultiTouchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullScreenTheme" />
+
+        <activity
+            android:name=".hardware_test.touch_panel.TouchPanelCheckActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullScreenTheme" />
+        <!-- hardware test end -->
 
         <activity
             android:name=".download_manager.DownloadManagerActivity"

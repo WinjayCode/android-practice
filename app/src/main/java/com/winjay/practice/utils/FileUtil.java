@@ -9,7 +9,8 @@ import android.os.StatFs;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -24,12 +25,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -752,7 +761,6 @@ public class FileUtil {
 //                })
 //                .setCompressListener(listener).launch();
 //    }
-
     public static boolean copyFolder(String oldPath, String newPath) {
         File newFile = new File(newPath);
         if (!newFile.exists()) {
@@ -1083,10 +1091,8 @@ public class FileUtil {
     /**
      * 给定根目录，返回一个相对路径所对应的实际文件名.
      *
-     * @param baseDir
-     *            指定根目录
-     * @param absFileName
-     *            相对路径名，来自于ZipEntry中的name
+     * @param baseDir     指定根目录
+     * @param absFileName 相对路径名，来自于ZipEntry中的name
      * @return java.io.File 实际的文件
      */
     public static File getRealFileName(String baseDir, String absFileName) {
@@ -1113,4 +1119,225 @@ public class FileUtil {
         }
         return ret;
     }
+
+
+    /////////////////////////////////////////// copy start ///////////////////////////////////////////
+    public static final int CPU_SIZE = Runtime.getRuntime().availableProcessors();
+    // 核心线程数为当前设备的CPU核心数加1
+    public static final int CORE_POOL_SIZE = CPU_SIZE + 1;
+    // 最大容量为CPU核心数的2倍加1
+    public static final int MAX_POLL_SIZE = CPU_SIZE * 2 + 1;
+    // 线程闲置超时时长60s
+    private static final long KEEP_ALIVE = 60L;
+    private static final ThreadFactory THREAD_FACTORY = new ThreadFactory() {
+        private AtomicInteger index = new AtomicInteger(1);
+
+        @Override
+        public Thread newThread(@NonNull Runnable r) {
+            return new Thread(r, "LogCopy-thread-" + index.getAndIncrement());
+        }
+    };
+    private static final int DEFAULT_THREAD_NUM = 1;
+    private static final ExecutorService sThreadPool = new ThreadPoolExecutor(CORE_POOL_SIZE,
+            MAX_POLL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(128), THREAD_FACTORY);
+
+    private static final ExecutorService mExecutorService = Executors.newFixedThreadPool(ioIntensivePoolSize());
+
+    /**
+     * Each tasks blocks 90% of the time, and works only 10% of its
+     * lifetime. That is, I/O intensive pool
+     *
+     * @return io intesive Thread pool size
+     */
+
+    public static int ioIntensivePoolSize() {
+        double blockingCoefficient = 0.9;
+        return poolSize(blockingCoefficient);
+    }
+
+    /**
+     * Number of threads = Number of Available Cores / (1 - BlockingCoefficient) where the blocking
+     * coefficient is between 0 and 1.
+     * A computation-intensive task has a blocking coefficient of 0, whereas an IO-intensive task
+     * has a value close to 1, so we don't have to worry about the value reaching 1.
+     *
+     * @param blockingCoefficient the coefficient
+     * @return Thread pool size
+     */
+    public static int poolSize(double blockingCoefficient) {
+        return (int) (CPU_SIZE / (1 - blockingCoefficient));
+    }
+
+    /**
+     * 单线程拷贝文件
+     *
+     * @param sourcePath
+     * @param targetPath
+     */
+    public static void copyFileRandom(String sourcePath, String targetPath) {
+        copyFileRandom(sourcePath, targetPath, ioIntensivePoolSize());
+    }
+
+    /**
+     * @param sourcePath 源文件路径
+     * @param targetPath 目标文件路径
+     * @param threadNums 设定的线程数
+     */
+    @WorkerThread
+    public static void copyFileRandom(String sourcePath, String targetPath, int threadNums) {
+        if (threadNums <= 0) {
+            threadNums = DEFAULT_THREAD_NUM;
+        }
+
+        //单线程拷贝
+        if (threadNums == 1) {
+            try {
+                copyFileRandomSingleThread(sourcePath, targetPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //多线程拷贝
+        } else {
+            copyFileRandomMultiThread(sourcePath, targetPath, threadNums);
+        }
+    }
+
+    /**
+     * 单线程拷贝文件（随机读取，支持断点读写）
+     *
+     * @param src 源文件
+     * @param dst 目标文件
+     * @throws IOException
+     */
+    @WorkerThread
+    public static void copyFileRandomSingleThread(String src, String dst) throws IOException {
+        RandomAccessFile srcFile = new RandomAccessFile(src, "rw");
+        RandomAccessFile dstFile = new RandomAccessFile(dst, "rw");
+
+        try {
+            long currentDstLength = dstFile.length();
+            srcFile.seek(currentDstLength);
+            dstFile.seek(currentDstLength);
+            LogUtil.d(TAG, "Read " + src + " and Write " + dst + " from " + currentDstLength);
+
+            byte[] buffer = new byte[1024];
+            int read = -1;
+            while ((read = srcFile.read(buffer)) != -1) {
+                dstFile.write(buffer, 0, read);
+            }
+        } catch (IOException e) {
+            LogUtil.w(TAG, "copyFileRandom exception, ", e);
+        } finally {
+            try {
+                srcFile.close();
+            } catch (IOException e) {
+                LogUtil.w(TAG, "copyFileRandom close exception, ", e);
+            }
+            try {
+                dstFile.close();
+            } catch (IOException e) {
+                LogUtil.w(TAG, "copyFileRandom close exception, ", e);
+            }
+        }
+    }
+
+    /**
+     * 多线程拷贝文件
+     *
+     * @param sourcePath
+     * @param targetPath
+     * @param threadNums
+     */
+    private static void copyFileRandomMultiThread(String sourcePath, String targetPath, int threadNums) {
+        long totalFileLength = new File(sourcePath).length();
+        long currentTargetLength = new File(targetPath).length();
+
+        long segmentLength = (totalFileLength - currentTargetLength) / (threadNums);
+        //同步锁，全部写完，才能继续下一步处理
+        CountDownLatch mCountDownLatch;
+        //如果不可以整除,则需要多一个线程
+        if (totalFileLength % threadNums != 0) {
+            mCountDownLatch = new CountDownLatch(threadNums + 1);
+        } else {
+            mCountDownLatch = new CountDownLatch(threadNums);
+        }
+
+        int i;
+        long start = System.currentTimeMillis();
+        for (i = 0; i < threadNums; i++) {
+            mExecutorService.execute(new CopyFileRunnable(mCountDownLatch, sourcePath, targetPath, i * segmentLength + currentTargetLength, (i + 1) * segmentLength));
+        }
+
+        if (totalFileLength % threadNums != 0) {
+            mExecutorService.execute(new CopyFileRunnable(mCountDownLatch, sourcePath, targetPath, i * segmentLength + currentTargetLength, totalFileLength));
+        }
+        try {
+            mCountDownLatch.await();
+            LogUtil.d(TAG, "multi thread copyFile costs-->" + (System.currentTimeMillis() - start));
+        } catch (InterruptedException e) {
+            LogUtil.w(TAG, "countDownLatch exception: ", e);
+        }
+    }
+
+    private static class CopyFileRunnable implements Runnable {
+        private RandomAccessFile in;
+        private RandomAccessFile out;
+        private long start;
+        private long end;
+        private CountDownLatch latch;
+
+        /**
+         * @param countDownLatch 同步锁
+         * @param in             源文件地址
+         * @param out            目标文件地址
+         * @param start          分段复制的开始位置
+         * @param end            分段复制的结束位置
+         */
+        CopyFileRunnable(CountDownLatch countDownLatch, String in, String out,
+                         long start, long end) {
+            this.start = start;
+            this.end = end;
+            try {
+                this.in = new RandomAccessFile(in, "rw");
+                this.out = new RandomAccessFile(out, "rw");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            this.latch = countDownLatch;
+        }
+
+        @Override
+        public void run() {
+            try {
+                if (in != null && out != null) {
+                    in.seek(start);
+                    out.seek(start);
+                    int hasRead = 0;
+                    byte[] buff = new byte[1024];
+                    while (start < end && (hasRead = in.read(buff)) != -1) {
+                        start += hasRead;
+                        out.write(buff, 0, hasRead);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (in != null) {
+                        in.close();
+                    }
+                    if (out != null) {
+                        out.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                latch.countDown();
+            }
+        }
+    }
+    /////////////////////////////////////////// copy end ///////////////////////////////////////////
 }

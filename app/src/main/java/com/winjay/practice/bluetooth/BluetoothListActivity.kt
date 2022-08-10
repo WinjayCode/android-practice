@@ -8,7 +8,9 @@ import android.content.Intent
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.winjay.practice.MainActivity_ViewBinding
 import com.winjay.practice.MainAdapter
 import com.winjay.practice.R
 import com.winjay.practice.bluetooth.a2dp.A2dpActivity
@@ -18,8 +20,8 @@ import com.winjay.practice.bluetooth.bt.BtClientActivity
 import com.winjay.practice.bluetooth.bt.BtServerActivity
 import com.winjay.practice.bluetooth.call.BluetoothCallActivity
 import com.winjay.practice.common.BaseActivity
+import com.winjay.practice.databinding.MainActivityBinding
 import com.winjay.practice.utils.LogUtil
-import kotlinx.android.synthetic.main.main_activity.*
 import java.util.*
 
 /**
@@ -31,25 +33,36 @@ import java.util.*
 class BluetoothListActivity : BaseActivity() {
     private val TAG = javaClass.simpleName
 
-    private val mainMap: LinkedHashMap<String?, Class<*>?> = object : LinkedHashMap<String?, Class<*>?>() {
-        init {
-            put("传统蓝牙A2DP模式", A2dpActivity::class.java)
-            put("传统蓝牙客户端(流模式)", BtClientActivity::class.java)
-            put("传统蓝牙服务端(流模式)", BtServerActivity::class.java)
-            put("低功耗蓝牙客户端(中心设备)", BleClientActivity::class.java)
-            put("低功耗蓝牙服务端(外围设备)", BleServerActivity::class.java)
-            put("蓝牙电话(车机)", BluetoothCallActivity::class.java)
+    private val mainMap: LinkedHashMap<String?, Class<*>?> =
+        object : LinkedHashMap<String?, Class<*>?>() {
+            init {
+                put("传统蓝牙A2DP模式", A2dpActivity::class.java)
+                put("传统蓝牙客户端(流模式)", BtClientActivity::class.java)
+                put("传统蓝牙服务端(流模式)", BtServerActivity::class.java)
+                put("低功耗蓝牙客户端(中心设备)", BleClientActivity::class.java)
+                put("低功耗蓝牙服务端(外围设备)", BleServerActivity::class.java)
+                put("蓝牙电话(车机)", BluetoothCallActivity::class.java)
+            }
         }
+
+    private lateinit var binding: MainActivityBinding
+
+    override fun useViewBinding(): Boolean {
+        return true
     }
 
-    override fun getLayoutId(): Int {
-        return R.layout.main_activity
+    override fun viewBinding(): View {
+        binding = MainActivityBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun permissions(): Array<String>? {
-        return arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.BLUETOOTH_ADMIN,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
+        return arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.BLUETOOTH_ADMIN,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.BLUETOOTH_CONNECT
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,14 +92,15 @@ class BluetoothListActivity : BaseActivity() {
         }
 
         // 让设备处于可检测模式的时间为 5 分钟 (300s)
-        val discoverableIntent: Intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
-            putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
-        }
+        val discoverableIntent: Intent =
+            Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
+                putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
+            }
         startActivityForResult(discoverableIntent, 2)
 
-        main_rv!!.layoutManager = LinearLayoutManager(this)
+        binding.mainRv.layoutManager = LinearLayoutManager(this)
         val mainAdapter = MainAdapter(ArrayList(mainMap.keys))
-        main_rv!!.adapter = mainAdapter
+        binding.mainRv.adapter = mainAdapter
         mainAdapter.setOnItemClickListener { view, key ->
             val intent = Intent(this@BluetoothListActivity, mainMap[key])
             startActivity(intent)

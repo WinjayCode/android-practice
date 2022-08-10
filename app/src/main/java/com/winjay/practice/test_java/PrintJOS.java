@@ -22,7 +22,7 @@ public class PrintJOS {
             @Override
             public void run() {
                 while (num.get() <= TOTAL - 1) {
-                    System.out.println("奇数while");
+//                    System.out.println("奇数while");
                     if (!flag) {
                         System.out.println(Thread.currentThread().getName() + "：" + num.getAndIncrement());
                         flag = true;
@@ -37,7 +37,7 @@ public class PrintJOS {
             @Override
             public void run() {
                 while (num.get() <= TOTAL) {
-                    System.out.println("偶数while");
+//                    System.out.println("偶数while");
                     if (flag) {
                         System.out.println(Thread.currentThread().getName() + "：" + num.getAndIncrement());
                         flag = false;

@@ -3,12 +3,14 @@ package com.winjay.practice.bluetooth.bt
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.os.Bundle
+import android.view.View
 import butterknife.OnClick
 import com.winjay.practice.R
 import com.winjay.practice.bluetooth.BtUtil
 import com.winjay.practice.common.BaseActivity
+import com.winjay.practice.databinding.A2dpActivityBinding
+import com.winjay.practice.databinding.BtServerActivityBinding
 import com.winjay.practice.utils.LogUtil
-import kotlinx.android.synthetic.main.bt_server_activity.*
 
 /**
  * 传统蓝牙服务端(流模式)
@@ -22,8 +24,15 @@ class BtServerActivity : BaseActivity() {
     private val stringBuffer = StringBuilder();
     private lateinit var handleSocket: HandleSocket
 
-    override fun getLayoutId(): Int {
-        return R.layout.bt_server_activity
+    private lateinit var binding: BtServerActivityBinding
+
+    override fun useViewBinding(): Boolean {
+        return true
+    }
+
+    override fun viewBinding(): View {
+        binding = BtServerActivityBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,13 +44,13 @@ class BtServerActivity : BaseActivity() {
     val readListener = object : HandleSocket.BluetoothListener {
         override fun onStart() {
             runOnUiThread {
-                server_status_tv.text = "服务器已就绪"
+                binding.serverStatusTv.text = "服务器已就绪"
             }
         }
 
         override fun onReceiveData(socket: BluetoothSocket?, msg: String) {
             runOnUiThread {
-                log_tv.text = stringBuffer.run {
+                binding.logTv.text = stringBuffer.run {
                     append(socket?.remoteDevice?.name + "：" + msg).append("\n")
                     toString()
                 }
@@ -50,13 +59,13 @@ class BtServerActivity : BaseActivity() {
 
         override fun onConnected(msg: String) {
             runOnUiThread {
-                server_status_tv.text = "已连接上客户端：$msg"
+                binding.serverStatusTv.text = "已连接上客户端：$msg"
             }
         }
 
         override fun onFail(error: String) {
             runOnUiThread {
-                server_status_tv.text = error
+                binding.serverStatusTv.text = error
             }
         }
     }
@@ -64,7 +73,7 @@ class BtServerActivity : BaseActivity() {
     val writeListener = object : HandleSocket.BaseBluetoothListener {
         override fun onSendMsg(socket: BluetoothSocket?, msg: String) {
             runOnUiThread {
-                log_tv.text = stringBuffer.run {
+                binding.logTv.text = stringBuffer.run {
                     append("我:$msg").append("\n")
                     toString()
                 }
@@ -73,7 +82,7 @@ class BtServerActivity : BaseActivity() {
 
         override fun onFail(error: String) {
             runOnUiThread {
-                log_tv.text = stringBuffer.run {
+                binding.logTv.text = stringBuffer.run {
                     append("发送失败:$error").append("\n")
                     toString()
                 }
@@ -126,14 +135,14 @@ class BtServerActivity : BaseActivity() {
     @OnClick(R.id.send_msg_btn)
     fun sendMsg() {
         if (this::handleSocket.isInitialized) {
-            handleSocket.sendMsg(send_edit.text.toString())
-            send_edit.setText("")
+            handleSocket.sendMsg(binding.sendEdit.text.toString())
+            binding.sendEdit.setText("")
         } else {
-            log_tv.text = stringBuffer.run {
+            binding.logTv.text = stringBuffer.run {
                 append("没有连接蓝牙设备...").append("\n")
                 toString()
             }
-            send_edit.setText("")
+            binding.sendEdit.setText("")
         }
     }
 

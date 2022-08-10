@@ -16,8 +16,8 @@ import butterknife.OnClick
 import com.winjay.practice.R
 import com.winjay.practice.bluetooth.BtUtil
 import com.winjay.practice.common.BaseActivity
+import com.winjay.practice.databinding.BtClientActivityBinding
 import com.winjay.practice.utils.LogUtil
-import kotlinx.android.synthetic.main.bt_client_activity.*
 
 /**
  * 传统蓝牙客户端(流模式)
@@ -36,8 +36,15 @@ class BtClientActivity : BaseActivity() {
     private var itemStateTV: TextView? = null
     private val stringBuilder = StringBuilder()
 
-    override fun getLayoutId(): Int {
-        return R.layout.bt_client_activity
+    private lateinit var binding: BtClientActivityBinding
+
+    override fun useViewBinding(): Boolean {
+        return true
+    }
+
+    override fun viewBinding(): View {
+        binding = BtClientActivityBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,15 +67,17 @@ class BtClientActivity : BaseActivity() {
     }
 
     private fun initRecyclerView() {
-        bt_list_rv.layoutManager = LinearLayoutManager(this)
-        bt_list_rv.adapter = bluetoothListAdapter
-        bluetoothListAdapter.setOnItemClickListener(object : BluetoothListAdapter.OnItemClickListener {
+        binding.btListRv.layoutManager = LinearLayoutManager(this)
+        binding.btListRv.adapter = bluetoothListAdapter
+        bluetoothListAdapter.setOnItemClickListener(object :
+            BluetoothListAdapter.OnItemClickListener {
             override fun onItemClick(view: View) {
                 itemStateTV = view.findViewById(R.id.blue_item_status_tv)
-                val position = bt_list_rv.getChildAdapterPosition(view)
+                val position = binding.btListRv.getChildAdapterPosition(view)
                 LogUtil.d(TAG, "position=$position")
                 toast("开始连接...")
-                connectThread = ConnectThread(bluetoothListData[position], readListener, writeListener)
+                connectThread =
+                    ConnectThread(bluetoothListData[position], readListener, writeListener)
                 connectThread?.start()
             }
         })
@@ -97,10 +106,13 @@ class BtClientActivity : BaseActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             when (intent?.action) {
                 BluetoothDevice.ACTION_FOUND -> {
-                    val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                    if (device !in bluetoothListData && device.name != null) {
-                        bluetoothListData.add(device)
-                        bluetoothListAdapter.notifyItemInserted(bluetoothListData.size)
+                    val device =
+                        intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                    if (device != null) {
+                        if (device !in bluetoothListData && device.name != null) {
+                            bluetoothListData.add(device)
+                            bluetoothListAdapter.notifyItemInserted(bluetoothListData.size)
+                        }
                     }
                 }
                 // 检测模式改变
@@ -131,14 +143,14 @@ class BtClientActivity : BaseActivity() {
     @OnClick(R.id.send_msg_btn)
     fun sendMsg() {
         if (this::handleSocket.isInitialized) {
-            handleSocket.sendMsg(send_edit.text.toString())
-            send_edit.setText("")
+            handleSocket.sendMsg(binding.sendEdit.text.toString())
+            binding.sendEdit.setText("")
         } else {
-            tv_log.text = stringBuilder.run {
+            binding.tvLog.text = stringBuilder.run {
                 append("没有连接蓝牙设备...").append("\n")
                 toString()
             }
-            send_edit.setText("")
+            binding.sendEdit.setText("")
         }
     }
 
@@ -152,7 +164,7 @@ class BtClientActivity : BaseActivity() {
 
         override fun onReceiveData(socket: BluetoothSocket?, msg: String) {
             runOnUiThread {
-                tv_log.text = stringBuilder.run {
+                binding.tvLog.text = stringBuilder.run {
                     append(socket?.remoteDevice?.name + "：" + msg).append("\n")
                     toString()
                 }
@@ -168,7 +180,7 @@ class BtClientActivity : BaseActivity() {
 
         override fun onFail(error: String) {
             runOnUiThread {
-                tv_log.text = stringBuilder.run {
+                binding.tvLog.text = stringBuilder.run {
                     append(error).append("\n")
                     toString()
                 }
@@ -181,7 +193,7 @@ class BtClientActivity : BaseActivity() {
     val writeListener = object : HandleSocket.BaseBluetoothListener {
         override fun onSendMsg(socket: BluetoothSocket?, msg: String) {
             runOnUiThread {
-                tv_log.text = stringBuilder.run {
+                binding.tvLog.text = stringBuilder.run {
                     append("我：$msg").append("\n")
                     toString()
                 }
@@ -190,7 +202,7 @@ class BtClientActivity : BaseActivity() {
 
         override fun onFail(error: String) {
             runOnUiThread {
-                tv_log.text = stringBuilder.run {
+                binding.tvLog.text = stringBuilder.run {
                     append("发送失败：$error").append("\n")
                     toString()
                 }
@@ -201,8 +213,11 @@ class BtClientActivity : BaseActivity() {
     /**
      * 连接类
      */
-    inner class ConnectThread(val device: BluetoothDevice,
-                              val readListener: HandleSocket.BluetoothListener?, val writeListener: HandleSocket.BaseBluetoothListener?) : Thread() {
+    inner class ConnectThread(
+        val device: BluetoothDevice,
+        val readListener: HandleSocket.BluetoothListener?,
+        val writeListener: HandleSocket.BaseBluetoothListener?
+    ) : Thread() {
 
         private val socket: BluetoothSocket? by lazy {
             readListener?.onStart()

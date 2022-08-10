@@ -216,8 +216,8 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String savedPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-                String oldPath = savedPath + File.separator + "test" + File.separator;
-                String newPath = savedPath + File.separator + "test2" + File.separator;
+                String oldPath = getExternalCacheDir().getPath() + File.separator + "debuglogger" + File.separator;
+                String newPath = getExternalCacheDir().getPath() + File.separator + "debuglogger2" + File.separator;
                 LogUtil.d(TAG, "oldPath=" + oldPath);
                 LogUtil.d(TAG, "newPath=" + newPath);
                 boolean result = copyFolder(oldPath, newPath);
@@ -695,20 +695,17 @@ public class TestActivity extends AppCompatActivity {
             if (temp.isDirectory()) {   //如果是子文件夹
                 boolean result = copyFolder(oldPath + "/" + file, newPath + "/" + file);
                 if (!result) {
-                    LogUtil.e(TAG, "copy subfolder error!");
-                    return false;
+                    LogUtil.w(TAG, "copy subfolder error!");
+//                    return false;
                 }
             } else if (!temp.exists()) {
-                LogUtil.e(TAG, "copyFolder:  oldFile not exist.");
-                return false;
-            } else if (!temp.isFile()) {
-                LogUtil.e(TAG, "copyFolder:  oldFile not file.");
-                return false;
-            } else if (!temp.canRead()) {
-                LogUtil.e(TAG, "copyFolder:  oldFile cannot read.");
-                return false;
+                LogUtil.w(TAG, "oldFile not exist!");
+//                return false;
             } else {
-                FileInputStream fileInputStream = null;
+                LogUtil.d(TAG, "copying path=" + temp.getPath());
+                FileUtil.copyFileRandom(temp.getPath(), newPath + "/" + temp.getName());
+
+                /*FileInputStream fileInputStream = null;
                 FileOutputStream fileOutputStream = null;
                 try {
                     fileInputStream = new FileInputStream(temp);
@@ -735,7 +732,7 @@ public class TestActivity extends AppCompatActivity {
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
-                }
+                }*/
             }
         }
         LogUtil.d(TAG, "copy success!");

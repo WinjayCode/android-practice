@@ -18,6 +18,7 @@ package com.winjay.practice.design_pattern.singleton;
  * volatile作用：
  * （1）使用 volatile 关键字修饰的变量，可以保证其指令执行的顺序与程序指明的顺序一致，不会发生顺序变换
  * （2）使用 volatile 关键字修饰的变量，可以保证其内存可见性，即每一时刻线程读取到该变量的值都是内存中最新的那个值，线程每次操作该变量都需要先读取该变量。
+ * （3）不保证原子性!
  * </p>
  *
  * @author Winjay

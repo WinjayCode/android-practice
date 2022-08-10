@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
+import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.utils.LogUtil;
 
 import java.util.ArrayList;
@@ -43,14 +44,14 @@ public class ActivityManagerActivity extends BaseActivity {
         app_process_rv.setLayoutManager(new LinearLayoutManager(this));
         app_process_rv.setAdapter(new AppProcessAdapter(this, getRunningProcessInfo()));
 
-        app_process_rv.postDelayed(testRunnable, 2000);
+        HandlerManager.getInstance().postDelayedOnMainThread(testRunnable, 2000);
     }
 
     private Runnable testRunnable = new Runnable() {
         @Override
         public void run() {
             getRunningProcessInfo();
-            app_process_rv.postDelayed(testRunnable, 2000);
+            HandlerManager.getInstance().postDelayedOnMainThread(testRunnable, 2000);
         }
     };
 
@@ -70,5 +71,11 @@ public class ActivityManagerActivity extends BaseActivity {
             amProcessInfoList.add(amProcessInfo);
         }
         return amProcessInfoList;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        HandlerManager.getInstance().getmMainHandler().removeCallbacks(testRunnable);
     }
 }

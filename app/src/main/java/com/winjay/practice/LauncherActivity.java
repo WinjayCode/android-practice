@@ -2,14 +2,17 @@ package com.winjay.practice;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.os.Handler;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
 
-import com.hailong.biometricprompt.fingerprint.FingerprintCallback;
-import com.hailong.biometricprompt.fingerprint.FingerprintVerifyManager;
 import com.winjay.practice.utils.LogUtil;
+
+import java.util.concurrent.Executor;
 
 /**
  * 指纹验证
@@ -19,59 +22,87 @@ import com.winjay.practice.utils.LogUtil;
  */
 public class LauncherActivity extends AppCompatActivity {
     private final static String TAG = LauncherActivity.class.getSimpleName();
+    private Handler handler = new Handler();
+
+    private Executor executor = new Executor() {
+        @Override
+        public void execute(Runnable command) {
+            handler.post(command);
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
-//        startActivity(intent);
-//        finish();
-        FingerprintVerifyManager.Builder builder = new FingerprintVerifyManager.Builder(LauncherActivity.this);
-        builder.callback(new FingerprintCallback() {
 
-            // 无指纹硬件或者指纹硬件不可用
+        BiometricManager biometricManager = BiometricManager.from(this);
+        switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)) {
+            // No error detected.
+            case BiometricManager.BIOMETRIC_SUCCESS:
+                LogUtil.d(TAG, "BIOMETRIC_SUCCESS");
+                showBiometricPrompt();
+                break;
+            // The hardware is unavailable. Try again later.
+            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+                LogUtil.d(TAG, "BIOMETRIC_ERROR_HW_UNAVAILABLE");
+                gotoMainActivity();
+                break;
+            // There is no biometric hardware.
+            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+                LogUtil.d(TAG, "BIOMETRIC_ERROR_NO_HARDWARE");
+                gotoMainActivity();
+                break;
+            // The user does not have any biometrics enrolled.
+            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+                LogUtil.d(TAG, "BIOMETRIC_ERROR_NONE_ENROLLED");
+                gotoMainActivity();
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED:
+                LogUtil.d(TAG, "BIOMETRIC_ERROR_SECURITY_UPDATE_REQUIRED");
+                break;
+            case BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED:
+                LogUtil.d(TAG, "BIOMETRIC_ERROR_UNSUPPORTED");
+                break;
+            case BiometricManager.BIOMETRIC_STATUS_UNKNOWN:
+                LogUtil.d(TAG, "BIOMETRIC_STATUS_UNKNOWN");
+                break;
+        }
+    }
+
+    private void showBiometricPrompt() {
+        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("身份验证")
+//                .setSubtitle("SubTitle")
+                .setNegativeButtonText("取消")
+                .build();
+        BiometricPrompt biometricPrompt = new BiometricPrompt(this, executor, new BiometricPrompt.AuthenticationCallback() {
             @Override
-            public void onHwUnavailable() {
-                LogUtil.d(TAG, "onHwUnavailable()");
-                Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
-                startActivity(intent);
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                LogUtil.d(TAG, "errorCode=" + errorCode + ", errString=" + errString);
                 finish();
             }
 
-            // 未添加指纹
             @Override
-            public void onNoneEnrolled() {
-                LogUtil.d(TAG, "onNoneEnrolled()");
-                Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
-                startActivity(intent);
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                LogUtil.d(TAG);
+                gotoMainActivity();
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                LogUtil.d(TAG);
                 finish();
             }
+        });
+        biometricPrompt.authenticate(promptInfo);
+    }
 
-            @Override
-            public void onSucceeded() {
-                LogUtil.d(TAG, "onSucceeded()");
-                Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
-            @Override
-            public void onFailed() {
-                LogUtil.d(TAG, "onFailed()");
-                Toast.makeText(LauncherActivity.this, "你是谁？", Toast.LENGTH_SHORT).show();
-            }
-
-            // 密码登录
-            @Override
-            public void onUsepwd() {
-                LogUtil.d(TAG, "onUsepwd()");
-            }
-
-            @Override
-            public void onCancel() {
-                LogUtil.d(TAG, "onCancel()");
-                finish();
-            }
-        }).build();
+    private void gotoMainActivity() {
+        Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

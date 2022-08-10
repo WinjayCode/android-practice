@@ -14,12 +14,13 @@ import android.media.MediaRecorder
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
+import android.view.View
 import butterknife.OnClick
 import com.winjay.practice.R
 import com.winjay.practice.common.BaseActivity
+import com.winjay.practice.databinding.ProjectionActivityBinding
 import com.winjay.practice.utils.FileUtil
 import com.winjay.practice.utils.LogUtil
-import kotlinx.android.synthetic.main.projection_activity.*
 import java.io.File
 import java.nio.ByteBuffer
 
@@ -42,8 +43,15 @@ class MediaProjectionActivity : BaseActivity() {
     private var mediaRecord: MediaRecorder? = null
     private var videoPath: String? = null;
 
-    override fun getLayoutId(): Int {
-        return R.layout.projection_activity
+    private lateinit var binding: ProjectionActivityBinding
+
+    override fun useViewBinding(): Boolean {
+        return true
+    }
+
+    override fun viewBinding(): View {
+        binding = ProjectionActivityBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun permissions(): Array<String> {
@@ -75,15 +83,15 @@ class MediaProjectionActivity : BaseActivity() {
             mediaManager.createScreenCaptureIntent().apply {
                 startActivityForResult(this, MEDIA_PROJECTION_MODE)
             }
-            media_projection_btn.text = "正在录制，可切换页面，点击结束并播放"
+            binding.mediaProjectionBtn.text = "正在录制，可切换页面，点击结束并播放"
         } else {
             try {
-                media_projection_btn.text = "点击开始屏幕录制"
+                binding.mediaProjectionBtn.text = "点击开始屏幕录制"
                 mediaRecord?.stop()
                 mediaProjection?.stop()
                 toast("开始播放")
                 val file = File(videoPath, "mediaprojection.mp4")
-                MediaPlayerHelper.prepare(this, file.absolutePath, sv.holder, MediaPlayer.OnPreparedListener {
+                MediaPlayerHelper.prepare(this, file.absolutePath, binding.sv.holder, MediaPlayer.OnPreparedListener {
                     LogUtil.d(TAG, "onPrepared: ${it.isPlaying}")
                     MediaPlayerHelper.play()
                 })
@@ -218,10 +226,10 @@ class MediaProjectionActivity : BaseActivity() {
                 bitmap.copyPixelsFromBuffer(buffer)
 
                 withMain {
-                    val canvas = sv.holder.lockCanvas()
+                    val canvas = binding.sv.holder.lockCanvas()
                     with(canvas) {
                         drawBitmap(bitmap, 0f, 0f, null)
-                        sv.holder.unlockCanvasAndPost(this)
+                        binding.sv.holder.unlockCanvasAndPost(this)
                     }
                     toast("保存成功")
                     mediaProjection?.stop()
