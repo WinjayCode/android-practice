@@ -10,9 +10,9 @@ ext {
             buildToolsVersion  : "27.0.3",
 
             // 最小sdk版本
-            minSdkVersion      : 21,
+            minSdkVersion      : 29,
             // 目标sdk版本
-            targetSdkVersion   : 29,
+            targetSdkVersion   : 31,
 
             // jdk版本
             sourceCompatibility: JavaVersion.VERSION_1_8,

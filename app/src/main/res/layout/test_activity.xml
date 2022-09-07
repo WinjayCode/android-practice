@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TEST"
-                android:background="@drawable/test_selector"
+                android:background="@drawable/statelist_drawable"
                 app:layout_constraintRight_toRightOf="parent" />
 
             <Button
@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TEST2"
-                android:background="@drawable/test_selector"
+                android:background="@drawable/statelist_drawable"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/test_btn"/>
 

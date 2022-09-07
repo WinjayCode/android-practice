@@ -25,7 +25,7 @@
         android:id="@+id/app_compat_tv"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:background="@drawable/english_textbook_evaluate_selector_bg"
+        android:background="@drawable/layer_drawable"
         android:gravity="center"
         android:maxLines="4"
         android:text="你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你你好你好好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好"

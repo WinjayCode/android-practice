@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+    android:antialias="true"
+    android:dither="true"
+    android:filter="true"
+    android:gravity="center"
+    android:mipMap="false"
+    android:src="@drawable/clock_dial"
+    android:tileMode="repeat" />
+
+    <!-- android:antialias  开启图片抗锯齿 -->
+    <!-- android:dither  开启抖动效果（让高质量的图片在低质量的屏幕上保持好的显示效果） -->
+    <!-- android:filter  开启过滤效果（图片尺寸被拉伸或者压缩时，可以保持较好的显示效果） -->
+    <!-- android:gravity  图片小于容器的尺寸时，设置此选项可以对图片进行定位 -->
+    <!-- android:mipMap  纹理映射（一般用不到） -->
+    <!-- android:tileMode  平铺模式（1.默认disabled，2.repeat表示水平和竖直方向上的平铺效果） -->
+    <!--   3.mirror表示在水平和竖直方向上的镜面投影效果 4.clamp表示图片四周的像素会扩展到周围区域 -->

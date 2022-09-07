@@ -772,6 +772,7 @@ public class FileUtil {
         File oldFile = new File(oldPath);
         String[] files = oldFile.list();
         if (files == null || files.length == 0) {
+            Log.w(TAG, "oldPath has no file!");
             return true;
         }
         File temp;

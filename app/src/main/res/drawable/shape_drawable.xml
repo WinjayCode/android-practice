@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#ff0000" />
+
+    <stroke
+        android:width="5dp"
+        android:color="#00ff00"
+        android:dashWidth="10dp"
+        android:dashGap="10dp" />
+</shape>
+
+    <!-- android:shape  形状：rectangle（矩形）、oval（椭圆）、line（横线）、 ring（圆环），默认矩形，line和ring这两个必须要通过<stroke>标签来指定线的宽度和颜色等信息，否则无法达到预期的效果-->
+    <!-- <corners> 表示shape的四个角的角度，它只适用于矩形shape，这里的角度是指圆角的程度，用px来表示 -->
+    <!-- <gradient> 表示渐变效果，与<solid>效果互斥，<solid>表示纯色填充 -->
+    <!-- <solid> 表示纯色填充 -->
+    <!-- <stroke> Shape的描边 -->
+    <!-- <padding> 包含它的View的空白 -->
+    <!-- <size> shape的大小 -->
