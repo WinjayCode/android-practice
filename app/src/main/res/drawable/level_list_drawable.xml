@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?> <!-- 等级效果 -->
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Drawable的等级是有范围的，即0~10000，最小是0，也是默认值，最大是10000 -->
+    <item
+        android:drawable="@drawable/switch_off"
+        android:maxLevel="0" />
+    <item
+        android:drawable="@drawable/switch_on"
+        android:maxLevel="1" />
+</level-list>
