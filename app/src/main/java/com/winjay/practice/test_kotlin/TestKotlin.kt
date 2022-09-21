@@ -78,10 +78,15 @@ fun main() {
 //    }
 
     val text = """
-        多行字符串
-        多行字符串
+        @UnityMessage@{
+      "id": 1,
+      "seq": "",
+      "name": "Test",
+      "method": "init",
+      "data": null
+    }
         """
-    println(text)
+    println(text.replace("@UnityMessage@", ""))
 }
 
 /**
@@ -114,10 +119,13 @@ var x = 5
 
 // 类型后面加?表示可为空
 var age: String? = "23"
+
 //抛出空指针异常
 val ages = age!!.toInt()
+
 //不做处理返回 null
 val ages1 = age?.toInt()
+
 //age为空返回-1
 val ages2 = age?.toInt() ?: -1
 

@@ -34,8 +34,8 @@ public class TouchPanelView extends View {
     private int mScreenHeight;
     private int mScreenWidth;
 
-    private final int mGridHeight = 40;
-    private final int mGridWidth = 40;
+    private final int mGridHeight = 80;
+    private final int mGridWidth = 80;
     private final int mDiagonalWidth = mGridWidth / 2;
 
     private HashMap<Rect, Boolean> mRectTouchMap;
@@ -134,6 +134,9 @@ public class TouchPanelView extends View {
         canvas.drawPath(mPath, mPathPaint);
     }
 
+    int preX = 0;
+    int preY = 0;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (allRectTouch()) {
@@ -165,8 +168,18 @@ public class TouchPanelView extends View {
                 mPath.reset();
                 break;
         }
-        touchWhere(touchX, touchY);
-        invalidate();
+
+        // method 2
+        if (preX != 0 && preY != 0) {
+            touchWhere2(touchX, touchY);
+            invalidate();
+        }
+        preX = touchX;
+        preY = touchY;
+
+        // method 1
+//        touchWhere(touchX, touchY);
+//        invalidate();
         return true;
     }
 
@@ -180,14 +193,78 @@ public class TouchPanelView extends View {
     }
 
     private void touchWhere(int touchX, int touchY) {
-        LogUtil.d(TAG, "touchX=" + touchX);
-        LogUtil.d(TAG, "touchY=" + touchY);
+        LogUtil.d(TAG, "touchX=" + touchX + ", touchY=" + touchY);
         for (Map.Entry<Rect, Boolean> rectBooleanEntry : mRectTouchMap.entrySet()) {
             Rect rect = rectBooleanEntry.getKey();
 //            LogUtil.d(TAG, "rect=" + rect.toString());
             if (rect.contains(touchX, touchY)) {
                 rectBooleanEntry.setValue(true);
             }
+        }
+    }
+
+    private void touchWhere2(int touchX, int touchY) {
+        LogUtil.d(TAG, "touchX=" + touchX + ", touchY=" + touchY);
+        for (Map.Entry<Rect, Boolean> rectBooleanEntry : mRectTouchMap.entrySet()) {
+            Rect rect = rectBooleanEntry.getKey();
+//            LogUtil.d(TAG, "rect=" + rect.toString());
+            if (isLineIntersectRectangle(preX, preY, touchX, touchY, rect.left, rect.top, rect.right, rect.bottom)) {
+                rectBooleanEntry.setValue(true);
+            }
+        }
+    }
+
+    /**
+     * <p> 判断线段是否在矩形内
+     * <p>
+     * 先看线段所在直线是否与矩形相交，
+     * 如果不相交则返回false，
+     * 如果相交，
+     * 则看线段的两个点是否在矩形的同一边（即两点的x(y)坐标都比矩形的小x(y)坐标小，或者大）,
+     * 若在同一边则返回false，
+     * 否则就是相交的情况。
+     * </p>
+     *
+     * @param linePointX1 线段起始点x坐标
+     * @param linePointY1 线段起始点y坐标
+     * @param linePointX2 线段结束点x坐标
+     * @param linePointY2 线段结束点y坐标
+     * @param rectangleLeftTopX 矩形左上点x坐标
+     * @param rectangleLeftTopY 矩形左上点y坐标
+     * @param rectangleRightBottomX 矩形右下点x坐标
+     * @param rectangleRightBottomY 矩形右下点y坐标
+     * @return 是否相交
+     */
+    private boolean isLineIntersectRectangle(int linePointX1, int linePointY1, int linePointX2, int linePointY2, int rectangleLeftTopX, int rectangleLeftTopY, int rectangleRightBottomX, int rectangleRightBottomY) {
+        int lineHeight = linePointY1 - linePointY2;
+        int lineWidth = linePointX2 - linePointX1;
+        // 计算叉乘
+        int c = linePointX1 * linePointY2 - linePointX2 * linePointY1;
+
+        if ((lineHeight * rectangleLeftTopX + lineWidth * rectangleLeftTopY + c >= 0 && lineHeight * rectangleRightBottomX + lineWidth * rectangleRightBottomY + c <= 0)
+                || (lineHeight * rectangleLeftTopX + lineWidth * rectangleLeftTopY + c <= 0 && lineHeight * rectangleRightBottomX + lineWidth * rectangleRightBottomY + c >= 0)
+                || (lineHeight * rectangleLeftTopX + lineWidth * rectangleRightBottomY + c >= 0 && lineHeight * rectangleRightBottomX + lineWidth * rectangleLeftTopY + c <= 0)
+                || (lineHeight * rectangleLeftTopX + lineWidth * rectangleRightBottomY + c <= 0 && lineHeight * rectangleRightBottomX + lineWidth * rectangleLeftTopY + c >= 0)) {
+            if (rectangleLeftTopX > rectangleRightBottomX) {
+                int temp = rectangleLeftTopX;
+                rectangleLeftTopX = rectangleRightBottomX;
+                rectangleRightBottomX = temp;
+            }
+            if (rectangleLeftTopY < rectangleRightBottomY) {
+                int temp = rectangleLeftTopY;
+                rectangleLeftTopY = rectangleRightBottomY;
+                rectangleRightBottomY = temp;
+            }
+            if ((linePointX1 < rectangleLeftTopX && linePointX2 < rectangleLeftTopX)
+                    || (linePointX1 > rectangleRightBottomX && linePointX2 > rectangleRightBottomX)
+                    || (linePointY1 > rectangleLeftTopY && linePointY2 > rectangleLeftTopY)
+                    || (linePointY1 < rectangleRightBottomY && linePointY2 < rectangleRightBottomY)) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
         }
     }
 

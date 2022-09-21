@@ -487,6 +487,12 @@
             android:theme="@style/FullScreenTheme" />
         <!-- hardware test end -->
 
+        <!-- file browser start -->
+        <activity
+            android:name=".file_browser.FileBrowserActivity"
+            android:screenOrientation="portrait" />
+        <!-- file browser end -->
+
         <activity
             android:name=".download_manager.DownloadManagerActivity"
             android:screenOrientation="portrait" />
