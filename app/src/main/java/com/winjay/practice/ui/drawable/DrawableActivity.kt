@@ -44,6 +44,6 @@ class DrawableActivity : BaseActivity() {
 
         // 裁剪level范围0~10000，0表示完全裁剪，即不可见，10000表示不裁剪
         val clipDrawable = binding.clipDrawable.drawable as ClipDrawable
-        clipDrawable.level = 5000
+        clipDrawable.level = 8000
     }
 }

@@ -43,12 +43,14 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <!-- 蓝牙 -->
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <!-- If your app targets Android 9 or lower, you can declare ACCESS_COARSE_LOCATION instead. -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+    <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
 
     <!-- android:persistent="true"：1.在系统刚起来的时候，该App也会被启动起来 2.该App被强制杀掉后，系统会重启该App。这种情况只针对系统内置的App，第三方安装的App不会被重启。 -->
     <!-- android:usesCleartextTraffic="true"：指示应用程序是否打算使用明文网络流量，例如明文HTTP -->
@@ -76,7 +78,8 @@
             android:excludeFromRecents="false"
             android:launchMode="standard"
             android:screenOrientation="portrait"
-            android:taskAffinity="com.winjay.practice">
+            android:taskAffinity="com.winjay.practice"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -211,7 +214,8 @@
             android:name=".ui.remote_views.RemoteViewsNotificationActivity"
             android:screenOrientation="portrait" />
 
-        <receiver android:name=".ui.remote_views.RemoteViewsAppWidgetProvider">
+        <receiver android:name=".ui.remote_views.RemoteViewsAppWidgetProvider"
+            android:exported="true">
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/appwidget_provide_info" />
@@ -236,7 +240,8 @@
             android:screenOrientation="portrait" />
 
         <!-- widget start -->
-        <receiver android:name=".ui.launcher_widget.ClockWidget">
+        <receiver android:name=".ui.launcher_widget.ClockWidget"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -314,7 +319,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <receiver android:name=".media.receiver.MediaButtonIntentReceiver">
+        <receiver android:name=".media.receiver.MediaButtonIntentReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
@@ -367,7 +373,8 @@
             android:name=".usb.UsbActivity"
             android:screenOrientation="portrait" />
 
-        <receiver android:name=".usb.MediaMountedReceiver">
+        <receiver android:name=".usb.MediaMountedReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
@@ -410,7 +417,8 @@
         <!--隐式启动activity，action、category、data必须同时匹配，才能隐式启动（android.intent.category.DEFAULT必须有）-->
         <activity
             android:name=".intent_filter.IntentFilterActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.winjay.practice.action_1" />
                 <action android:name="com.winjay.practice.action_2" />
@@ -425,7 +433,8 @@
 
         <service
             android:name=".accessibility.AccessibilityServiceHelper"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>

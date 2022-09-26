@@ -135,7 +135,7 @@
             android:layout_margin="20dp"
             android:background="@color/black_color"
             android:padding="20dp"
-            app:circle_color="@color/biometricprompt_color_82C785"
+            app:circle_color="#82C785"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rect" />
 

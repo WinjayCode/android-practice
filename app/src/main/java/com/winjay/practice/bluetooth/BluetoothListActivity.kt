@@ -61,7 +61,9 @@ class BluetoothListActivity : BaseActivity() {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.BLUETOOTH_ADMIN,
             Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.BLUETOOTH_CONNECT
+            Manifest.permission.BLUETOOTH_CONNECT,
+            Manifest.permission.BLUETOOTH_SCAN,
+            Manifest.permission.BLUETOOTH_ADVERTISE,
         )
     }
 
@@ -73,11 +75,9 @@ class BluetoothListActivity : BaseActivity() {
         }
 
         // Android 10 还需要开启GPS
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                toast("请开启GPS，否则蓝牙不可用！")
-            }
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            toast("请开启GPS，否则蓝牙不可用！")
         }
 
         val bluetooth = BluetoothAdapter.getDefaultAdapter()
