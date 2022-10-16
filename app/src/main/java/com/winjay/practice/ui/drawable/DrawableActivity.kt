@@ -1,5 +1,6 @@
 package com.winjay.practice.ui.drawable
 
+import android.graphics.Color
 import android.graphics.drawable.ClipDrawable
 import android.graphics.drawable.ScaleDrawable
 import android.graphics.drawable.TransitionDrawable
@@ -45,5 +46,9 @@ class DrawableActivity : BaseActivity() {
         // 裁剪level范围0~10000，0表示完全裁剪，即不可见，10000表示不裁剪
         val clipDrawable = binding.clipDrawable.drawable as ClipDrawable
         clipDrawable.level = 8000
+
+        // custom drawable
+        val customDrawable = CustomDrawable(Color.BLUE)
+        binding.customDrawable.background = customDrawable
     }
 }

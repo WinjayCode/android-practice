@@ -208,5 +208,24 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/clip_drawable_title" />
+
+        <TextView
+            android:id="@+id/custom_drawable_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="ClipDrawable（裁剪效果）"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clip_drawable" />
+
+        <ImageView
+            android:id="@+id/custom_drawable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/custom_drawable_title" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
