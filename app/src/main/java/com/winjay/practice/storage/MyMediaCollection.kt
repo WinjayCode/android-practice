@@ -1,10 +1,9 @@
-package com.winjay.practice.directory_structure
+package com.winjay.practice.storage
 
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
-import android.media.ExifInterface
 import android.net.Uri
 import android.provider.BaseColumns
 import android.provider.MediaStore

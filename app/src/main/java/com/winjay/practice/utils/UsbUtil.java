@@ -10,7 +10,13 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbEndpoint;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
+import android.os.Build;
+import android.os.Environment;
 import android.os.storage.StorageManager;
+import android.os.storage.StorageVolume;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +24,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 /**
  * USB相关工具类
@@ -121,7 +128,7 @@ public class UsbUtil {
     }
 
     /**
-     * 获取当前连接的U盘设备路径
+     * 获取当前连接的U盘设备路径（old method）
      *
      * @param mContext
      * @return
@@ -160,5 +167,25 @@ public class UsbUtil {
             e.printStackTrace();
         }
         return targetpath;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    public static void getUSBPath(Context context, USBDeviceMountedListener listener) {
+        StorageManager storageManager = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
+        storageManager.registerStorageVolumeCallback(Executors.newSingleThreadExecutor(), new StorageManager.StorageVolumeCallback() {
+            @Override
+            public void onStateChanged(@NonNull StorageVolume volume) {
+                super.onStateChanged(volume);
+                if (volume.isRemovable() && Environment.MEDIA_MOUNTED.equals(volume.getState())) {
+                    if (listener != null) {
+                        listener.getUSBPath(volume.getDirectory().toString());
+                    }
+                }
+            }
+        });
+    }
+
+    public interface USBDeviceMountedListener {
+        void getUSBPath(String path);
     }
 }

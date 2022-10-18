@@ -1,6 +1,8 @@
 package com.winjay.practice;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +17,7 @@ import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.content_provider.ProviderActivity;
 import com.winjay.practice.crash.CrashTestActivity;
 import com.winjay.practice.design_mode.DesignModeListActivity;
-import com.winjay.practice.directory_structure.DirectoryStructureActivity;
+import com.winjay.practice.storage.StorageActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
 import com.winjay.practice.file_browser.FileBrowserActivity;
 import com.winjay.practice.hardware_test.HardwareTestListActivity;
@@ -33,7 +35,10 @@ import com.winjay.practice.performance_optimize.PerformanceOptimizeActivity;
 import com.winjay.practice.plugin.PluginActivity;
 import com.winjay.practice.system_info.SystemInfoActivity;
 import com.winjay.practice.ui.UIListActivity;
+import com.winjay.practice.usb.USBDeviceReceiver;
+import com.winjay.practice.usb.VolumeInfo;
 import com.winjay.practice.utils.LogUtil;
+import com.winjay.practice.utils.UsbUtil;
 import com.winjay.puzzle.activity.PuzzleMainActivity;
 
 import java.util.ArrayList;
@@ -51,6 +56,8 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.main_rv)
     RecyclerView main_rv;
 
+    private USBDeviceReceiver usbDeviceReceiver;
+
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
         {
             put("Jetpack", JetpackLibListActivity.class);
@@ -65,7 +72,7 @@ public class MainActivity extends BaseActivity {
             put("Location", LocationActivity.class);
             put("Intent Filter", null);
             put("DownloadManager", DownloadManagerActivity.class);
-            put("Directory Structure", DirectoryStructureActivity.class);
+            put("Storage", StorageActivity.class);
             put("Design Mode", DesignModeListActivity.class);
             put("IOC", IOCActivity.class);
             put("IPC", IPCListActivity.class);
@@ -99,7 +106,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemClick(View view, String key) {
                 switch (key) {
-                    case "Intent_Filter":
+                    case "Intent Filter":
                         Intent it = new Intent();
                         it.setAction("com.winjay.practice.action_1");
                         it.addCategory("com.winjay.practice.category_1");
@@ -130,6 +137,27 @@ public class MainActivity extends BaseActivity {
 
 //        Intent intent = new Intent(this, TestService.class);
 //        startService(intent);
+
+        registerUSBReceiver();
+    }
+
+    private void registerUSBReceiver() {
+        if (usbDeviceReceiver == null) {
+            usbDeviceReceiver = new USBDeviceReceiver();
+        }
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
+        intentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+        intentFilter.addAction(UsbUtil.ACTION_USB_PERMISSION);
+        intentFilter.addAction(VolumeInfo.ACTION_VOLUME_STATE_CHANGED);
+        registerReceiver(usbDeviceReceiver, intentFilter);
+    }
+
+    private void unregisterUSBReceiver() {
+        if (usbDeviceReceiver != null) {
+            unregisterReceiver(usbDeviceReceiver);
+            usbDeviceReceiver = null;
+        }
     }
 
     @Override
@@ -148,5 +176,6 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         LogUtil.d(TAG);
+        unregisterUSBReceiver();
     }
 }

@@ -49,7 +49,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * @date 2019-08-15
  */
 public class LocationActivity extends AppCompatActivity implements LocationListener, EasyPermissions.PermissionCallbacks {
-    private final String TAG = LocationActivity.class.getSimpleName();
+    private static final String TAG = LocationActivity.class.getSimpleName();
 
     private final int RC_PERMISSION = 100;
 
@@ -120,6 +120,8 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
                         if (!mThread.isAlive()) {
                             mThread.start();
                         }
+                    } else {
+                        ToastUtils.show(LocationActivity.this, "无法模拟定位！");
                     }
                 } else {
                     ToastUtils.show(LocationActivity.this, "输入要模拟的经纬度信息！");
@@ -276,6 +278,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
                         setMockLocation(Double.valueOf(mMockLongitudeET.getText().toString()),
                                 Double.valueOf(mMockLatitudeET.getText().toString()));
                     } catch (Exception e) {
+                        LogUtil.w(TAG, "mock location error!", e);
                         // 防止用户在软件运行过程中关闭模拟位置或选择其他应用
                         stopMockLocation();
                     }
@@ -347,6 +350,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
                 hasAddTestProvider = true;
                 canMockPosition = true;
             } catch (SecurityException e) {
+                LogUtil.w(TAG, "SecurityException=" + e.getMessage());
                 canMockPosition = false;
             }
         }

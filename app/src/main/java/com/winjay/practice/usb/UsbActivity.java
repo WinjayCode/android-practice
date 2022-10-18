@@ -1,7 +1,6 @@
 package com.winjay.practice.usb;
 
 import android.Manifest;
-import android.content.ContentUris;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.ContentObserver;
@@ -9,6 +8,7 @@ import android.database.Cursor;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
@@ -21,9 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
-import com.winjay.practice.media.music.MusicActivity;
 import com.winjay.practice.media.bean.AudioBean;
 import com.winjay.practice.media.bean.VideoBean;
+import com.winjay.practice.media.music.MusicActivity;
 import com.winjay.practice.media.video.VideoActivity;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.UsbUtil;
@@ -43,7 +43,8 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 public class UsbActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
     private static final String TAG = UsbActivity.class.getSimpleName();
-    private static final String INTERNAL_STORAGE_PATH = "/storage/emulated/0/";
+//    private static final String INTERNAL_STORAGE_PATH = "/storage/emulated/0/";
+    private static final String INTERNAL_STORAGE_PATH = Environment.getExternalStorageDirectory().getPath();
     private MediaStoreChangeObserver mMediaStoreChangeObserver;
     private final int RC_PERMISSION = 100;
 
@@ -162,18 +163,18 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
                 MediaStore.Video.Media.DURATION,
                 MediaStore.Video.Media.SIZE};
 
-//        StringBuilder where = new StringBuilder();
-//        where.delete(0, where.length());
-//        where.append(MediaStore.Video.Media.TITLE + " != ''");
-//        where.append(" AND (" + MediaStore.Video.Media.MIME_TYPE + " LIKE '%video/%')");
-//        // 不读取内置sd卡
-//        where.append(" AND (" + MediaStore.Video.Media.DATA + " NOT LIKE '%" + INTERNAL_STORAGE_PATH + "%')");
-//        LogUtil.d(TAG, "where: " + where.toString());
+        StringBuilder where = new StringBuilder();
+        where.delete(0, where.length());
+        where.append(MediaStore.Video.Media.TITLE + " != ''");
+        where.append(" AND (" + MediaStore.Video.Media.MIME_TYPE + " LIKE '%video/%')");
+        // 不读取内置sd卡
+        where.append(" AND (" + MediaStore.Video.Media.DATA + " NOT LIKE '%" + INTERNAL_STORAGE_PATH + "%')");
+        LogUtil.d(TAG, "where: " + where.toString());
 
         sortOrder = MediaStore.Video.VideoColumns.DATE_TAKEN + " DESC, " + BaseColumns._ID + " DESC ";
 
         // video
-        Cursor cursor = getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, cursorCols, null, null, sortOrder);
+        Cursor cursor = getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, cursorCols, where.toString(), null, sortOrder);
 
         if (cursor != null && cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
@@ -199,11 +200,11 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
 
                 cursor.moveToNext();
             }
+            cursor.close();
         } else {
             LogUtil.d(TAG, "cursor size is null or zero");
             mVideoListData.clear();
         }
-        cursor.close();
         mVideoListAdapter.setData(mVideoListData);
     }
 
@@ -221,18 +222,18 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
                 MediaStore.Audio.Media.DURATION,
                 MediaStore.Audio.Media.SIZE};
 
-//        StringBuilder where = new StringBuilder();
-//        where.delete(0, where.length());
-//        where.append(MediaStore.Audio.Media.TITLE + " != ''");
-//        where.append(" AND (" + MediaStore.Audio.Media.MIME_TYPE + " LIKE '%audio/%')");
-//        // 不读取内置sd卡
-//        where.append(" AND (" + MediaStore.Audio.Media.DATA + " NOT LIKE '%" + INTERNAL_STORAGE_PATH + "%')");
-//        LogUtil.d(TAG, "where: " + where.toString());
+        StringBuilder where = new StringBuilder();
+        where.delete(0, where.length());
+        where.append(MediaStore.Audio.Media.TITLE + " != ''");
+        where.append(" AND (" + MediaStore.Audio.Media.MIME_TYPE + " LIKE '%audio/%')");
+        // 不读取内置sd卡
+        where.append(" AND (" + MediaStore.Audio.Media.DATA + " NOT LIKE '%" + INTERNAL_STORAGE_PATH + "%')");
+        LogUtil.d(TAG, "where: " + where.toString());
 
-//        sortOrder = MediaStore.Audio.VideoColumns.DATE_TAKEN + " DESC, " + BaseColumns._ID + " DESC ";
+        sortOrder = MediaStore.Audio.AudioColumns.DATE_TAKEN + " DESC, " + BaseColumns._ID + " DESC ";
 
         // audio
-        Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorCols, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorCols, where.toString(), null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
 
         if (cursor != null && cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
@@ -240,7 +241,7 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
                 String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
                 String displayName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
                 String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-                int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID));
+                int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
 
                 String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
                 long dateModified = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));
@@ -257,11 +258,11 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
 
                 cursor.moveToNext();
             }
+            cursor.close();
         } else {
             LogUtil.d(TAG, "cursor size is null or zero");
             mMusicListData.clear();
         }
-        cursor.close();
         mMusicListAdapter.setData(mMusicListData);
     }
 

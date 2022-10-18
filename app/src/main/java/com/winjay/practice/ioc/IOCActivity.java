@@ -40,6 +40,7 @@ public class IOCActivity extends AppCompatActivity {
         setContentView(R.layout.ioc_activity);
         mUnbinder = BindHelper.bind(this);
 
+        // TODO null point error
         mIOCTV.setText("注解测试");
     }
 

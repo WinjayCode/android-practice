@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.winjay.practice.utils.LogUtil;
+import com.winjay.practice.utils.UsbUtil;
 
 /**
  * USB设备插拔广播监听器
@@ -29,14 +30,20 @@ public class USBDeviceReceiver extends BroadcastReceiver {
                 case UsbManager.ACTION_USB_DEVICE_ATTACHED:
                     UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                     LogUtil.d(TAG, "usb attach=" + device.toString());
-                    if (device != null &&
-                            device.getConfiguration(0).getInterface(0).getInterfaceClass() != UsbConstants.USB_CLASS_MASS_STORAGE) {
+                    if (device.getConfiguration(0).getInterface(0).getInterfaceClass() != UsbConstants.USB_CLASS_MASS_STORAGE) {
                         Toast.makeText(context, "不支持该USB设备", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+
+                    UsbUtil.getUSBPath(context, new UsbUtil.USBDeviceMountedListener() {
+                        @Override
+                        public void getUSBPath(String path) {
+                            LogUtil.d(TAG, "usb path=" + path);
+                        }
+                    });
                     break;
                 case UsbManager.ACTION_USB_DEVICE_DETACHED:
-                    UsbDevice device2 = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                    LogUtil.d(TAG, "usb detach=" + device2.toString());
+
                     break;
                 case VolumeInfo.ACTION_VOLUME_STATE_CHANGED:
                     int state = intent.getIntExtra(VolumeInfo.EXTRA_VOLUME_STATE, -1);

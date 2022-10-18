@@ -1,4 +1,4 @@
-package com.winjay.practice.directory_structure
+package com.winjay.practice.storage
 
 import android.app.Activity
 import android.content.Context

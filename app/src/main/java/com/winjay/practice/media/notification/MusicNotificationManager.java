@@ -36,7 +36,7 @@ public class MusicNotificationManager {
         remoteViews.setImageViewResource(R.id.album_iv, R.drawable.bird);
 
         Intent contentIntent = new Intent(context, MusicActivity.class);
-        PendingIntent contentPendingIntent = PendingIntent.getActivity(context, 0, contentIntent, 0);
+        PendingIntent contentPendingIntent = PendingIntent.getActivity(context, 0, contentIntent, PendingIntent.FLAG_IMMUTABLE);
 
         notificationBuilder.setContent(remoteViews)
                 .setWhen(System.currentTimeMillis())
@@ -49,27 +49,27 @@ public class MusicNotificationManager {
 
         // 上一首
         Intent intentPrev = new Intent(Constants.ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_PREV);
-        PendingIntent prevPendingIntent = PendingIntent.getBroadcast(context, 0, intentPrev, 0);
+        PendingIntent prevPendingIntent = PendingIntent.getBroadcast(context, 0, intentPrev, PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setOnClickPendingIntent(R.id.prev_iv, prevPendingIntent);
 
         // 播放
         Intent intentPlay = new Intent(Constants.ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_PLAY);
-        PendingIntent playPendingIntent = PendingIntent.getBroadcast(context, 0, intentPlay, 0);
+        PendingIntent playPendingIntent = PendingIntent.getBroadcast(context, 0, intentPlay, PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setOnClickPendingIntent(R.id.play_iv, playPendingIntent);
 
         // 暂停
         Intent intentPause = new Intent(Constants.ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_PAUSE);
-        PendingIntent pausePendingIntent = PendingIntent.getBroadcast(context, 0, intentPause, 0);
+        PendingIntent pausePendingIntent = PendingIntent.getBroadcast(context, 0, intentPause, PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setOnClickPendingIntent(R.id.pause_iv, pausePendingIntent);
 
         // 下一首
         Intent intentNext = new Intent(Constants.ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_NEXT);
-        PendingIntent nextPendingIntent = PendingIntent.getBroadcast(context, 0, intentNext, 0);
+        PendingIntent nextPendingIntent = PendingIntent.getBroadcast(context, 0, intentNext, PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setOnClickPendingIntent(R.id.next_iv, nextPendingIntent);
 
         // 关闭通知栏
         Intent intentClose = new Intent(Constants.ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_CLOSE);
-        PendingIntent closePendingIntent = PendingIntent.getBroadcast(context, 0, intentClose, 0);
+        PendingIntent closePendingIntent = PendingIntent.getBroadcast(context, 0, intentClose, PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setOnClickPendingIntent(R.id.close_iv, closePendingIntent);
 
         notification = notificationBuilder.build();

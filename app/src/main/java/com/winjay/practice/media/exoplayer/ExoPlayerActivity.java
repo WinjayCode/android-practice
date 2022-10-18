@@ -105,7 +105,10 @@ public class ExoPlayerActivity extends BaseActivity implements View.OnClickListe
 
 
     //    private String url = "http://apis.dui.ai/resource/ae4a3a1c0c8817?productId=278579724";
-    private String url = "http://apis.dui.ai/resource/ae4a3a1c0d8310?productId=278579724";
+    // audio
+//    private String url = "http://apis.dui.ai/resource/ae4a3a1c0d8310?productId=278579724";
+    // video
+    private String url = "https://media.w3.org/2010/05/sintel/trailer.mp4";
 
 //    private AudioFocusManager mAudioFocusManager;
 

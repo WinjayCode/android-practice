@@ -14,7 +14,7 @@ import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.LogUtil;
 
 /**
- * U盘插拔状态监听
+ * U盘插拔状态监听（好像已无法收到？）
  * <p>
  * sd卡被插入，且已经挂载	Intent.ACTION_MEDIA_MOUNTED
  * sd卡存在，但还没有挂载	Intent.ACTION_MEDIA_UNMOUNTED
@@ -44,15 +44,20 @@ public class MediaMountedReceiver extends BroadcastReceiver {
                 case Intent.ACTION_MEDIA_MOUNTED:
                     String pathMounted = intent.getData().getPath();
                     LogUtil.d(TAG, "ACTION_MEDIA_MOUNTED: path=" + pathMounted);
+
+                    Toast.makeText(context, "media mounted usb=" + pathMounted, Toast.LENGTH_SHORT).show();
+
                     // test code
-                    Toast.makeText(context, "usb=" + pathMounted, Toast.LENGTH_SHORT).show();
-                    boolean result = FileUtil.copyFile(Environment.getExternalStorageDirectory() + "Log.txt", pathMounted + "/Log.txt");
-                    LogUtil.d(TAG, "result=" + result);
-                    Toast.makeText(context, "result=" + result, Toast.LENGTH_SHORT).show();
+//                    boolean result = FileUtil.copyFile(Environment.getExternalStorageDirectory() + "Log.txt", pathMounted + "/Log.txt");
+//                    LogUtil.d(TAG, "result=" + result);
+//                    Toast.makeText(context, "result=" + result, Toast.LENGTH_SHORT).show();
                     break;
                 // 外部媒体资源未挂载
                 case Intent.ACTION_MEDIA_UNMOUNTED:
                     LogUtil.i(TAG, "ACTION_MEDIA_UNMOUNTED");
+
+                    String pathUnmounted = intent.getData().getPath();
+                    Toast.makeText(context, "media unmounted usb=" + pathUnmounted, Toast.LENGTH_SHORT).show();
                     break;
                 //
                 case Intent.ACTION_MEDIA_SCANNER_STARTED:

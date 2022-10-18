@@ -1,13 +1,21 @@
 package com.winjay.practice.utils;
 
 import android.annotation.TargetApi;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.os.StatFs;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
@@ -17,6 +25,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,6 +33,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.math.BigInteger;
@@ -31,6 +41,7 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -44,13 +55,221 @@ import java.util.zip.ZipFile;
 
 
 public class FileUtil {
+    private static final String TAG = "FileUtil";
 
-    private static String TAG = "FileUtil";
     private static String pattern = "null\\/.*";
     private static String APP_DIR = "Winjay";
 
-    private FileUtil() {
-        throw new UnsupportedOperationException("can't instantiate class" + TAG);
+    // Checks if a volume containing external storage is available for read and write.
+    public static boolean isExternalStorageWritable() {
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+    }
+
+    // Checks if a volume containing external storage is available to at least read.
+    public static boolean isExternalStorageReadable() {
+        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED) ||
+                Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED_READ_ONLY);
+    }
+
+    /////////////////////////////////////////// 根据uri获取文件路径 start ///////////////////////////////////////////
+    public static String getPathFromUri(Context context, Uri uri) {
+        if (context == null || uri == null)
+            return null;
+        if (DocumentsContract.isDocumentUri(context, uri)) {
+            if (isExternalStorageDocument(uri)) {
+                String docId = DocumentsContract.getDocumentId(uri);
+                String[] split = docId.split(":");
+                String type = split[0];
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+            } else if (isDownloadsDocument(uri)) {
+                String id = DocumentsContract.getDocumentId(uri);
+                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                return getDataColumn(context, contentUri, null, null);
+            } else if (isMediaDocument(uri)) {
+                String docId = DocumentsContract.getDocumentId(uri);
+                String[] split = docId.split(":");
+                String type = split[0];
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+                String selection = MediaStore.Images.Media._ID + "=?";
+                String[] selectionArgs = new String[]{split[1]};
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            if (isGooglePhotosUri(uri))
+                return uri.getLastPathSegment();
+            return getDataColumn(context, uri, null, null);
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+        return null;
+    }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+
+    public static boolean isGooglePhotosUri(Uri uri) {
+        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
+    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+        Cursor cursor = null;
+        String column = MediaStore.Images.Media.DATA;
+        String[] projection = {column};
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+    /////////////////////////////////////////// 根据uri获取文件路径 end ///////////////////////////////////////////
+
+    public static boolean isVirtualFile(Context context, Uri uri) {
+        if (!DocumentsContract.isDocumentUri(context, uri)) {
+            return false;
+        }
+
+        Cursor cursor = context.getContentResolver().query(
+                uri,
+                new String[]{DocumentsContract.Document.COLUMN_FLAGS},
+                null, null, null);
+
+        int flags = 0;
+        if (cursor.moveToFirst()) {
+            flags = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return (flags & DocumentsContract.Document.FLAG_VIRTUAL_DOCUMENT) != 0;
+    }
+
+    private InputStream getInputStreamForVirtualFile(Context context, Uri uri, String mimeTypeFilter)
+            throws IOException {
+
+        ContentResolver resolver = context.getContentResolver();
+
+        String[] openableMimeTypes = resolver.getStreamTypes(uri, mimeTypeFilter);
+
+        if (openableMimeTypes == null || openableMimeTypes.length < 1) {
+            throw new FileNotFoundException();
+        }
+
+        return resolver.openTypedAssetFileDescriptor(uri, openableMimeTypes[0], null)
+                .createInputStream();
+    }
+
+    public static void dumpMetaData(Context context, Uri uri) {
+
+        // The query, because it only applies to a single document, returns only
+        // one row. There's no need to filter, sort, or select fields,
+        // because we want all fields for one document.
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null, null);
+
+        try {
+            // moveToFirst() returns false if the cursor has 0 rows. Very handy for
+            // "if there's anything to look at, look at it" conditionals.
+            if (cursor != null && cursor.moveToFirst()) {
+
+                // Note it's called "Display Name". This is
+                // provider-specific, and might not necessarily be the file name.
+                String displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                LogUtil.d(TAG, "Display Name: " + displayName);
+
+                int sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE);
+                // If the size is unknown, the value stored is null. But because an
+                // int can't be null, the behavior is implementation-specific,
+                // and unpredictable. So as
+                // a rule, check if it's null before assigning to an int. This will
+                // happen often: The storage API allows for remote files, whose
+                // size might not be locally known.
+                String size = null;
+                if (!cursor.isNull(sizeIndex)) {
+                    // Technically the column stores an int, but cursor.getString()
+                    // will do the conversion automatically.
+                    size = cursor.getString(sizeIndex);
+                } else {
+                    size = "Unknown";
+                }
+                LogUtil.d(TAG, "Size: " + size);
+            }
+        } finally {
+            cursor.close();
+        }
+    }
+
+    public static Bitmap getBitmapFromUri(Context context, Uri uri) throws IOException {
+        ParcelFileDescriptor parcelFileDescriptor = context.getContentResolver().openFileDescriptor(uri, "r");
+        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+        Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+        parcelFileDescriptor.close();
+        return image;
+    }
+
+    public static String readTextFromUri(Context context, Uri uri) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (InputStream inputStream = context.getContentResolver().openInputStream(uri);
+             BufferedReader reader = new BufferedReader(
+                     new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    public static void alterTextFromUri(Context context, Uri uri, String overWrittenString) {
+        try {
+            ParcelFileDescriptor pfd = context.getContentResolver().openFileDescriptor(uri, "w");
+            FileOutputStream fileOutputStream = new FileOutputStream(pfd.getFileDescriptor());
+            fileOutputStream.write(overWrittenString.getBytes());
+            // Let the document provider know you're done by closing the stream.
+            fileOutputStream.close();
+            pfd.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getFileTypeFromUri(Context context, Uri uri) {
+        return context.getContentResolver().getType(uri);
+    }
+
+    public static boolean deleteFileFromUri(Context context, Uri uri) {
+        try {
+            return DocumentsContract.deleteDocument(context.getContentResolver(), uri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**
@@ -227,11 +446,9 @@ public class FileUtil {
      */
     @TargetApi(8)
     private static File getExternalCacheDir(Context context) {
-        if (Environment.MEDIA_MOUNTED.equals(Environment
-                .getExternalStorageState())) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             return context.getExternalCacheDir();
         }
-
         return null;
     }
 
@@ -765,14 +982,14 @@ public class FileUtil {
         File newFile = new File(newPath);
         if (!newFile.exists()) {
             if (!newFile.mkdirs()) {
-                Log.e(TAG, "copyFolder: cannot create directory.");
+                LogUtil.e(TAG, "copyFolder: cannot create directory.");
                 return false;
             }
         }
         File oldFile = new File(oldPath);
         String[] files = oldFile.list();
         if (files == null || files.length == 0) {
-            Log.w(TAG, "oldPath has no file!");
+            LogUtil.w(TAG, "oldPath has no file!");
             return true;
         }
         File temp;
@@ -782,21 +999,21 @@ public class FileUtil {
             } else {
                 temp = new File(oldPath + File.separator + file);
             }
-            Log.d(TAG, "temp=" + temp.getName());
+            LogUtil.d(TAG, "temp=" + temp.getName());
             if (temp.isDirectory()) {   //如果是子文件夹
                 boolean result = copyFolder(oldPath + "/" + file, newPath + "/" + file);
                 if (!result) {
-                    Log.e(TAG, "copy subfolder error!");
+                    LogUtil.e(TAG, "copy subfolder error!");
                     return false;
                 }
             } else if (!temp.exists()) {
-                Log.e(TAG, "copyFolder:  oldFile not exist.");
+                LogUtil.e(TAG, "copyFolder:  oldFile not exist.");
                 return false;
             } else if (!temp.isFile()) {
-                Log.e(TAG, "copyFolder:  oldFile not file.");
+                LogUtil.e(TAG, "copyFolder:  oldFile not file.");
                 return false;
             } else if (!temp.canRead()) {
-                Log.e(TAG, "copyFolder:  oldFile cannot read.");
+                LogUtil.e(TAG, "copyFolder:  oldFile cannot read.");
                 return false;
             } else {
                 try {
@@ -814,12 +1031,12 @@ public class FileUtil {
                     fileOutputStream.close();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e(TAG, "copy error!");
+                    LogUtil.e(TAG, "copy error!");
                     return false;
                 }
             }
         }
-        Log.d(TAG, "copy success!");
+        LogUtil.d(TAG, "copy success!");
         return true;
     }
 
@@ -991,7 +1208,7 @@ public class FileUtil {
 
     public static String getFileMD5(File file) {
         if (!file.isFile()) {
-            Log.w(TAG, "is not file!");
+            LogUtil.w(TAG, "is not file!");
             return null;
         }
         MessageDigest digest = null;
@@ -1007,7 +1224,7 @@ public class FileUtil {
             in.close();
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e(TAG, "md5 calculate error!");
+            LogUtil.e(TAG, "md5 calculate error!");
             return null;
         }
         BigInteger bigInt = new BigInteger(1, digest.digest());
@@ -1051,7 +1268,7 @@ public class FileUtil {
             try {
                 fos = new FileOutputStream(realFile);
             } catch (FileNotFoundException e) {
-                Log.e(TAG, e.getMessage());
+                LogUtil.e(TAG, e.getMessage());
                 return false;
             }
             os = new BufferedOutputStream(fos);
@@ -1059,7 +1276,7 @@ public class FileUtil {
             try {
                 is = new BufferedInputStream(zfile.getInputStream(ze));
             } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
+                LogUtil.e(TAG, e.getMessage());
                 return false;
             }
             int readLen = 0;
@@ -1069,21 +1286,21 @@ public class FileUtil {
                     os.write(buf, 0, readLen);
                 }
             } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
+                LogUtil.e(TAG, e.getMessage());
                 return false;
             }
             try {
                 is.close();
                 os.close();
             } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
+                LogUtil.e(TAG, e.getMessage());
                 return false;
             }
         }
         try {
             zfile.close();
         } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
+            LogUtil.e(TAG, e.getMessage());
             return false;
         }
         return true;

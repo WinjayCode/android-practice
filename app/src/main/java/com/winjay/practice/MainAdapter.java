@@ -30,7 +30,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     public MainAdapter(List<String> data) {
         mData = data;
-        LogUtil.d(TAG, "mData=" + JsonUtil.getInstance().toJson(mData));
+//        LogUtil.d(TAG, "mData=" + JsonUtil.getInstance().toJson(mData));
     }
 
     @NonNull
@@ -63,7 +63,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         @Override
         public void onClick(View v) {
             String key = item_tv.getText().toString();
-            LogUtil.d(TAG, "onClick():key=" + key);
+//            LogUtil.d(TAG, "onClick():key=" + key);
             if (itemClickListener != null) {
                 itemClickListener.onItemClick(v, key);
             }

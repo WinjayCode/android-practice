@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+    <!-- Android11 以上版本 -->
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.usb.host" />
@@ -507,7 +508,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".directory_structure.DirectoryStructureActivity"
+            android:name=".storage.StorageActivity"
             android:screenOrientation="portrait" />
 
         <activity

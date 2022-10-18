@@ -4,7 +4,8 @@ package com.winjay.practice.utils;
 import android.content.Context;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.util.Log;
+import android.provider.MediaStore;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.Arrays;
@@ -18,20 +19,42 @@ public class MediaUtil {
     public static void scanFile(Context context, String dirPath) {
         try {
             File[] listFiles = new File(dirPath).listFiles();
-            String[] paths = new String[listFiles.length];
-            for (int i = 0; i < listFiles.length; i++) {
-                paths[i] = listFiles[i].getAbsolutePath();
+            if (listFiles != null) {
+                String[] paths = new String[listFiles.length];
+                for (int i = 0; i < listFiles.length; i++) {
+                    paths[i] = listFiles[i].getAbsolutePath();
+                }
+                LogUtil.d(TAG, "files=" + Arrays.asList(paths));
+                MediaScannerConnection.scanFile(context, paths, new String[]{"audio/*", "video/*"},
+                        new MediaScannerConnection.OnScanCompletedListener() {
+                            public void onScanCompleted(String path, Uri uri) {
+                                LogUtil.d(TAG, "path=" + path);
+                                LogUtil.d(TAG, "uri=" + uri);
+                                Toast.makeText(context, "scan path=" + path, Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
-            Log.d(TAG, "files=" + Arrays.asList(paths));
-            MediaScannerConnection.scanFile(context, paths, null,
-                    new MediaScannerConnection.OnScanCompletedListener() {
-                        public void onScanCompleted(String path, Uri uri) {
-                            Log.d(TAG, "path=" + path);
-                            Log.d(TAG, "uri=" + uri);
-                        }
-                    });
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void removeFile(Context context, String dirPath) {
+        File dir = new File(dirPath);
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    int res = context.getContentResolver().delete(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                            MediaStore.Video.Media.DATA + "= \"" + file.getAbsolutePath() + "\"",
+                            null);
+                    if (res > 0) {
+                        LogUtil.d(TAG, "remove success!");
+                    } else {
+                        LogUtil.w(TAG, "remove failure!");
+                    }
+                }
+            }
         }
     }
 }
