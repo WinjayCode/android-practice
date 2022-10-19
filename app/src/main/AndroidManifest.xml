@@ -99,16 +99,6 @@
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:screenOrientation="portrait" />
 
-        <!-- content provider start -->
-        <activity
-            android:name=".content_provider.ProviderActivity"
-            android:screenOrientation="portrait" />
-
-        <provider
-            android:name=".content_provider.UserinfoProvider"
-            android:authorities="com.winjay.info" />
-        <!-- content provider end -->
-
         <!-- design mode start -->
         <activity
             android:name=".design_mode.DesignModeListActivity"
@@ -149,6 +139,14 @@
         <activity
             android:name=".ipc.aidl.BookManagerClientActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ipc.content_provider.ProviderActivity"
+            android:screenOrientation="portrait" />
+
+        <provider
+            android:name=".ipc.content_provider.UserinfoProvider"
+            android:authorities="com.winjay.info" />
         <!-- ipc end -->
 
         <!-- ioc start -->

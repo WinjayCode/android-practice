@@ -14,7 +14,6 @@ import com.winjay.g2048.activity.Game2048Activity;
 import com.winjay.practice.activity_manager.ActivityManagerActivity;
 import com.winjay.practice.bluetooth.BluetoothListActivity;
 import com.winjay.practice.common.BaseActivity;
-import com.winjay.practice.content_provider.ProviderActivity;
 import com.winjay.practice.crash.CrashTestActivity;
 import com.winjay.practice.design_mode.DesignModeListActivity;
 import com.winjay.practice.storage.StorageActivity;
@@ -68,7 +67,6 @@ public class MainActivity extends BaseActivity {
             put("Net", NetListActivity.class);
             put("JNI", JniTestActivity.class);
             put("Kotlin", KotlinListActivity.class);
-            put("ContentProvider", ProviderActivity.class);
             put("Location", LocationActivity.class);
             put("Intent Filter", null);
             put("DownloadManager", DownloadManagerActivity.class);
