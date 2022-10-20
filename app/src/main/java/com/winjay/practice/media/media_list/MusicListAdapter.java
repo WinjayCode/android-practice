@@ -1,4 +1,4 @@
-package com.winjay.practice.usb;
+package com.winjay.practice.media.media_list;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.winjay.practice.R;
-import com.winjay.practice.media.bean.VideoBean;
+import com.winjay.practice.media.bean.AudioBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,21 +22,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * 视频数据适配器
+ * 音频数据适配器
  *
  * @author Winjay
  * @date 2020/12/22
  */
-public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.ViewHolder> {
-    private static final String TAG = VideoListAdapter.class.getSimpleName();
+public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.ViewHolder> {
+    private static final String TAG = MusicListAdapter.class.getSimpleName();
     private Context mContext;
-    private List<VideoBean> mListData;
+    private List<AudioBean> mListData;
 
     public OnItemClickListener itemClickListener;
 
     private RequestOptions mGlideOptions;
 
-    public VideoListAdapter(Context context) {
+    public MusicListAdapter(Context context) {
         mContext = context;
         mListData = new ArrayList<>();
         mGlideOptions = new RequestOptions()
@@ -44,7 +44,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.View
                 .centerCrop();
     }
 
-    public void setData(List<VideoBean> listData) {
+    public void setData(List<AudioBean> listData) {
         mListData = listData;
         notifyDataSetChanged();
     }
@@ -52,7 +52,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.video_list_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.music_list_item, parent, false);
         return new ViewHolder(v);
     }
 
@@ -61,8 +61,8 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.View
         Glide.with(mContext)
                 .load(mListData.get(position).getPath())
                 .apply(mGlideOptions)
-                .into(holder.video_iv);
-        holder.video_tv.setText(mListData.get(position).getTitle());
+                .into(holder.music_iv);
+        holder.music_tv.setText(mListData.get(position).getDisplayName());
     }
 
     @Override
@@ -71,11 +71,11 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.video_iv)
-        ImageView video_iv;
+        @BindView(R.id.music_iv)
+        ImageView music_iv;
 
-        @BindView(R.id.video_tv)
-        TextView video_tv;
+        @BindView(R.id.music_tv)
+        TextView music_tv;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -96,6 +96,6 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.View
     }
 
     public interface OnItemClickListener {
-        void onItemClick(VideoBean videoBean);
+        void onItemClick(AudioBean audioBean);
     }
 }

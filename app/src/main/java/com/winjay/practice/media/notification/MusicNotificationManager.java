@@ -13,7 +13,7 @@ import android.widget.RemoteViews;
 import com.winjay.practice.Constants;
 import com.winjay.practice.R;
 import com.winjay.practice.media.bean.AudioBean;
-import com.winjay.practice.media.music.MusicActivity;
+import com.winjay.practice.media.music.MusicPlayActivity;
 
 /**
  * 音乐通知栏
@@ -35,7 +35,7 @@ public class MusicNotificationManager {
         remoteViews = new RemoteViews(context.getPackageName(), R.layout.music_notification);
         remoteViews.setImageViewResource(R.id.album_iv, R.drawable.bird);
 
-        Intent contentIntent = new Intent(context, MusicActivity.class);
+        Intent contentIntent = new Intent(context, MusicPlayActivity.class);
         PendingIntent contentPendingIntent = PendingIntent.getActivity(context, 0, contentIntent, PendingIntent.FLAG_IMMUTABLE);
 
         notificationBuilder.setContent(remoteViews)

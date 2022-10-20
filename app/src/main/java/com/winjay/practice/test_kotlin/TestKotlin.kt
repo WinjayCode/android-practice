@@ -77,16 +77,17 @@ fun main() {
 //        println(c)
 //    }
 
-    val text = """
-        @UnityMessage@{
-      "id": 1,
-      "seq": "",
-      "name": "Test",
-      "method": "init",
-      "data": null
-    }
-        """
-    println(text.replace("@UnityMessage@", ""))
+    // 字符替换
+//    val text = """
+//        @UnityMessage@{
+//      "id": 1,
+//      "seq": "",
+//      "name": "Test",
+//      "method": "init",
+//      "data": null
+//    }
+//        """
+//    println(text.replace("@UnityMessage@", ""))
 }
 
 /**

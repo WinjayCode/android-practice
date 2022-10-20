@@ -1,3 +1,4 @@
+// 暂时废弃
 ext {
     // 应用ID
     applicationId = "com.winjay.practice"

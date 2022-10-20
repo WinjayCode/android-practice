@@ -50,8 +50,8 @@ import java.io.File;
  * @author Winjay
  * @date 2020/11/27
  */
-public class VideoActivity extends BaseActivity {
-    private static final String TAG = VideoActivity.class.getSimpleName();
+public class VideoPlayActivity extends BaseActivity {
+    private static final String TAG = VideoPlayActivity.class.getSimpleName();
     private VideoView mVideoView;
 
     @Override

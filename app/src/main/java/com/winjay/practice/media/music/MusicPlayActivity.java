@@ -47,8 +47,8 @@ import butterknife.OnClick;
  * @author Winjay
  * @date 2021-02-05
  */
-public class MusicActivity extends BaseActivity implements IMediaStatus {
-    private static final String TAG = MusicActivity.class.getSimpleName();
+public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
+    private static final String TAG = MusicPlayActivity.class.getSimpleName();
     private final String assetsDir = "audio";
     private MediaPlayer musicPlayer;
     private AudioFocusManager mAudioFocusManager;
@@ -188,7 +188,7 @@ public class MusicActivity extends BaseActivity implements IMediaStatus {
             public void onPrepared(MediaPlayer mp) {
                 LogUtil.d(TAG, "duration=" + musicPlayer.getDuration());
                 musicPlayer.start();
-                MusicNotificationManager.getInstance(MusicActivity.this).showMusicNotification(true);
+                MusicNotificationManager.getInstance(MusicPlayActivity.this).showMusicNotification(true);
             }
         });
         musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

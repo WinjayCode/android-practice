@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/directory_structure_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Android目录结构"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/file_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="文档和其他文件"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/directory_structure_btn" />
+
+    <Button
+        android:id="@+id/all_files_access_permission_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="申请所有文件访问权限(MANAGE_EXTERNAL_STORAGE)"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/file_title" />
+
+    <Button
+        android:id="@+id/create_share_doc_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="使用存储访问框架创建文档文件"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/all_files_access_permission_btn" />
+
+    <Button
+        android:id="@+id/open_share_doc_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="使用存储访问框架打开文档文件"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/create_share_doc_btn" />
+
+    <Button
+        android:id="@+id/open_share_doc_tree_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="使用存储访问框架授予对目录内容的访问权限"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/open_share_doc_btn" />
+
+    <Button
+        android:id="@+id/delete_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="删除文件"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/open_share_doc_tree_btn" />
+
+    <TextView
+        android:id="@+id/media_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="媒体内容"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/delete_btn" />
+
+    <Button
+        android:id="@+id/single_pic_select_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="单个照片选择器"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/media_title" />
+
+    <Button
+        android:id="@+id/multi_pic_select_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="多个照片选择器"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/single_pic_select_btn" />
+
+    <ImageView
+        android:id="@+id/open_img"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,10 +17,12 @@ import com.winjay.practice.media.camera.CameraListActivity;
 import com.winjay.practice.media.codec.MediaCodecActivity;
 import com.winjay.practice.media.exoplayer.ExoPlayerActivity;
 import com.winjay.practice.media.extractor_muxer.MediaExtractorAndMuxerActivity;
-import com.winjay.practice.media.music.MusicActivity;
+import com.winjay.practice.media.media_list.MusicListActivity;
+import com.winjay.practice.media.media_list.VideoListActivity;
+import com.winjay.practice.media.music.MusicPlayActivity;
 import com.winjay.practice.media.projection.MediaProjectionActivity;
 import com.winjay.practice.media.audio_record.AudioRecordActivity;
-import com.winjay.practice.media.video.VideoActivity;
+import com.winjay.practice.media.video.VideoPlayActivity;
 import com.winjay.practice.usb.UsbActivity;
 
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import butterknife.BindView;
  * @author Winjay
  * @date 21/01/21
  */
-public class ModuleMediaListActivity extends BaseActivity {
+public class MediaListActivity extends BaseActivity {
     @BindView(R.id.main_rv)
     RecyclerView main_rv;
 
@@ -42,11 +44,13 @@ public class ModuleMediaListActivity extends BaseActivity {
         {
             put("AudioRecorder", AudioRecordActivity.class);
             put("Camera", CameraListActivity.class);
-            put("Music", MusicActivity.class);
-            put("Video", VideoActivity.class);
+            put("Music List", MusicListActivity.class);
+            put("Video List", VideoListActivity.class);
+            put("Play Music", MusicPlayActivity.class);
+            put("Play Video", VideoPlayActivity.class);
+            put("Exoplayer", ExoPlayerActivity.class);
             put("AudioFocusTest", AudioFocusTestActivity.class);
             put("USB", UsbActivity.class);
-            put("Exoplayer", ExoPlayerActivity.class);
             put("MediaExtractor解析视频 And MediaMuxer封装视频", MediaExtractorAndMuxerActivity.class);
             put("MediaProjection截屏和录屏", MediaProjectionActivity.class);
             put("MediaCodec多媒体编解码器", MediaCodecActivity.class);
@@ -75,7 +79,7 @@ public class ModuleMediaListActivity extends BaseActivity {
         mainAdapter.setOnItemClickListener(new MainAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, String key) {
-                Intent intent = new Intent(ModuleMediaListActivity.this, mainMap.get(key));
+                Intent intent = new Intent(MediaListActivity.this, mainMap.get(key));
                 startActivity(intent);
             }
         });

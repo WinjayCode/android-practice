@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white_color">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_1"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Tint通过修改图像的Alpha遮罩层来修改图像的颜色，从而达到重新着色的目的 -->
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_2"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_1"
         app:tint="#FF5555" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_3"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -41,7 +41,7 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_2"
         app:tint="#FF5555" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_4"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -54,7 +54,7 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_3"
         app:tint="#FF5555" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_rect"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -63,7 +63,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_circle"
         android:layout_width="50dp"
         android:layout_height="50dp"

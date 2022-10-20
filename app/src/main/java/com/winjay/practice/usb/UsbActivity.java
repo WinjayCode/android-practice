@@ -23,8 +23,11 @@ import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.media.bean.AudioBean;
 import com.winjay.practice.media.bean.VideoBean;
-import com.winjay.practice.media.music.MusicActivity;
-import com.winjay.practice.media.video.VideoActivity;
+import com.winjay.practice.media.media_list.MusicListAdapter;
+import com.winjay.practice.media.media_list.VideoListAdapter;
+import com.winjay.practice.media.music.MusicPlayActivity;
+import com.winjay.practice.media.video.VideoPlayActivity;
+import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.UsbUtil;
 
@@ -99,7 +102,7 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
         mVideoListAdapter.setOnItemClickListener(new VideoListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(VideoBean videoBean) {
-                Intent intent = new Intent(UsbActivity.this, VideoActivity.class);
+                Intent intent = new Intent(UsbActivity.this, VideoPlayActivity.class);
                 intent.putExtra("video", videoBean);
                 startActivity(intent);
             }
@@ -112,7 +115,7 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
         mMusicListAdapter.setOnItemClickListener(new MusicListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(AudioBean audioBean) {
-                Intent intent = new Intent(UsbActivity.this, MusicActivity.class);
+                Intent intent = new Intent(UsbActivity.this, MusicPlayActivity.class);
                 intent.putExtra("audio", audioBean);
                 startActivity(intent);
             }
@@ -143,8 +146,13 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
         public void onChange(boolean selfChange, Uri uri) {
             LogUtil.d(TAG, "selfChange=" + selfChange + ", uri=" + uri.toString());
             if (uri.compareTo(MediaStore.Video.Media.EXTERNAL_CONTENT_URI) == 0) {
-                scanVideoFile();
-                scanMusicFile();
+                HandlerManager.getInstance().postOnSubThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        scanVideoFile();
+                        scanMusicFile();
+                    }
+                });
             }
         }
     }
@@ -291,8 +299,13 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
         if (EasyPermissions.hasPermissions(this, perms)) {
             LogUtil.d(TAG, "Already have permission, scan files!");
             // Already have permission, do the thing
-            scanVideoFile();
-            scanMusicFile();
+            HandlerManager.getInstance().postOnSubThread(new Runnable() {
+                @Override
+                public void run() {
+                    scanVideoFile();
+                    scanMusicFile();
+                }
+            });
         } else {
             LogUtil.w(TAG, "Do not have permissions, request them now!");
             // Do not have permissions, request them now

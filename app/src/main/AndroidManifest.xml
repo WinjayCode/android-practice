@@ -77,10 +77,10 @@
             android:name=".LauncherActivity"
             android:configChanges="orientation|screenSize"
             android:excludeFromRecents="false"
+            android:exported="true"
             android:launchMode="standard"
             android:screenOrientation="portrait"
-            android:taskAffinity="com.winjay.practice"
-            android:exported="true">
+            android:taskAffinity="com.winjay.practice">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -97,31 +97,39 @@
             android:name=".MainActivity"
             android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <!-- design mode start -->
         <activity
             android:name=".design_mode.DesignModeListActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".design_mode.mvc.controller.MVCActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".design_mode.mvp.view.MVPActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".design_mode.mvvm.databinding.MVVMDataBindingActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".design_mode.mvvm.view.UserListActivity" />
+        <activity
+            android:name=".design_mode.mvvm.view.UserListActivity"
+            android:exported="true" />
         <!-- design mode end -->
 
         <!-- ipc start -->
         <activity
             android:name=".ipc.IPCListActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <service
@@ -130,6 +138,7 @@
 
         <activity
             android:name=".ipc.messenger.MessengerActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <service
@@ -138,10 +147,12 @@
 
         <activity
             android:name=".ipc.aidl.BookManagerClientActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ipc.content_provider.ProviderActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <provider
@@ -152,68 +163,85 @@
         <!-- ioc start -->
         <activity
             android:name=".ioc.IOCActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".ioc.IOCActivity2"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <!-- ioc end -->
 
         <!-- ui start -->
         <activity
             android:name=".ui.UIListActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.constraint_layout.ConstraintLayoutActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.drawable.DrawableActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.cardview.CardViewActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.app_compat_text.AppCompatTextActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.toolbar.ToolbarActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/ToolbarTheme" />
 
         <activity
             android:name=".ui.surfaceview_animation.SurfaceViewAnimationActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.viewpager_fragment.ViewPagerActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.custom_view.CustomViewActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.material_design.MaterialDesignActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/MyMaterialDesignTheme" />
 
         <activity
             android:name=".ui.svg.SVGActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.imageloader.ImageLoaderActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.remote_views.RemoteViewsNotificationActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
-        <receiver android:name=".ui.remote_views.RemoteViewsAppWidgetProvider"
+        <receiver
+            android:name=".ui.remote_views.RemoteViewsAppWidgetProvider"
             android:exported="true">
             <meta-data
                 android:name="android.appwidget.provider"
@@ -228,6 +256,7 @@
         <activity
             android:name=".ui.TransparentActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
+            android:exported="true"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/NoTitleTranslucentTheme" />
@@ -235,11 +264,13 @@
         <activity
             android:name=".EmptyActivity"
             android:configChanges="orientation|screenSize"
+            android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
         <!-- widget start -->
-        <receiver android:name=".ui.launcher_widget.ClockWidget"
+        <receiver
+            android:name=".ui.launcher_widget.ClockWidget"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -253,64 +284,89 @@
 
         <activity
             android:name=".ui.window.WindowActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <!-- ui end -->
 
         <!-- media start-->
         <activity
-            android:name=".media.ModuleMediaListActivity"
+            android:name=".media.MediaListActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".media.audio_record.AudioRecordActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".media.video.VideoActivity"
+            android:name=".media.video.VideoPlayActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".media.music.MusicActivity"
+            android:name=".media.music.MusicPlayActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".media.media_list.MusicListActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".media.media_list.VideoListActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".media.exoplayer.ExoPlayerActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".media.camera.CameraListActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".media.camera.camera1.CameraActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".media.camera.camera2.Camera2Activity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".media.camera.camerax.CameraXActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".media.extractor_muxer.MediaExtractorAndMuxerActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".media.projection.MediaProjectionActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".media.codec.MediaCodecActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".media.codec.decode.DecodeMediaActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".media.audio_focus.AudioFocusTestActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <service
@@ -318,7 +374,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <receiver android:name=".media.receiver.MediaButtonIntentReceiver"
+        <receiver
+            android:name=".media.receiver.MediaButtonIntentReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
@@ -340,39 +397,48 @@
         <!-- bluetooth start -->
         <activity
             android:name=".bluetooth.BluetoothListActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".bluetooth.bt.BtClientActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".bluetooth.bt.BtServerActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".bluetooth.a2dp.A2dpActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".bluetooth.ble.BleClientActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".bluetooth.ble.BleServerActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".bluetooth.call.BluetoothCallActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <!-- bluetooth end -->
 
         <!-- usb start -->
         <activity
             android:name=".usb.UsbActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
-        <receiver android:name=".usb.MediaMountedReceiver"
+        <receiver
+            android:name=".usb.MediaMountedReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
@@ -394,30 +460,35 @@
         <!-- socket start -->
         <activity
             android:name=".net.NetListActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".net.ftp.FtpTestActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".net.socket.udp.UdpMainActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".net.socket.udp.UdpTestActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".net.socket.SocketListActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <!-- socket end -->
 
         <!--隐式启动activity，action、category、data必须同时匹配，才能隐式启动（android.intent.category.DEFAULT必须有）-->
         <activity
             android:name=".intent_filter.IntentFilterActivity"
-            android:screenOrientation="portrait"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.winjay.practice.action_1" />
                 <action android:name="com.winjay.practice.action_2" />
@@ -432,8 +503,8 @@
 
         <service
             android:name=".accessibility.AccessibilityServiceHelper"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:exported="true">
+            android:exported="true"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
@@ -446,51 +517,61 @@
         <!-- jetpack start -->
         <activity
             android:name=".jetpack.JetpackLibListActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".jetpack.lifecycle.LifecycleTestActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <!-- jetpack end -->
 
         <!-- jni_ndk start -->
         <activity
             android:name=".jni.JniTestActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <!-- jni_ndk end -->
 
         <!-- kotlin start -->
         <activity
             android:name=".kotlin.KotlinListActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".kotlin.KotlinTestActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".kotlin.coroutines.KotlinCoroutinesTestActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <!-- kotlin end -->
 
         <!-- performance_optimize start -->
         <activity
             android:name=".performance_optimize.PerformanceOptimizeActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <!-- performance_optimize end -->
 
         <!-- hardware test start -->
         <activity
             android:name=".hardware_test.HardwareTestListActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".hardware_test.multi_touch.MultiTouchActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/FullScreenTheme" />
 
         <activity
             android:name=".hardware_test.touch_panel.TouchPanelCheckActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/FullScreenTheme" />
         <!-- hardware test end -->
@@ -498,47 +579,65 @@
         <!-- file browser start -->
         <activity
             android:name=".file_browser.FileBrowserActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <!-- file browser end -->
 
+        <!-- storage start -->
         <activity
-            android:name=".download_manager.DownloadManagerActivity"
+            android:name=".storage.StorageActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".storage.StorageActivity"
+            android:name=".storage.DirectoryStructureActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <!-- storage end -->
+
+        <activity
+            android:name=".download_manager.DownloadManagerActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".location.LocationActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".system_info.SystemInfoActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".package_manager.PackageManagerActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".activity_manager.ActivityManagerActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".notification.NotificationActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".plugin.PluginActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".TestActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".crash.CrashTestActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <service android:name=".TestService" />

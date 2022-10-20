@@ -1,13 +1,11 @@
 apply plugin: 'com.android.library'
 
-def rootAndroid = rootProject.ext.android
-
 android {
-    compileSdkVersion rootAndroid.compileSdkVersion
+    compileSdkVersion 31
 
     defaultConfig {
-        minSdkVersion rootAndroid.minSdkVersion
-        targetSdkVersion rootAndroid.targetSdkVersion
+        minSdkVersion 29
+        targetSdkVersion 31
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }

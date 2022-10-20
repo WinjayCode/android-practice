@@ -1,5 +1,6 @@
 package com.winjay.practice.common;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.transition.Explode;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.winjay.practice.utils.LogUtil;
@@ -63,6 +65,8 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
                 setContentView(getLayoutId());
             }
         }
+
+//        setTitle(TAG);
 
         unbinder = ButterKnife.bind(this);
     }
@@ -142,6 +146,18 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
         if (!TextUtils.isEmpty(text)) {
             ToastUtils.show(this, text);
         }
+    }
+
+    protected void setTitle(String title) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(title);
+        }
+    }
+
+    public void startNewActivity(Class<?> cls) {
+        Intent intent = new Intent(this, cls);
+        startActivity(intent);
     }
 
     ////////////////////////////////////////// permission //////////////////////////////////////////

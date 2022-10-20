@@ -16,6 +16,7 @@ import com.winjay.practice.bluetooth.BluetoothListActivity;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.crash.CrashTestActivity;
 import com.winjay.practice.design_mode.DesignModeListActivity;
+import com.winjay.practice.media.MediaListActivity;
 import com.winjay.practice.storage.StorageActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
 import com.winjay.practice.file_browser.FileBrowserActivity;
@@ -26,7 +27,6 @@ import com.winjay.practice.jetpack.JetpackLibListActivity;
 import com.winjay.practice.jni.JniTestActivity;
 import com.winjay.practice.kotlin.KotlinListActivity;
 import com.winjay.practice.location.LocationActivity;
-import com.winjay.practice.media.ModuleMediaListActivity;
 import com.winjay.practice.net.NetListActivity;
 import com.winjay.practice.notification.NotificationActivity;
 import com.winjay.practice.package_manager.PackageManagerActivity;
@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity {
         {
             put("Jetpack", JetpackLibListActivity.class);
             put("UI", UIListActivity.class);
-            put("Media", ModuleMediaListActivity.class);
+            put("Media", MediaListActivity.class);
             put("Bluetooth", BluetoothListActivity.class);
             put("Plugin", PluginActivity.class);
             put("Net", NetListActivity.class);

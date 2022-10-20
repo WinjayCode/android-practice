@@ -2,7 +2,11 @@
     package="com.winjay.g2048">
 
     <application>
-        <activity android:name=".activity.Game2048Activity" />
-        <activity android:name=".activity.ConfigActivity" />
+        <activity
+            android:name=".activity.Game2048Activity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.ConfigActivity"
+            android:exported="true" />
     </application>
 </manifest>
