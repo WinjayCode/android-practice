@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
-import com.winjay.practice.storage.AssetHelper;
+import com.winjay.practice.utils.AssetHelper;
 import com.winjay.practice.media.bean.VideoBean;
 import com.winjay.practice.utils.LogUtil;
 

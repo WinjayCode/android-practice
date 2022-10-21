@@ -186,16 +186,16 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
 
         if (cursor != null && cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                String path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE));
-                String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
-                int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID));
+                String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
+                String duration = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID));
                 // 可针对特定光标项生成 URI：
 //                Uri volumeAudioUri = MediaStore.Video.Media.getContentUri(volumeName);
 //                Uri mediaUri = ContentUris.withAppendedId(volumeAudioUri, id);
 
-                String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.MIME_TYPE));
-                long dateModified = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.DATE_MODIFIED));
+                String mimeType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE));
+                long dateModified = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_MODIFIED));
                 int orientation = 0;//cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
 
                 LogUtil.d(TAG, "path=" + path);
@@ -245,14 +245,14 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
 
         if (cursor != null && cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                String displayName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-                int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+                String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+                String displayName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
+                String duration = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
 
-                String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
-                long dateModified = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));
+                String mimeType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.MIME_TYPE));
+                long dateModified = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_MODIFIED));
                 int orientation = 0;//cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
 
                 LogUtil.d(TAG, "path=" + path);

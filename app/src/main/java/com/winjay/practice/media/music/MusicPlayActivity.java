@@ -2,8 +2,6 @@ package com.winjay.practice.media.music;
 
 import android.content.IntentFilter;
 import android.content.res.AssetFileDescriptor;
-import android.database.ContentObserver;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
@@ -11,9 +9,8 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Size;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -70,13 +67,12 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.music_activity;
+        return R.layout.activity_music_play;
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerObserver();
         registerReceiver();
         musicPlayer = new MediaPlayer();
         mAudioFocusManager = new AudioFocusManager(this, MediaType.MUSIC);
@@ -122,13 +118,15 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
 
         if (getIntent().hasExtra("audio")) {
             mSourceType = SourceType.USB_TYPE;
-            AudioBean audio = (AudioBean) getIntent().getSerializableExtra("audio");
+            AudioBean audio = (AudioBean) getIntent().getParcelableExtra("audio");
             if (audio != null && !TextUtils.isEmpty(audio.getPath())) {
                 if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioFocusManager.requestFocus()) {
                     mMediaSessionHelper.registerMediaButton(AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
                     setLocalSource(audio.getPath());
                 }
                 mMusicTitleTV.setText(audio.getDisplayName());
+                loadCover(audio.getPath());
+//                loadThumbnail(audio.getUri());
                 MusicNotificationManager.getInstance(this).setMediaData(audio);
             }
         } else {
@@ -305,91 +303,8 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
         mMediaSessionHelper.unRegisterMediaButton();
         unregisterReceiver();
         MusicNotificationManager.getInstance(getApplicationContext()).cancel();
-
-        unRegisterObserver();
     }
 
-
-    private MediaStoreChangeObserver mMediaStoreChangeObserver;
-
-    private void registerObserver() {
-        if (mMediaStoreChangeObserver == null) {
-            mMediaStoreChangeObserver = new MediaStoreChangeObserver();
-            getContentResolver().registerContentObserver(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, false, mMediaStoreChangeObserver);
-        }
-    }
-
-    private void unRegisterObserver() {
-        if (mMediaStoreChangeObserver != null) {
-            getContentResolver().unregisterContentObserver(mMediaStoreChangeObserver);
-            mMediaStoreChangeObserver = null;
-        }
-    }
-
-    private class MediaStoreChangeObserver extends ContentObserver {
-
-        public MediaStoreChangeObserver() {
-            super(new Handler());
-        }
-
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            LogUtil.d(TAG, "selfChange=" + selfChange + ", uri=" + uri.toString());
-            if (uri.compareTo(MediaStore.Video.Media.EXTERNAL_CONTENT_URI) == 0) {
-                scanMusicFile();
-            }
-        }
-    }
-
-    private void scanMusicFile() {
-        String sortOrder;
-        String[] cursorCols;
-
-        cursorCols = new String[]{MediaStore.Video.Media._ID,
-                MediaStore.Video.Media.DATA,
-                MediaStore.Video.Media.DISPLAY_NAME,
-                MediaStore.Video.Media.MIME_TYPE,
-                MediaStore.Video.Media.DATE_ADDED,
-                MediaStore.Video.Media.DATE_MODIFIED,
-                MediaStore.Video.Media.TITLE,
-                MediaStore.Video.Media.DURATION,
-                MediaStore.Video.Media.SIZE};
-
-//        StringBuilder where = new StringBuilder();
-//        where.delete(0, where.length());
-//        where.append(MediaStore.Audio.Media.TITLE + " != ''");
-//        where.append(" AND (" + MediaStore.Audio.Media.MIME_TYPE + " LIKE '%audio/%')");
-//        // 不读取内置sd卡
-//        where.append(" AND (" + MediaStore.Audio.Media.DATA + " NOT LIKE '%" + INTERNAL_STORAGE_PATH + "%')");
-//        LogUtil.d(TAG, "where: " + where.toString());
-
-//        sortOrder = MediaStore.Audio.VideoColumns.DATE_TAKEN + " DESC, " + BaseColumns._ID + " DESC ";
-
-        // audio
-        Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorCols, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                String displayName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-                int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-                int albumId = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-
-                String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
-                long dateModified = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));
-                int orientation = 0;//cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
-
-                LogUtil.d(TAG, "path=" + path);
-
-                cursor.moveToNext();
-            }
-        } else {
-            LogUtil.d(TAG, "cursor size is null or zero");
-        }
-        cursor.close();
-    }
 
     /**
      * 获取音乐资源信息
@@ -436,6 +351,21 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
         if (cover.length > 0) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(cover, 0, cover.length);
             album_iv.setImageBitmap(bitmap);
+        }
+    }
+
+    /**
+     * 加载专辑缩略图片（只适合小缩略图显示，否则会看起来很模糊）
+     *
+     * @param uri contentUri (Uri contentUri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);)
+     */
+    private void loadThumbnail(Uri uri) {
+        if (uri != null) {
+            try {
+                album_iv.setImageBitmap(getContentResolver().loadThumbnail(uri, new Size(200, 200), null));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -1,9 +1,8 @@
-package com.winjay.practice.storage
+package com.winjay.practice.utils
 
 import android.content.Context
 import android.os.FileUtils
 import android.os.ParcelFileDescriptor
-import com.winjay.practice.utils.LogUtil
 import java.io.File
 import java.io.FileOutputStream
 

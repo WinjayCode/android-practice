@@ -2,15 +2,19 @@ package com.winjay.practice.storage;
 
 import static android.os.ext.SdkExtensions.getExtensionVersion;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
@@ -33,6 +37,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -55,6 +60,9 @@ public class StorageActivity extends BaseActivity {
 
     @BindView(R.id.open_img)
     ImageView open_img;
+
+    @BindView(R.id.img_location_tv)
+    TextView img_location_tv;
 
     private Uri deleteFileUri;
 
@@ -239,6 +247,7 @@ public class StorageActivity extends BaseActivity {
             showImg(uri);
         } else if (fileType.startsWith("audio")) {
             AudioBean audioBean = new AudioBean();
+            audioBean.setUri(uri);
             audioBean.setPath(FileUtil.getPathFromUri(this, uri));
 
             Intent intent = new Intent(this, MusicPlayActivity.class);
@@ -273,8 +282,11 @@ public class StorageActivity extends BaseActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
+        float[] imageLocation = getImageLocation(uri);
+        img_location_tv.setText("latitude=" + imageLocation[0] + "\nlongitude=" + imageLocation[1]);
+        img_location_tv.setVisibility(View.VISIBLE);
+    }
 
     // Registers a photo picker activity launcher in single-select mode.
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
@@ -353,5 +365,35 @@ public class StorageActivity extends BaseActivity {
         } else {
             return false;
         }
+    }
+
+    /**
+     * 获取图片的经纬度信息
+     *
+     * @param uri
+     */
+    private float[] getImageLocation(Uri uri) {
+        float[] latLong = new float[2];
+        try {
+            // Get location data using the Exifinterface library.
+            // Exception occurs if ACCESS_MEDIA_LOCATION permission isn't granted.
+            Uri photoUri = MediaStore.setRequireOriginal(uri);
+            InputStream stream = getContentResolver().openInputStream(photoUri);
+            if (stream != null) {
+                ExifInterface exifInterface = new ExifInterface(stream);
+                boolean result = exifInterface.getLatLong(latLong);
+
+                LogUtil.d(TAG, "get image location " + (result ? "success" : "failure"));
+
+                // Don't reuse the stream associated with
+                // the instance of "ExifInterface".
+                stream.close();
+            } else {
+                LogUtil.w(TAG, "stream is null!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return latLong;
     }
 }

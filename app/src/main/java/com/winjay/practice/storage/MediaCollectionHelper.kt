@@ -8,9 +8,10 @@ import android.net.Uri
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import android.util.Size
+import com.winjay.practice.utils.AssetHelper
 import com.winjay.practice.utils.LogUtil
 
-class MyMediaCollection {
+class MediaCollectionHelper {
 
     //图片实体类
     data class ImageBean(

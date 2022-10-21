@@ -11,7 +11,10 @@ import android.text.TextUtils
 import com.winjay.practice.utils.LogUtil
 import java.io.*
 
-class MyDownloadCollection {
+class DownloadCollectionHelper {
+    companion object {
+        private const val TAG = "DownloadCollectionHelper"
+    }
 
     /**
      * 访问目录
@@ -82,7 +85,7 @@ class MyDownloadCollection {
      */
     fun deleteDocument(context: Context, uri: Uri) {
         LogUtil.d(TAG, "deleteDocument() called with: context = $context, uri = $uri")
-        val result = DocumentsContract.deleteDocument(context.contentResolver,uri)
+        val result = DocumentsContract.deleteDocument(context.contentResolver, uri)
         LogUtil.d(TAG, "deleteDocument() result = $result")
     }
 
@@ -128,7 +131,7 @@ class MyDownloadCollection {
     /**
      * 使用获得永久保存获取的目录权限
      */
-    fun useKeepDocument(context: Context,saveUri: String,intent: Intent){
+    fun useKeepDocument(context: Context, saveUri: String, intent: Intent) {
         if (TextUtils.isEmpty(saveUri)) {
             // 打开目录, 重新请求永久保存获取的目录权限
             // --------- 省略 代码 --------
@@ -145,9 +148,5 @@ class MyDownloadCollection {
                 // --------- 省略 代码 --------
             }
         }
-    }
-
-    companion object {
-        private const val TAG = "MyDownloadCollection"
     }
 }

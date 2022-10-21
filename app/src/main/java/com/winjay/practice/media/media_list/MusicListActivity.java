@@ -1,7 +1,9 @@
 package com.winjay.practice.media.media_list;
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -31,7 +33,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 public class MusicListActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
     private static final String TAG = MusicListActivity.class.getSimpleName();
-//    private static final String INTERNAL_STORAGE_PATH = "/storage/emulated/0/";
+    //    private static final String INTERNAL_STORAGE_PATH = "/storage/emulated/0/";
     private static final String INTERNAL_STORAGE_PATH = Environment.getExternalStorageDirectory().getPath();
 
     @BindView(R.id.music_rv)
@@ -39,7 +41,6 @@ public class MusicListActivity extends BaseActivity implements EasyPermissions.P
 
     private MusicListAdapter mMusicListAdapter;
     private List<AudioBean> mMusicListData;
-
 
     @Override
     protected int getLayoutId() {
@@ -74,7 +75,6 @@ public class MusicListActivity extends BaseActivity implements EasyPermissions.P
         });
     }
 
-
     private void scanMusicFile() {
         String sortOrder;
         String[] cursorCols;
@@ -100,19 +100,21 @@ public class MusicListActivity extends BaseActivity implements EasyPermissions.P
 //        sortOrder = MediaStore.Audio.AudioColumns.DATE_TAKEN + " DESC, " + BaseColumns._ID + " DESC ";
 
         // audio
-        Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.INTERNAL_CONTENT_URI, cursorCols, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, cursorCols, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        if (cursor != null) {
 
-        if (cursor != null && cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                String displayName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
-                int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+            while (cursor.moveToNext()) {
+                String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+                String displayName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME));
+                String duration = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
 
-                String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.MIME_TYPE));
-                long dateModified = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_MODIFIED));
+                String mimeType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.MIME_TYPE));
+                long dateModified = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_MODIFIED));
                 int orientation = 0;//cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
+
+                Uri contentUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id);
 
                 LogUtil.d(TAG, "path=" + path);
 
@@ -121,9 +123,8 @@ public class MusicListActivity extends BaseActivity implements EasyPermissions.P
                 audioBean.setTitle(title);
                 audioBean.setDuration(duration);
                 audioBean.setDisplayName(displayName);
+                audioBean.setUri(contentUri);
                 mMusicListData.add(audioBean);
-
-                cursor.moveToNext();
             }
             cursor.close();
         } else {
@@ -144,5 +145,4 @@ public class MusicListActivity extends BaseActivity implements EasyPermissions.P
         super.onDestroy();
         LogUtil.d(TAG);
     }
-
 }

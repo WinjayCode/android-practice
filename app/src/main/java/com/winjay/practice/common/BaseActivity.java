@@ -66,9 +66,11 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
             }
         }
 
-//        setTitle(TAG);
+        setTitle(getClass().getSimpleName().replace("Activity", ""));
 
         unbinder = ButterKnife.bind(this);
+
+        requestPermissions();
     }
 
     public boolean isFullScreen() {

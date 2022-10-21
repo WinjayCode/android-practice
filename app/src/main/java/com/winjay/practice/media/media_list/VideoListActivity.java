@@ -101,20 +101,20 @@ public class VideoListActivity extends BaseActivity implements EasyPermissions.P
         sortOrder = MediaStore.Video.VideoColumns.DATE_TAKEN + " DESC, " + BaseColumns._ID + " DESC ";
 
         // video
-        Cursor cursor = getContentResolver().query(MediaStore.Video.Media.INTERNAL_CONTENT_URI, cursorCols, null, null, sortOrder);
+        Cursor cursor = getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, cursorCols, null, null, sortOrder);
 
-        if (cursor != null && cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                String path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE));
-                String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
-                int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID));
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
+                String duration = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID));
                 // 可针对特定光标项生成 URI：
 //                Uri volumeAudioUri = MediaStore.Video.Media.getContentUri(volumeName);
 //                Uri mediaUri = ContentUris.withAppendedId(volumeAudioUri, id);
 
-                String mimeType = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.MIME_TYPE));
-                long dateModified = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.DATE_MODIFIED));
+                String mimeType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE));
+                long dateModified = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_MODIFIED));
                 int orientation = 0;//cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
 
                 LogUtil.d(TAG, "path=" + path);
@@ -124,8 +124,6 @@ public class VideoListActivity extends BaseActivity implements EasyPermissions.P
                 videoBean.setTitle(title);
                 videoBean.setDuration(duration);
                 mVideoListData.add(videoBean);
-
-                cursor.moveToNext();
             }
             cursor.close();
         } else {

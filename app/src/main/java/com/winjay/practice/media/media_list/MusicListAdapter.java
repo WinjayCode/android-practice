@@ -1,6 +1,10 @@
 package com.winjay.practice.media.media_list;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +18,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.winjay.practice.R;
 import com.winjay.practice.media.bean.AudioBean;
+import com.winjay.practice.utils.LogUtil;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +37,7 @@ import butterknife.ButterKnife;
  * @date 2020/12/22
  */
 public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.ViewHolder> {
-    private static final String TAG = MusicListAdapter.class.getSimpleName();
+    private static final String TAG = "MusicListAdapter";
     private Context mContext;
     private List<AudioBean> mListData;
 
@@ -36,12 +45,15 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.View
 
     private RequestOptions mGlideOptions;
 
+    private Bitmap defaultBitmap;
+
     public MusicListAdapter(Context context) {
         mContext = context;
         mListData = new ArrayList<>();
         mGlideOptions = new RequestOptions()
                 .placeholder(R.mipmap.icon)
                 .centerCrop();
+        defaultBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.icon);
     }
 
     public void setData(List<AudioBean> listData) {
@@ -58,11 +70,39 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Glide.with(mContext)
-                .load(mListData.get(position).getPath())
-                .apply(mGlideOptions)
-                .into(holder.music_iv);
+//        Glide.with(mContext)
+//                .load(getMusicPicture(mListData.get(position).getPath()))
+//                .apply(mGlideOptions)
+//                .into(holder.music_iv);
+
+        try {
+            // 显示专辑缩略图片
+            holder.music_iv.setImageBitmap(mContext.getContentResolver().loadThumbnail(mListData.get(position).getUri(), new Size(50, 50), null));
+        } catch (IOException e) {
+//            e.printStackTrace();
+            holder.music_iv.setImageBitmap(defaultBitmap);
+        }
         holder.music_tv.setText(mListData.get(position).getDisplayName());
+    }
+
+    /**
+     * 加载专辑图片
+     *
+     * @param path 资源路径
+     */
+    private Bitmap getMusicPicture(String path) {
+        LogUtil.d(TAG, "path=" + path);
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        try {
+            mediaMetadataRetriever.setDataSource(path);
+            byte[] cover = mediaMetadataRetriever.getEmbeddedPicture();
+            if (cover != null && cover.length > 0) {
+                return BitmapFactory.decodeByteArray(cover, 0, cover.length);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return defaultBitmap;
     }
 
     @Override
