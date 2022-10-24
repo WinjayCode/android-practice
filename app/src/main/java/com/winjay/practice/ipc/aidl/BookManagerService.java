@@ -36,8 +36,10 @@ public class BookManagerService extends Service {
 
         @Override
         public void addBook(Book book) throws RemoteException {
-            LogUtil.d(TAG, "book=" + JsonUtil.getInstance().toJson(book));
-            mBookList.add(book);
+            if (book != null) {
+                LogUtil.d(TAG, "book=" + JsonUtil.getInstance().toJson(book));
+                mBookList.add(book);
+            }
         }
     };
 

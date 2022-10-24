@@ -12,9 +12,9 @@ import com.winjay.practice.MainAdapter;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.ipc.aidl.BookManagerClientActivity;
+import com.winjay.practice.ipc.binder.BinderStudyClientActivity;
 import com.winjay.practice.ipc.content_provider.ProviderActivity;
 import com.winjay.practice.ipc.messenger.MessengerActivity;
-import com.winjay.practice.jetpack.lifecycle.LifecycleTestActivity;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -33,6 +33,7 @@ public class IPCListActivity extends BaseActivity {
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
         {
+            put("Binder", BinderStudyClientActivity.class);
             put("AIDL", BookManagerClientActivity.class);
             put("Messenger", MessengerActivity.class);
             put("ContentProvider", ProviderActivity.class);

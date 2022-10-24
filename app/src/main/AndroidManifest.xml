@@ -133,6 +133,15 @@
             android:exported="true"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ipc.binder.BinderStudyClientActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <service
+            android:name=".ipc.binder.BinderStudyService"
+            android:process=":remote" />
+
         <service
             android:name=".ipc.messenger.MessengerService"
             android:process=":remote" />

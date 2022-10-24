@@ -3,6 +3,16 @@
  */
 package com.winjay.practice.aidl;
 
+/**
+ * Binder工作机制
+ * 1.当客户端发起远程请求时，由于当前线程会被挂起直至服务端进程返回数据，所以如果一个方法是很耗时的，
+ * 那么不能在UI线程中发起此远程请求；
+ * 2.由于服务端的 Binder 方法运行在 Binder 的线程池中，所以 Binder 方法不管是否耗时都应该采用同步
+ * 的方式去实现，因为它已经运行在一个线程中了。
+ *
+ * @author Winjay
+ * @date 2022-10-20
+ */
 public interface IBookManager_study extends android.os.IInterface {
     /**
      * Default implementation for IBookManager.
