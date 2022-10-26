@@ -1,4 +1,4 @@
-package com.winjay.practice.storage.database
+package com.winjay.practice.jetpack.room
 
 import androidx.room.Dao
 import androidx.room.Delete

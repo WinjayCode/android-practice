@@ -1,4 +1,4 @@
-package com.winjay.practice.storage.database
+package com.winjay.practice.jetpack.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

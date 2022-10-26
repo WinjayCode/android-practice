@@ -1,4 +1,4 @@
-package com.winjay.practice.storage.database
+package com.winjay.practice.jetpack.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

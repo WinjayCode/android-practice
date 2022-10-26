@@ -2,7 +2,6 @@ package com.winjay.practice.storage;
 
 import static android.os.ext.SdkExtensions.getExtensionVersion;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.ExifInterface;
@@ -23,7 +22,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.room.Room;
-import androidx.room.RoomDatabase;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
@@ -31,9 +29,9 @@ import com.winjay.practice.media.bean.AudioBean;
 import com.winjay.practice.media.bean.VideoBean;
 import com.winjay.practice.media.music.MusicPlayActivity;
 import com.winjay.practice.media.video.VideoPlayActivity;
-import com.winjay.practice.storage.database.MyDatabase;
-import com.winjay.practice.storage.database.User;
-import com.winjay.practice.storage.database.UserDao;
+import com.winjay.practice.jetpack.room.MyDatabase;
+import com.winjay.practice.jetpack.room.User;
+import com.winjay.practice.jetpack.room.UserDao;
 import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.JsonUtil;
