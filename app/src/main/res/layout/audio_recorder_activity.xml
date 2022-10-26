@@ -86,4 +86,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/play_pcm_static_btn" />
+
+    <Button
+        android:id="@+id/get_mic_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="获取Mic"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/play_pcm_stream_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

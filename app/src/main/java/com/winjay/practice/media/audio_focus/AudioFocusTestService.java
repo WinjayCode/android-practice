@@ -15,7 +15,7 @@ import com.winjay.practice.utils.LogUtil;
 import java.io.IOException;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2022-03-08
  */
 public class AudioFocusTestService extends Service {

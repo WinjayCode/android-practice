@@ -1,5 +1,6 @@
 package com.winjay.practice.media.video;
 
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.AssetHelper;
 import com.winjay.practice.media.bean.VideoBean;
+import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.LogUtil;
 
 import java.io.File;
@@ -65,9 +67,11 @@ public class VideoPlayActivity extends BaseActivity {
         mVideoView = findViewById(R.id.video_view);
 
         if (getIntent().hasExtra("video")) {
-            VideoBean video = (VideoBean) getIntent().getSerializableExtra("video");
+            VideoBean video = (VideoBean) getIntent().getParcelableExtra("video");
             if (video != null && !TextUtils.isEmpty(video.getPath())) {
                 setVideoPath(video.getPath());
+                getVideoLocation(video.getPath());
+//                getVideoLocation(video.getUri());
             }
         } else {
             File videoFile = new File(getExternalFilesDir(Environment.DIRECTORY_MOVIES), "3G2.3g2");
@@ -214,6 +218,52 @@ public class VideoPlayActivity extends BaseActivity {
         });
 
         mVideoView.setMediaController(new MediaController(this));
+    }
+
+    /**
+     * 获取视频的经纬度信息（目前拿不到位置信息！）
+     *
+     * @param uri
+     */
+    private String getVideoLocation(Uri uri) {
+        if (uri == null) {
+            return "";
+        }
+
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(this, uri);
+        } catch (RuntimeException e) {
+            LogUtil.w(TAG, "Cannot retrieve video file", e);
+        }
+        // Metadata should use a standardized format.
+        String locationMetadata = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_LOCATION);
+
+        LogUtil.d(TAG, "locationMetadata=" + locationMetadata);
+        return locationMetadata;
+    }
+
+    /**
+     * 获取视频的经纬度信息（目前拿不到位置信息！）
+     *
+     * @param path
+     */
+    private String getVideoLocation(String path) {
+        if (TextUtils.isEmpty(path)) {
+            return "";
+        }
+
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(path);
+        } catch (RuntimeException e) {
+            LogUtil.w(TAG, "Cannot retrieve video file", e);
+        }
+        // Metadata should use a standardized format.
+        String locationMetadata = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_LOCATION);
+
+        LogUtil.d(TAG, "locationMetadata=" + locationMetadata);
+        return locationMetadata;
     }
 
     @Override

@@ -2,10 +2,8 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
-
-// camerax
-def camerax_version = "1.1.0-alpha03"
 
 android {
     compileSdkVersion 33
@@ -35,6 +33,13 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags ''
+            }
+        }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                // room 构建需要
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
     }
@@ -198,13 +203,22 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.7.1'
 
     // CameraX 核心库
-    implementation "androidx.camera:camera-core:${camerax_version}"
+    // camerax
+    def camerax_version = "1.1.0-alpha03"
+    implementation "androidx.camera:camera-core:$camerax_version"
     implementation "androidx.camera:camera-camera2:$camerax_version"
     // CameraX 生命周期
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
     // CameraX view 集合，比如 cameraview，preview等
     implementation "androidx.camera:camera-view:1.0.0-alpha23"
 //    implementation "androidx.camera:camera-extensions:1.0.0-alpha23"
+
+    // room
+    def room_version = "2.4.3"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    // To use Kotlin annotation processing tool (kapt)
+    kapt "androidx.room:room-compiler:$room_version"
 
     // 指纹识别
     implementation 'androidx.biometric:biometric:1.1.0'

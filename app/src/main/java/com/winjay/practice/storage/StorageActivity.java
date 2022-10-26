@@ -6,6 +6,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.ExifInterface;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
@@ -28,8 +31,14 @@ import com.winjay.practice.media.bean.AudioBean;
 import com.winjay.practice.media.bean.VideoBean;
 import com.winjay.practice.media.music.MusicPlayActivity;
 import com.winjay.practice.media.video.VideoPlayActivity;
+import com.winjay.practice.storage.database.MyDatabase;
+import com.winjay.practice.storage.database.User;
+import com.winjay.practice.storage.database.UserDao;
+import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.utils.FileUtil;
+import com.winjay.practice.utils.JsonUtil;
 import com.winjay.practice.utils.LogUtil;
+import com.winjay.practice.utils.PreferenceUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,6 +47,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -66,6 +76,8 @@ public class StorageActivity extends BaseActivity {
 
     private Uri deleteFileUri;
 
+    private UserDao userDao;
+
     @Override
     protected int getLayoutId() {
         return R.layout.storage_activity;
@@ -74,6 +86,9 @@ public class StorageActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        MyDatabase myDatabase = Room.databaseBuilder(this, MyDatabase.class, "my_database").build();
+        userDao = myDatabase.userDao();
 
 //        File file = new File(getFilesDir(), "internal_test_dir");
 //        file.mkdir();
@@ -87,6 +102,7 @@ public class StorageActivity extends BaseActivity {
         startNewActivity(DirectoryStructureActivity.class);
     }
 
+    /////////////////////////////////////////////////////// 文档和其他文件 ///////////////////////////////////////////////////////
     // 申请所有文件访问权限
     @RequiresApi(api = Build.VERSION_CODES.R)
     @OnClick(R.id.all_files_access_permission_btn)
@@ -254,6 +270,8 @@ public class StorageActivity extends BaseActivity {
             intent.putExtra("audio", audioBean);
             startActivity(intent);
         } else if (fileType.startsWith("video")) {
+            getVideoLocation(uri);
+
             VideoBean videoBean = new VideoBean();
             videoBean.setPath(FileUtil.getPathFromUri(this, uri));
 
@@ -287,6 +305,9 @@ public class StorageActivity extends BaseActivity {
         img_location_tv.setText("latitude=" + imageLocation[0] + "\nlongitude=" + imageLocation[1]);
         img_location_tv.setVisibility(View.VISIBLE);
     }
+    /////////////////////////////////////////////////////// 文档和其他文件 ///////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////// 媒体内容 ///////////////////////////////////////////////////////
 
     // Registers a photo picker activity launcher in single-select mode.
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
@@ -368,13 +389,16 @@ public class StorageActivity extends BaseActivity {
     }
 
     /**
-     * 获取图片的经纬度信息
+     * 获取图片的经纬度信息(会报权限问题!!!)
      *
      * @param uri
      */
-    private float[] getImageLocation(Uri uri) {
+    private float[] getImageLocationFromUri(Uri uri) {
         float[] latLong = new float[2];
         try {
+            // may be need these code
+//            Uri photoUri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cursor.getString(idColumnIndex));
+
             // Get location data using the Exifinterface library.
             // Exception occurs if ACCESS_MEDIA_LOCATION permission isn't granted.
             Uri photoUri = MediaStore.setRequireOriginal(uri);
@@ -396,4 +420,117 @@ public class StorageActivity extends BaseActivity {
         }
         return latLong;
     }
+
+    /**
+     * 获取图片的经纬度信息
+     *
+     * @param uri
+     */
+    private float[] getImageLocation(Uri uri) {
+        float[] latLong = new float[2];
+        try {
+            ExifInterface exifInterface = new ExifInterface(new File(FileUtil.getPathFromUri(this, uri)));
+            boolean result = exifInterface.getLatLong(latLong);
+
+            LogUtil.d(TAG, "get image location " + (result ? "success" : "failure"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return latLong;
+    }
+
+    /**
+     * 获取视频的经纬度信息
+     *
+     * @param uri
+     */
+    private String getVideoLocation(Uri uri) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(FileUtil.getPathFromUri(this, uri));
+        } catch (RuntimeException e) {
+            LogUtil.w(TAG, "Cannot retrieve video file", e);
+        }
+        // Metadata should use a standardized format.
+        String locationMetadata = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_LOCATION);
+
+        LogUtil.d(TAG, "locationMetadata=" + locationMetadata);
+        return locationMetadata;
+    }
+    /////////////////////////////////////////////////////// 媒体内容 ///////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////// 键值对数据 ///////////////////////////////////////////////////////
+    int spInt = 0;
+
+    @OnClick(R.id.save_sp_btn)
+    void saveSp() {
+        PreferenceUtils.putIntAsync(this, "sp_key", spInt++);
+    }
+
+    @OnClick(R.id.get_sp_btn)
+    void getSp() {
+        toast(String.valueOf(PreferenceUtils.getInt(this, "sp_key", spInt)));
+    }
+    /////////////////////////////////////////////////////// 键值对数据 ///////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////// 本地数据库 ///////////////////////////////////////////////////////
+    private User user = new User(1, 1 + "_first_name", 1 + "_last_name");
+
+    @OnClick(R.id.insert_data_btn)
+    void insertData() {
+        HandlerManager.getInstance().postOnSubThread(new Runnable() {
+            @Override
+            public void run() {
+                userDao.insertAll(user);
+            }
+        });
+    }
+
+    @OnClick(R.id.database_all_data_btn)
+    void databaseAllData() {
+        HandlerManager.getInstance().postOnSubThread(new Runnable() {
+            @Override
+            public void run() {
+                List<User> userList = userDao.getAll();
+                for (User user : userList) {
+                    toast(JsonUtil.getInstance().toJson(user));
+                }
+            }
+        });
+    }
+
+    @OnClick(R.id.delete_data_btn)
+    void deleteData() {
+        HandlerManager.getInstance().postOnSubThread(new Runnable() {
+            @Override
+            public void run() {
+                userDao.delete(user);
+            }
+        });
+    }
+
+    @OnClick(R.id.query_data_by_id_btn)
+    void queryDataById() {
+        HandlerManager.getInstance().postOnSubThread(new Runnable() {
+            @Override
+            public void run() {
+                List<User> userList = userDao.loadAllByIds(new int[]{1});
+                for (User user : userList) {
+                    toast(JsonUtil.getInstance().toJson(user));
+                }
+            }
+        });
+    }
+
+    @OnClick(R.id.query_data_by_parameter_btn)
+    void queryDataByParameter() {
+        HandlerManager.getInstance().postOnSubThread(new Runnable() {
+            @Override
+            public void run() {
+                User user = userDao.findByName(1 + "_first_name", 1 + "_last_name");
+                toast(JsonUtil.getInstance().toJson(user));
+            }
+        });
+    }
+    /////////////////////////////////////////////////////// 本地数据库 ///////////////////////////////////////////////////////
 }

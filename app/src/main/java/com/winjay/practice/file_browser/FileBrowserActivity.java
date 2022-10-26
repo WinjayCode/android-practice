@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * File Browser
  *
- * @author F2848777
+ * @author Winjay
  * @date 2022-09-15
  */
 public class FileBrowserActivity extends BaseActivity {

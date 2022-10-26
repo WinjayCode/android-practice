@@ -104,4 +104,78 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/open_img" />
+
+    <TextView
+        android:id="@+id/sp_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="键值对数据"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_location_tv" />
+
+    <Button
+        android:id="@+id/save_sp_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="存储键值对数据"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sp_title" />
+
+    <Button
+        android:id="@+id/get_sp_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="获取键值对数据"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/save_sp_btn" />
+
+    <TextView
+        android:id="@+id/database_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="本地数据库"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/get_sp_btn" />
+
+    <Button
+        android:id="@+id/insert_data_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="插入数据"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/database_title" />
+
+    <Button
+        android:id="@+id/database_all_data_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="获取数据库所有数据"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/insert_data_btn" />
+
+    <Button
+        android:id="@+id/delete_data_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="删除指定数据"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/database_all_data_btn" />
+
+    <Button
+        android:id="@+id/query_data_by_id_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="根据ID查询数据"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/delete_data_btn" />
+
+    <Button
+        android:id="@+id/query_data_by_parameter_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="根据字段名查询数据"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/query_data_by_id_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

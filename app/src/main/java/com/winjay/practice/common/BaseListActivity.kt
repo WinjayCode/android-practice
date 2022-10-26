@@ -11,7 +11,7 @@ import java.util.*
 /**
  * Common List Activity
  *
- * @author F2848777
+ * @author Winjay
  * @date 2022-07-28
  */
 abstract class BaseListActivity : BaseActivity() {

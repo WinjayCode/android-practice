@@ -1,25 +1,29 @@
-package com.winjay.practice.storage
+package com.winjay.practice.media
 
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
+import android.media.ExifInterface
 import android.net.Uri
+import android.os.Parcelable
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import android.util.Size
 import com.winjay.practice.utils.AssetHelper
 import com.winjay.practice.utils.LogUtil
+import kotlinx.parcelize.Parcelize
 
 class MediaCollectionHelper {
 
     //图片实体类
+    @Parcelize
     data class ImageBean(
         val uri: Uri,
         val name: String,
         val mimeType: String,
         val size: Int
-    )
+    ): Parcelable
 
     //视频实体类
     data class VideoBean(
@@ -90,7 +94,6 @@ class MediaCollectionHelper {
                     size = size.toInt()
                 )
                 imageBeanList += imageBean
-
             }
             cursor.close()
         }
@@ -218,6 +221,7 @@ class MediaCollectionHelper {
 
     /**
      *  Insert [ 图片媒体集 ]
+     *  拷贝assets目录下图片到系统媒体库
      */
     fun insertImageToCollection(context: Context, disPlayName: String) {
         LogUtil.d(
@@ -251,6 +255,7 @@ class MediaCollectionHelper {
 
     /**
      *  Insert [ 视频媒体集 ]
+     *  拷贝assets目录下视频到系统媒体库
      */
     fun insertVideoToCollection(context: Context, disPlayName: String) {
         LogUtil.d(
@@ -284,6 +289,7 @@ class MediaCollectionHelper {
 
     /**
      *  Insert [ 音频媒体集 ]
+     *  拷贝assets目录下音频到系统媒体库
      */
     fun insertAudioToCollection(context: Context, disPlayName: String) {
         LogUtil.d(
@@ -445,20 +451,27 @@ class MediaCollectionHelper {
     /**
      * 获取图片位置元数据信息
      */
-//    fun getImageLocationMataData(context: Context, imageUri: Uri) {
-//        // 获取位置数据使用 ExifInterface 库.
-//        // 如果 ACCESS_MEDIA_LOCATION 没有被授予，将会发生异常
-//        val uri = MediaStore.setRequireOriginal(imageUri)
-//        context.contentResolver.openInputStream(uri)?.use {
+    fun getImageLocationMataData(context: Context, imageUri: Uri) {
+        // 获取位置数据使用 ExifInterface 库.
+        // 如果 ACCESS_MEDIA_LOCATION 没有被授予，将会发生异常
+        val uri = MediaStore.setRequireOriginal(imageUri)
+
+        context.contentResolver.openInputStream(uri)?.use {
+            val latLong = FloatArray(2)
+            ExifInterface(it).getLatLong(latLong).run {
+                LogUtil.d(TAG, "getImageLocationMataData() called : Latitude =  ${latLong[0]}")
+                LogUtil.d(TAG, "getImageLocationMataData() called : Longitude = ${latLong[1]}")
+            }
 //            ExifInterface(it).run {
 //                //如果经纬度为Null，将会回退到坐标(0,0)
+//                this.getLatLong()
 //                this.latLong?.let {
 //                    LogUtil.d(TAG, "getImageLocationMataData() called : Latitude =  ${latLong?.get(0)}")
 //                    LogUtil.d(TAG, "getImageLocationMataData() called : Longitude = ${latLong?.get(1)}")
 //                }
 //            }
-//        }
-//    }
+        }
+    }
 
 
     companion object {

@@ -1,7 +1,7 @@
 package com.winjay.practice.utils;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2022-10-13
  */
 public class FileTypeUtil {

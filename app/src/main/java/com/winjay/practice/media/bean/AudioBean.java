@@ -11,7 +11,7 @@ public class AudioBean implements Parcelable {
     private String title;
     private String duration;
     private String displayName;
-    // Uri 不能被序列化!
+    // Uri 不能被序列化! 不能使用 Serializable
     private Uri uri;
 
     public AudioBean() {

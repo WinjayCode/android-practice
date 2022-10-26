@@ -17,6 +17,7 @@ import com.winjay.practice.media.camera.CameraListActivity;
 import com.winjay.practice.media.codec.MediaCodecActivity;
 import com.winjay.practice.media.exoplayer.ExoPlayerActivity;
 import com.winjay.practice.media.extractor_muxer.MediaExtractorAndMuxerActivity;
+import com.winjay.practice.media.media_list.ImageListActivity;
 import com.winjay.practice.media.media_list.MusicListActivity;
 import com.winjay.practice.media.media_list.VideoListActivity;
 import com.winjay.practice.media.music.MusicPlayActivity;
@@ -44,6 +45,7 @@ public class MediaListActivity extends BaseActivity {
         {
             put("AudioRecorder", AudioRecordActivity.class);
             put("Camera", CameraListActivity.class);
+            put("Image List", ImageListActivity.class);
             put("Music List", MusicListActivity.class);
             put("Video List", VideoListActivity.class);
             put("Play Music", MusicPlayActivity.class);

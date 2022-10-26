@@ -1,8 +1,10 @@
 package com.winjay.practice.media.audio_record;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
+import android.media.AudioDeviceInfo;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
@@ -37,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -464,6 +467,24 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
 
         void down() {
             isDone = true;
+        }
+    }
+
+    @OnClick(R.id.get_mic_btn)
+    void getMic() {
+        AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        AudioDeviceInfo[] devices = mAudioManager.getDevices(AudioManager.GET_DEVICES_INPUTS);
+        LogUtil.d(TAG, "devices num=" + devices.length);
+        if (devices != null && devices.length > 0) {
+            for (int i = 0; i < devices.length; i++) {
+                if (devices[i].getType() == AudioDeviceInfo.TYPE_BUILTIN_MIC) {
+                    LogUtil.d(TAG, "mic_product_name" + devices[i].getProductName());
+                    LogUtil.d(TAG, "mic_id" + devices[i].getId());
+                    LogUtil.d(TAG, "mic_channel_counts" + Arrays.toString(devices[i].getChannelCounts()));
+//                    this.micRecorddev = devices[i];
+//                    audioRecord.setPreferredDevice(devices[i]);
+                }
+            }
         }
     }
 

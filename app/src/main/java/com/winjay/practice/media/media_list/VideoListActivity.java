@@ -1,7 +1,9 @@
 package com.winjay.practice.media.media_list;
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.BaseColumns;
@@ -117,12 +119,15 @@ public class VideoListActivity extends BaseActivity implements EasyPermissions.P
                 long dateModified = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_MODIFIED));
                 int orientation = 0;//cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
 
+                Uri videoUri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);
+
                 LogUtil.d(TAG, "path=" + path);
 
                 VideoBean videoBean = new VideoBean();
                 videoBean.setPath(path);
                 videoBean.setTitle(title);
                 videoBean.setDuration(duration);
+                videoBean.setUri(videoUri);
                 mVideoListData.add(videoBean);
             }
             cursor.close();

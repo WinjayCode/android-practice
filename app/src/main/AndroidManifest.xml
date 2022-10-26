@@ -320,6 +320,16 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".media.media_list.ImageListActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".media.image.ImagePlayActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".media.media_list.MusicListActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
