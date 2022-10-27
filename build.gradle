@@ -9,6 +9,12 @@ buildscript {
 
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
+
+        maven {
+            url "http://4thline.org/m2/"
+            allowInsecureProtocol = true
+        }
+
 //        google()
 //        jcenter()
     }
@@ -30,6 +36,11 @@ allprojects {
 
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
+
+        maven {
+            url "http://4thline.org/m2/"
+            allowInsecureProtocol = true
+        }
 //        google()
 //        jcenter()
     }

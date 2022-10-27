@@ -12,6 +12,7 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
+import com.winjay.dlna.cast.application.BaseApplication;
 import com.winjay.practice.crash.CrashHandler;
 import com.winjay.practice.utils.ActivityListUtil;
 import com.winjay.practice.utils.LogUtil;
@@ -48,6 +49,10 @@ public class AppApplication extends MultiDexApplication {
         // 设置异常处理
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
+
+        // dlna
+        BaseApplication baseApplication = new BaseApplication();
+        baseApplication.onCreate(getApplicationContext());
     }
 
     public static class ActivityLifeCycle implements Application.ActivityLifecycleCallbacks {

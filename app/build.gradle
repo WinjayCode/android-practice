@@ -132,6 +132,10 @@ android {
         enabled = true
     }
 
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
+
     // 差异化、多渠道打包
     flavorDimensions "channel"
     productFlavors {
@@ -266,6 +270,9 @@ dependencies {
     implementation project(':puzzle')
     // 2048游戏
     implementation project(':game_2048')
+
+    // dlna
+    implementation project(':dlna')
 }
 
 repositories {

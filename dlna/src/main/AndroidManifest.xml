@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.winjay.dlna">
+
+    <!-- wifi direct : start -->
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.ACCESS_WIFI_STATE"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.CHANGE_WIFI_STATE"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        android:required="true" />
+    <!-- wifi direct : end -->
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!--<uses-permission android:name="android.permission.INTERNET" />-->
+    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+
+        <service
+            android:name=".datatransfer.ReceiveFileService"
+            android:exported="true" />
+
+        <activity android:name=".selectfile.SelectFileActivity" />
+
+        <!-- cast start -->
+        <activity
+            android:name=".cast.activity.StartActivity"
+            android:exported="true" />
+        <activity
+            android:name=".cast.activity.IndexActivity"
+            android:exported="true" />
+        <activity
+            android:name=".cast.activity.DevicesActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true" />
+        <activity
+            android:name=".cast.activity.ContentActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true" />
+        <activity
+            android:name=".cast.activity.ControlActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true" />
+        <activity
+            android:name=".cast.activity.SettingActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true" />
+        <activity
+            android:name=".cast.activity.AboutActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name=".cast.dmp.ExoPlayerActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".cast.dmp.GPlayer"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+
+            <!-- This filter captures protocols without type info -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="rtsp" />
+            </intent-filter>
+            <!-- This filter captures protocols with type info -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="video/*" />
+                <data android:mimeType="audio/*" />
+                <data android:scheme="rtsp" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="" />
+                <data android:scheme="file" />
+                <data android:scheme="ftp" />
+                <data android:scheme="content" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:mimeType="video/*" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="application/3gpp*" />
+                <data android:mimeType="application/mp4" />
+                <data android:mimeType="application/mpeg*" />
+                <data android:mimeType="application/ogg" />
+                <data android:mimeType="application/vnd.3gp*" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".cast.dmp.ImageDisplay"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
+            android:launchMode="singleTop" />
+        <!--<activity
+            android:name="com.test.dlnademo.cast.dmc.RemoteVideoPlay"
+            android:configChanges="orientation|keyboardHidden"
+            android:exported="true"
+            android:theme="@android:style/Theme.NoTitleBar" />-->
+
+        <service android:name=".cast.dmr.RenderPlayerService" />
+        <service android:name="org.fourthline.cling.android.AndroidUpnpServiceImpl" />
+        <!-- cast end -->
+
+
+        <!-- cling demo -->
+        <!--<activity
+            android:name=".clingdemo.BrowserActivity"
+            android:exported="true"
+            android:label="BrowserActivity">
+            &lt;!&ndash;<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>&ndash;&gt;
+        </activity>
+
+        <service android:name="org.fourthline.cling.android.AndroidUpnpServiceImpl" />
+
+        <activity
+            android:name=".clingdemo.LightActivity"
+            android:exported="true"
+            android:label="LightActivity">
+            &lt;!&ndash;<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>&ndash;&gt;
+        </activity>
+
+        &lt;!&ndash; Or a custom service configuration, also use this class in bindService()! &ndash;&gt;
+        <service android:name=".clingdemo.BrowserUpnpService" />-->
+        <!-- cling demo -->
+
+    </application>
+</manifest>

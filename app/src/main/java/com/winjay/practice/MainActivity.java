@@ -83,6 +83,7 @@ public class MainActivity extends BaseActivity {
             put("Performance Optimization", PerformanceOptimizeActivity.class);
             put("Puzzle", PuzzleMainActivity.class);
             put("2048", Game2048Activity.class);
+            put("DLNA", com.winjay.dlna.MainActivity.class);
             put("Test", TestActivity.class);
             put("Crash Test", CrashTestActivity.class);
         }
