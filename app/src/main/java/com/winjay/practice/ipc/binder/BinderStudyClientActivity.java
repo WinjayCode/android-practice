@@ -44,10 +44,7 @@ public class BinderStudyClientActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding.bindService.setOnClickListener(v -> {
-            if (binderStudy == null) {
-                Intent intent = new Intent(this, BinderStudyService.class);
-                bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-            }
+            bindService();
         });
 
         binding.addDataBtn.setOnClickListener(v -> {
@@ -76,17 +73,47 @@ public class BinderStudyClientActivity extends BaseActivity {
         });
     }
 
+    private void bindService() {
+        if (binderStudy == null) {
+            Intent intent = new Intent(this, BinderStudyService.class);
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        }
+    }
+
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             LogUtil.d(TAG, "componentName=" + name.getClassName());
             binderStudy = IBinderStudy.IBinderStudyImpl.asInterface(service);
+
+            try {
+                service.linkToDeath(mDeathRecipient, 0);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+
+            // Check to see if the process that the binder is in is still alive.
+            // service.isBinderAlive();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             LogUtil.d(TAG, "componentName=" + name.getClassName());
             binderStudy = null;
+        }
+    };
+
+    private IBinder.DeathRecipient mDeathRecipient = new IBinder.DeathRecipient() {
+        @Override
+        public void binderDied() {
+            if (binderStudy == null) {
+                return;
+            }
+            binderStudy.asBinder().unlinkToDeath(mDeathRecipient, 0);
+            binderStudy = null;
+
+            // bind service again
+            bindService();
         }
     };
 }
