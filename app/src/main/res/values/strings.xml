@@ -1,5 +1,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">WinjayDemo</string>
+    <string name="app_name">Winjay</string>
+
     <string name="appwidget_text">时钟</string>
     <string name="add_widget">时钟</string>
 

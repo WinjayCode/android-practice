@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="app_name">DLNADemo</string>
-
-
     <string name="registeringDevice">Registering UPnP BinaryLight device…</string>
     <string name="createDeviceFailed">Creating of BinaryLight failed, check the log!</string>
 
