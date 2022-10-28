@@ -21,6 +21,7 @@ import com.winjay.practice.common.BaseActivity
 import com.winjay.practice.databinding.ProjectionActivityBinding
 import com.winjay.practice.utils.FileUtil
 import com.winjay.practice.utils.LogUtil
+import com.winjay.practice.utils.ToastUtils
 import java.io.File
 import java.nio.ByteBuffer
 
@@ -32,16 +33,19 @@ import java.nio.ByteBuffer
  */
 class MediaProjectionActivity : BaseActivity() {
     private val TAG = "MediaProjectionActivity"
-    private val SCREEN_CAPTURE_MODE = 1
-    private val MEDIA_PROJECTION_MODE = 2
+
+    companion object {
+        val SCREEN_CAPTURE_MODE = 1
+        val MEDIA_PROJECTION_MODE = 2
+    }
 
     // lateinit延迟初始化
-    private lateinit var mediaManager: MediaProjectionManager
+    private lateinit var mediaProjectionManager: MediaProjectionManager
     private var mediaProjection: MediaProjection? = null
     private var imageReader: ImageReader? = null
     private var isRecord = false
     private var mediaRecord: MediaRecorder? = null
-    private var videoPath: String? = null;
+    private var videoPath: String? = null
 
     private lateinit var binding: ProjectionActivityBinding
 
@@ -61,6 +65,9 @@ class MediaProjectionActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mediaProjectionManager =
+            getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+
         videoPath = externalCacheDir.toString() + File.separator + "mediaProjection" + File.separator
         if (!hasPermissions()) {
             requestPermissions()
@@ -69,8 +76,7 @@ class MediaProjectionActivity : BaseActivity() {
 
     @OnClick(R.id.screen_capture_btn)
     fun screenCapture() {
-        mediaManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
-        mediaManager.createScreenCaptureIntent().apply {
+        mediaProjectionManager.createScreenCaptureIntent().apply {
             startActivityForResult(this, SCREEN_CAPTURE_MODE)
         }
     }
@@ -79,121 +85,70 @@ class MediaProjectionActivity : BaseActivity() {
     fun mediaProjection() {
         if (!isRecord) {
             isRecord = true
-            mediaManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
-            mediaManager.createScreenCaptureIntent().apply {
+            mediaProjectionManager.createScreenCaptureIntent().apply {
                 startActivityForResult(this, MEDIA_PROJECTION_MODE)
             }
             binding.mediaProjectionBtn.text = "正在录制，可切换页面，点击结束并播放"
         } else {
+            isRecord = false
             try {
                 binding.mediaProjectionBtn.text = "点击开始屏幕录制"
-                mediaRecord?.stop()
-                mediaProjection?.stop()
+
+                stopScreenRecord()
+
                 toast("开始播放")
-                val file = File(videoPath, "mediaprojection.mp4")
-                MediaPlayerHelper.prepare(this, file.absolutePath, binding.sv.holder, MediaPlayer.OnPreparedListener {
-                    LogUtil.d(TAG, "onPrepared: ${it.isPlaying}")
-                    MediaPlayerHelper.play()
-                })
+//                val file = File(videoPath, "mediaprojection.mp4")
+//                MediaPlayerHelper.prepare(this, file.absolutePath, binding.sv.holder, MediaPlayer.OnPreparedListener {
+//                    LogUtil.d(TAG, "onPrepared: ${it.isPlaying}")
+//                    MediaPlayerHelper.play()
+//                })
             } catch (e: Exception) {
                 LogUtil.d(TAG, "media projection $e")
             }
         }
     }
 
+    fun stopScreenRecord() {
+        val intent = Intent("stop")
+        sendBroadcast(intent)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            // 获取到操作对象（data不为null时执行let函数体，相当于判空）
+
             data?.let {
-                mediaProjection = mediaManager.getMediaProjection(resultCode, it)
-            }
-            when (requestCode) {
-                // 截屏
-                SCREEN_CAPTURE_MODE -> {
-                    LogUtil.d(TAG, "开始截屏")
+                if (requestCode == SCREEN_CAPTURE_MODE) {
                     configImageReader()
                 }
-                // 录屏
-                MEDIA_PROJECTION_MODE -> {
-                    if (configMediaRecorder()) {
-                        try {
-                            mediaRecord?.start()
-                        } catch (e: Exception) {
-                            LogUtil.e(TAG, "error=$e")
-                            e.printStackTrace()
-                        }
-                        toast("正在录制")
-                    }
-                }
+                val intent = Intent(this, ScreenRecordService::class.java)
+                intent.putExtra("requestCode", requestCode)
+                intent.putExtra("resultCode", resultCode)
+                intent.putExtra("data", data)
+                intent.putExtra("videoPath", videoPath)
+                startForegroundService(intent)
             }
         }
     }
 
+    /**
+     * 配置截屏参数
+     */
     private fun configImageReader() {
         val dm = resources.displayMetrics
-        imageReader = ImageReader.newInstance(dm.widthPixels, dm.heightPixels,
-                PixelFormat.RGBA_8888, 1).apply {
+        imageReader = ImageReader.newInstance(
+            dm.widthPixels, dm.heightPixels,
+            PixelFormat.RGBA_8888, 1
+        ).apply {
             setOnImageAvailableListener({
                 savePicTask(it)
             }, null)
-            // 把内容投射到ImageReader的surface
-            mediaProjection?.createVirtualDisplay(TAG, dm.widthPixels, dm.heightPixels, dm.densityDpi,
-                    DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC, surface, null, null)
+//            // 把内容投射到ImageReader的surface
+//            mediaProjection?.createVirtualDisplay(
+//                TAG, dm.widthPixels, dm.heightPixels, dm.densityDpi,
+//                DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC, surface, null, null
+//            )
         }
-    }
-
-    private fun configMediaRecorder(): Boolean {
-        val dir = File(videoPath)
-        if (!dir.exists()) {
-            dir.mkdir()
-        }
-
-        val file = File(videoPath, "mediaprojection.mp4")
-        if (file.exists()) {
-            file.delete()
-        }
-
-        val dm = resources.displayMetrics
-        mediaRecord = MediaRecorder()
-        mediaRecord?.apply {
-            // 音频来源
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            // 视频来源
-            setVideoSource(MediaRecorder.VideoSource.SURFACE)
-            // 输出格式
-            setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            // 音频编码格式
-            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            // 视频编码格式
-            setVideoEncoder(MediaRecorder.VideoEncoder.H264)
-            // 视频宽高
-            setVideoSize(dm.widthPixels, dm.heightPixels)
-            // 视频帧率
-            setVideoFrameRate(60)
-            // 视频编码比特率(值越大，视频越清晰，类似音频比特率，值越大，音质越好)
-            setVideoEncodingBitRate(6 * 1024 * 1024)
-            // 输出文件位置
-            setOutputFile(file.absolutePath)
-            try {
-                prepare()
-                mediaProjection?.createVirtualDisplay(
-                        TAG,
-                        dm.widthPixels,
-                        dm.heightPixels,
-                        dm.densityDpi,
-                        DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-                        surface,
-                        null,
-                        null
-                )
-            } catch (e: Exception) {
-                LogUtil.e(TAG, "error=$e")
-                e.printStackTrace()
-                return false
-            }
-        }
-        return true
     }
 
     /**
@@ -221,8 +176,10 @@ class MediaProjectionActivity : BaseActivity() {
                 //然后通过 rowStride 去减，得到大概的内存偏移量，不过一般都是对齐的。
                 val rowPadding = rowStride - pixelStride * width
                 // 创建具体的bitmap大小，由于rowPadding是RGBA 4个通道的，所以也要除以pixelStride，得到实际的宽
-                val bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height,
-                        Bitmap.Config.ARGB_8888)
+                val bitmap = Bitmap.createBitmap(
+                    width + rowPadding / pixelStride, height,
+                    Bitmap.Config.ARGB_8888
+                )
                 bitmap.copyPixelsFromBuffer(buffer)
 
                 withMain {
@@ -248,17 +205,20 @@ class MediaProjectionActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaProjection?.stop()
         MediaPlayerHelper.release()
-        imageReader?.close()
-        try {
-            mediaRecord?.stop()
-            mediaRecord?.release()
-            mediaRecord = null
-        } catch (e: Exception) {
-            LogUtil.e(TAG, "error=$e")
-            e.printStackTrace()
-        }
-        FileUtil.delete(videoPath)
+        stopScreenRecord()
+
+//        mediaProjection?.stop()
+//        MediaPlayerHelper.release()
+//        imageReader?.close()
+//        try {
+//            mediaRecord?.stop()
+//            mediaRecord?.release()
+//            mediaRecord = null
+//        } catch (e: Exception) {
+//            LogUtil.e(TAG, "error=$e")
+//            e.printStackTrace()
+//        }
+//        FileUtil.delete(videoPath)
     }
 }

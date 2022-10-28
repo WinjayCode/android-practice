@@ -32,6 +32,14 @@ public class Constants {
      */
     public static final String ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_CLOSE = "com.winjay.action.MEDIA_NOTIFICATION_PENDINGINTENT_CLOSE";
 
-    public static final String NOTIFICATION_CHANNEL_ID = "100";
+    /**
+     * 应用通知唯一 Channel ID
+     */
+    public static final String NOTIFICATION_CHANNEL_ID = AppApplication.getApplication().getPackageName();
+    /**
+     * 应用通知唯一 Channel Name
+     */
+    public static final String NOTIFICATION_CHANNEL_NAME = AppApplication.getApplication().getResources().getString(R.string.app_name);
+
     public static final int NOTIFICATION_ID = 100;
 }

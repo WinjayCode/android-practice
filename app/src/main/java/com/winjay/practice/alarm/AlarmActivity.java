@@ -34,7 +34,7 @@ public class AlarmActivity extends BaseActivity {
     public void setAlarm(int period) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         Intent intent = new Intent("自己定义的action名字");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + period * 1000, period * 1000, pendingIntent);
         //这里我设置的是重复闹醒 LZ也可以用  alarmManager.set(type, triggerAtTime, operation)；

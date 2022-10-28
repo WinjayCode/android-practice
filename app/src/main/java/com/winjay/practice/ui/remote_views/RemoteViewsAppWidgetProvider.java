@@ -103,7 +103,7 @@ public class RemoteViewsAppWidgetProvider extends AppWidgetProvider {
         intentClick.setFlags(0x01000000);
         intentClick.setPackage(context.getPackageName());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
-                intentClick, 0);
+                intentClick, PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setOnClickPendingIntent(R.id.widget_iv, pendingIntent);
 
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);

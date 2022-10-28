@@ -1,10 +1,12 @@
 package com.winjay.practice;
 
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,6 +35,7 @@ import com.winjay.practice.package_manager.PackageManagerActivity;
 import com.winjay.practice.performance_optimize.PerformanceOptimizeActivity;
 import com.winjay.practice.plugin.PluginActivity;
 import com.winjay.practice.system_info.SystemInfoActivity;
+import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.ui.UIListActivity;
 import com.winjay.practice.usb.USBDeviceReceiver;
 import com.winjay.practice.usb.VolumeInfo;
@@ -133,6 +136,21 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         LogUtil.d(TAG);
+
+//        HandlerManager.getInstance().postDelayedOnSubThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    LogUtil.d(TAG, "111");
+//                    Instrumentation instrumentation = new Instrumentation();
+//                    instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }, 3000);
+
+
 
 //        Intent intent = new Intent(this, TestService.class);
 //        startService(intent);

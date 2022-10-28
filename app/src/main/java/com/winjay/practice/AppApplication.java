@@ -25,6 +25,7 @@ import com.winjay.practice.utils.LogUtil;
  */
 public class AppApplication extends MultiDexApplication {
     private static final String TAG = AppApplication.class.getSimpleName();
+    private static Context mContext;
     private ActivityLifeCycle mActivityLifeCycle;
 
     @Override
@@ -40,6 +41,8 @@ public class AppApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = getApplicationContext();
+
         mActivityLifeCycle = new ActivityLifeCycle();
         registerActivityLifecycleCallbacks(mActivityLifeCycle);
 
@@ -53,6 +56,10 @@ public class AppApplication extends MultiDexApplication {
         // dlna
         BaseApplication baseApplication = new BaseApplication();
         baseApplication.onCreate(getApplicationContext());
+    }
+
+    public static Context getApplication() {
+        return mContext;
     }
 
     public static class ActivityLifeCycle implements Application.ActivityLifecycleCallbacks {
