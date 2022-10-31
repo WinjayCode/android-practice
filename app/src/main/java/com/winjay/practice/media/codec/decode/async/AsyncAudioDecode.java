@@ -49,6 +49,7 @@ public class AsyncAudioDecode extends BaseAsyncDecode {
 
         //拿到一帧的最小buffer大小
         int bufferSize = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
+        LogUtil.d(TAG, "bufferSize=" + bufferSize);
 
         /**
          * 设置音频信息属性

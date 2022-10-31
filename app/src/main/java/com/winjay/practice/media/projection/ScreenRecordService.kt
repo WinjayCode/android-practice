@@ -95,7 +95,6 @@ class ScreenRecordService : Service() {
                 MediaProjectionActivity.MEDIA_PROJECTION_MODE -> {
                     if (configMediaRecorder(videoPath)) {
                         try {
-                            LogUtil.d(TAG, "start record. ${mediaRecord.toString()}")
                             ToastUtils.show(this@ScreenRecordService, "正在录制")
                             if (mediaRecord != null) {
                                 mediaRecord?.start()
@@ -211,14 +210,21 @@ class ScreenRecordService : Service() {
         val screenSize = DisplayUtil.getScreenSize(this)
         mediaRecord = MediaRecorder()
         mediaRecord?.apply {
+
             // 音频来源
             setAudioSource(MediaRecorder.AudioSource.MIC)
-            // 视频来源
+
+            // 视频来源（必须于 setOutputFormat 之前调用！！！）
             setVideoSource(MediaRecorder.VideoSource.SURFACE)
-            // 输出格式
+
+            // 输出格式（必须于 setAudioSource 之后调用！！！）
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
-            // 音频编码格式
+
+            // 音频编码格式（必须于 setOutputFormat 之后调用！！！）
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            // Usually it is either 1 (mono) or 2 (stereo). (默认手机录出来的是mono，但是后期解码时AudioTrack会报错，需要stereo才行。。。)
+            setAudioChannels(2)
+
             // 视频编码格式
             setVideoEncoder(MediaRecorder.VideoEncoder.H264)
             // 视频宽高（如果宽高信息不合适，会导致 MediaRecorder 录屏失败！！！）
@@ -228,6 +234,7 @@ class ScreenRecordService : Service() {
             setVideoFrameRate(60)
             // 视频编码比特率(值越大，视频越清晰，类似音频比特率，值越大，音质越好)
             setVideoEncodingBitRate(6 * 1024 * 1024)
+
             // 输出文件位置
             setOutputFile(file.absolutePath)
 

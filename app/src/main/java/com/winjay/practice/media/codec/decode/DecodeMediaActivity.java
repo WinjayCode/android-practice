@@ -16,8 +16,10 @@ import com.winjay.practice.media.codec.decode.async.AsyncVideoDecode;
 import com.winjay.practice.media.codec.decode.sync.SyncAudioDecode;
 import com.winjay.practice.media.codec.decode.sync.SyncVideoDecode;
 import com.winjay.practice.media.extractor_muxer.MyMediaExtractor;
+import com.winjay.practice.utils.AssetHelper;
 import com.winjay.practice.utils.LogUtil;
 
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -32,7 +34,8 @@ import butterknife.OnClick;
  */
 public class DecodeMediaActivity extends BaseActivity {
     private static final String TAG = DecodeMediaActivity.class.getSimpleName();
-    private static final String VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/test.MP4";
+
+    private String videoPath;
     private ExecutorService mExecutorService = Executors.newFixedThreadPool(2);
     private SyncVideoDecode syncVideoDecode;
     private SyncAudioDecode syncAudioDecode;
@@ -50,11 +53,18 @@ public class DecodeMediaActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        videoPath = getExternalFilesDir(null).getPath() + File.separator + "test.mp4";
+        File file = new File(videoPath);
+        if (!file.exists()) {
+            AssetHelper.Companion.copyAssetSingleFile(this, "video/test.mp4", file);
+        }
+
         mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
                 LogUtil.d(TAG, "surface width*height=" + width + "*" + height);
-                MyMediaExtractor myMediaExtractor = new MyMediaExtractor(VIDEO_PATH);
+                MyMediaExtractor myMediaExtractor = new MyMediaExtractor(videoPath);
                 ViewGroup.LayoutParams layoutParams = mTextureView.getLayoutParams();
                 layoutParams.width = myMediaExtractor.getVideoFormat().getInteger(MediaFormat.KEY_WIDTH);
                 layoutParams.height = myMediaExtractor.getVideoFormat().getInteger(MediaFormat.KEY_HEIGHT);
@@ -82,8 +92,8 @@ public class DecodeMediaActivity extends BaseActivity {
     @OnClick(R.id.sync_decode_btn)
     void syncDecode() {
         stopMedia();
-        syncVideoDecode = new SyncVideoDecode(VIDEO_PATH, mTextureView.getSurfaceTexture());
-        syncAudioDecode = new SyncAudioDecode(VIDEO_PATH);
+        syncVideoDecode = new SyncVideoDecode(videoPath, mTextureView.getSurfaceTexture());
+        syncAudioDecode = new SyncAudioDecode(videoPath);
         mExecutorService.execute(syncVideoDecode);
         mExecutorService.execute(syncAudioDecode);
     }
@@ -91,9 +101,9 @@ public class DecodeMediaActivity extends BaseActivity {
     @OnClick(R.id.async_decode_btn)
     void asyncDecode() {
         stopMedia();
-        asyncVideoDecode = new AsyncVideoDecode(VIDEO_PATH, mTextureView.getSurfaceTexture());
+        asyncVideoDecode = new AsyncVideoDecode(videoPath, mTextureView.getSurfaceTexture());
         asyncVideoDecode.start();
-        asyncAudioDecode = new AsyncAudioDecode(VIDEO_PATH);
+        asyncAudioDecode = new AsyncAudioDecode(videoPath);
         asyncAudioDecode.start();
     }
 

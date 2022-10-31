@@ -46,6 +46,7 @@ public class SyncAudioDecode extends BaseSyncDecode {
 
         //拿到一帧的最小buffer大小
         int bufferSize = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
+        LogUtil.d(TAG, "bufferSize=" + bufferSize);
 
         /**
          * 设置音频信息属性
@@ -57,7 +58,7 @@ public class SyncAudioDecode extends BaseSyncDecode {
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build();
         /**
-         * 设置音频哥特式
+         * 设置音频格式
          * 1. 设置采样率
          * 2. 设置采样位数
          * 3. 设置声道
