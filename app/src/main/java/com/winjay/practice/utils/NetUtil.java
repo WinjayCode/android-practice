@@ -38,14 +38,11 @@ public class NetUtil {
         // TYPE_ETHERNET 以太网
         NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_ETHERNET);
         if (context == null || networkInfo == null || !networkInfo.isAvailable()) {
-            LogUtil.d(TAG, "111");
             return false;
         }
         if (networkInfo.getState() == NetworkInfo.State.CONNECTED || networkInfo.getState() == NetworkInfo.State.CONNECTING) {
-            LogUtil.d(TAG, "222");
             return true;
         }
-        LogUtil.d(TAG, "333");
         return false;
     }
 

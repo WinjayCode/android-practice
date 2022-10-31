@@ -95,4 +95,15 @@ public class BitmapUtil {
         // 把ByteArrayInputStream数据生成图片
         return BitmapFactory.decodeStream(isBm, null, null);
     }
+
+
+    public static byte[] bitmap2Bytes(Bitmap bm){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        return baos.toByteArray();
+    }
+
+    public static Bitmap bytes2Bitmap(byte[] bytes) {
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    }
 }
