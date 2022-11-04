@@ -56,6 +56,8 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+    <uses-permission android:name="android.software.activities_on_secondary_displays" />
+
     <!-- android:persistent="true"：1.在系统刚起来的时候，该App也会被启动起来 2.该App被强制杀掉后，系统会重启该App。这种情况只针对系统内置的App，第三方安装的App不会被重启。 -->
     <!-- android:usesCleartextTraffic="true"：指示应用程序是否打算使用明文网络流量，例如明文HTTP -->
     <!-- android:requestLegacyExternalStorage="true"：目标版本API<=29时,采用旧的存储模型运行的。目标版本API>29时该配置无效，强制使用分区存储 -->
@@ -380,7 +382,7 @@
             android:name=".media.projection.ScreenRecordService"
             android:enabled="true"
             android:exported="true"
-            android:foregroundServiceType="mediaProjection"/>
+            android:foregroundServiceType="mediaProjection" />
 
         <activity
             android:name=".media.codec.MediaCodecActivity"
@@ -529,6 +531,7 @@
             </intent-filter>
         </activity>
 
+        <!-- accessibility start -->
         <service
             android:name=".accessibility.AccessibilityServiceHelper"
             android:exported="true"
@@ -541,6 +544,22 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_helper" />
         </service>
+
+        <service
+            android:name=".accessibility.AutoClickService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/autoclick_accessibility_description"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/autoclick_accessibility_config" />
+        </service>
+        <!-- accessibility end -->
 
         <!-- jetpack start -->
         <activity

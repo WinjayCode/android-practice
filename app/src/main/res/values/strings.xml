@@ -1,6 +1,8 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Winjay</string>
 
+    <string name="autoclick_accessibility_description">自动点击服务</string>
+
     <string name="appwidget_text">时钟</string>
     <string name="add_widget">时钟</string>
 

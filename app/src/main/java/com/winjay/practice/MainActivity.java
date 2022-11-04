@@ -1,12 +1,10 @@
 package com.winjay.practice;
 
-import android.app.Instrumentation;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,8 +16,6 @@ import com.winjay.practice.bluetooth.BluetoothListActivity;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.crash.CrashTestActivity;
 import com.winjay.practice.design_mode.DesignModeListActivity;
-import com.winjay.practice.media.MediaListActivity;
-import com.winjay.practice.storage.StorageActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
 import com.winjay.practice.file_browser.FileBrowserActivity;
 import com.winjay.practice.hardware_test.HardwareTestListActivity;
@@ -29,11 +25,13 @@ import com.winjay.practice.jetpack.JetpackLibListActivity;
 import com.winjay.practice.jni.JniTestActivity;
 import com.winjay.practice.kotlin.KotlinListActivity;
 import com.winjay.practice.location.LocationActivity;
+import com.winjay.practice.media.MediaListActivity;
 import com.winjay.practice.net.NetListActivity;
 import com.winjay.practice.notification.NotificationActivity;
 import com.winjay.practice.package_manager.PackageManagerActivity;
 import com.winjay.practice.performance_optimize.PerformanceOptimizeActivity;
 import com.winjay.practice.plugin.PluginActivity;
+import com.winjay.practice.storage.StorageActivity;
 import com.winjay.practice.system_info.SystemInfoActivity;
 import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.ui.UIListActivity;
@@ -126,6 +124,19 @@ public class MainActivity extends BaseActivity {
 //                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, view, "share").toBundle());
 //                        // 使用多个共享元素过渡动画
 //                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, Pair.create(view, "share")).toBundle());
+
+
+
+//                        ActivityOptions activityOptions = ActivityOptions.makeBasic();
+//                        MediaRouter mediaRouter = (MediaRouter) getSystemService(Context.MEDIA_ROUTER_SERVICE);
+//                        MediaRouter.RouteInfo route = mediaRouter.getSelectedRoute(MediaRouter.ROUTE_TYPE_LIVE_VIDEO);
+//                        if (route != null) {
+//                            Display presentationDisplay = route.getPresentationDisplay();
+//                            LogUtil.d(TAG, "displayId=" + presentationDisplay.getDisplayId());
+//                            Bundle bundle = activityOptions.setLaunchDisplayId(presentationDisplay.getDisplayId()).toBundle();
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            startActivity(intent, bundle);
+//                        }
                         break;
                 }
             }
@@ -137,19 +148,25 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         LogUtil.d(TAG);
 
-//        HandlerManager.getInstance().postDelayedOnSubThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    LogUtil.d(TAG, "111");
-//                    Instrumentation instrumentation = new Instrumentation();
-//                    instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }, 3000);
+        HandlerManager.getInstance().postDelayedOnSubThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    LogUtil.d(TAG, "111");
 
+//                    Instrumentation instrumentation = new Instrumentation();
+////                    instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
+//                    instrumentation.sendPointerSync(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 100, 10, 0));
+//                    instrumentation.sendPointerSync(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 100, 10, 0));
+
+//                    Util.slide(100, 10, 100, 100);
+//                    InjectUtil.click(500, 500);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 3000);
 
 
 //        Intent intent = new Intent(this, TestService.class);
