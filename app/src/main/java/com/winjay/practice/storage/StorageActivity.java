@@ -21,17 +21,16 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.room.Room;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
+import com.winjay.practice.jetpack.room.MyDatabase;
+import com.winjay.practice.jetpack.room.User;
+import com.winjay.practice.jetpack.room.UserDao;
 import com.winjay.practice.media.bean.AudioBean;
 import com.winjay.practice.media.bean.VideoBean;
 import com.winjay.practice.media.music.MusicPlayActivity;
 import com.winjay.practice.media.video.VideoPlayActivity;
-import com.winjay.practice.jetpack.room.MyDatabase;
-import com.winjay.practice.jetpack.room.User;
-import com.winjay.practice.jetpack.room.UserDao;
 import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.JsonUtil;
@@ -85,8 +84,7 @@ public class StorageActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MyDatabase myDatabase = Room.databaseBuilder(this, MyDatabase.class, "my_database").build();
-        userDao = myDatabase.userDao();
+        userDao = MyDatabase.Companion.getDatabase().userDao();
 
 //        File file = new File(getFilesDir(), "internal_test_dir");
 //        file.mkdir();
@@ -473,6 +471,7 @@ public class StorageActivity extends BaseActivity {
 
     /////////////////////////////////////////////////////// 本地数据库 ///////////////////////////////////////////////////////
     private User user = new User(1, 1 + "_first_name", 1 + "_last_name");
+    private User user2 = new User(2, 2 + "_first_name", 2 + "_last_name");
 
     @OnClick(R.id.insert_data_btn)
     void insertData() {
@@ -527,6 +526,20 @@ public class StorageActivity extends BaseActivity {
             public void run() {
                 User user = userDao.findByName(1 + "_first_name", 1 + "_last_name");
                 toast(JsonUtil.getInstance().toJson(user));
+            }
+        });
+    }
+
+    @OnClick(R.id.update_data_btn)
+    void updateData() {
+        HandlerManager.getInstance().postOnSubThread(new Runnable() {
+            @Override
+            public void run() {
+                // 全字段更新
+//                userDao.updateUsers(user2);
+                // 单字段更新
+                userDao.updateUser(2, "2_first_name");
+                databaseAllData();
             }
         });
     }

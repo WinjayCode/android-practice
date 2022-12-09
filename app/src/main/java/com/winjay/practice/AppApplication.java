@@ -42,6 +42,8 @@ public class AppApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         mContext = getApplicationContext();
+        // scrcpy_android
+        com.winjay.mirrorcast.AppApplication.context = mContext;
 
         mActivityLifeCycle = new ActivityLifeCycle();
         registerActivityLifecycleCallbacks(mActivityLifeCycle);
@@ -67,6 +69,8 @@ public class AppApplication extends MultiDexApplication {
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 //            LogUtil.d(TAG, "activity=" + activity.getClass().getSimpleName());
             ActivityListUtil.addActivity(activity);
+            // scrcpy_android
+            com.winjay.mirrorcast.util.ActivityListUtil.addActivity(activity);
 //            LogUtil.d(TAG, "activity.size=" + ActivityListUtil.getActivityCount());
         }
 
@@ -99,6 +103,8 @@ public class AppApplication extends MultiDexApplication {
         public void onActivityDestroyed(Activity activity) {
 //            LogUtil.d(TAG, "activity=" + activity.getClass().getSimpleName());
             ActivityListUtil.removeActivity(activity);
+            // scrcpy_android
+            com.winjay.mirrorcast.util.ActivityListUtil.removeActivity(activity);
 //            LogUtil.d(TAG, "activity.size=" + ActivityListUtil.getActivityCount());
         }
     }

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_cl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0c0f18">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/shortcut_ll"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/time_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="14:21"
+            android:textColor="@color/white"
+            android:textSize="30dp" />
+
+        <ImageView
+            android:id="@+id/voice_iv"
+            style="@style/CarShortcutIconTheme"
+            android:src="@drawable/voice_drawable" />
+
+        <ImageView
+            android:id="@+id/navigation_iv"
+            style="@style/CarShortcutIconTheme"
+            android:src="@drawable/car_navigation_drawable" />
+
+        <ImageView
+            android:id="@+id/tiktok_iv"
+            style="@style/CarShortcutIconTheme"
+            android:src="@drawable/car_tiktok_drawable" />
+
+        <ImageView
+            android:id="@+id/phone_iv"
+            style="@style/CarShortcutIconTheme"
+            android:src="@drawable/car_phone_drawable" />
+
+        <ImageView
+            android:id="@+id/home_iv"
+            style="@style/CarShortcutIconTheme"
+            android:src="@mipmap/app_list" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <RelativeLayout
+        android:id="@+id/status_bar_rl"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        app:layout_constraintLeft_toRightOf="@+id/shortcut_ll"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/battery_iv"
+            android:src="@mipmap/disconnected" />
+
+        <ImageView
+            android:id="@+id/battery_iv"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@mipmap/battery" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/content_rl"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/indicator_rl"
+        app:layout_constraintLeft_toRightOf="@+id/shortcut_ll"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/status_bar_rl">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/home_vp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/indicator_rl"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/shortcut_ll"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <ImageView
+            android:id="@+id/dot_one_iv"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@+id/dot_two_iv"
+            android:src="@mipmap/dot_selected" />
+
+        <ImageView
+            android:id="@+id/dot_two_iv"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/dot" />
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

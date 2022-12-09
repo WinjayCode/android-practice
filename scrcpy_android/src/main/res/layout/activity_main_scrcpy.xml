@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_wifi_p2p"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="WIFI直连"
+        android:textSize="30dp" />
+
+    <EditText
+        android:id="@+id/ip_ed"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:hint="192.168.49.1"
+        android:textSize="30dp" />
+
+    <Button
+        android:id="@+id/btn_start_record"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="开始投屏"
+        android:textSize="30dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/connect_mirror_cast_server"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="连接投屏服务"
+        android:textSize="30dp" />
+
+    <Button
+        android:id="@+id/btn_start_receive"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="接收投屏"
+        android:textSize="30dp" />
+
+    <Button
+        android:id="@+id/btn_car_launcher"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="Car Launcher"
+        android:textAllCaps="false"
+        android:textSize="30dp" />
+</LinearLayout>

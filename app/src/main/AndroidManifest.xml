@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.winjay.practice">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -57,6 +58,10 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-permission android:name="android.software.activities_on_secondary_displays" />
+
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
 
     <!-- android:persistent="true"：1.在系统刚起来的时候，该App也会被启动起来 2.该App被强制杀掉后，系统会重启该App。这种情况只针对系统内置的App，第三方安装的App不会被重启。 -->
     <!-- android:usesCleartextTraffic="true"：指示应用程序是否打算使用明文网络流量，例如明文HTTP -->

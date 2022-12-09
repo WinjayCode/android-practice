@@ -85,6 +85,7 @@ public class MainActivity extends BaseActivity {
             put("Puzzle", PuzzleMainActivity.class);
             put("2048", Game2048Activity.class);
             put("DLNA", com.winjay.dlna.MainActivity.class);
+            put("Scrcpy_Android_2_Android", com.winjay.mirrorcast.MainActivity.class);
             put("Test", TestActivity.class);
             put("Crash Test", CrashTestActivity.class);
         }
@@ -148,7 +149,7 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         LogUtil.d(TAG);
 
-        HandlerManager.getInstance().postDelayedOnSubThread(new Runnable() {
+        /*HandlerManager.getInstance().postDelayedOnSubThread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -166,7 +167,7 @@ public class MainActivity extends BaseActivity {
                     e.printStackTrace();
                 }
             }
-        }, 3000);
+        }, 3000);*/
 
 
 //        Intent intent = new Intent(this, TestService.class);

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.winjay.mirrorcast">
+
+    <!-- wifi direct : start -->
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.ACCESS_WIFI_STATE"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.CHANGE_WIFI_STATE"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.INTERNET"
+        android:required="true" />
+    <!-- wifi direct : end -->
+
+    <!-- server -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
+
+    <uses-permission android:name="android.software.activities_on_secondary_displays" />
+
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+
+    <!-- sdl -->
+    <!-- OpenGL ES 2.0 -->
+    <uses-feature android:glEsVersion="0x00020000" />
+
+    <!-- Touchscreen support -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+
+    <!-- Game controller support -->
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.gamepad"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="false" />
+
+    <!-- External mouse input events -->
+    <uses-feature
+        android:name="android.hardware.type.pc"
+        android:required="false" />
+
+    <!-- Allow access to the vibrator -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- sdl -->
+
+    <application>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+
+        <!-- wifi direct -->
+        <activity
+            android:name=".wifidirect.WIFIDirectActivity"
+            android:exported="true" />
+        <!-- wifi direct -->
+
+        <!-- server -->
+        <service
+            android:name=".server.ScreenService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="mediaProjection" />
+        <!-- server -->
+
+        <!-- client -->
+        <activity
+            android:name=".decode.ScreenDecoderActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Client" />
+        <!-- client -->
+
+        <!-- car -->
+        <activity
+            android:name=".car.client.CarShowActivity"
+            android:exported="true"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.Client" />
+
+        <!--android:excludeFromRecents="true"-->
+        <activity
+            android:name=".car.server.CarLauncherActivity"
+            android:exported="true"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.Client" />
+
+        <activity
+            android:name=".car.server.TipsActivity"
+            android:exported="true"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.Client" />
+        <!-- car -->
+
+        <!-- sdl -->
+        <activity
+            android:name="org.libsdl.app.SDLActivity"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:exported="true"
+            android:label="投屏"
+            android:launchMode="singleInstance"
+            android:preferMinimalPostProcessing="true">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            &lt;!&ndash; Let Android know that we can handle some USB devices and should receive this event &ndash;&gt;
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>-->
+            <!-- Drop file event -->
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            -->
+        </activity>
+        <!-- sdl -->
+    </application>
+
+</manifest>

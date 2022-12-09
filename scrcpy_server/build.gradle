@@ -1,0 +1,52 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 31
+    defaultConfig {
+        applicationId "com.winjay.scrcpy"
+        minSdkVersion 21
+        targetSdkVersion 31
+        versionCode 12400
+        versionName "1.24"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    task copyRelease(dependsOn: 'deleteServer', type: Copy){
+        from file('build/outputs/apk/release/scrcpy_server-release-unsigned.apk')
+        into file('../app/src/main/assets')
+        rename('scrcpy_server-release-unsigned.apk', 'scrcpy-server.jar')
+    }
+
+    task deleteServer(type: Delete){
+        delete "../app/src/main/assets/scrcpy-server.jar"
+    }
+
+    task copyDebug (dependsOn: 'deleteServer', type: Copy){
+        from file("build/outputs/apk/debug/scrcpy_server-debug.apk")
+        into file("../app/src/main/assets/")
+        rename('scrcpy_server-debug.apk', 'scrcpy-server.jar')
+    }
+
+    afterEvaluate {
+        packageRelease.finalizedBy(copyRelease)
+    }
+
+    afterEvaluate {
+        packageDebug.finalizedBy(copyDebug)
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.13.1'
+
+    implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+}
+
+apply from: "$project.rootDir/config/android-checkstyle.gradle"

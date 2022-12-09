@@ -6,6 +6,7 @@ public class PMAppInfo {
     private String appLabel;
     private Drawable appIcon;
     private String pkgName;
+    private String appEnterClass;
 
     public String getAppLabel() {
         return appLabel;
@@ -29,5 +30,13 @@ public class PMAppInfo {
 
     public void setPkgName(String pkgName) {
         this.pkgName = pkgName;
+    }
+
+    public String getAppEnterClass() {
+        return appEnterClass;
+    }
+
+    public void setAppEnterClass(String appEnterClass) {
+        this.appEnterClass = appEnterClass;
     }
 }
