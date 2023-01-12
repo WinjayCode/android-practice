@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 模拟事件（只能操作本应用，不能操作其他应用！！！）
+ * 模拟事件（只能操作本应用，不能操作其他应用！！！???）
+ * Android12系统下可以，但是Android13系统测试不行。。。
  *
  * @author Winjay
  * @date 2022-11-02

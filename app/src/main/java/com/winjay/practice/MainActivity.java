@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.winjay.g2048.activity.Game2048Activity;
+import com.winjay.practice.accessibility.AccessibilityServiceHelper;
+import com.winjay.practice.accessibility.AutoClickAccessibilityService;
 import com.winjay.practice.activity_manager.ActivityManagerActivity;
 import com.winjay.practice.bluetooth.BluetoothListActivity;
 import com.winjay.practice.common.BaseActivity;
@@ -149,25 +151,47 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         LogUtil.d(TAG);
 
-        /*HandlerManager.getInstance().postDelayedOnSubThread(new Runnable() {
+        if (!AccessibilityServiceHelper.isServiceON(this, AutoClickAccessibilityService.class.getName())) {
+            AccessibilityServiceHelper.requirePermission(this);
+        }
+
+        HandlerManager.getInstance().postDelayedOnMainThread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    LogUtil.d(TAG, "111");
+                    LogUtil.d(TAG, "main thread mock event");
 
-//                    Instrumentation instrumentation = new Instrumentation();
-////                    instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
-//                    instrumentation.sendPointerSync(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 100, 10, 0));
-//                    instrumentation.sendPointerSync(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 100, 10, 0));
-
-//                    Util.slide(100, 10, 100, 100);
-//                    InjectUtil.click(500, 500);
-
+//                    InjectUtil.click(90, 300);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        }, 3000);*/
+        }, 3000);
+
+        HandlerManager.getInstance().postDelayedOnSubThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    LogUtil.d(TAG, "sub thread mock event");
+
+//                    Instrumentation instrumentation = new Instrumentation();
+//                    instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
+//                    instrumentation.sendPointerSync(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 100, 10, 0));
+//                    instrumentation.sendPointerSync(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 100, 10, 0));
+
+//                    Util.slide(100, 10, 100, 100);
+//                    InjectUtil.click(90, 300);
+
+//                    InputManager inputManager = (InputManager) getSystemService(Context.INPUT_SERVICE);
+
+//                    CommandUtil.exec("adb shell input tap 90 200");
+
+                    AutoClickAccessibilityService.getInstance().onClick(90, 300);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 3000);
 
 
 //        Intent intent = new Intent(this, TestService.class);

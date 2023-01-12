@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.provider.Settings;
 
 import com.winjay.practice.accessibility.AccessibilityServiceHelper;
+import com.winjay.practice.accessibility.AppForegroundAccessibilityService;
 
 import java.util.List;
 
@@ -26,8 +27,8 @@ public class AppForegroundUtil {
      * @return
      */
     public static boolean isAppRunningForeground(Context context, String packageName) {
-        if (AccessibilityServiceHelper.getInstance().isAccessibilitySettingsOn(context)) {
-            String foreground = AccessibilityServiceHelper.getInstance().getForegroundPackageName();
+        if (AccessibilityServiceHelper.isAccessibilitySettingsOn(context)) {
+            String foreground = AppForegroundAccessibilityService.getInstance().getForegroundPackageName();
             LogUtil.d(TAG, "当前窗口焦点对应包名为：" + foreground);
             return packageName.equals(foreground);
         } else {

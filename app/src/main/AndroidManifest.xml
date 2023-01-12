@@ -57,6 +57,8 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+    <uses-permission android:name="android.permission.INJECT_EVENTS" />
+
     <uses-permission android:name="android.software.activities_on_secondary_displays" />
 
     <uses-permission
@@ -538,7 +540,7 @@
 
         <!-- accessibility start -->
         <service
-            android:name=".accessibility.AccessibilityServiceHelper"
+            android:name=".accessibility.AppForegroundAccessibilityService"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
@@ -551,7 +553,7 @@
         </service>
 
         <service
-            android:name=".accessibility.AutoClickService"
+            android:name=".accessibility.AutoClickAccessibilityService"
             android:enabled="true"
             android:exported="true"
             android:label="@string/autoclick_accessibility_description"

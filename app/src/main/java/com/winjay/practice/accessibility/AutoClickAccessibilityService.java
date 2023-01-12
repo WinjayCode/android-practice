@@ -7,22 +7,23 @@ import android.os.Build;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
-public class AutoClickService extends AccessibilityService {
-    private static final String TAG =  AutoClickService.class.getName();
-    private static AutoClickService mAutoClickService;
+
+public class AutoClickAccessibilityService extends AccessibilityService {
+    private static final String TAG = AutoClickAccessibilityService.class.getName();
+    private static AutoClickAccessibilityService mAutoClickAccessibilityService;
     public static boolean mIsAppLaunched = false;
 
-    public AutoClickService() {
+    public AutoClickAccessibilityService() {
         super();
-        mAutoClickService = this;
+        mAutoClickAccessibilityService = this;
     }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
     }
 
-    public static AutoClickService getInstance() {
-        return mAutoClickService;
+    public static AutoClickAccessibilityService getInstance() {
+        return mAutoClickAccessibilityService;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class AutoClickService extends AccessibilityService {
                 dispatchGesture(gestureBuilder.build(), new GestureResultCallback() {
                     @Override
                     public void onCompleted(GestureDescription gestureDescription) {
-                        Log.w(TAG, "TYPE_VIEW_CLICKED Gesture Completed");
+                        Log.d(TAG, "TYPE_VIEW_CLICKED Gesture Completed");
                         super.onCompleted(gestureDescription);
                     }
                 }, null);
@@ -70,17 +71,17 @@ public class AutoClickService extends AccessibilityService {
         }
     }
 
-    public void onBackClick(){
+    public void onBackClick() {
         Log.d(TAG, "onBackClick");
         performGlobalAction(GLOBAL_ACTION_BACK);
     }
 
-    public void onHomeClick(){
+    public void onHomeClick() {
         Log.d(TAG, "onHomeKeyClick");
         performGlobalAction(GLOBAL_ACTION_HOME);
     }
 
-    public void onAppLaunched(){
+    public void onAppLaunched() {
         Log.d(TAG, "onAppLaunched");
         mIsAppLaunched = true;
     }
@@ -99,7 +100,7 @@ public class AutoClickService extends AccessibilityService {
             Log.d(TAG, "TYPE_VIEW_onSwipe velocityY_duration " + velocityY_duration);
             int widthPixels = getResources().getDisplayMetrics().widthPixels;
             int heightPixels = getResources().getDisplayMetrics().heightPixels;
-            Log.d(TAG, "Mobile  widthPixels  = "+widthPixels+" heightPixels  = "+heightPixels);
+            Log.d(TAG, "Mobile  widthPixels  = " + widthPixels + " heightPixels  = " + heightPixels);
 
             Path path = new Path();
             path.moveTo(x, y);
@@ -112,23 +113,22 @@ public class AutoClickService extends AccessibilityService {
             int diffX = endX - x;
             if (Math.abs(diffX) > Math.abs(diffY)) {
                 if (Math.abs(diffX) > SWIPE_THRESHOLD) {
-                    if(velocityX_duration == velocityY_duration) {
+                    if (velocityX_duration == velocityY_duration) {
                         gestureBuilder.addStroke(new GestureDescription.StrokeDescription(path, (velocityX_duration / 8), (velocityX_duration / 7)));
                     } else {
-                        double distance = Math.abs(Math.sqrt((x-endX)*(x-endX)+(y-endY)*(y-endY)));
+                        double distance = Math.abs(Math.sqrt((x - endX) * (x - endX) + (y - endY) * (y - endY)));
                         //Log.d(TAG, "onFling: ((distance/widthPixels)*1000) = "+(int)((distance/widthPixels)*1000));
-                        gestureBuilder.addStroke(new GestureDescription.StrokeDescription(path, 0, (int)((distance/widthPixels)*1000)));
+                        gestureBuilder.addStroke(new GestureDescription.StrokeDescription(path, 0, (int) ((distance / widthPixels) * 1000)));
                     }
 
                 }
-            }
-            else if (Math.abs(diffY) > SWIPE_THRESHOLD) {
-                if(velocityX_duration == velocityY_duration) {
+            } else if (Math.abs(diffY) > SWIPE_THRESHOLD) {
+                if (velocityX_duration == velocityY_duration) {
                     gestureBuilder.addStroke(new GestureDescription.StrokeDescription(path, (velocityY_duration / 8), (velocityY_duration / 7)));
                 } else {
-                    double distance = Math.abs(Math.sqrt((x-endX)*(x-endX)+(y-endY)*(y-endY)));
+                    double distance = Math.abs(Math.sqrt((x - endX) * (x - endX) + (y - endY) * (y - endY)));
                     //Log.d(TAG, "onFling: yaozong distance Y1 = "+(int)((distance/heightPixels)*1000));
-                    if(((int)((distance/heightPixels)*1000)) > 850) {
+                    if (((int) ((distance / heightPixels) * 1000)) > 850) {
                         gestureBuilder.addStroke(new GestureDescription.StrokeDescription(path, 0, 1));
                     }
                 }

@@ -17,6 +17,22 @@ public final class Server {
         // not instantiable
     }
 
+    public static void main(String... args) throws Exception {
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                Ln.e("Exception on thread " + t, e);
+                suggestFix(e);
+            }
+        });
+
+        Options options = createOptions(args);
+
+        Ln.initLogLevel(options.getLogLevel());
+
+        scrcpy(options);
+    }
+
     private static void scrcpy(Options options) throws IOException {
         Ln.i("Device: " + Build.MANUFACTURER + " " + Build.MODEL + " (Android " + Build.VERSION.RELEASE + ")");
         final Device device = new Device(options);
@@ -379,21 +395,5 @@ public final class Server {
                 }
             }
         }
-    }
-
-    public static void main(String... args) throws Exception {
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                Ln.e("Exception on thread " + t, e);
-                suggestFix(e);
-            }
-        });
-
-        Options options = createOptions(args);
-
-        Ln.initLogLevel(options.getLogLevel());
-
-        scrcpy(options);
     }
 }
