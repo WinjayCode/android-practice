@@ -150,7 +150,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         LogUtil.d(TAG);
-
+/*
         if (!AccessibilityServiceHelper.isServiceON(this, AutoClickAccessibilityService.class.getName())) {
             AccessibilityServiceHelper.requirePermission(this);
         }
@@ -186,13 +186,13 @@ public class MainActivity extends BaseActivity {
 
 //                    CommandUtil.exec("adb shell input tap 90 200");
 
-                    AutoClickAccessibilityService.getInstance().onClick(90, 300);
+//                    AutoClickAccessibilityService.getInstance().onClick(90, 300);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }, 3000);
-
+*/
 
 //        Intent intent = new Intent(this, TestService.class);
 //        startService(intent);

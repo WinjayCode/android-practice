@@ -38,11 +38,11 @@ ext {
 
     // 第三方依赖库
     dependencies = [
-            appcompat_androidx  : "androidx.appcompat:appcompat:1.2.0",
+            appcompat_androidx  : "androidx.appcompat:appcompat:1.5.1",
             constraint_layout   : 'androidx.constraintlayout:constraintlayout:2.0.4',
             junit               : 'junit:junit:4.12',
-            runner              : 'androidx.test.ext:junit:1.1.1',
-            espresso_core       : 'androidx.test.espresso:espresso-core:3.1.0',
+            runner              : 'androidx.test.ext:junit:1.1.5',
+            espresso_core       : 'androidx.test.espresso:espresso-core:3.4.0',
 
             // kotlin
             kotlin_stdlib_jdk7  : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",

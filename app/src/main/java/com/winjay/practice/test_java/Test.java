@@ -1,5 +1,7 @@
 package com.winjay.practice.test_java;
 
+import com.google.gson.JsonObject;
+
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.Locale;
@@ -190,6 +192,22 @@ public class Test {
 //        list.add(1);
 //        list.add(2);
 //        System.out.println(list.size());
+
+
+//        JsonObject jsonObject = new JsonObject();
+//        jsonObject.addProperty("KEY_TITLE", 1);
+//        jsonObject.addProperty("KEY_ARTIST", 2);
+//        jsonObject.addProperty("KEY_ALBUM", 3);
+//        System.out.println(jsonObject);
+//        // {"KEY_TITLE":1,"KEY_ARTIST":2,"KEY_ALBUM":3}
+
+
+//        float a = 231000;
+//        float b = 10040;
+//        int c;
+//        c = (int) (b / a * 100);
+//        System.out.println("c=" + c);
+//        // c=4
     }
 
     public static boolean isOnline() {
