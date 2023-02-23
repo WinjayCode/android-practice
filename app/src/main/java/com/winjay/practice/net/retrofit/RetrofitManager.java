@@ -6,7 +6,7 @@ import com.winjay.practice.interfaces.DoanloadCallback;
 import com.winjay.practice.interfaces.UpgradeRequestCallBack;
 import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.utils.LogUtil;
-import com.winjay.practice.utils.URLUtils;
+import com.winjay.practice.utils.URLUtil;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -51,8 +51,8 @@ public class RetrofitManager {
         //        String path = "http://aispeech-kui-public.oss-cn-shenzhen.aliyuncs.com/release/dangbei/kui-tv/kui-tv-dangbei-1.0.11.180929.2-1011.apk";
         //        fileUrl = "http://ksyun-cdn.ottboxer.cn/apkmarket_file/app/video/ystjg/tv_video_3.3.2.2020_android_13090.apk";
 
-        String url = URLUtils.getUrl(fileUrl);
-        String baseUrl = URLUtils.getHost(fileUrl);
+        String url = URLUtil.getUrl(fileUrl);
+        String baseUrl = URLUtil.getHost(fileUrl);
         LogUtil.d(TAG, "url=" + url);
         LogUtil.d(TAG, "baseUrl=" + baseUrl);
         try {
@@ -137,8 +137,8 @@ public class RetrofitManager {
      * @param callback  回调
      */
     public void upgradeConfig(String configUrl, final UpgradeRequestCallBack callback) {
-        String url = URLUtils.getUrl(configUrl);
-        String baseUrl = URLUtils.getHost(configUrl);
+        String url = URLUtil.getUrl(configUrl);
+        String baseUrl = URLUtil.getHost(configUrl);
         LogUtil.d(TAG, baseUrl);
         LogUtil.d(TAG, url);
 
@@ -213,8 +213,8 @@ public class RetrofitManager {
         //        map.put("deviceId", deviceId);
         //        map.put("packageName", packageName);
 
-        String url = URLUtils.getUrl(baseURL);
-        String baseUrl = URLUtils.getHost(baseURL);
+        String url = URLUtil.getUrl(baseURL);
+        String baseUrl = URLUtil.getHost(baseURL);
         LogUtil.d(TAG, baseUrl);
         LogUtil.d(TAG, url);
 

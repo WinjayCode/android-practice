@@ -14,19 +14,19 @@ import java.util.List;
 /**
  * 获取用户的地理位置
  */
-public class GPSUtils {
+public class GPSUtil {
 
-    private static GPSUtils instance;
-    private Context mContext;
+    private static volatile GPSUtil instance;
+    private final Context mContext;
     private LocationManager locationManager;
 
-    private GPSUtils(Context context) {
-        this.mContext = context;
+    private GPSUtil(Context context) {
+        this.mContext = context.getApplicationContext();
     }
 
-    public static GPSUtils getInstance(Context context) {
+    public static GPSUtil getInstance(Context context) {
         if (instance == null) {
-            instance = new GPSUtils(context);
+            instance = new GPSUtil(context);
         }
         return instance;
     }

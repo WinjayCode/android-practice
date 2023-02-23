@@ -115,6 +115,7 @@ public class TestActivity extends AppCompatActivity {
         skillLL = findViewById(R.id.skill_ll);
         editText = findViewById(R.id.edit);
         testBtn = findViewById(R.id.test_btn);
+
         testBtn.setOnClickListener(v -> {
             LogUtil.d("HookSetOnClickListener", "111");
             Toast.makeText(TestActivity.this, "测试点击", Toast.LENGTH_SHORT).show();
@@ -192,7 +193,14 @@ public class TestActivity extends AppCompatActivity {
 //            String savedPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 //            boolean result = FileUtil.copyFolder(savedPath + File.separator + "test", savedPath + File.separator + "test2");
 //            LogUtil.d(TAG, "result=" + result);
+
+            if (mTestBinder != null) {
+                mTestBinder.testFun1();
+                mTestBinder.testFun2();
+                mTestBinder.getService().testFun();
+            }
         });
+
         // Hook
         HookSetOnClickListenerHelper.hook(this, testBtn);
 
@@ -290,7 +298,16 @@ public class TestActivity extends AppCompatActivity {
 //                sendBroadcast(new Intent("test"), "haha");
 //            }
 //        }, 2000);
+
+
+        Intent intent = new Intent(this, TestService.class);
+        // 和service无交互
+//        startService(intent);
+        // 可以和service进行交互
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
+
+    private TestService.TestBinder mTestBinder;
 
     @Override
     public void onUserInteraction() {
@@ -318,6 +335,50 @@ public class TestActivity extends AppCompatActivity {
         LogUtil.d(TAG, "isOnline=" + NetUtil.isOnline());
         LogUtil.d(TAG, "isEthernetConnected=" + NetUtil.isEthernetConnected(this));
         LogUtil.d(TAG, "networkAvailable=" + NetUtil.networkAvailable(this));
+
+/*
+        if (!AccessibilityServiceHelper.isServiceON(this, AutoClickAccessibilityService.class.getName())) {
+            AccessibilityServiceHelper.requirePermission(this);
+        }
+
+        HandlerManager.getInstance().postDelayedOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    LogUtil.d(TAG, "main thread mock event");
+
+//                    InjectUtil.click(90, 300);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 3000);
+
+        HandlerManager.getInstance().postDelayedOnSubThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    LogUtil.d(TAG, "sub thread mock event");
+
+//                    Instrumentation instrumentation = new Instrumentation();
+//                    instrumentation.sendKeyDownUpSync(KeyEvent.KEYCODE_BACK);
+//                    instrumentation.sendPointerSync(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 100, 10, 0));
+//                    instrumentation.sendPointerSync(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 100, 10, 0));
+
+//                    Util.slide(100, 10, 100, 100);
+//                    InjectUtil.click(90, 300);
+
+//                    InputManager inputManager = (InputManager) getSystemService(Context.INPUT_SERVICE);
+
+//                    CommandUtil.exec("adb shell input tap 90 200");
+
+//                    AutoClickAccessibilityService.getInstance().onClick(90, 300);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 3000);
+*/
     }
 
     /**
@@ -363,12 +424,14 @@ public class TestActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             LogUtil.d(TAG, "onServiceConnected()");
-            mService = new Messenger(service);
+//            mService = new Messenger(service);
+            mTestBinder = (TestService.TestBinder) service;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             LogUtil.d(TAG, "onServiceDisconnected()");
+            mTestBinder = null;
         }
     };
 
@@ -420,7 +483,7 @@ public class TestActivity extends AppCompatActivity {
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
-//        unbindService(mConnection);
+        unbindService(mConnection);
 
         if (mUnbinder != null) {
             mUnbinder.unbind();

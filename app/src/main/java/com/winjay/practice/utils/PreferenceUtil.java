@@ -20,7 +20,7 @@ import android.content.SharedPreferences.Editor;
  * @author Winjay
  * @date 2019-09-11
  */
-public class PreferenceUtils {
+public class PreferenceUtil {
     private final static String FILE_NAME = "config";
     private static SharedPreferences sp;
     private static Editor editor;

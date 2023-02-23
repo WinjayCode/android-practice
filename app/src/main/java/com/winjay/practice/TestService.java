@@ -2,6 +2,7 @@ package com.winjay.practice;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
@@ -14,7 +15,7 @@ public class TestService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new TestBinder();
     }
 
     @Override
@@ -45,6 +46,27 @@ public class TestService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         LogUtil.d(TAG, "onStartCommand()_startId=" + startId);
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    public void testFun() {
+        LogUtil.d(TAG);
+    }
+
+    // 用来和绑定端交互
+    public class TestBinder extends Binder {
+        private static final String TAG = "TestBinder";
+
+        public void testFun1() {
+            LogUtil.d(TAG);
+        }
+
+        public void testFun2() {
+            LogUtil.d(TAG);
+        }
+
+        public TestService getService() {
+            return TestService.this;
+        }
     }
 
     @Override

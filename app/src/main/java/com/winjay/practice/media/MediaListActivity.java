@@ -21,6 +21,7 @@ import com.winjay.practice.media.media_list.ImageListActivity;
 import com.winjay.practice.media.media_list.MusicListActivity;
 import com.winjay.practice.media.media_list.VideoListActivity;
 import com.winjay.practice.media.music.MusicPlayActivity;
+import com.winjay.practice.media.music.MusicPlayActivity2;
 import com.winjay.practice.media.projection.MediaProjectionActivity;
 import com.winjay.practice.media.audio_record.AudioRecordActivity;
 import com.winjay.practice.media.video.VideoPlayActivity;
@@ -49,6 +50,7 @@ public class MediaListActivity extends BaseActivity {
             put("Music List", MusicListActivity.class);
             put("Video List", VideoListActivity.class);
             put("Play Music", MusicPlayActivity.class);
+            put("Play Music2", MusicPlayActivity2.class);
             put("Play Video", VideoPlayActivity.class);
             put("Exoplayer", ExoPlayerActivity.class);
             put("AudioFocusTest", AudioFocusTestActivity.class);

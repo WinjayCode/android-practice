@@ -7,7 +7,6 @@ import android.transition.Explode;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +14,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.winjay.practice.utils.LogUtil;
-import com.winjay.practice.utils.ToastUtils;
+import com.winjay.practice.utils.ToastUtil;
 
 import java.util.List;
 
@@ -146,7 +145,7 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
 
     protected void toast(String text) {
         if (!TextUtils.isEmpty(text)) {
-            ToastUtils.show(this, text);
+            ToastUtil.show(this, text);
         }
     }
 

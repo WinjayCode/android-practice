@@ -331,6 +331,20 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".media.music.MusicPlayActivity2"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <service
+            android:name=".media.music.MusicPlayBrowserService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
+
+        <activity
             android:name=".media.media_list.ImageListActivity"
             android:exported="true"
             android:screenOrientation="portrait" />

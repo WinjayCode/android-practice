@@ -33,8 +33,8 @@ public class IPCListActivity extends BaseActivity {
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
         {
-            put("Binder", BinderStudyClientActivity.class);
             put("AIDL", BookManagerClientActivity.class);
+            put("Binder_Study", BinderStudyClientActivity.class);
             put("Messenger", MessengerActivity.class);
             put("ContentProvider", ProviderActivity.class);
         }

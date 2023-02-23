@@ -23,7 +23,7 @@ import com.winjay.practice.Constants
 import com.winjay.practice.utils.BitmapUtil
 import com.winjay.practice.utils.DisplayUtil
 import com.winjay.practice.utils.LogUtil
-import com.winjay.practice.utils.ToastUtils
+import com.winjay.practice.utils.ToastUtil
 import java.io.File
 import java.nio.ByteBuffer
 
@@ -95,7 +95,7 @@ class ScreenRecordService : Service() {
                 MediaProjectionActivity.MEDIA_PROJECTION_MODE -> {
                     if (configMediaRecorder(videoPath)) {
                         try {
-                            ToastUtils.show(this@ScreenRecordService, "正在录制")
+                            ToastUtil.show(this@ScreenRecordService, "正在录制")
                             if (mediaRecord != null) {
                                 mediaRecord?.start()
                             }

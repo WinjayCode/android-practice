@@ -7,7 +7,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class URLUtils {
+public class URLUtil {
     private static String TAG = "URLUtils";
 
     /**

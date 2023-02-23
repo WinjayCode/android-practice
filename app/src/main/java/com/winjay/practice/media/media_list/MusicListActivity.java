@@ -114,6 +114,7 @@ public class MusicListActivity extends BaseActivity implements EasyPermissions.P
                 long dateModified = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_MODIFIED));
                 int orientation = 0;//cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
 
+                // 较大版本封面
                 Uri contentUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id);
 
                 LogUtil.d(TAG, "path=" + path);

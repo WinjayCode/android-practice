@@ -2,7 +2,6 @@ package com.winjay.practice.ui.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -16,7 +15,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 
 import com.winjay.practice.R;
-import com.winjay.practice.utils.ToastUtils;
+import com.winjay.practice.utils.ToastUtil;
 
 public class MyDialog extends Dialog {
     private static final String TAG = MyDialog.class.getSimpleName();
@@ -70,7 +69,7 @@ public class MyDialog extends Dialog {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.show(getContext(), "点不到点不到");
+                ToastUtil.show(getContext(), "点不到点不到");
             }
         });
 

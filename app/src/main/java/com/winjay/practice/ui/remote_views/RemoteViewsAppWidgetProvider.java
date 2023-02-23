@@ -15,7 +15,7 @@ import com.winjay.practice.R;
 import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.utils.BitmapUtil;
 import com.winjay.practice.utils.LogUtil;
-import com.winjay.practice.utils.ToastUtils;
+import com.winjay.practice.utils.ToastUtil;
 
 /**
  * RemoteViews学习
@@ -38,7 +38,7 @@ public class RemoteViewsAppWidgetProvider extends AppWidgetProvider {
         LogUtil.d(TAG, "action=" + intent.getAction());
         // 这里判断是自己的action，做自己的事情，比如小部件被单击了要干什么，这里是做了一个动画效果
         if (intent.getAction().equals(CLICK_ACTION)) {
-            ToastUtils.show(context, "clicked it");
+            ToastUtil.show(context, "clicked it");
 
             HandlerManager.getInstance().postOnSubThread(new Runnable() {
                 @Override

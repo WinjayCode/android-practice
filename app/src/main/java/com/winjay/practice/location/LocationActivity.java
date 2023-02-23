@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.GnssStatus;
-import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -34,7 +33,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.winjay.practice.R;
 import com.winjay.practice.utils.NoDoubleClickListener;
-import com.winjay.practice.utils.ToastUtils;
+import com.winjay.practice.utils.ToastUtil;
 
 import java.util.List;
 
@@ -121,10 +120,10 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
                             mThread.start();
                         }
                     } else {
-                        ToastUtils.show(LocationActivity.this, "无法模拟定位！");
+                        ToastUtil.show(LocationActivity.this, "无法模拟定位！");
                     }
                 } else {
-                    ToastUtils.show(LocationActivity.this, "输入要模拟的经纬度信息！");
+                    ToastUtil.show(LocationActivity.this, "输入要模拟的经纬度信息！");
                 }
                 return;
             }

@@ -4,7 +4,10 @@ import com.google.gson.JsonObject;
 
 import java.math.BigInteger;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class Test {
 
@@ -208,6 +211,17 @@ public class Test {
 //        c = (int) (b / a * 100);
 //        System.out.println("c=" + c);
 //        // c=4
+
+
+//        // 减去时区偏移，否则会出现小时多出8小时的问题
+//        Date date = new Date(0 - TimeZone.getDefault().getRawOffset());
+//        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+//        String time = format.format(date);
+//        if (time.startsWith("00:")) {
+//            time = time.replaceFirst("00:", "");
+//        }
+//        System.out.println("time=" + time);
+//        // time=00:00
     }
 
     public static boolean isOnline() {

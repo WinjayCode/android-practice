@@ -35,7 +35,7 @@ import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.JsonUtil;
 import com.winjay.practice.utils.LogUtil;
-import com.winjay.practice.utils.PreferenceUtils;
+import com.winjay.practice.utils.PreferenceUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -460,12 +460,12 @@ public class StorageActivity extends BaseActivity {
 
     @OnClick(R.id.save_sp_btn)
     void saveSp() {
-        PreferenceUtils.putIntAsync(this, "sp_key", spInt++);
+        PreferenceUtil.putIntAsync(this, "sp_key", spInt++);
     }
 
     @OnClick(R.id.get_sp_btn)
     void getSp() {
-        toast(String.valueOf(PreferenceUtils.getInt(this, "sp_key", spInt)));
+        toast(String.valueOf(PreferenceUtil.getInt(this, "sp_key", spInt)));
     }
     /////////////////////////////////////////////////////// 键值对数据 ///////////////////////////////////////////////////////
 

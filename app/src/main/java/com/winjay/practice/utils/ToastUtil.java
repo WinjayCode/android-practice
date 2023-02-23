@@ -17,7 +17,7 @@ import java.lang.reflect.Proxy;
  * @author Winjay
  * @date 2020-01-08
  */
-public class ToastUtils {
+public class ToastUtil {
     private static Object iNotificationManagerObj;
 
     /**

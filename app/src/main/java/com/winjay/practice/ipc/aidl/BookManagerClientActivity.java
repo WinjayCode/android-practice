@@ -80,6 +80,7 @@ public class BookManagerClientActivity extends BaseActivity {
                 for (Book book : list) {
                     LogUtil.d(TAG, "bookName=" + book.bookName + ", bookId=" + book.bookId);
                 }
+                LogUtil.d(TAG, "book.size=" + bookManager.getSize());
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
