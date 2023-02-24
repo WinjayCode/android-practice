@@ -331,12 +331,12 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".media.music.MusicPlayActivity2"
+            android:name=".media.mediasession.MediaSessionActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
 
         <service
-            android:name=".media.music.MusicPlayBrowserService"
+            android:name=".media.mediasession.service.MusicBrowserService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

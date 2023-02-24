@@ -18,10 +18,13 @@ import com.winjay.practice.utils.LogUtil;
 
 /**
  * 多媒体按键监听
+ * <p>
+ * 2023.2.24 废弃！使用最新的多媒体应用架构
  *
  * @author Winjay
  * @date 21/02/3
  */
+@Deprecated
 public class MediaSessionHelper {
     private static final String TAG = MediaSessionHelper.class.getSimpleName();
     private Context mContext;

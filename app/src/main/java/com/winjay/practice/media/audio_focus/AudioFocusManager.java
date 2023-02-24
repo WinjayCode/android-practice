@@ -65,6 +65,10 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
         }
     }
 
+    public boolean requestAudioFocus() {
+        return requestFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+    }
+
     @Override
     public void onAudioFocusChange(int focusChange) {
         if (mAudioFocusChangeListener != null) {
@@ -86,6 +90,10 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
         } else {
             return mAudioManager.abandonAudioFocus(this);
         }
+    }
+
+    public void abandonAudioFocus() {
+        releaseAudioFocus();
     }
 
     /**
