@@ -24,6 +24,7 @@ import com.winjay.practice.media.audio_focus.AudioFocusManager;
 import com.winjay.practice.media.bean.AudioBean;
 import com.winjay.practice.media.interfaces.IMediaStatus;
 import com.winjay.practice.media.interfaces.MediaType;
+import com.winjay.practice.media.mediasession.data.MusicDataHelper;
 import com.winjay.practice.media.mediasession.players.MediaPlayerAdapter;
 import com.winjay.practice.media.mediasession.players.PlaybackInfoListener;
 import com.winjay.practice.media.mediasession.players.PlayerAdapter;
@@ -43,7 +44,7 @@ import java.util.List;
  * @author Winjay
  * @date 2023-02-21
  */
-public class MusicBrowserService extends MediaBrowserServiceCompat implements IMediaStatus {
+public class MusicBrowserService extends MediaBrowserServiceCompat {
     private static final String TAG = "MusicPlayBrowserService";
     private static final String ROOT_ID = "ROOT_ID";
     private static final String MY_MEDIA_ROOT_ID = "MY_MEDIA_ROOT_ID";
@@ -55,19 +56,7 @@ public class MusicBrowserService extends MediaBrowserServiceCompat implements IM
     private PlaybackStateCompat.Builder mPlaybackState;
     private MediaMetadataCompat.Builder mMediaMetadata;
 
-    private MediaPlayer mMediaPlayer;
-    private AudioFocusManager mAudioFocusManager;
-    private MediaNotificationReceiver mMediaNotificationReceiver;
-
     private String mParentId;
-
-    private boolean isPrepare = false;
-
-    private final List<AudioBean> mPlayList = new ArrayList<>();
-
-    private final String assetsDir = "audio";
-
-    private int mCurrentIndex = 0;
 
     private PlayerAdapter mPlayback;
     private boolean mServiceInStartedState;
@@ -124,11 +113,7 @@ public class MusicBrowserService extends MediaBrowserServiceCompat implements IM
         }
 
         // 模拟获取数据的过程，真实情况应该是异步从网络或本地读取数据
-        getAssetsSource();
-
-        List<MediaBrowserCompat.MediaItem> mediaItems = transformPlayList(mPlayList);
-
-//        MusicNotificationManager.getInstance(this).setMediaData(audioBean);
+        List<MediaBrowserCompat.MediaItem> mediaItems = MusicDataHelper.getMediaBrowserItemsFromAssets(this);
 
         // Check if this is the root menu:
         if (MY_MEDIA_ROOT_ID.equals(parentId)) {
@@ -139,33 +124,6 @@ public class MusicBrowserService extends MediaBrowserServiceCompat implements IM
             // and put the children of that menu in the mediaItems list...
         }
         result.sendResult(mediaItems);
-    }
-
-    private ArrayList<MediaBrowserCompat.MediaItem> transformPlayList(List<AudioBean> audioBeanList) {
-        ArrayList<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
-        for (int i = 0; i < audioBeanList.size(); i++) {
-            MediaMetadataCompat metadata = transformAudioBean(audioBeanList.get(i));
-            mediaItems.add(createMediaItem(metadata));
-        }
-        return mediaItems;
-    }
-
-    private MediaMetadataCompat transformAudioBean(AudioBean bean) {
-        MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
-        if (!TextUtils.isEmpty(bean.getTitle())) {
-            builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, bean.getTitle());
-        }
-        return builder.build();
-
-//        return new MediaMetadataCompat.Builder()
-//                .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "" + bean.mediaId)
-//                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, bean.tilte)
-//                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, bean.artist)
-//                .build();
-    }
-
-    private MediaBrowserCompat.MediaItem createMediaItem(MediaMetadataCompat metadata) {
-        return new MediaBrowserCompat.MediaItem(metadata.getDescription(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
     }
 
     @Override
@@ -184,8 +142,6 @@ public class MusicBrowserService extends MediaBrowserServiceCompat implements IM
         mMediaSession.setCallback(mMediaSessionCallback);
         setSessionToken(mMediaSession.getSessionToken());
 
-        mMediaSession.setActive(true);
-
         mPlaybackState = new PlaybackStateCompat.Builder();
         // 收藏按钮
 //        mPlaybackState.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
@@ -194,41 +150,8 @@ public class MusicBrowserService extends MediaBrowserServiceCompat implements IM
 //                .build());
         mMediaMetadata = new MediaMetadataCompat.Builder();
 
-        mMediaPlayer = new MediaPlayer();
-        mAudioFocusManager = new AudioFocusManager(this, MediaType.MUSIC);
-        mAudioFocusManager.setOnAudioFocusChangeListener(mOnAudioFocusChangeListener);
-        mMediaPlayer.setAudioAttributes(mAudioFocusManager.getAudioAttributes());
-
-        registerReceiver();
-
-        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                LogUtil.d(TAG);
-                isPrepare = true;
-                mMediaSessionCallback.onPlay();
-//                MusicNotificationManager.getInstance(mContext).showMusicNotification(true);
-            }
-        });
-        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                LogUtil.d(TAG);
-                mMediaSessionCallback.onSkipToNext();
-            }
-        });
-        mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                LogUtil.e(TAG, "what=" + what + ", extra=" + extra);
-                isPrepare = false;
-                mMediaPlayer.reset();
-                return false;
-            }
-        });
-
-
         mPlayback = new MediaPlayerAdapter(this, new MediaPlayerListener());
+        mPlayback.play();
     }
 
     public class MediaPlayerListener extends PlaybackInfoListener {
@@ -256,6 +179,12 @@ public class MusicBrowserService extends MediaBrowserServiceCompat implements IM
                     mServiceManager.moveServiceOutOfStartedState(state);
                     break;
             }
+        }
+
+        @Override
+        public void onPlaybackCompleted() {
+            LogUtil.d(TAG);
+            mMediaSessionCallback.onSkipToNext();
         }
 
         class ServiceManager {
@@ -293,90 +222,59 @@ public class MusicBrowserService extends MediaBrowserServiceCompat implements IM
 
     }
 
-    AudioFocusManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioFocusManager.OnAudioFocusChangeListener() {
-        @Override
-        public void onAudioFocusChange(int focusChange) {
-            switch (focusChange) {
-                case AudioManager.AUDIOFOCUS_GAIN:
-                    LogUtil.d(TAG, "media:AUDIOFOCUS_GAIN");
-                    mMediaSessionCallback.onPlay();
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS:
-                    LogUtil.d(TAG, "media:AUDIOFOCUS_LOSS");
-                    mMediaSessionCallback.onStop();
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                    LogUtil.d(TAG, "media:AUDIOFOCUS_LOSS_TRANSIENT");
-                    mMediaSessionCallback.onPause();
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                    LogUtil.d(TAG, "media:AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
-                    mMediaSessionCallback.onPause();
-                    break;
-            }
-        }
-    };
+    private int mCurrentIndex = 0;
 
     MediaSessionCompat.Callback mMediaSessionCallback = new MediaSessionCompat.Callback() {
+
         @Override
         public void onPrepare() {
             LogUtil.d(TAG);
-            setAssetsSource();
+
+            mMediaSession.setMetadata(MusicDataHelper.getMediaMetadataItemsFromAssets().get(mCurrentIndex));
+
+            if (!mMediaSession.isActive()) {
+                mMediaSession.setActive(true);
+            }
         }
 
         @Override
         public void onPlay() {
             LogUtil.d(TAG);
-            if (isPrepare) {
-                if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioFocusManager.requestFocus()) {
-                    mMediaPlayer.start();
-                }
-            }
-
-//            MusicNotificationManager.getInstance(mContext).showMusicNotification(true);
+            onPrepare();
+            mPlayback.playFromMedia(MusicDataHelper.getMediaMetadataItemsFromAssets().get(mCurrentIndex));
         }
 
         @Override
         public void onPause() {
             LogUtil.d(TAG);
-            mMediaPlayer.pause();
-//            MusicNotificationManager.getInstance(mContext).showMusicNotification(false);
+            mPlayback.pause();
         }
 
         @Override
         public void onStop() {
             LogUtil.d(TAG);
-            mMediaPlayer.stop();
-            mMediaPlayer.release();
+            mPlayback.stop();
+            mMediaSession.setActive(false);
 
-//            MusicNotificationManager.getInstance(mContext).showMusicNotification(false);
-
-            mAudioFocusManager.releaseAudioFocus();
         }
 
         @Override
         public void onSkipToNext() {
             LogUtil.d(TAG);
-            ++mCurrentIndex;
-            if (mCurrentIndex > mPlayList.size() - 1) {
-                mCurrentIndex = 0;
-            }
-            onPrepare();
+            mCurrentIndex = (++mCurrentIndex % MusicDataHelper.getMediaMetadataItemsFromAssets().size());
+            onPlay();
         }
 
         @Override
         public void onSkipToPrevious() {
             LogUtil.d(TAG);
-            --mCurrentIndex;
-            if (mCurrentIndex < 0) {
-                mCurrentIndex = mPlayList.size() - 1;
-            }
-            onPrepare();
+            mCurrentIndex = mCurrentIndex > 0 ? mCurrentIndex - 1 : MusicDataHelper.getMediaMetadataItemsFromAssets().size() - 1;
+            onPlay();
         }
 
         @Override
         public void onSeekTo(long pos) {
-            mMediaPlayer.seekTo((int) pos);
+            mPlayback.seekTo(pos);
         }
 
         @Override
@@ -388,65 +286,6 @@ public class MusicBrowserService extends MediaBrowserServiceCompat implements IM
         }
     };
 
-    private void getAssetsSource() {
-        try {
-            String[] mAssetsMusicList = getAssets().list(assetsDir);
-            LogUtil.d(TAG, "mAssetsMusicList=" + mAssetsMusicList.length);
-            for (String title : mAssetsMusicList) {
-                LogUtil.d(TAG, "assetsFile=" + title);
-                AudioBean bean = new AudioBean();
-                bean.setTitle(title);
-                mPlayList.add(bean);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setLocalSource(String path) {
-        try {
-            mMediaPlayer.setDataSource(path);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setAssetsSource() {
-        LogUtil.d(TAG, "assets=" + mPlayList.get(mCurrentIndex).getTitle());
-        mMediaPlayer.reset();
-        try {
-            AssetFileDescriptor afd = getAssets().openFd(assetsDir + File.separator + mPlayList.get(mCurrentIndex).getTitle());
-            mMediaPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        mMediaPlayer.prepareAsync();
-
-        mMediaSession.setMetadata(transformAudioBean(mPlayList.get(mCurrentIndex)));
-
-//        MusicNotificationManager.getInstance(this).setMediaData(audioBean);
-    }
-
-    private void registerReceiver() {
-        if (mMediaNotificationReceiver == null) {
-            mMediaNotificationReceiver = new MediaNotificationReceiver(this);
-        }
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constants.ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_PREV);
-        intentFilter.addAction(Constants.ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_PAUSE);
-        intentFilter.addAction(Constants.ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_PLAY);
-        intentFilter.addAction(Constants.ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_NEXT);
-        intentFilter.addAction(Constants.ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_CLOSE);
-        registerReceiver(mMediaNotificationReceiver, intentFilter);
-    }
-
-    private void unregisterReceiver() {
-        if (mMediaNotificationReceiver != null) {
-            unregisterReceiver(mMediaNotificationReceiver);
-            mMediaNotificationReceiver = null;
-        }
-    }
-
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
@@ -457,46 +296,11 @@ public class MusicBrowserService extends MediaBrowserServiceCompat implements IM
     public void onDestroy() {
         super.onDestroy();
 
-        isPrepare = false;
-
-        if (mMediaPlayer != null) {
-            if (mMediaPlayer.isPlaying()) {
-                mMediaPlayer.stop();
-            }
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
-
-        if (mMediaSession != null) {
-            mMediaSession.release();
-            mMediaSession = null;
-        }
-
-        unregisterReceiver();
+        mPlayback.stop();
 
         mMediaSession.setActive(false);
         mMediaSession.release();
 
 //        MusicNotificationManager.getInstance(mContext).cancel();
-    }
-
-    @Override
-    public void prev() {
-        mMediaSessionCallback.onSkipToPrevious();
-    }
-
-    @Override
-    public void next() {
-        mMediaSessionCallback.onSkipToNext();
-    }
-
-    @Override
-    public void play() {
-        mMediaSessionCallback.onPlay();
-    }
-
-    @Override
-    public void pause() {
-        mMediaSessionCallback.onPause();
     }
 }

@@ -222,6 +222,13 @@ public class Test {
 //        }
 //        System.out.println("time=" + time);
 //        // time=00:00
+
+
+//        int a = 2;
+//        int b = 5;
+//        int c = ++a % b;
+//        System.out.println("c=" + c);
+//        // 0,1,2,3,4,->0,1,2,3,4,循环
     }
 
     public static boolean isOnline() {

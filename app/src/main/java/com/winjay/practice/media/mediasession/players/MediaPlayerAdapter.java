@@ -23,7 +23,9 @@ import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import com.winjay.practice.media.mediasession.MusicLibrary;
+import com.winjay.practice.media.mediasession.data.MusicDataHelper;
+
+import java.io.File;
 
 /**
  * Exposes the functionality of the {@link MediaPlayer} and implements the {@link PlayerAdapter}
@@ -79,8 +81,7 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
     @Override
     public void playFromMedia(MediaMetadataCompat metadata) {
         mCurrentMedia = metadata;
-        final String mediaId = metadata.getDescription().getMediaId();
-        playFile(MusicLibrary.getMusicFilename(mediaId));
+        playFileFromAssets(MusicDataHelper.ASSETS_DIR + File.separator + metadata.getDescription().getTitle());
     }
 
     @Override
@@ -88,7 +89,7 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
         return mCurrentMedia;
     }
 
-    private void playFile(String filename) {
+    private void playFileFromAssets(String filename) {
         boolean mediaChanged = (mFilename == null || !filename.equals(mFilename));
         if (mCurrentMediaPlayedToCompletion) {
             // Last audio file was played to completion, the resourceId hasn't changed, but the
