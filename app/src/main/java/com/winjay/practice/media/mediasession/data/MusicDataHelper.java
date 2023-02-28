@@ -11,13 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 测试在线音频列表地址：https://storage.googleapis.com/uamp/catalog.json
+ *
  * @author Winjay
  * @date 2023-02-27
  */
 public class MusicDataHelper {
     private static final String TAG = MusicDataHelper.class.getSimpleName();
     public static final String ASSETS_DIR = "audio";
-    private static List<MediaMetadataCompat> mMediaMetadataItems = new ArrayList<>();
+    private static final List<MediaMetadataCompat> mMediaMetadataItems = new ArrayList<>();
 
     public static List<MediaBrowserCompat.MediaItem> getMediaBrowserItemsFromAssets(Context context) {
         List<MediaBrowserCompat.MediaItem> result = new ArrayList<>();

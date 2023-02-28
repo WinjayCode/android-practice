@@ -61,6 +61,8 @@
 
     <uses-permission android:name="android.software.activities_on_secondary_displays" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />

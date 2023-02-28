@@ -28,12 +28,15 @@ import android.widget.SeekBar;
 
 import androidx.appcompat.widget.AppCompatSeekBar;
 
+import com.winjay.practice.utils.LogUtil;
+
 /**
  * SeekBar that can be used with a {@link MediaSessionCompat} to track and seek in playing
  * media.
  */
 
 public class MediaSeekBar extends AppCompatSeekBar {
+    private static final String TAG = MediaSeekBar.class.getSimpleName();
     private MediaControllerCompat mMediaController;
     private ControllerCallback mControllerCallback;
 
@@ -124,7 +127,12 @@ public class MediaSeekBar extends AppCompatSeekBar {
             // way to do that is to create a ValueAnimator to update it so the bar reaches
             // the end of the media the same time as playback gets there (or close enough).
             if (state != null && state.getState() == PlaybackStateCompat.STATE_PLAYING) {
-                final int timeToEnd = (int) ((getMax() - progress) / state.getPlaybackSpeed());
+                LogUtil.d(TAG, "max=" + getMax());
+                LogUtil.d(TAG, "progress=" + progress);
+                LogUtil.d(TAG, "speed=" + state.getPlaybackSpeed());
+                int timeToEnd = (int) ((getMax() - progress) / state.getPlaybackSpeed());
+                LogUtil.d(TAG, "timeToEnd=" + timeToEnd);
+                timeToEnd = Math.max(timeToEnd, 0);
 
                 mProgressAnimator = ValueAnimator.ofInt(progress, getMax())
                         .setDuration(timeToEnd);

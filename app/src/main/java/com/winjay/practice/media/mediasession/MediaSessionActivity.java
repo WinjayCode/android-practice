@@ -56,6 +56,8 @@ public class MediaSessionActivity extends BaseActivity {
     @BindView(R.id.media_seek_bar)
     MediaSeekBar media_seek_bar;
 
+
+
     private MediaBrowserHelper mMediaBrowserHelper;
     private boolean mIsPlaying;
 
@@ -105,8 +107,11 @@ public class MediaSessionActivity extends BaseActivity {
     private class MediaControllerListener extends MediaControllerCompat.Callback {
         @Override
         public void onPlaybackStateChanged(PlaybackStateCompat playbackState) {
-            mIsPlaying = playbackState != null &&
-                    playbackState.getState() == PlaybackStateCompat.STATE_PLAYING;
+            if (playbackState == null) {
+                return;
+            }
+            LogUtil.d(TAG, "state=" + playbackState.getState());
+            mIsPlaying = playbackState.getState() == PlaybackStateCompat.STATE_PLAYING;
             if (mIsPlaying) {
                 play_pause_iv.setImageResource(android.R.drawable.ic_media_pause);
             } else {
@@ -163,14 +168,14 @@ public class MediaSessionActivity extends BaseActivity {
     private void getMusicInfo(String filePath) {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();//实例化MediaMetadataRetriever对象mmr
         mmr.setDataSource(filePath);//设置mmr对象的数据源为上面file对象的绝对路径
-        String ablumString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);//获得音乐专辑的标题
+        String albumString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);//获得音乐专辑的标题
         String artistString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);//获取音乐的艺术家信息
         String titleString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);//获取音乐标题信息
         String mimetypeString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);//获取音乐mime类型
         String durationString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);//获取音乐持续时间
         String bitrateString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);//获取音乐比特率，位率
         String dateString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DATE);//获取音乐的日期
-        LogUtil.d(TAG, "ablumString=" + ablumString
+        LogUtil.d(TAG, "albumString=" + albumString
                 + "\n" + "artistString=" + artistString
                 + "\n" + "titleString=" + titleString
                 + "\n" + "mimetypeString=" + mimetypeString

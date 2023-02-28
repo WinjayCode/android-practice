@@ -24,6 +24,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.winjay.practice.media.mediasession.data.MusicDataHelper;
+import com.winjay.practice.utils.LogUtil;
 
 import java.io.File;
 
@@ -32,7 +33,7 @@ import java.io.File;
  * so that Activity can control music playback.
  */
 public final class MediaPlayerAdapter extends PlayerAdapter {
-
+    private static final String TAG = MediaPlayerAdapter.class.getSimpleName();
     private final Context mContext;
     private MediaPlayer mMediaPlayer;
     private String mFilename;
@@ -49,18 +50,19 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
         super(context);
         mContext = context.getApplicationContext();
         mPlaybackInfoListener = listener;
+        initializeMediaPlayer();
     }
 
-    /**
-     * Once the {@link MediaPlayer} is released, it can't be used again, and another one has to be
-     * created. In the onStop() method of the Activity the {@link MediaPlayer} is
-     * released. Then in the onStart() of the Activity a new {@link MediaPlayer}
-     * object has to be created. That's why this method is private, and called by load(int) and
-     * not the constructor.
-     */
     private void initializeMediaPlayer() {
         if (mMediaPlayer == null) {
             mMediaPlayer = new MediaPlayer();
+            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    LogUtil.d(TAG, "duration=" + mMediaPlayer.getDuration());
+                    play();
+                }
+            });
             mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
@@ -72,6 +74,13 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
                     // Paused allows: seekTo(), start(), pause(), stop()
                     // Stop allows: stop()
                     setNewState(PlaybackStateCompat.STATE_PAUSED);
+                }
+            });
+            mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    LogUtil.e(TAG, "what=" + what + ", extra=" + extra);
+                    return false;
                 }
             });
         }
@@ -90,7 +99,7 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
     }
 
     private void playFileFromAssets(String filename) {
-        boolean mediaChanged = (mFilename == null || !filename.equals(mFilename));
+        boolean mediaChanged = !filename.equals(mFilename);
         if (mCurrentMediaPlayedToCompletion) {
             // Last audio file was played to completion, the resourceId hasn't changed, but the
             // player was released, so force a reload of the media file for playback.
@@ -103,12 +112,12 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
             }
             return;
         } else {
-            release();
+//            release();
         }
 
         mFilename = filename;
 
-        initializeMediaPlayer();
+        mMediaPlayer.reset();
 
         try {
             AssetFileDescriptor assetFileDescriptor = mContext.getAssets().openFd(mFilename);
@@ -121,27 +130,12 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
         }
 
         try {
-            mMediaPlayer.prepare();
+            mMediaPlayer.prepareAsync();
         } catch (Exception e) {
             throw new RuntimeException("Failed to open file: " + mFilename, e);
         }
 
-        play();
-    }
-
-    @Override
-    public void onStop() {
-        // Regardless of whether or not the MediaPlayer has been created / started, the state must
-        // be updated, so that MediaNotificationManager can take down the notification.
-        setNewState(PlaybackStateCompat.STATE_STOPPED);
-        release();
-    }
-
-    private void release() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
+//        play();
     }
 
     @Override
@@ -162,6 +156,21 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
         if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
             setNewState(PlaybackStateCompat.STATE_PAUSED);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        // Regardless of whether or not the MediaPlayer has been created / started, the state must
+        // be updated, so that MediaNotificationManager can take down the notification.
+        setNewState(PlaybackStateCompat.STATE_STOPPED);
+        release();
+    }
+
+    private void release() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.release();
+            mMediaPlayer = null;
         }
     }
 

@@ -3,10 +3,6 @@ package com.winjay.practice.media.mediasession.service;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.AssetFileDescriptor;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
@@ -16,24 +12,17 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.winjay.practice.Constants;
-import com.winjay.practice.media.audio_focus.AudioFocusManager;
 import com.winjay.practice.media.bean.AudioBean;
-import com.winjay.practice.media.interfaces.IMediaStatus;
-import com.winjay.practice.media.interfaces.MediaType;
 import com.winjay.practice.media.mediasession.data.MusicDataHelper;
 import com.winjay.practice.media.mediasession.players.MediaPlayerAdapter;
 import com.winjay.practice.media.mediasession.players.PlaybackInfoListener;
 import com.winjay.practice.media.mediasession.players.PlayerAdapter;
-import com.winjay.practice.media.receiver.MediaNotificationReceiver;
+import com.winjay.practice.media.notification.MusicNotificationManager2;
 import com.winjay.practice.utils.LogUtil;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,8 +48,8 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
     private String mParentId;
 
     private PlayerAdapter mPlayback;
+    private int mCurrentIndex = 0;
     private boolean mServiceInStartedState;
-
 
     /**
      * 控制客户端链接
@@ -151,7 +140,6 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
         mMediaMetadata = new MediaMetadataCompat.Builder();
 
         mPlayback = new MediaPlayerAdapter(this, new MediaPlayerListener());
-        mPlayback.play();
     }
 
     public class MediaPlayerListener extends PlaybackInfoListener {
@@ -194,18 +182,23 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
 //                        mMediaNotificationManager.getNotification(
 //                                mPlayback.getCurrentMedia(), state, getSessionToken());
 
-                if (!mServiceInStartedState) {
-                    ContextCompat.startForegroundService(
-                            mContext,
-                            new Intent(mContext, MusicBrowserService.class));
-                    mServiceInStartedState = true;
-                }
+//                if (!mServiceInStartedState) {
+//                    ContextCompat.startForegroundService(
+//                            mContext,
+//                            new Intent(mContext, MusicBrowserService.class));
+//                    mServiceInStartedState = true;
+//                }
 
 //                startForeground(MediaNotificationManager.NOTIFICATION_ID, notification);
+
+                Notification notification = MusicNotificationManager2.getInstance(mContext).getNotification(
+                        mPlayback.getCurrentMedia().getDescription(),
+                        mMediaSession.getSessionToken());
+                startForeground(Constants.NOTIFICATION_ID, notification);
             }
 
             private void updateNotificationForPause(PlaybackStateCompat state) {
-                stopForeground(false);
+//                stopForeground(false);
 //                Notification notification =
 //                        mMediaNotificationManager.getNotification(
 //                                mPlayback.getCurrentMedia(), state, getSessionToken());
@@ -214,15 +207,13 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
             }
 
             private void moveServiceOutOfStartedState(PlaybackStateCompat state) {
-                stopForeground(true);
-                stopSelf();
-                mServiceInStartedState = false;
+//                stopForeground(true);
+//                stopSelf();
+//                mServiceInStartedState = false;
             }
         }
 
     }
-
-    private int mCurrentIndex = 0;
 
     MediaSessionCompat.Callback mMediaSessionCallback = new MediaSessionCompat.Callback() {
 
@@ -240,7 +231,6 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
         @Override
         public void onPlay() {
             LogUtil.d(TAG);
-            onPrepare();
             mPlayback.playFromMedia(MusicDataHelper.getMediaMetadataItemsFromAssets().get(mCurrentIndex));
         }
 
@@ -262,6 +252,7 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
         public void onSkipToNext() {
             LogUtil.d(TAG);
             mCurrentIndex = (++mCurrentIndex % MusicDataHelper.getMediaMetadataItemsFromAssets().size());
+            onPrepare();
             onPlay();
         }
 
@@ -269,6 +260,7 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
         public void onSkipToPrevious() {
             LogUtil.d(TAG);
             mCurrentIndex = mCurrentIndex > 0 ? mCurrentIndex - 1 : MusicDataHelper.getMediaMetadataItemsFromAssets().size() - 1;
+            onPrepare();
             onPlay();
         }
 
@@ -300,7 +292,5 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
 
         mMediaSession.setActive(false);
         mMediaSession.release();
-
-//        MusicNotificationManager.getInstance(mContext).cancel();
     }
 }
