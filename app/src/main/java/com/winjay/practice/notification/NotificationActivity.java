@@ -1,5 +1,6 @@
 package com.winjay.practice.notification;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -43,6 +44,12 @@ public class NotificationActivity extends BaseActivity {
     RadioGroup visibility_rg;
 
     private int notificationGrade = 1;
+
+    @Override
+    protected String[] permissions() {
+        // android 13 运行时通知权限
+        return new String[]{Manifest.permission.POST_NOTIFICATIONS};
+    }
 
     @Override
     protected int getLayoutId() {

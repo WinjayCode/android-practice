@@ -231,7 +231,7 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
         --mCurrentIndex;
         if (mSourceType == SourceType.ASSETS_TYPE) {
             if (mCurrentIndex < 0) {
-                mCurrentIndex = mAssetsMusicList.length;
+                mCurrentIndex = mAssetsMusicList.length - 1;
             }
             setAssetsSource();
         } else if (mSourceType == SourceType.USB_TYPE) {

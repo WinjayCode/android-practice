@@ -154,8 +154,8 @@ public class MediaSessionActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         media_seek_bar.disconnectController();
+        super.onDestroy();
         mMediaBrowserHelper.onStop();
     }
 

@@ -1,6 +1,7 @@
 package com.winjay.practice.media.mediasession.service;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -194,7 +195,9 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
                 Notification notification = MusicNotificationManager2.getInstance(mContext).getNotification(
                         mPlayback.getCurrentMedia().getDescription(),
                         mMediaSession.getSessionToken());
-                startForeground(Constants.NOTIFICATION_ID, notification);
+                NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(Constants.NOTIFICATION_ID, notification);
+//                startForeground(Constants.NOTIFICATION_ID, notification);
             }
 
             private void updateNotificationForPause(PlaybackStateCompat state) {

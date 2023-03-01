@@ -176,6 +176,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
+    // media
+    implementation "androidx.media:media:1.5.0"
+
     // appcompat
     implementation 'androidx.appcompat:appcompat:1.5.1'
 

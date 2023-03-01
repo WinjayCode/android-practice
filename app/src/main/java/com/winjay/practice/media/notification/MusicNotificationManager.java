@@ -38,7 +38,7 @@ public class MusicNotificationManager {
         Intent contentIntent = new Intent(context, MusicPlayActivity.class);
         PendingIntent contentPendingIntent = PendingIntent.getActivity(context, 0, contentIntent, PendingIntent.FLAG_IMMUTABLE);
 
-        notificationBuilder.setContent(remoteViews)
+        notificationBuilder.setCustomContentView(remoteViews)
                 .setWhen(System.currentTimeMillis())
                 .setTicker("正在播放")
                 .setPriority(Notification.PRIORITY_DEFAULT)
