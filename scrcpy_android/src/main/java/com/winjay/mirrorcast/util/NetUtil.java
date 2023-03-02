@@ -8,7 +8,7 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2022-09-19
  */
 public class NetUtil {

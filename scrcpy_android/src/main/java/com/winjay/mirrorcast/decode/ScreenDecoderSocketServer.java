@@ -10,7 +10,7 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2022-12-01
  */
 public class ScreenDecoderSocketServer extends WebSocketServer {

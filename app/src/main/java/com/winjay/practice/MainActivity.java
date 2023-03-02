@@ -15,7 +15,7 @@ import com.winjay.practice.activity_manager.ActivityManagerActivity;
 import com.winjay.practice.bluetooth.BluetoothListActivity;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.crash.CrashTestActivity;
-import com.winjay.practice.design_mode.DesignModeListActivity;
+import com.winjay.practice.architecture_mode.ArchitectureModeListActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
 import com.winjay.practice.file_browser.FileBrowserActivity;
 import com.winjay.practice.hardware_test.HardwareTestListActivity;
@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity {
             put("Intent Filter", null);
             put("DownloadManager", DownloadManagerActivity.class);
             put("Storage", StorageActivity.class);
-            put("Design Mode", DesignModeListActivity.class);
+            put("Architecture Mode", ArchitectureModeListActivity.class);
             put("IOC", IOCActivity.class);
             put("IPC", IPCListActivity.class);
             put("SystemInfo", SystemInfoActivity.class);

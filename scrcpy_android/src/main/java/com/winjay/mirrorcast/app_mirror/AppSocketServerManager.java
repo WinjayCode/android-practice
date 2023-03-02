@@ -6,7 +6,7 @@ import com.winjay.mirrorcast.util.LogUtil;
 import java.net.InetSocketAddress;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2022-11-29
  */
 public class AppSocketServerManager {

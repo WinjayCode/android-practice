@@ -6,7 +6,7 @@
 
         <variable
             name="bean"
-            type="com.winjay.practice.design_mode.mvvm.databinding.MVVMBean" />
+            type="com.winjay.practice.architecture_mode.mvvm.databinding.MVVMBean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

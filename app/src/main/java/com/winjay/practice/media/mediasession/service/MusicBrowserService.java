@@ -21,7 +21,7 @@ import com.winjay.practice.media.mediasession.data.MusicDataHelper;
 import com.winjay.practice.media.mediasession.players.MediaPlayerAdapter;
 import com.winjay.practice.media.mediasession.players.PlaybackInfoListener;
 import com.winjay.practice.media.mediasession.players.PlayerAdapter;
-import com.winjay.practice.media.notification.MusicNotificationManager2;
+import com.winjay.practice.media.notification.MediaStyleNotificationManager;
 import com.winjay.practice.utils.LogUtil;
 
 import java.util.List;
@@ -192,7 +192,7 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
 
 //                startForeground(MediaNotificationManager.NOTIFICATION_ID, notification);
 
-                Notification notification = MusicNotificationManager2.getInstance(mContext).getNotification(
+                Notification notification = MediaStyleNotificationManager.getInstance(mContext).getNotification(
                         mPlayback.getCurrentMedia().getDescription(),
                         mMediaSession.getSessionToken());
                 NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);

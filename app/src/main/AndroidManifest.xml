@@ -115,31 +115,31 @@
             android:exported="true"
             android:screenOrientation="portrait" />
 
-        <!-- design mode start -->
+        <!-- architecture mode start -->
         <activity
-            android:name=".design_mode.DesignModeListActivity"
+            android:name=".architecture_mode.ArchitectureModeListActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".design_mode.mvc.controller.MVCActivity"
+            android:name=".architecture_mode.mvc.controller.MVCActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".design_mode.mvp.view.MVPActivity"
+            android:name=".architecture_mode.mvp.view.MVPActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".design_mode.mvvm.databinding.MVVMDataBindingActivity"
+            android:name=".architecture_mode.mvvm.databinding.MVVMDataBindingActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".design_mode.mvvm.view.UserListActivity"
+            android:name=".architecture_mode.mvvm.view.UserListActivity"
             android:exported="true" />
-        <!-- design mode end -->
+        <!-- architecture mode end -->
 
         <!-- ipc start -->
         <activity

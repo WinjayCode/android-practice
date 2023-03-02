@@ -8,7 +8,7 @@ import java.net.Socket;
 
 /**
  * send GC ip to GO
- * @author F2848777
+ * @author Winjay
  * @date 2022-09-14
  */
 public class ClientThread extends Thread {

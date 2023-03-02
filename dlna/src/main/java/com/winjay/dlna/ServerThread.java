@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * receive GC ip
  *
- * @author F2848777
+ * @author Winjay
  * @date 2022-09-14
  */
 public class ServerThread extends Thread {

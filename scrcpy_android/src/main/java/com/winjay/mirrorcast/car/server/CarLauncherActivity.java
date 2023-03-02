@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2022-11-24
  */
 public class CarLauncherActivity extends BaseActivity implements View.OnClickListener {

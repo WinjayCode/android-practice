@@ -3,7 +3,7 @@ package com.winjay.mirrorcast.car.server;
 import android.graphics.drawable.Drawable;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2022-11-24
  */
 public class AppBean {

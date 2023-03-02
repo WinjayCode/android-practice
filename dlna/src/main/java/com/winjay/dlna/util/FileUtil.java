@@ -9,7 +9,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2022-09-13
  */
 public class FileUtil {

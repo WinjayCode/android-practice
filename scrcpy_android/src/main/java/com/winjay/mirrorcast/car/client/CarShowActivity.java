@@ -25,7 +25,7 @@ import com.winjay.mirrorcast.util.DisplayUtil;
 import com.winjay.mirrorcast.util.LogUtil;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2022-11-25
  */
 public class CarShowActivity extends BaseActivity {

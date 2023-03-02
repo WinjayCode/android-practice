@@ -16,7 +16,7 @@ import com.winjay.practice.media.bean.AudioBean;
 import com.winjay.practice.media.music.MusicPlayActivity;
 
 /**
- * 音乐通知栏
+ * 音乐通知栏（自定义样式）
  *
  * @author Winjay
  * @date 21/02/34

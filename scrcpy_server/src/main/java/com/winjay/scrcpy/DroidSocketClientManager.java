@@ -4,7 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2022-12-02
  */
 public class DroidSocketClientManager {

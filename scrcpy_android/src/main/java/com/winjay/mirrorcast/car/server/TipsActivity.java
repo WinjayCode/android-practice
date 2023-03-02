@@ -11,7 +11,7 @@ import com.winjay.mirrorcast.databinding.ActivityTipsBinding;
 import com.winjay.mirrorcast.util.LogUtil;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2022-11-30
  */
 public class TipsActivity extends BaseActivity {

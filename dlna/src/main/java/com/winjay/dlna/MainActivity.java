@@ -52,7 +52,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2022-09-09
  */
 public class MainActivity extends com.winjay.dlna.BaseActivity {

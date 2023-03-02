@@ -30,7 +30,7 @@ import com.winjay.mirrorcast.wifidirect.ServerThread;
 import com.winjay.mirrorcast.wifidirect.WIFIDirectActivity;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2022-11-09
  */
 public class MainActivity extends com.winjay.mirrorcast.BaseActivity implements View.OnClickListener {
