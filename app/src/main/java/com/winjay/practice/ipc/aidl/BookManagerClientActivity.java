@@ -22,6 +22,9 @@ import butterknife.OnClick;
 
 /**
  * IPC-AIDL-客户端
+ * 优点：支持一对多并发通信，支持实时通信
+ * 缺点：使用稍复杂，需要处理好线程同步
+ * 适用场景：一对多通信且有RPC需求（有请求，有响应）
  *
  * @author Winjay
  * @date 2020-02-21

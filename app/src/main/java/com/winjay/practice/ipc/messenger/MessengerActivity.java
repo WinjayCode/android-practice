@@ -20,6 +20,9 @@ import com.winjay.practice.utils.LogUtil;
 
 /**
  * IPC-Messenger-客户端
+ * 优点：功能一般，支持一对多串行通信，支持实时通信
+ * 缺点：不能很好处理高并发情形，不支持RPC（请求响应），数据通过Message进行传输，因此只能传输Bundle支持的数据类型
+ * 使用场景：低并发的一对多及时通信，无RPC需求，或者无须要返回结果的RPC需求。
  *
  * @author Winjay
  * @date 2020-02-18

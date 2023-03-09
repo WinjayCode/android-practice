@@ -15,6 +15,9 @@ import com.winjay.practice.R;
 
 /**
  * ContentProvider学习
+ * 优点：在数据源访问方面功能强大，支持一对多并发数据共享，可通过Call方法扩展其他操作
+ * 缺点：受约束的AIDL，主要提供数据源的CRUD操作（增加(Create)、读取(Read)、更新(Update)和删除(Delete)）。
+ * 适用场景：一对多的进程间的数据共享。
  *
  * @author Winjay
  * @date 2019/5/11
