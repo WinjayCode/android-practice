@@ -229,6 +229,11 @@ public class Test {
 //        int c = ++a % b;
 //        System.out.println("c=" + c);
 //        // 0,1,2,3,4,->0,1,2,3,4,循环
+
+
+//        float a = (float) (Math.round(91.306816 * 10)) / 10;
+//        System.out.println("a=" + a);
+        // 91.3
     }
 
     public static boolean isOnline() {
