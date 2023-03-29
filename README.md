@@ -20,7 +20,9 @@
   - Bluetooth Call
 - Crash
 - Design Pattern
+  - Adapter
   - Builder
+  - Decorator
   - Observer
   - Singleton
   - Strategy
