@@ -13,6 +13,7 @@ import com.winjay.practice.MainAdapter;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.media.audio_focus.AudioFocusTestActivity;
+import com.winjay.practice.media.audio_record.ktv.KTVActivity;
 import com.winjay.practice.media.camera.CameraListActivity;
 import com.winjay.practice.media.codec.MediaCodecActivity;
 import com.winjay.practice.media.exoplayer.ExoPlayerActivity;
@@ -46,6 +47,7 @@ public class MediaListActivity extends BaseActivity {
         {
             put("MediaSession", MediaSessionActivity.class);
             put("AudioRecorder", AudioRecordActivity.class);
+            put("KTV", KTVActivity.class);
             put("Camera", CameraListActivity.class);
             put("Image List", ImageListActivity.class);
             put("Music List", MusicListActivity.class);
