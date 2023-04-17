@@ -326,6 +326,11 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".media.audio_record.ktv.KTVActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".media.video.VideoPlayActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
