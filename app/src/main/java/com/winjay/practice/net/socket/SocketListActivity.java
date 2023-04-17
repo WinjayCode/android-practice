@@ -1,6 +1,5 @@
 package com.winjay.practice.net.socket;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -11,9 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.winjay.practice.MainAdapter;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
-import com.winjay.practice.net.socket.websocket.WebsocketTest;
 import com.winjay.practice.net.socket.udp.UdpMainActivity;
-import com.winjay.practice.thread.HandlerManager;
+import com.winjay.practice.net.socket.websocket.WebSocketActivity;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -32,7 +30,7 @@ public class SocketListActivity extends BaseActivity {
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
         {
-            put("WebSocket", null);
+            put("WebSocket", WebSocketActivity.class);
             put("UDP", UdpMainActivity.class);
         }
     };
@@ -51,22 +49,7 @@ public class SocketListActivity extends BaseActivity {
         mainAdapter.setOnItemClickListener(new MainAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, String key) {
-                switch (key) {
-                    case "WebSocket":
-                        HandlerManager.getInstance().postOnSubThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                WebsocketTest websocketTest = new WebsocketTest();
-                                websocketTest.startServer();
-                                websocketTest.startClient();
-                            }
-                        });
-                        break;
-                    default:
-                        Intent intent = new Intent(SocketListActivity.this, mainMap.get(key));
-                        startActivity(intent);
-                        break;
-                }
+                startActivity(mainMap.get(key));
             }
         });
     }

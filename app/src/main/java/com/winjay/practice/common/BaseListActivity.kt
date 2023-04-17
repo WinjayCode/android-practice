@@ -1,12 +1,10 @@
 package com.winjay.practice.common
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.winjay.practice.MainAdapter
 import com.winjay.practice.databinding.MainActivityBinding
-import java.util.*
 
 /**
  * Common List Activity
@@ -34,8 +32,7 @@ abstract class BaseListActivity : BaseActivity() {
         val mainAdapter = MainAdapter(ArrayList(getMainMap().keys))
         binding.mainRv.adapter = mainAdapter
         mainAdapter.setOnItemClickListener { view, key ->
-            val intent = Intent(this@BaseListActivity, getMainMap()[key])
-            startActivity(intent)
+            startActivity(getMainMap()[key])
         }
     }
 }

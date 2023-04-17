@@ -42,4 +42,8 @@ public class Constants {
     public static final String NOTIFICATION_CHANNEL_NAME = AppApplication.getApplication().getResources().getString(R.string.app_name);
 
     public static final int NOTIFICATION_ID = 100;
+
+    //---------------------------------- net ----------------------------------
+    public static final int SOCKET_PORT = 8080;
+    //---------------------------------- net ----------------------------------
 }

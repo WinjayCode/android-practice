@@ -95,7 +95,7 @@ public class StorageActivity extends BaseActivity {
 
     @OnClick(R.id.directory_structure_btn)
     void directoryStructure() {
-        startNewActivity(DirectoryStructureActivity.class);
+        startActivity(DirectoryStructureActivity.class);
     }
 
     /////////////////////////////////////////////////////// 文档和其他文件 ///////////////////////////////////////////////////////

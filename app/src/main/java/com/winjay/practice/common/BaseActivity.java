@@ -156,7 +156,7 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
         }
     }
 
-    public void startNewActivity(Class<?> cls) {
+    public void startActivity(Class<?> cls) {
         Intent intent = new Intent(this, cls);
         startActivity(intent);
     }
