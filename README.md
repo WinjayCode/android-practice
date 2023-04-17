@@ -49,6 +49,7 @@
 - Media
   - Audio Focus
   - Audio Record
+  - KTV
   - Camera
   - Codec
   - Exoplayer
@@ -61,7 +62,6 @@
   - Play Video
   - MediaStyle Notification
   - MediaProjectionManager
-  - 
 - Net
   - FTP
   - Retrofit

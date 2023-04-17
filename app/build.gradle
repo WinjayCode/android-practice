@@ -137,7 +137,7 @@ android {
     }
 
     // 差异化、多渠道打包
-    flavorDimensions "channel"
+    /*flavorDimensions "channel"
     productFlavors {
         // 产品A
         A {
@@ -165,7 +165,7 @@ android {
             //versionCode
             versionCode 1
         }
-    }
+    }*/
 }
 
 dependencies {

@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import com.winjay.practice.Constants;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.databinding.ActivityWebsocketBinding;
+import com.winjay.practice.utils.LogUtil;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -53,11 +54,11 @@ public class WebSocketActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (myWebSocketServer != null) {
-            myWebSocketServer.close();
-        }
         if (myWebSocketClient != null) {
             myWebSocketClient.close();
+        }
+        if (myWebSocketServer != null) {
+            myWebSocketServer.close();
         }
     }
 
@@ -128,6 +129,7 @@ public class WebSocketActivity extends BaseActivity implements View.OnClickListe
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    LogUtil.d(TAG, "server: " + message);
                     binding.websocketServerMsgTv.setText(binding.websocketServerMsgTv.getText() + "\nFrom WebSocketClient:" + message);
                 }
             });
@@ -148,6 +150,7 @@ public class WebSocketActivity extends BaseActivity implements View.OnClickListe
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    LogUtil.d(TAG, "server: " + errorMessage);
                     binding.websocketServerMsgTv.setText(binding.websocketServerMsgTv.getText() + "\nError: " + errorMessage);
                 }
             });
@@ -170,6 +173,7 @@ public class WebSocketActivity extends BaseActivity implements View.OnClickListe
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    LogUtil.d(TAG, "client: " + message);
                     binding.websocketClientMsgTv.setText(binding.websocketClientMsgTv.getText() + "\nFrom WebSocketServer:" + message);
                 }
             });
@@ -190,6 +194,7 @@ public class WebSocketActivity extends BaseActivity implements View.OnClickListe
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    LogUtil.d(TAG, "client: " + errorMessage);
                     binding.websocketClientMsgTv.setText(binding.websocketClientMsgTv.getText() + "\nError: " + errorMessage);
                 }
             });
