@@ -12,6 +12,10 @@ import java.net.InetSocketAddress;
 
 /**
  * WebSocketServer
+ * <p>
+ * 注意：
+ * WebSocket.close()只能关闭连接
+ * WebSocketServer.stop()才能既关闭连接又关闭服务器本身，释放当前地址和端口，这样才能避免Address Already in use的错误！！！
  *
  * @author Winjay
  * @date 2023-04-17
@@ -71,12 +75,6 @@ public class MyWebSocketServer extends WebSocketServer {
         LogUtil.d(TAG, "message=" + message);
         if (mWebSocket != null && !TextUtils.isEmpty(message)) {
             mWebSocket.send(message);
-        }
-    }
-
-    public void close() {
-        if (mWebSocket != null) {
-            mWebSocket.close();
         }
     }
 

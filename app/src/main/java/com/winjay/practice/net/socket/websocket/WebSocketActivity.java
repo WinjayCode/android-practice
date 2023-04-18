@@ -54,11 +54,12 @@ public class WebSocketActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (myWebSocketClient != null) {
-            myWebSocketClient.close();
-        }
         if (myWebSocketServer != null) {
-            myWebSocketServer.close();
+            try {
+                myWebSocketServer.stop();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -78,7 +79,7 @@ public class WebSocketActivity extends BaseActivity implements View.OnClickListe
 
         if (v == binding.startWebsocketClientBtn) {
             try {
-                myWebSocketClient = new MyWebSocketClient(new URI("ws://localhost:8080"));
+                myWebSocketClient = new MyWebSocketClient(new URI(Constants.WEBSOCKET_LOCAL_ADDRESS + Constants.SOCKET_PORT));
                 myWebSocketClient.connect();
                 myWebSocketClient.setOnWebSocketClientListener(mOnWebSocketClientListener);
             } catch (URISyntaxException e) {

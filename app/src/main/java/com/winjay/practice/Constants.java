@@ -44,6 +44,7 @@ public class Constants {
     public static final int NOTIFICATION_ID = 100;
 
     //---------------------------------- net ----------------------------------
+    public static final String WEBSOCKET_LOCAL_ADDRESS = "ws://localhost:";
     public static final int SOCKET_PORT = 8080;
     //---------------------------------- net ----------------------------------
 }
