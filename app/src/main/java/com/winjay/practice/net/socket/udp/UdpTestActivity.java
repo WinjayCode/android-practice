@@ -40,6 +40,10 @@ import java.util.Arrays;
 import butterknife.BindView;
 
 /**
+ * Socket使用UDP协议的示例
+ *
+ * 通过创建DatagramSocket类实例，并指定UDP的端口号来实现数据报文的接收和发送
+ *
  * @author Winjay
  * @date 2021-08-17
  */
@@ -53,7 +57,7 @@ public class UdpTestActivity extends BaseActivity implements View.OnClickListene
     private static final int LOCAL_PORT = 10400;
     //本机IP
     private String LOCAL_IP;
-
+    // 使用UPD协议的Socket
     private DatagramSocket udpSocket;
     private UdpReceiveThread udpReceiveThread;
     private UdpSendThread udpSendThread;

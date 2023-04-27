@@ -7,6 +7,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Scanner;
 import java.util.TimeZone;
 
 public class Test {
@@ -234,6 +235,12 @@ public class Test {
 //        float a = (float) (Math.round(91.306816 * 10)) / 10;
 //        System.out.println("a=" + a);
         // 91.3
+
+        // 控制台输入框
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.print("请输入一个整数：");
+//        int num = scanner.nextInt();
+//        System.out.println("您输入的整数是：" + num);
     }
 
     public static boolean isOnline() {

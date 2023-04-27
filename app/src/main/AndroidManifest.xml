@@ -518,7 +518,7 @@
         </receiver>
         <!-- usb end -->
 
-        <!-- socket start -->
+        <!-- net start -->
         <activity
             android:name=".net.NetListActivity"
             android:exported="true"
@@ -526,6 +526,16 @@
 
         <activity
             android:name=".net.ftp.FtpTestActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".net.socket.SocketListActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".net.socket.tcp.TCPTestActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
 
@@ -540,15 +550,10 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".net.socket.SocketListActivity"
-            android:exported="true"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:name=".net.socket.websocket.WebSocketActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
-        <!-- socket end -->
+        <!-- net end -->
 
         <!--隐式启动activity，action、category、data必须同时匹配，才能隐式启动（android.intent.category.DEFAULT必须有）-->
         <activity

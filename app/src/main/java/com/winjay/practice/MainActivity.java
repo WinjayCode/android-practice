@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.winjay.g2048.activity.Game2048Activity;
 import com.winjay.practice.activity_manager.ActivityManagerActivity;
+import com.winjay.practice.architecture_mode.ArchitectureModeListActivity;
 import com.winjay.practice.bluetooth.BluetoothListActivity;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.crash.CrashTestActivity;
-import com.winjay.practice.architecture_mode.ArchitectureModeListActivity;
 import com.winjay.practice.download_manager.DownloadManagerActivity;
 import com.winjay.practice.file_browser.FileBrowserActivity;
 import com.winjay.practice.hardware_test.HardwareTestListActivity;
@@ -115,8 +115,7 @@ public class MainActivity extends BaseActivity {
                         break;
                     default:
                         LogUtil.d(TAG, "key=" + key + ", class=" + mainMap.get(key));
-                        Intent intent = new Intent(MainActivity.this, mainMap.get(key));
-                        startActivity(intent);
+                        startActivity(mainMap.get(key));
 
 //                        // 使用Activity过渡动画
 //                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle());
@@ -124,7 +123,6 @@ public class MainActivity extends BaseActivity {
 //                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, view, "share").toBundle());
 //                        // 使用多个共享元素过渡动画
 //                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, Pair.create(view, "share")).toBundle());
-
 
 
 //                        ActivityOptions activityOptions = ActivityOptions.makeBasic();

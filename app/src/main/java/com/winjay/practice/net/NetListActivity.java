@@ -1,6 +1,5 @@
 package com.winjay.practice.net;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -13,8 +12,6 @@ import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.net.ftp.FtpTestActivity;
 import com.winjay.practice.net.socket.SocketListActivity;
-import com.winjay.practice.net.socket.websocket.WebsocketTest;
-import com.winjay.practice.thread.HandlerManager;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -33,8 +30,8 @@ public class NetListActivity extends BaseActivity {
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
         {
-            put("Socket", SocketListActivity.class);
             put("FTP", FtpTestActivity.class);
+            put("Socket", SocketListActivity.class);
         }
     };
 
@@ -52,8 +49,7 @@ public class NetListActivity extends BaseActivity {
         mainAdapter.setOnItemClickListener(new MainAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, String key) {
-                Intent intent = new Intent(NetListActivity.this, mainMap.get(key));
-                startActivity(intent);
+                startActivity(mainMap.get(key));
             }
         });
     }

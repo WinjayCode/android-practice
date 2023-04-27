@@ -19,6 +19,8 @@ import okio.ByteString;
 /**
  * Websocket学习
  *
+ * WebSocket是一种在单个TCP连接上进行全双工通讯的协议
+ *
  * @author Winjay
  * @date 2019/3/21
  */

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/start_socket_server_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start SocketServer"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/start_socket_client_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start SocketClient"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/start_socket_server_btn" />
+
+    <EditText
+        android:id="@+id/server_socket_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="SocketServer"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/server_socket_send_btn"
+        app:layout_constraintTop_toBottomOf="@+id/start_socket_client_btn" />
+
+    <Button
+        android:id="@+id/server_socket_send_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="@+id/server_socket_et"
+        app:layout_constraintLeft_toRightOf="@+id/server_socket_et"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/server_socket_et" />
+
+    <ScrollView
+        android:id="@+id/server_socket_msg_sv"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/server_socket_et">
+
+        <TextView
+            android:id="@+id/server_socket_msg_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
+
+    <EditText
+        android:id="@+id/socket_client_et"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="SocketClient"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/server_socket_send_btn"
+        app:layout_constraintTop_toBottomOf="@+id/server_socket_msg_sv" />
+
+    <Button
+        android:id="@+id/socket_client_send_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="@+id/socket_client_et"
+        app:layout_constraintLeft_toRightOf="@+id/socket_client_et"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/socket_client_et" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/socket_client_et">
+
+        <TextView
+            android:id="@+id/socket_client_msg_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
