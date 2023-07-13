@@ -245,8 +245,13 @@ dependencies {
     implementation "org.java-websocket:Java-WebSocket:1.5.3"
 
     // retrofit
-    implementation "com.squareup.retrofit2:retrofit:2.1.0"
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-gson:2.1.0"
+
+    //retrofit moshi
+    implementation "com.squareup.retrofit2:converter-moshi:2.6.2"
+    //moshi used KotlinJsonAdapterFactory
+    implementation "com.squareup.moshi:moshi-kotlin:1.9.3"
 
     //    implementation project(':ioclibrary')
 

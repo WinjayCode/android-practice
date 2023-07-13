@@ -1,12 +1,12 @@
-package com.winjay.practice.architecture_mode.mvvm.viewmodle;
+package com.winjay.practice.architecture_mode.mvvm.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.winjay.practice.architecture_mode.mvvm.model.Callback;
-import com.winjay.practice.architecture_mode.mvvm.model.User;
-import com.winjay.practice.architecture_mode.mvvm.model.UserRepository;
+import com.winjay.practice.architecture_mode.mvvm.model.MVVMDataBean;
+import com.winjay.practice.architecture_mode.mvvm.model.MVVMRepository;
 import com.winjay.practice.utils.JsonUtil;
 import com.winjay.practice.utils.LogUtil;
 
@@ -16,19 +16,19 @@ import java.util.List;
  * MVVM 的VM层
  * 注意，没有持有View层的任何引用
  */
-public class UserListViewModel extends ViewModel {
+public class MVVMViewModel extends ViewModel {
     private static final String TAG = "UserListViewModel";
     /**
      * 用户信息
      */
-    private MutableLiveData<List<User>> userListLiveData;
+    private MutableLiveData<List<MVVMDataBean>> userListLiveData;
 
     /**
      * 进条度的显示
      */
     private MutableLiveData<Boolean> loadingLiveData;
 
-    public UserListViewModel() {
+    public MVVMViewModel() {
         userListLiveData = new MutableLiveData<>();
         loadingLiveData = new MutableLiveData<>();
     }
@@ -41,9 +41,9 @@ public class UserListViewModel extends ViewModel {
 
         loadingLiveData.setValue(true);
 
-        UserRepository.getUserRepository().getUsersFromServer(new Callback<List<User>>() {
+        MVVMRepository.getUserRepository().getUsersFromServer(new Callback<List<MVVMDataBean>>() {
             @Override
-            public void onSuccess(List<User> users) {
+            public void onSuccess(List<MVVMDataBean> users) {
                 LogUtil.d(TAG, "users=" + JsonUtil.getInstance().toJson(users));
                 loadingLiveData.setValue(false);
                 userListLiveData.setValue(users);
@@ -61,7 +61,7 @@ public class UserListViewModel extends ViewModel {
     /**
      * 返回LiveData类型
      */
-    public LiveData<List<User>> getUserListLiveData() {
+    public LiveData<List<MVVMDataBean>> getUserListLiveData() {
         return userListLiveData;
     }
 

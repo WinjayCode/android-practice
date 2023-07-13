@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.winjay.practice.R;
-import com.winjay.practice.architecture_mode.mvvm.model.User;
+import com.winjay.practice.architecture_mode.mvvm.model.MVVMDataBean;
 import com.winjay.practice.utils.JsonUtil;
 import com.winjay.practice.utils.LogUtil;
 
@@ -18,11 +18,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
-    private static final String TAG = UserAdapter.class.getSimpleName();
-    private List<User> mData;
+public class MVVMAdapter extends RecyclerView.Adapter<MVVMAdapter.ViewHolder> {
+    private static final String TAG = MVVMAdapter.class.getSimpleName();
+    private List<MVVMDataBean> mData;
 
-    public UserAdapter(List<User> data) {
+    public MVVMAdapter(List<MVVMDataBean> data) {
         mData = data;
         LogUtil.d(TAG, "mData=" + JsonUtil.getInstance().toJson(mData));
     }

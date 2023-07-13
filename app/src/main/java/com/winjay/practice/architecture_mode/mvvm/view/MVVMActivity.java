@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.winjay.practice.R;
-import com.winjay.practice.architecture_mode.mvvm.model.User;
-import com.winjay.practice.architecture_mode.mvvm.viewmodle.UserListViewModel;
+import com.winjay.practice.architecture_mode.mvvm.model.MVVMDataBean;
+import com.winjay.practice.architecture_mode.mvvm.viewmodel.MVVMViewModel;
 import com.winjay.practice.utils.JsonUtil;
 import com.winjay.practice.utils.LogUtil;
 
@@ -22,19 +22,19 @@ import java.util.List;
 /**
  * MVVM 的View层（含xml）
  */
-public class UserListActivity extends AppCompatActivity {
+public class MVVMActivity extends AppCompatActivity {
     private static final String TAG = "UserListActivity";
-    private UserListViewModel mUserListViewModel;
+    private MVVMViewModel mUserListViewModel;
     private ProgressBar mProgressBar;
     private RecyclerView mRvUserList;
-    private UserAdapter mUserAdapter;
+    private MVVMAdapter mUserAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogUtil.d(TAG);
 
-        setContentView(R.layout.mvvm_test_activity);
+        setContentView(R.layout.mvvm_activity);
 
         initView();
 
@@ -56,7 +56,7 @@ public class UserListActivity extends AppCompatActivity {
     private void initViewModel() {
         ViewModelProvider viewModelProvider = new ViewModelProvider(this);
         // 即使Activity被重新创建时，ViewModel对象却始终是相同的
-        mUserListViewModel = viewModelProvider.get(UserListViewModel.class);
+        mUserListViewModel = viewModelProvider.get(MVVMViewModel.class);
         LogUtil.d(TAG, "mUserListViewModel=" + mUserListViewModel.toString());
     }
 
@@ -71,15 +71,15 @@ public class UserListActivity extends AppCompatActivity {
      * 观察ViewModel的数据，且此数据 是 View 直接需要的，不需要再做逻辑处理
      */
     private void observeLivaData() {
-        mUserListViewModel.getUserListLiveData().observe(this, new Observer<List<User>>() {
+        mUserListViewModel.getUserListLiveData().observe(this, new Observer<List<MVVMDataBean>>() {
             @Override
-            public void onChanged(List<User> users) {
+            public void onChanged(List<MVVMDataBean> users) {
                 LogUtil.d(TAG, "users=" + JsonUtil.getInstance().toJson(users));
                 if (users == null) {
-                    Toast.makeText(UserListActivity.this, "获取user失败！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MVVMActivity.this, "获取user失败！", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                mUserAdapter = new UserAdapter(users);
+                mUserAdapter = new MVVMAdapter(users);
                 mRvUserList.setAdapter(mUserAdapter);
             }
         });

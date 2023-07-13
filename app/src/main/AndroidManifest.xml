@@ -139,7 +139,11 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".architecture_mode.mvvm.view.UserListActivity"
+            android:name=".architecture_mode.mvvm.view.MVVMActivity"
+            android:exported="true" />
+
+        <activity
+            android:name=".architecture_mode.mvi.view.MVIActivity"
             android:exported="true" />
         <!-- architecture mode end -->
 

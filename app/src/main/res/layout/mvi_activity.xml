@@ -6,18 +6,28 @@
     android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_user_list"
+        android:id="@+id/rv_wallpaper"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ProgressBar
-        android:id="@+id/pb_loading_users"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:visibility="gone"
+    <Button
+        android:id="@+id/btn_get_wallpaper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="获取壁纸"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

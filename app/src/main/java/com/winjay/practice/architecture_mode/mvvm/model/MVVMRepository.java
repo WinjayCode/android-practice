@@ -12,14 +12,14 @@ import java.util.List;
  * 存储区
  * MVVM 的第一个M层
  */
-public class UserRepository {
+public class MVVMRepository {
     private static final String TAG = "UserRepository";
 
-    private static UserRepository mUserRepository;
+    private static MVVMRepository mUserRepository;
 
-    public static UserRepository getUserRepository() {
+    public static MVVMRepository getUserRepository() {
         if (mUserRepository == null) {
-            mUserRepository = new UserRepository();
+            mUserRepository = new MVVMRepository();
         }
         return mUserRepository;
     }
@@ -29,11 +29,11 @@ public class UserRepository {
      *
      * @param callback
      */
-    public void getUsersFromServer(Callback<List<User>> callback) {
-        new AsyncTask<Void, Void, List<User>>() {
+    public void getUsersFromServer(Callback<List<MVVMDataBean>> callback) {
+        new AsyncTask<Void, Void, List<MVVMDataBean>>() {
 
             @Override
-            protected void onPostExecute(List<User> users) {
+            protected void onPostExecute(List<MVVMDataBean> users) {
                 LogUtil.d(TAG, "users=" + JsonUtil.getInstance().toJson(users));
                 callback.onSuccess(users);
                 //存本地数据库
@@ -41,7 +41,7 @@ public class UserRepository {
             }
 
             @Override
-            protected List<User> doInBackground(Void... voids) {
+            protected List<MVVMDataBean> doInBackground(Void... voids) {
                 LogUtil.d(TAG);
                 try {
                     Thread.sleep(2000);
@@ -49,9 +49,9 @@ public class UserRepository {
                     e.printStackTrace();
                 }
                 //假装从服务端获取的
-                List<User> users = new ArrayList<>();
+                List<MVVMDataBean> users = new ArrayList<>();
                 for (int i = 0; i < 20; i++) {
-                    User user = new User("user" + i, i);
+                    MVVMDataBean user = new MVVMDataBean("user" + i, i);
                     users.add(user);
                 }
                 return users;
@@ -71,7 +71,7 @@ public class UserRepository {
      *
      * @param users
      */
-    private void saveUsersToLocal(List<User> users) {
+    private void saveUsersToLocal(List<MVVMDataBean> users) {
         // TODO: 2021/1/24 存入本地数据库
     }
 }

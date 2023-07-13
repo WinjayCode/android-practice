@@ -1,10 +1,10 @@
 package com.winjay.practice.architecture_mode.mvvm.model;
 
-public class User {
+public class MVVMDataBean {
     private String name;
     private int age;
 
-    public User(String name, int age) {
+    public MVVMDataBean(String name, int age) {
         this.name = name;
         this.age = age;
     }
