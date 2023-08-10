@@ -26,6 +26,7 @@ import com.winjay.practice.jni.JniTestActivity;
 import com.winjay.practice.kotlin.KotlinListActivity;
 import com.winjay.practice.location.LocationActivity;
 import com.winjay.practice.media.MediaListActivity;
+import com.winjay.practice.meta_data.MetaDataActivity;
 import com.winjay.practice.net.NetListActivity;
 import com.winjay.practice.notification.NotificationActivity;
 import com.winjay.practice.package_manager.PackageManagerActivity;
@@ -80,6 +81,7 @@ public class MainActivity extends BaseActivity {
             put("Notification", NotificationActivity.class);
             put("Hardware Test", HardwareTestListActivity.class);
             put("File Browser", FileBrowserActivity.class);
+            put("Meta Data", MetaDataActivity.class);
             put("Performance Optimization", PerformanceOptimizeActivity.class);
             put("Puzzle", PuzzleMainActivity.class);
             put("2048", Game2048Activity.class);

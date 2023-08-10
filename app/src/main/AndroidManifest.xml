@@ -62,13 +62,14 @@
     <uses-permission android:name="android.software.activities_on_secondary_displays" />
 
     <!-- android13运行时通知权限 -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- 查看应用列表 -->
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
-    <uses-permission android:name="android.software.activities_on_secondary_displays"/>
+    <uses-permission android:name="android.software.activities_on_secondary_displays" />
 
     <!-- android:persistent="true"：1.在系统刚起来的时候，该App也会被启动起来 2.该App被强制杀掉后，系统会重启该App。这种情况只针对系统内置的App，第三方安装的App不会被重启。 -->
     <!-- android:usesCleartextTraffic="true"：指示应用程序是否打算使用明文网络流量，例如明文HTTP -->
@@ -84,6 +85,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
+        <meta-data
+            android:name="application_name"
+            android:value="application_value" />
 
         <!--configChanges：配置中的属性发生变化时，activity不会重建-->
         <!--launchMode：activity启动模式（standard、singleTop、singleTask、singleInstance）-->
@@ -666,6 +671,12 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/FullScreenTheme" />
+
+        <activity
+            android:name=".hardware_test.mic.MicTestActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullScreenTheme" />
         <!-- hardware test end -->
 
         <!-- file browser start -->
@@ -731,6 +742,16 @@
             android:name=".crash.CrashTestActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".meta_data.MetaDataActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
+
+            <meta-data
+                android:name="activity_name"
+                android:value="activity_value" />
+        </activity>
 
         <service android:name=".TestService" />
     </application>

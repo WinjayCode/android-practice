@@ -8,6 +8,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -33,6 +37,8 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
     private static final String TAG = "BaseActivity";
     private Unbinder unbinder;
     private final int RC_PERMISSION = 100;
+
+    private ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +70,8 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
                 setContentView(getLayoutId());
             }
         }
+
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), getActivityResultCallback());
 
         setTitle(getClass().getSimpleName().replace("Activity", ""));
 
@@ -159,6 +167,18 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
     public void startActivity(Class<?> cls) {
         Intent intent = new Intent(this, cls);
         startActivity(intent);
+    }
+
+    public void startActivityForResult(Intent intent) {
+        activityResultLauncher.launch(intent);
+    }
+
+    protected ActivityResultCallback<ActivityResult> getActivityResultCallback() {
+        return new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+            }
+        };
     }
 
     ////////////////////////////////////////// permission //////////////////////////////////////////

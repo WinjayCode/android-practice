@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.winjay.practice.MainAdapter;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
+import com.winjay.practice.hardware_test.mic.MicTestActivity;
 import com.winjay.practice.hardware_test.multi_touch.MultiTouchActivity;
 import com.winjay.practice.hardware_test.touch_panel.TouchPanelCheckActivity;
 
@@ -33,6 +34,7 @@ public class HardwareTestListActivity extends BaseActivity {
         {
             put("MultiTouch", MultiTouchActivity.class);
             put("Touch Panel Check", TouchPanelCheckActivity.class);
+            put("Mic Test", MicTestActivity.class);
         }
     };
 

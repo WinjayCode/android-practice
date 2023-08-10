@@ -241,6 +241,48 @@ public class Test {
 //        System.out.print("请输入一个整数：");
 //        int num = scanner.nextInt();
 //        System.out.println("您输入的整数是：" + num);
+
+        // byte[]的大小为str的char数
+//        String a = "APP_COMMAND_RETURN_CAR_SYSTEM";
+//        System.out.println("str的byte数字大小：" + a.getBytes().length);
+
+
+//        int[] a = new int[2];
+//        a[0] = 1;
+//        a[1] = 2;
+//        b(a);
+//        System.out.println(a[0]); // 3
+//        System.out.println(a[1]); // 4
+
+        // 不使用临时变量交换a和b
+//        int a = 5;
+//        int b = 6;
+//        a = a + b;
+//        b = a - b;
+//        a = a - b;
+//        System.out.println("a=" + a); // 6
+//        System.out.println("b=" + b); // 5
+
+//        int a = 3;
+//        int b = 6;
+//        swap(a, b);
+//        System.out.println("a=" + a); // 3
+//        System.out.println("b=" + b); // 6
+        // 值传递的时候，形参变化不会影响实参
+    }
+
+    private static void swap(int a, int b) {
+        int temp = a;
+        a = b;
+        b = temp;
+        System.out.println("a=" + a); // b
+        System.out.println("b=" + b); // a
+    }
+
+    // 传递给方法b的是数组a的引用，即指向数组a的内存地址，因此对数组a的任何修改都会反映在主函数中
+    private static void b (int[] a) {
+        a[0] = 3;
+        a[1] = 4;
     }
 
     public static boolean isOnline() {
