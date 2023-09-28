@@ -64,7 +64,10 @@
     <!-- android13运行时通知权限 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- 以下情况均需要添加该权限： -->
     <!-- 查看应用列表 -->
+    <!-- 获取其他App meta-data 数据 -->
+    <!-- 连接其他App Service -->
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
@@ -355,7 +358,7 @@
             android:screenOrientation="portrait" />
 
         <service
-            android:name=".media.mediasession.service.MusicBrowserService"
+            android:name=".media.mediasession.service.MediaBrowserService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

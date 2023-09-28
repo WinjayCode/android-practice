@@ -38,168 +38,82 @@ import java.util.List;
  * and basic browsing with simplified callbacks.
  */
 public class MediaBrowserHelper {
-
     private static final String TAG = MediaBrowserHelper.class.getSimpleName();
 
     private final Context mContext;
-    private final Class<? extends MediaBrowserServiceCompat> mMediaBrowserServiceClass;
-
-    private final List<MediaControllerCompat.Callback> mMediaControllerCallbackList = new ArrayList<>();
-
-    private final MediaBrowserConnectionCallback mMediaBrowserConnectionCallback;
-    private final MediaControllerCallback mMediaControllerCallback;
-    private final MediaBrowserSubscriptionCallback mMediaBrowserSubscriptionCallback;
+    private final String mMediaBrowserServicePkg;
+    private final String mMediaBrowserServiceClass;
 
     private MediaBrowserCompat mMediaBrowser;
 
     @Nullable
     private MediaControllerCompat mMediaController;
 
-    public MediaBrowserHelper(Context context, Class<? extends MediaBrowserServiceCompat> serviceClass) {
-        mContext = context;
-        mMediaBrowserServiceClass = serviceClass;
+    private final List<MediaControllerCompat.Callback> mMediaControllerCallbackList = new ArrayList<>();
 
-        mMediaBrowserConnectionCallback = new MediaBrowserConnectionCallback();
-        mMediaControllerCallback = new MediaControllerCallback();
-        mMediaBrowserSubscriptionCallback = new MediaBrowserSubscriptionCallback();
+    /**
+     * @param context Context of the application
+     * @param pkg     The name of the package the MediaBrowserService component exists in
+     * @param cls     The name of the class inside of pkg that implements the MediaBrowserService component
+     */
+    public MediaBrowserHelper(Context context, @NonNull String pkg, @NonNull String cls) {
+        mContext = context;
+        mMediaBrowserServicePkg = pkg;
+        mMediaBrowserServiceClass = cls;
     }
 
     public void onStart() {
         if (mMediaBrowser == null) {
+            // Create MediaBrowserServiceCompat
             mMediaBrowser =
                     new MediaBrowserCompat(
                             mContext,
-                            new ComponentName(mContext, mMediaBrowserServiceClass),
-                            mMediaBrowserConnectionCallback,
-                            null);
+                            new ComponentName(mMediaBrowserServicePkg, mMediaBrowserServiceClass),
+                            mConnectionCallback,
+                            null); // optional Bundle
             mMediaBrowser.connect();
         }
         LogUtil.d(TAG, "Creating MediaBrowser, and connecting");
     }
 
-    public void onStop() {
-        if (mMediaController != null) {
-            mMediaController.unregisterCallback(mMediaControllerCallback);
-            mMediaController = null;
-        }
-        if (mMediaBrowser != null && mMediaBrowser.isConnected()) {
-            mMediaBrowser.disconnect();
-            mMediaBrowser = null;
-        }
-        resetState();
-        LogUtil.d(TAG, "Releasing MediaController, Disconnecting from MediaBrowser");
-    }
-
-    /**
-     * Called after connecting with a {@link MediaBrowserServiceCompat}.
-     * <p>
-     * Override to perform processing after a connection is established.
-     *
-     * @param mediaController {@link MediaControllerCompat} associated with the connected
-     *                        MediaSession.
-     */
-    protected void onConnected(@NonNull MediaControllerCompat mediaController) {
-    }
-
-    /**
-     * Called after loading a browsable {@link MediaBrowserCompat.MediaItem}
-     *
-     * @param parentId The media ID of the parent item.
-     * @param children List (possibly empty) of child items.
-     */
-    protected void onChildrenLoaded(@NonNull String parentId,
-                                    @NonNull List<MediaBrowserCompat.MediaItem> children) {
-    }
-
-    /**
-     * Called when the {@link MediaBrowserServiceCompat} connection is lost.
-     */
-    protected void onDisconnected() {
-    }
-
-    @NonNull
-    protected final MediaControllerCompat getMediaController() {
-        if (mMediaController == null) {
-            throw new IllegalStateException("MediaController is null!");
-        }
-        return mMediaController;
-    }
-
-    /**
-     * The internal state of the app needs to revert to what it looks like when it started before
-     * any connections to the {@link MediaBrowserServiceCompat} happens via the {@link MediaSessionCompat}.
-     */
-    private void resetState() {
-        for (MediaControllerCompat.Callback callback : mMediaControllerCallbackList) {
-            callback.onPlaybackStateChanged(null);
-        }
-        LogUtil.d(TAG);
-    }
-
-    public MediaControllerCompat.TransportControls getTransportControls() {
-        if (mMediaController == null) {
-            LogUtil.d(TAG, "getTransportControls: MediaController is null!");
-            throw new IllegalStateException("MediaController is null!");
-        }
-        return mMediaController.getTransportControls();
-    }
-
-    public void registerMediaControllerCallback(MediaControllerCompat.Callback callback) {
-        if (callback != null) {
-            mMediaControllerCallbackList.add(callback);
-
-            // Update with the latest metadata/playback state.
-            if (mMediaController != null) {
-                final MediaMetadataCompat metadata = mMediaController.getMetadata();
-                if (metadata != null) {
-                    callback.onMetadataChanged(metadata);
-                }
-
-                final PlaybackStateCompat playbackState = mMediaController.getPlaybackState();
-                if (playbackState != null) {
-                    callback.onPlaybackStateChanged(playbackState);
-                }
-            }
-        }
-    }
-
     // Receives callbacks from the MediaBrowser when it has successfully connected to the
     // MediaBrowserService (MusicService).
-    private class MediaBrowserConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
+    private final MediaBrowserCompat.ConnectionCallback mConnectionCallback = new MediaBrowserCompat.ConnectionCallback() {
 
         // Happens as a result of onStart().
         @Override
         public void onConnected() {
             // Get a MediaController for the MediaSession.
-            mMediaController =
-                    new MediaControllerCompat(mContext, mMediaBrowser.getSessionToken());
+            mMediaController = new MediaControllerCompat(mContext, mMediaBrowser.getSessionToken());
             mMediaController.registerCallback(mMediaControllerCallback);
 
             // Sync existing MediaSession state to the UI.
             mMediaControllerCallback.onMetadataChanged(mMediaController.getMetadata());
-            mMediaControllerCallback.onPlaybackStateChanged(
-                    mMediaController.getPlaybackState());
+            mMediaControllerCallback.onPlaybackStateChanged(mMediaController.getPlaybackState());
 
-            MediaBrowserHelper.this.onConnected(mMediaController);
+            MediaBrowserHelper.this.onConnected();
 
+            // 从 MediaBrowserService 的 onLoadChildren() 方法中获取媒体列表
             mMediaBrowser.subscribe(mMediaBrowser.getRoot(), mMediaBrowserSubscriptionCallback);
+            // 还可以使用 先取消订阅再订阅的方式 进行主动异步获取的操作
+            // mediaBrowser.unsubscribe(mediaBrowser.getRoot());
+            // mediaBrowser.subscribe(mediaBrowser.getRoot(), mMediaBrowserSubscriptionCallback);
         }
-    }
-
-    // Receives callbacks from the MediaBrowser when the MediaBrowserService has loaded new media
-    // that is ready for playback.
-    public class MediaBrowserSubscriptionCallback extends MediaBrowserCompat.SubscriptionCallback {
 
         @Override
-        public void onChildrenLoaded(@NonNull String parentId,
-                                     @NonNull List<MediaBrowserCompat.MediaItem> children) {
-            MediaBrowserHelper.this.onChildrenLoaded(parentId, children);
+        public void onConnectionSuspended() {
+            // The Service has crashed. Disable transport controls until it automatically reconnects
         }
-    }
+
+        @Override
+        public void onConnectionFailed() {
+            // The Service has refused our connection
+        }
+    };
 
     // Receives callbacks from the MediaController and updates the UI state,
     // i.e.: Which is the current item, whether it's playing or paused, etc.
-    private class MediaControllerCallback extends MediaControllerCompat.Callback {
+    private final MediaControllerCompat.Callback mMediaControllerCallback = new MediaControllerCompat.Callback() {
 
         @Override
         public void onMetadataChanged(final MediaMetadataCompat metadata) {
@@ -224,5 +138,95 @@ public class MediaBrowserHelper {
 
             MediaBrowserHelper.this.onDisconnected();
         }
+    };
+
+    // Receives callbacks from the MediaBrowser when the MediaBrowserService has loaded new media
+    // that is ready for playback.
+    public final MediaBrowserCompat.SubscriptionCallback mMediaBrowserSubscriptionCallback = new MediaBrowserCompat.SubscriptionCallback() {
+
+        @Override
+        public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children) {
+            // children 即为从 MediaBrowserService 的 onLoadChildren() 方法中获取的媒体列表
+            MediaBrowserHelper.this.onChildrenLoaded(parentId, children);
+        }
+    };
+
+    @NonNull
+    protected final MediaControllerCompat getMediaController() {
+        if (mMediaController == null) {
+            throw new IllegalStateException("MediaController is null!");
+        }
+        return mMediaController;
+    }
+
+    public MediaControllerCompat.TransportControls getTransportControls() {
+        return getMediaController().getTransportControls();
+    }
+
+    public void registerMediaControllerCallback(MediaControllerCompat.Callback callback) {
+        if (callback != null) {
+            mMediaControllerCallbackList.add(callback);
+
+            // Update with the latest metadata/playback state.
+            if (mMediaController != null) {
+                final MediaMetadataCompat metadata = mMediaController.getMetadata();
+                if (metadata != null) {
+                    callback.onMetadataChanged(metadata);
+                }
+
+                final PlaybackStateCompat playbackState = mMediaController.getPlaybackState();
+                if (playbackState != null) {
+                    callback.onPlaybackStateChanged(playbackState);
+                }
+            }
+        }
+    }
+
+    public void onStop() {
+        if (mMediaController != null) {
+            mMediaController.unregisterCallback(mMediaControllerCallback);
+            mMediaController = null;
+        }
+        if (mMediaBrowser != null && mMediaBrowser.isConnected()) {
+            mMediaBrowser.disconnect();
+            mMediaBrowser = null;
+        }
+        resetState();
+        LogUtil.d(TAG, "Releasing MediaController, Disconnecting from MediaBrowser");
+    }
+
+    /**
+     * The internal state of the app needs to revert to what it looks like when it started before
+     * any connections to the {@link MediaBrowserServiceCompat} happens via the {@link MediaSessionCompat}.
+     */
+    private void resetState() {
+        for (MediaControllerCompat.Callback callback : mMediaControllerCallbackList) {
+            callback.onPlaybackStateChanged(null);
+        }
+        LogUtil.d(TAG);
+    }
+
+    /**
+     * Called after connecting with a {@link MediaBrowserServiceCompat}.
+     * <p>
+     * Override to perform processing after a connection is established.
+     */
+    protected void onConnected() {
+    }
+
+    /**
+     * Called after loading a browsable {@link MediaBrowserCompat.MediaItem}
+     *
+     * @param parentId The media ID of the parent item.
+     * @param children List (possibly empty) of child items.
+     */
+    protected void onChildrenLoaded(@NonNull String parentId,
+                                    @NonNull List<MediaBrowserCompat.MediaItem> children) {
+    }
+
+    /**
+     * Called when the {@link MediaBrowserServiceCompat} connection is lost.
+     */
+    protected void onDisconnected() {
     }
 }

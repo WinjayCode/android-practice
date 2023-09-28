@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Size;
 import android.widget.ImageView;
@@ -21,7 +20,7 @@ import androidx.annotation.Nullable;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.media.mediasession.client.MediaBrowserHelper;
-import com.winjay.practice.media.mediasession.service.MusicBrowserService;
+import com.winjay.practice.media.mediasession.service.MediaBrowserService;
 import com.winjay.practice.media.ui.MediaSeekBar;
 import com.winjay.practice.utils.LogUtil;
 
@@ -32,14 +31,13 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 音乐播放器
+ * MediaSession客户端
  *
  * @author Winjay
  * @date 2023-02-20
  */
 public class MediaSessionActivity extends BaseActivity {
     private static final String TAG = MediaSessionActivity.class.getSimpleName();
-    private Context mContext;
 
     @BindView(R.id.music_title_tv)
     TextView mMusicTitleTV;
@@ -56,8 +54,6 @@ public class MediaSessionActivity extends BaseActivity {
     @BindView(R.id.media_seek_bar)
     MediaSeekBar media_seek_bar;
 
-
-
     private MediaBrowserHelper mMediaBrowserHelper;
     private boolean mIsPlaying;
 
@@ -70,26 +66,24 @@ public class MediaSessionActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = this;
 
         mMediaBrowserHelper = new MediaBrowserConnection(this);
-        mMediaBrowserHelper.registerMediaControllerCallback(new MediaControllerListener());
+        mMediaBrowserHelper.registerMediaControllerCallback(mMediaControllerCallback);
         mMediaBrowserHelper.onStart();
     }
 
     private class MediaBrowserConnection extends MediaBrowserHelper {
         private MediaBrowserConnection(Context context) {
-            super(context, MusicBrowserService.class);
+            super(context, context.getPackageName(), MediaBrowserService.class.getName());
         }
 
         @Override
-        protected void onConnected(@NonNull MediaControllerCompat mediaController) {
-            media_seek_bar.setMediaController(mediaController);
+        protected void onConnected() {
+            media_seek_bar.setMediaController(getMediaController());
         }
 
         @Override
-        protected void onChildrenLoaded(@NonNull String parentId,
-                                        @NonNull List<MediaBrowserCompat.MediaItem> children) {
+        protected void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children) {
             super.onChildrenLoaded(parentId, children);
 
             final MediaControllerCompat mediaController = getMediaController();
@@ -104,7 +98,7 @@ public class MediaSessionActivity extends BaseActivity {
         }
     }
 
-    private class MediaControllerListener extends MediaControllerCompat.Callback {
+    private final MediaControllerCompat.Callback mMediaControllerCallback = new MediaControllerCompat.Callback() {
         @Override
         public void onPlaybackStateChanged(PlaybackStateCompat playbackState) {
             if (playbackState == null) {
@@ -125,13 +119,12 @@ public class MediaSessionActivity extends BaseActivity {
                 return;
             }
             mMusicTitleTV.setText(mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
-            music_artist_tv.setText(
-                    mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
+            music_artist_tv.setText(mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
 //            mAlbumArt.setImageBitmap(MusicLibrary.getAlbumBitmap(
 //                    MainActivity.this,
 //                    mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)));
         }
-    }
+    };
 
     @OnClick(R.id.play_pause_iv)
     void playPauseSwitch() {
@@ -154,8 +147,9 @@ public class MediaSessionActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        media_seek_bar.disconnectController();
         super.onDestroy();
+
+        media_seek_bar.disconnectController();
         mMediaBrowserHelper.onStop();
     }
 

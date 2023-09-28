@@ -34,8 +34,8 @@ import java.util.List;
  * @author Winjay
  * @date 2023-02-21
  */
-public class MusicBrowserService extends MediaBrowserServiceCompat {
-    private static final String TAG = "MusicPlayBrowserService";
+public class MediaBrowserService extends MediaBrowserServiceCompat {
+    private static final String TAG = MediaBrowserService.class.getSimpleName();
     private static final String ROOT_ID = "ROOT_ID";
     private static final String MY_MEDIA_ROOT_ID = "MY_MEDIA_ROOT_ID";
     private static final String MY_EMPTY_MEDIA_ROOT_ID = "MY_EMPTY_MEDIA_ROOT_ID";
@@ -52,13 +52,52 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
     private int mCurrentIndex = 0;
     private boolean mServiceInStartedState;
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        LogUtil.d(TAG);
+        mContext = this;
+
+        // 创建并初始化媒体会话
+        mMediaSession = new MediaSessionCompat(this, TAG);
+
+        // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player
+        mPlaybackState = new PlaybackStateCompat.Builder().setActions(
+                        PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE)
+                .setState(PlaybackStateCompat.STATE_NONE, 0, 1.0f);
+        mMediaSession.setPlaybackState(mPlaybackState.build());
+
+        // 设置媒体会话回调
+        mMediaSession.setCallback(mMediaSessionCallback);
+
+        // 设置媒体会话令牌，用于客户端创建 MediaController 时与其配对使用
+        setSessionToken(mMediaSession.getSessionToken());
+
+        mPlaybackState = new PlaybackStateCompat.Builder();
+        // 收藏按钮
+//        mPlaybackState.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
+//                CUSTOM_ACTION_THUMBS_UP, getResources().getString(R.string.thumbs_up), thumbsUpIcon)
+//                .setExtras(customActionExtras)
+//                .build());
+        mMediaMetadata = new MediaMetadataCompat.Builder();
+
+        mPlayback = new MediaPlayerAdapter(this, new MediaPlayerListener());
+    }
+
     /**
-     * 控制客户端链接
+     * 控制客户端连接，可以在返回BrowserRoot之前对客户端做权限验证，如果不允许连接，则返回null即可。
      *
-     * @param clientPackageName 客户端的packageName
-     * @param clientUid         clientUid
+     * -要允许客户端连接到您的服务并浏览其媒体内容，onGetRoot() 必须返回非 null 的 BrowserRoot，这是代表您的内容层次结构的根 ID。
+     * -要允许客户端连接到您的 MediaSession 而不进行浏览，onGetRoot() 仍然必须返回非 null 的 BrowserRoot，但此根 ID 应代表一个空的内容层次结构。
+     *
+     * 注意：onGetRoot() 方法应该快速返回一个非 null 值。用户身份验证和其他运行缓慢的进程不应在 onGetRoot() 中运行。大多数业务逻辑应该在 onLoadChildren() 方法中处理，
+     *
+     * MediaBrowser.connect()时回调此方法。
+     *
+     * @param clientPackageName 请求访问浏览媒体的应用程序的包名。
+     * @param clientUid         请求访问浏览媒体的应用程序的uid。
      * @param rootHints         从客户端传递过来的Bundle
-     * @return BrowserRoot
+     * @return BrowserRoot      包含浏览器服务在第一次连接时需要发送给客户端的信息。
      */
     @Nullable
     @Override
@@ -69,7 +108,7 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
         }
         // 通过以上参数来进行判断，若同意连接，则返回BrowserRoot对象，否则返回null;
         // 构造BrowserRoot的第一个参数为rootId(自定义)，第二个参数为Bundle;
-        return new BrowserRoot(clientPackageName, null);
+        return new BrowserRoot(ROOT_ID, null);
 
 //        // (Optional) Control the level of access for the specified package name.
 //        if (allowBrowsing(clientPackageName, clientUid)) {
@@ -84,7 +123,11 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
     }
 
     /**
-     * 播放列表
+     * 发送媒体列表给客户端
+     *
+     * 注意：MediaBrowserService 传送的 MediaItem 对象不应包含图标位图。当您为每项内容构建 MediaDescription 时，请通过调用 setIconUri() 来使用 Uri。
+     *
+     * MediaBrowser.subscribe()时回调此方法。服务端也可以使用 notifyChildrenChanged(String parentId) 来主动触发该方法。
      *
      * @param parentId parentId
      * @param result   result
@@ -93,14 +136,16 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
     public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
         LogUtil.d(TAG, "parentId=" + parentId);
         mParentId = parentId;
-        // 将信息从当前线程中移除，允许后续调用sendResult方法
-//        result.detach();
 
         //  Browsing not allowed
         if (TextUtils.equals(MY_EMPTY_MEDIA_ROOT_ID, parentId)) {
             result.sendResult(null);
             return;
         }
+
+        // 如果数据加载操作为耗时操作，且需要在其他线程中执行时，需要先调用次方法。
+        // 将信息从当前线程中移除，允许后续调用sendResult方法
+//        result.detach();
 
         // 模拟获取数据的过程，真实情况应该是异步从网络或本地读取数据
         List<MediaBrowserCompat.MediaItem> mediaItems = MusicDataHelper.getMediaBrowserItemsFromAssets(this);
@@ -116,32 +161,71 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
         result.sendResult(mediaItems);
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        LogUtil.d(TAG);
-        mContext = this;
+    // Callback 中的一系列方法是与 MediaController 中的方法一一对应的
+    private final MediaSessionCompat.Callback mMediaSessionCallback = new MediaSessionCompat.Callback() {
 
-        mMediaSession = new MediaSessionCompat(this, TAG);
-        // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player
-        mPlaybackState = new PlaybackStateCompat.Builder().setActions(
-                        PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE)
-                .setState(PlaybackStateCompat.STATE_NONE, 0, 1.0f);
-        mMediaSession.setPlaybackState(mPlaybackState.build());
+        @Override
+        public void onPrepare() {
+            LogUtil.d(TAG);
+            // 通知客户端当前媒体信息发生变化，之后 MediaControllerCompat.Callback 的 onMetadataChanged() 会收到更新回调
+            mMediaSession.setMetadata(MusicDataHelper.getMediaMetadataItemsFromAssets().get(mCurrentIndex));
+            // 同样，当服务端播放器状态发生变化时，也可以通过该方法通知客户端
+            // mMediaSession.setPlaybackState(state);
 
-        mMediaSession.setCallback(mMediaSessionCallback);
-        setSessionToken(mMediaSession.getSessionToken());
+            if (!mMediaSession.isActive()) {
+                mMediaSession.setActive(true);
+            }
+        }
 
-        mPlaybackState = new PlaybackStateCompat.Builder();
-        // 收藏按钮
-//        mPlaybackState.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
-//                CUSTOM_ACTION_THUMBS_UP, getResources().getString(R.string.thumbs_up), thumbsUpIcon)
-//                .setExtras(customActionExtras)
-//                .build());
-        mMediaMetadata = new MediaMetadataCompat.Builder();
+        @Override
+        public void onPlay() {
+            LogUtil.d(TAG);
+            mPlayback.playFromMedia(MusicDataHelper.getMediaMetadataItemsFromAssets().get(mCurrentIndex));
+        }
 
-        mPlayback = new MediaPlayerAdapter(this, new MediaPlayerListener());
-    }
+        @Override
+        public void onPause() {
+            LogUtil.d(TAG);
+            mPlayback.pause();
+        }
+
+        @Override
+        public void onStop() {
+            LogUtil.d(TAG);
+            mPlayback.stop();
+            mMediaSession.setActive(false);
+
+        }
+
+        @Override
+        public void onSkipToNext() {
+            LogUtil.d(TAG);
+            mCurrentIndex = (++mCurrentIndex % MusicDataHelper.getMediaMetadataItemsFromAssets().size());
+            onPrepare();
+            onPlay();
+        }
+
+        @Override
+        public void onSkipToPrevious() {
+            LogUtil.d(TAG);
+            mCurrentIndex = mCurrentIndex > 0 ? mCurrentIndex - 1 : MusicDataHelper.getMediaMetadataItemsFromAssets().size() - 1;
+            onPrepare();
+            onPlay();
+        }
+
+        @Override
+        public void onSeekTo(long pos) {
+            mPlayback.seekTo(pos);
+        }
+
+        @Override
+        public void onCustomAction(String action, Bundle extras) {
+            LogUtil.d(TAG, "action=" + action);
+            if (CUSTOM_ACTION_THUMBS_UP.equals(action)) {
+                LogUtil.d(TAG);
+            }
+        }
+    };
 
     public class MediaPlayerListener extends PlaybackInfoListener {
 
@@ -215,71 +299,7 @@ public class MusicBrowserService extends MediaBrowserServiceCompat {
 //                mServiceInStartedState = false;
             }
         }
-
     }
-
-    MediaSessionCompat.Callback mMediaSessionCallback = new MediaSessionCompat.Callback() {
-
-        @Override
-        public void onPrepare() {
-            LogUtil.d(TAG);
-
-            mMediaSession.setMetadata(MusicDataHelper.getMediaMetadataItemsFromAssets().get(mCurrentIndex));
-
-            if (!mMediaSession.isActive()) {
-                mMediaSession.setActive(true);
-            }
-        }
-
-        @Override
-        public void onPlay() {
-            LogUtil.d(TAG);
-            mPlayback.playFromMedia(MusicDataHelper.getMediaMetadataItemsFromAssets().get(mCurrentIndex));
-        }
-
-        @Override
-        public void onPause() {
-            LogUtil.d(TAG);
-            mPlayback.pause();
-        }
-
-        @Override
-        public void onStop() {
-            LogUtil.d(TAG);
-            mPlayback.stop();
-            mMediaSession.setActive(false);
-
-        }
-
-        @Override
-        public void onSkipToNext() {
-            LogUtil.d(TAG);
-            mCurrentIndex = (++mCurrentIndex % MusicDataHelper.getMediaMetadataItemsFromAssets().size());
-            onPrepare();
-            onPlay();
-        }
-
-        @Override
-        public void onSkipToPrevious() {
-            LogUtil.d(TAG);
-            mCurrentIndex = mCurrentIndex > 0 ? mCurrentIndex - 1 : MusicDataHelper.getMediaMetadataItemsFromAssets().size() - 1;
-            onPrepare();
-            onPlay();
-        }
-
-        @Override
-        public void onSeekTo(long pos) {
-            mPlayback.seekTo(pos);
-        }
-
-        @Override
-        public void onCustomAction(String action, Bundle extras) {
-            LogUtil.d(TAG, "action=" + action);
-            if (CUSTOM_ACTION_THUMBS_UP.equals(action)) {
-                LogUtil.d(TAG);
-            }
-        }
-    };
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
