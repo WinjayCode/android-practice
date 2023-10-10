@@ -57,4 +57,19 @@ public class MediaUtil {
             }
         }
     }
+
+    public static String formatDuration(long milliseconds) {
+        long seconds = (milliseconds / 1000) % 60;
+        long minutes = (milliseconds / (1000 * 60)) % 60;
+        long hours = (milliseconds / (1000 * 60 * 60)) % 24;
+
+        String time;
+        if (hours > 0) {
+            time = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        } else {
+            time = String.format("%02d:%02d", minutes, seconds);
+        }
+
+        return time;
+    }
 }

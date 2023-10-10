@@ -1,30 +1,28 @@
 package com.winjay.practice.media.mediasession;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Size;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.media.mediasession.client.MediaBrowserHelper;
 import com.winjay.practice.media.mediasession.service.MediaBrowserService;
 import com.winjay.practice.media.ui.MediaSeekBar;
 import com.winjay.practice.utils.LogUtil;
+import com.winjay.practice.utils.MediaUtil;
 
-import java.io.IOException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -54,9 +52,17 @@ public class MediaSessionActivity extends BaseActivity {
     @BindView(R.id.media_seek_bar)
     MediaSeekBar media_seek_bar;
 
+    @BindView(R.id.position_tv)
+    TextView position_tv;
+
+    @BindView(R.id.duration_tv)
+    TextView duration_tv;
+
     private MediaBrowserHelper mMediaBrowserHelper;
+    private String mCustomAction;
     private boolean mIsPlaying;
 
+    private final Handler updatePositionHandler = new Handler();
 
     @Override
     protected int getLayoutId() {
@@ -80,6 +86,12 @@ public class MediaSessionActivity extends BaseActivity {
         @Override
         protected void onConnected() {
             media_seek_bar.setMediaController(getMediaController());
+
+            // 获取服务端所有自定义Action
+            for (PlaybackStateCompat.CustomAction customAction : getPlaybackState().getCustomActions()) {
+                LogUtil.d(TAG, "" + customAction.getAction());
+                mCustomAction = customAction.getAction();
+            }
         }
 
         @Override
@@ -108,8 +120,13 @@ public class MediaSessionActivity extends BaseActivity {
             mIsPlaying = playbackState.getState() == PlaybackStateCompat.STATE_PLAYING;
             if (mIsPlaying) {
                 play_pause_iv.setImageResource(android.R.drawable.ic_media_pause);
+
+                updatePositionHandler.removeCallbacks(mUpdatePositionRunnable);
+                updatePositionHandler.post(mUpdatePositionRunnable);
             } else {
                 play_pause_iv.setImageResource(android.R.drawable.ic_media_play);
+
+                updatePositionHandler.removeCallbacks(mUpdatePositionRunnable);
             }
         }
 
@@ -120,9 +137,30 @@ public class MediaSessionActivity extends BaseActivity {
             }
             mMusicTitleTV.setText(mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
             music_artist_tv.setText(mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
-//            mAlbumArt.setImageBitmap(MusicLibrary.getAlbumBitmap(
-//                    MainActivity.this,
-//                    mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)));
+
+            long durationOnMs = mediaMetadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+            duration_tv.setText(MediaUtil.formatDuration(durationOnMs));
+
+            Uri albumArtUri = Uri.parse(mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI));
+            if (albumArtUri == Uri.EMPTY) {
+                album_iv.setImageResource(R.mipmap.icon);
+            } else {
+                Glide.with(MediaSessionActivity.this)
+                        .load(albumArtUri)
+                        .into(album_iv);
+            }
+        }
+    };
+
+    private final Runnable mUpdatePositionRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                position_tv.setText(MediaUtil.formatDuration(mMediaBrowserHelper.getPlaybackState().getPosition()));
+                updatePositionHandler.postDelayed(mUpdatePositionRunnable, 1000);
+            } catch (Exception e) {
+                updatePositionHandler.removeCallbacks(this);
+            }
         }
     };
 
@@ -133,6 +171,9 @@ public class MediaSessionActivity extends BaseActivity {
         } else {
             mMediaBrowserHelper.getTransportControls().play();
         }
+
+        // test customAction
+        mMediaBrowserHelper.getTransportControls().sendCustomAction(mCustomAction, null);
     }
 
     @OnClick(R.id.prev_iv)
@@ -147,73 +188,11 @@ public class MediaSessionActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-
+        updatePositionHandler.removeCallbacks(mUpdatePositionRunnable);
+        mMediaBrowserHelper.getTransportControls().stop();
         media_seek_bar.disconnectController();
         mMediaBrowserHelper.onStop();
-    }
 
-
-    /**
-     * 获取音乐资源信息
-     *
-     * @param filePath
-     */
-    private void getMusicInfo(String filePath) {
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();//实例化MediaMetadataRetriever对象mmr
-        mmr.setDataSource(filePath);//设置mmr对象的数据源为上面file对象的绝对路径
-        String albumString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);//获得音乐专辑的标题
-        String artistString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);//获取音乐的艺术家信息
-        String titleString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);//获取音乐标题信息
-        String mimetypeString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);//获取音乐mime类型
-        String durationString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);//获取音乐持续时间
-        String bitrateString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);//获取音乐比特率，位率
-        String dateString = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DATE);//获取音乐的日期
-        LogUtil.d(TAG, "albumString=" + albumString
-                + "\n" + "artistString=" + artistString
-                + "\n" + "titleString=" + titleString
-                + "\n" + "mimetypeString=" + mimetypeString
-                + "\n" + "durationString=" + durationString
-                + "\n" + "bitrateString=" + bitrateString
-                + "\n" + "dateString=" + dateString);
-
-        /* 设置文本的内容 */
-//        ablum.setText("专辑标题为："+ablumString);
-//        artist.setText("艺术家名称为："+artistString);
-//        title.setText("音乐标题为："+titleString);
-//        mimetype.setText("音乐的MIME类型为："+mimetypeString);
-//        duration.setText("duration为："+durationString);
-//        bitrate.setText("bitrate为："+bitrateString);
-//        date.setText("date为："+dateString);
-    }
-
-    /**
-     * 加载专辑图片
-     *
-     * @param path 资源路径
-     */
-    private void loadCover(String path) {
-        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-        mediaMetadataRetriever.setDataSource(path);
-        byte[] cover = mediaMetadataRetriever.getEmbeddedPicture();
-        if (cover.length > 0) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(cover, 0, cover.length);
-            album_iv.setImageBitmap(bitmap);
-        }
-    }
-
-    /**
-     * 加载专辑缩略图片（只适合小缩略图显示，否则会看起来很模糊）
-     *
-     * @param uri contentUri (Uri contentUri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);)
-     */
-    private void loadThumbnail(Uri uri) {
-        if (uri != null) {
-            try {
-                album_iv.setImageBitmap(getContentResolver().loadThumbnail(uri, new Size(200, 200), null));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        super.onDestroy();
     }
 }

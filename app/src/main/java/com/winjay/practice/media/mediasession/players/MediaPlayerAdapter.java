@@ -19,6 +19,7 @@ package com.winjay.practice.media.mediasession.players;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -37,6 +38,7 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
     private final Context mContext;
     private MediaPlayer mMediaPlayer;
     private String mFilename;
+    private String mUri;
     private PlaybackInfoListener mPlaybackInfoListener;
     private MediaMetadataCompat mCurrentMedia;
     private int mState;
@@ -90,12 +92,38 @@ public final class MediaPlayerAdapter extends PlayerAdapter {
     @Override
     public void playFromMedia(MediaMetadataCompat metadata) {
         mCurrentMedia = metadata;
-        playFileFromAssets(MusicDataHelper.ASSETS_DIR + File.separator + metadata.getDescription().getTitle());
+        if (MusicDataHelper.SOURCES_FROM_NET) {
+            playFileFromNet(metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI));
+        } else {
+            playFileFromAssets(MusicDataHelper.ASSETS_DIR + File.separator + metadata.getDescription().getTitle());
+        }
     }
 
     @Override
     public MediaMetadataCompat getCurrentMedia() {
         return mCurrentMedia;
+    }
+
+    private void playFileFromNet(String uri) {
+        boolean mediaChanged = !uri.equals(mUri);
+        if (!mediaChanged) {
+            if (!isPlaying()) {
+                play();
+            }
+            return;
+        } else {
+//            release();
+        }
+
+        mUri = uri;
+
+        mMediaPlayer.reset();
+        try {
+            mMediaPlayer.setDataSource(mContext, Uri.parse(uri));
+            mMediaPlayer.prepareAsync();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to open file: " + uri, e);
+        }
     }
 
     private void playFileFromAssets(String filename) {

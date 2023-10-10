@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,12 @@ public class GsonUtil {
         Gson gson = new Gson();
         T t = null;
         return t = gson.fromJson(json, c);
+    }
+
+    public static <T> T fromJson(Reader reader, Class<T> c) {
+        Gson gson = new Gson();
+        T t = null;
+        return t = gson.fromJson(reader, c);
     }
 
     public static <T> List<T> fromListJson(String json, Class<T> c) {

@@ -1,18 +1,17 @@
 package com.winjay.practice.media.mediasession.service;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.winjay.practice.Constants;
@@ -44,13 +43,11 @@ public class MediaBrowserService extends MediaBrowserServiceCompat {
 
     private MediaSessionCompat mMediaSession;
     private PlaybackStateCompat.Builder mPlaybackState;
-    private MediaMetadataCompat.Builder mMediaMetadata;
 
     private String mParentId;
 
     private PlayerAdapter mPlayback;
     private int mCurrentIndex = 0;
-    private boolean mServiceInStartedState;
 
     @Override
     public void onCreate() {
@@ -73,13 +70,14 @@ public class MediaBrowserService extends MediaBrowserServiceCompat {
         // 设置媒体会话令牌，用于客户端创建 MediaController 时与其配对使用
         setSessionToken(mMediaSession.getSessionToken());
 
+        // 增加自定义Action
         mPlaybackState = new PlaybackStateCompat.Builder();
-        // 收藏按钮
-//        mPlaybackState.addCustomAction(new PlaybackStateCompat.CustomAction.Builder(
-//                CUSTOM_ACTION_THUMBS_UP, getResources().getString(R.string.thumbs_up), thumbsUpIcon)
-//                .setExtras(customActionExtras)
-//                .build());
-        mMediaMetadata = new MediaMetadataCompat.Builder();
+        // 自定义Action(收藏)
+        PlaybackStateCompat.CustomAction customAction = new PlaybackStateCompat.CustomAction.Builder(CUSTOM_ACTION_THUMBS_UP, "thumbs up",
+                android.R.drawable.star_off).build();
+        mPlaybackState.addCustomAction(customAction);
+        mMediaSession.setPlaybackState(mPlaybackState.build());
+
 
         mPlayback = new MediaPlayerAdapter(this, new MediaPlayerListener());
     }
@@ -145,10 +143,17 @@ public class MediaBrowserService extends MediaBrowserServiceCompat {
 
         // 如果数据加载操作为耗时操作，且需要在其他线程中执行时，需要先调用次方法。
         // 将信息从当前线程中移除，允许后续调用sendResult方法
-//        result.detach();
+        result.detach();
 
         // 模拟获取数据的过程，真实情况应该是异步从网络或本地读取数据
-        List<MediaBrowserCompat.MediaItem> mediaItems = MusicDataHelper.getMediaBrowserItemsFromAssets(this);
+        MusicDataHelper.getMediaBrowserItems(this, new MusicDataHelper.GetDataCallback() {
+            @Override
+            public void onLoadFinished(List<MediaBrowserCompat.MediaItem> mediaItems) {
+                if (mediaItems != null && !mediaItems.isEmpty()) {
+                    result.sendResult(mediaItems);
+                }
+            }
+        });
 
         // Check if this is the root menu:
         if (MY_MEDIA_ROOT_ID.equals(parentId)) {
@@ -158,7 +163,7 @@ public class MediaBrowserService extends MediaBrowserServiceCompat {
             // Examine the passed parentMediaId to see which submenu we're at,
             // and put the children of that menu in the mediaItems list...
         }
-        result.sendResult(mediaItems);
+//        result.sendResult(mediaItems);
     }
 
     // Callback 中的一系列方法是与 MediaController 中的方法一一对应的
@@ -168,7 +173,7 @@ public class MediaBrowserService extends MediaBrowserServiceCompat {
         public void onPrepare() {
             LogUtil.d(TAG);
             // 通知客户端当前媒体信息发生变化，之后 MediaControllerCompat.Callback 的 onMetadataChanged() 会收到更新回调
-            mMediaSession.setMetadata(MusicDataHelper.getMediaMetadataItemsFromAssets().get(mCurrentIndex));
+            mMediaSession.setMetadata(MusicDataHelper.getMediaMetadataItems().get(mCurrentIndex));
             // 同样，当服务端播放器状态发生变化时，也可以通过该方法通知客户端
             // mMediaSession.setPlaybackState(state);
 
@@ -180,7 +185,7 @@ public class MediaBrowserService extends MediaBrowserServiceCompat {
         @Override
         public void onPlay() {
             LogUtil.d(TAG);
-            mPlayback.playFromMedia(MusicDataHelper.getMediaMetadataItemsFromAssets().get(mCurrentIndex));
+            mPlayback.playFromMedia(MusicDataHelper.getMediaMetadataItems().get(mCurrentIndex));
         }
 
         @Override
@@ -194,13 +199,12 @@ public class MediaBrowserService extends MediaBrowserServiceCompat {
             LogUtil.d(TAG);
             mPlayback.stop();
             mMediaSession.setActive(false);
-
         }
 
         @Override
         public void onSkipToNext() {
             LogUtil.d(TAG);
-            mCurrentIndex = (++mCurrentIndex % MusicDataHelper.getMediaMetadataItemsFromAssets().size());
+            mCurrentIndex = (++mCurrentIndex % MusicDataHelper.getMediaMetadataItems().size());
             onPrepare();
             onPlay();
         }
@@ -208,7 +212,7 @@ public class MediaBrowserService extends MediaBrowserServiceCompat {
         @Override
         public void onSkipToPrevious() {
             LogUtil.d(TAG);
-            mCurrentIndex = mCurrentIndex > 0 ? mCurrentIndex - 1 : MusicDataHelper.getMediaMetadataItemsFromAssets().size() - 1;
+            mCurrentIndex = mCurrentIndex > 0 ? mCurrentIndex - 1 : MusicDataHelper.getMediaMetadataItems().size() - 1;
             onPrepare();
             onPlay();
         }
@@ -222,7 +226,7 @@ public class MediaBrowserService extends MediaBrowserServiceCompat {
         public void onCustomAction(String action, Bundle extras) {
             LogUtil.d(TAG, "action=" + action);
             if (CUSTOM_ACTION_THUMBS_UP.equals(action)) {
-                LogUtil.d(TAG);
+
             }
         }
     };
@@ -263,40 +267,34 @@ public class MediaBrowserService extends MediaBrowserServiceCompat {
         class ServiceManager {
 
             private void moveServiceToStartedState(PlaybackStateCompat state) {
-//                Notification notification =
-//                        mMediaNotificationManager.getNotification(
-//                                mPlayback.getCurrentMedia(), state, getSessionToken());
-
-//                if (!mServiceInStartedState) {
-//                    ContextCompat.startForegroundService(
-//                            mContext,
-//                            new Intent(mContext, MusicBrowserService.class));
-//                    mServiceInStartedState = true;
-//                }
-
-//                startForeground(MediaNotificationManager.NOTIFICATION_ID, notification);
-
-                Notification notification = MediaStyleNotificationManager.getInstance(mContext).getNotification(
+                MediaStyleNotificationManager.getInstance(mContext).getNotification(
+                        mMediaSession.getController(),
                         mPlayback.getCurrentMedia().getDescription(),
-                        mMediaSession.getSessionToken());
-                NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.notify(Constants.NOTIFICATION_ID, notification);
-//                startForeground(Constants.NOTIFICATION_ID, notification);
+                        mMediaSession.getSessionToken(),
+                        new MediaStyleNotificationManager.NotificationCallback() {
+                            @Override
+                            public void onPrepared(Notification notification) {
+                                NotificationManagerCompat.from(mContext).notify(Constants.NOTIFICATION_ID, notification);
+                            }
+                        });
             }
 
             private void updateNotificationForPause(PlaybackStateCompat state) {
-//                stopForeground(false);
-//                Notification notification =
-//                        mMediaNotificationManager.getNotification(
-//                                mPlayback.getCurrentMedia(), state, getSessionToken());
-//                mMediaNotificationManager.getNotificationManager()
-//                        .notify(MediaNotificationManager.NOTIFICATION_ID, notification);
+                MediaStyleNotificationManager.getInstance(mContext).getNotification(
+                        mMediaSession.getController(),
+                        mPlayback.getCurrentMedia().getDescription(),
+                        mMediaSession.getSessionToken(),
+                        new MediaStyleNotificationManager.NotificationCallback() {
+                            @Override
+                            public void onPrepared(Notification notification) {
+                                NotificationManagerCompat.from(mContext).notify(Constants.NOTIFICATION_ID, notification);
+                            }
+                        });
+
             }
 
             private void moveServiceOutOfStartedState(PlaybackStateCompat state) {
-//                stopForeground(true);
-//                stopSelf();
-//                mServiceInStartedState = false;
+                NotificationManagerCompat.from(mContext).cancel(Constants.NOTIFICATION_ID);
             }
         }
     }

@@ -122,12 +122,12 @@ public class AppApplication extends MultiDexApplication {
     private static class ApplicationLifecycleObserver implements LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_START)
         private void onAppForeground() {
-            LogUtil.w(TAG, "ApplicationObserver: app moved to foreground");
+            LogUtil.d(TAG, "ApplicationObserver: app moved to foreground");
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
         private void onAppBackground() {
-            LogUtil.w(TAG, "ApplicationObserver: app moved to background");
+            LogUtil.d(TAG, "ApplicationObserver: app moved to background");
         }
     }
 }

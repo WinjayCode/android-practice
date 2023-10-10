@@ -152,6 +152,7 @@ public class MediaSeekBar extends AppCompatSeekBar {
                     ? (int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
                     : 0;
             setProgress(0);
+            LogUtil.d(TAG, "max=" + max);
             setMax(max);
         }
 
@@ -164,6 +165,7 @@ public class MediaSeekBar extends AppCompatSeekBar {
             }
 
             final int animatedIntValue = (int) valueAnimator.getAnimatedValue();
+//            LogUtil.d(TAG, "animatedIntValue=" + animatedIntValue);
             setProgress(animatedIntValue);
         }
     }

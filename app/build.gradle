@@ -171,13 +171,18 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    // test
+    // unit test
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    // media
-    implementation "androidx.media:media:1.5.0"
+    // androidx.media (Deprecated?)
+    implementation "androidx.media:media:1.6.0"
+
+    // androidx.media3 (no release version!)
+    def media3_version = "1.0.0-rc01"
+    // For exposing and controlling media sessions
+    implementation "androidx.media3:media3-session:$media3_version"
 
     // appcompat
     implementation 'androidx.appcompat:appcompat:1.5.1'
@@ -227,6 +232,12 @@ dependencies {
     // To use Kotlin annotation processing tool (kapt)
     kapt "androidx.room:room-compiler:$room_version"
 
+    // exoplayer
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
+
+    // palette
+    implementation 'androidx.palette:palette-ktx:1.0.0'
+
     // 指纹识别
     implementation 'androidx.biometric:biometric:1.1.0'
 
@@ -258,12 +269,6 @@ dependencies {
     // butterknife
     implementation 'com.jakewharton:butterknife:10.2.1'
     kapt 'com.jakewharton:butterknife-compiler:10.2.1'
-
-    // exoplayer
-    implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
-
-    // palette
-    implementation 'androidx.palette:palette-ktx:1.0.0'
 
     // glide
     implementation 'com.github.bumptech.glide:glide:4.8.0'

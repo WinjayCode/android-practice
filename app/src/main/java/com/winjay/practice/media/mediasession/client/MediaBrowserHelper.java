@@ -163,6 +163,10 @@ public class MediaBrowserHelper {
         return getMediaController().getTransportControls();
     }
 
+    public PlaybackStateCompat getPlaybackState() {
+        return getMediaController().getPlaybackState();
+    }
+
     public void registerMediaControllerCallback(MediaControllerCompat.Callback callback) {
         if (callback != null) {
             mMediaControllerCallbackList.add(callback);
