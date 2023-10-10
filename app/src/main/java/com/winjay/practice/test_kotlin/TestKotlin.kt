@@ -165,5 +165,5 @@ fun getStringLength3(obj: Any): Int? {
 fun decimalDigitValue(c: Char): Int {
     if (c !in '0'..'9')
         throw IllegalArgumentException("Out of range")
-    return c.toInt() - '0'.toInt()
+    return c.code - '0'.code
 }

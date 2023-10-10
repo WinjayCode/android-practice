@@ -14,8 +14,8 @@ buildscript {
             url "http://4thline.org/m2/"
             allowInsecureProtocol = true
         }
+        google()
 
-//        google()
 //        jcenter()
     }
 
@@ -41,8 +41,8 @@ allprojects {
             url "http://4thline.org/m2/"
             allowInsecureProtocol = true
         }
+        google()
 
-//        google()
 //        jcenter()
     }
 }
