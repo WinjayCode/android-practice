@@ -14,6 +14,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.databinding.ActivityMusicPlayBinding;
 import com.winjay.practice.media.media3.service.Media3Service;
+import com.winjay.practice.utils.LogUtil;
 
 import java.util.concurrent.ExecutionException;
 
@@ -22,7 +23,7 @@ import java.util.concurrent.ExecutionException;
  * @author Winjay
  * @date 2023-10-10
  */
-public class Media3Activity extends BaseActivity {
+public class Media3Activity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = Media3Activity.class.getSimpleName();
     private ActivityMusicPlayBinding binding;
 
@@ -45,6 +46,10 @@ public class Media3Activity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        binding.prevIv.setOnClickListener(this);
+        binding.nextIv.setOnClickListener(this);
+        binding.playPauseIv.setOnClickListener(this);
+
         SessionToken sessionToken = new SessionToken(this, new ComponentName(this, Media3Service.class));
         mControllerFuture = new MediaController.Builder(this, sessionToken).buildAsync();
 
@@ -54,11 +59,29 @@ public class Media3Activity extends BaseActivity {
             // attached to the PlayerView UI component.
 //            playerView.setPlayer(mControllerFuture.get());
             try {
+                LogUtil.d(TAG, "get player");
                 mPlayer = mControllerFuture.get();
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
         }, MoreExecutors.directExecutor());
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == binding.prevIv) {
+            mPlayer.seekToPreviousMediaItem();
+        }
+        if (v == binding.nextIv) {
+            mPlayer.seekToNextMediaItem();
+        }
+        if (v == binding.playPauseIv) {
+            if (mPlayer.isPlaying()) {
+                mPlayer.pause();
+            } else {
+                mPlayer.play();
+            }
+        }
     }
 
     @Override

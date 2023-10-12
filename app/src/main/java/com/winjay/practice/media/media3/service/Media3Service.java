@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -13,21 +12,22 @@ import androidx.annotation.OptIn;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.media3.common.AudioAttributes;
-import androidx.media3.common.MediaItem;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.common.util.Util;
+import androidx.media3.datasource.DataSourceBitmapLoader;
 import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.session.CacheBitmapLoader;
 import androidx.media3.session.CommandButton;
-import androidx.media3.session.LibraryResult;
 import androidx.media3.session.MediaLibraryService;
 import androidx.media3.session.MediaSession;
 import androidx.media3.session.MediaSessionService;
 import androidx.media3.session.SessionCommand;
+import androidx.media3.session.SessionCommands;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.winjay.practice.R;
 import com.winjay.practice.media.media3.Media3Activity;
+import com.winjay.practice.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,172 +86,46 @@ public class Media3Service extends MediaLibraryService {
         super.onDestroy();
     }
 
-    /*private class CustomMediaLibrarySessionCallback implements MediaLibrarySession.Callback {
+    private class CustomMediaLibrarySessionCallback implements MediaLibrarySession.Callback {
 
-        override fun
-
-        onConnect(session:MediaSession, controller:ControllerInfo):
-
-        ConnectionResult {
-            val availableSessionCommands =
-                    ConnectionResult.DEFAULT_SESSION_AND_LIBRARY_COMMANDS.buildUpon()
-            for (commandButton in customCommands) {
-                // Add custom command to available session commands.
-                commandButton.sessionCommand ?.let {
-                    availableSessionCommands.add(it)
+        @OptIn(markerClass = UnstableApi.class)
+        @Override
+        public MediaSession.ConnectionResult onConnect(MediaSession session, MediaSession.ControllerInfo controller) {
+            LogUtil.d(TAG);
+            SessionCommands.Builder availableSessionCommands =
+                    MediaSession.ConnectionResult.DEFAULT_SESSION_AND_LIBRARY_COMMANDS.buildUpon();
+            for (CommandButton customCommand : customCommands) {
+                if (customCommand.sessionCommand != null) {
+                    availableSessionCommands.add(customCommand.sessionCommand);
                 }
             }
-            return ConnectionResult.AcceptedResultBuilder(session)
+
+            return new MediaSession.ConnectionResult.AcceptedResultBuilder(session)
                     .setAvailableSessionCommands(availableSessionCommands.build())
-                    .build()
+                    .build();
         }
+    }
 
-        override fun
-
-        onCustomCommand(
-                session:MediaSession,
-                controller:ControllerInfo,
-                customCommand:SessionCommand,
-                args:Bundle
-        ):ListenableFuture<SessionResult>
-
-        {
-            if (CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON == customCommand.customAction) {
-                // Enable shuffling.
-                player.shuffleModeEnabled = true
-                // Change the custom layout to contain the `Disable shuffling` command.
-                session.setCustomLayout(ImmutableList.of(customCommands[1]))
-            } else if (CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_OFF == customCommand.customAction) {
-                // Disable shuffling.
-                player.shuffleModeEnabled = false
-                // Change the custom layout to contain the `Enable shuffling` command.
-                session.setCustomLayout(ImmutableList.of(customCommands[0]))
-            }
-            return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
-        }
-
-        override fun
-
-        onGetLibraryRoot(
-                session:MediaLibrarySession,
-                browser:ControllerInfo,
-                params:LibraryParams?
-        ):ListenableFuture<LibraryResult<MediaItem>>
-
-        {
-            if (params != null && params.isRecent) {
-                // The service currently does not support playback resumption. Tell System UI by returning
-                // an error of type 'RESULT_ERROR_NOT_SUPPORTED' for a `params.isRecent` request. See
-                // https://github.com/androidx/media/issues/355
-                return Futures.immediateFuture(LibraryResult.ofError(RESULT_ERROR_NOT_SUPPORTED))
-            }
-            return Futures.immediateFuture(LibraryResult.ofItem(MediaItemTree.getRootItem(), params))
-        }
-
-        override fun
-
-        onGetItem(
-                session:MediaLibrarySession,
-                browser:ControllerInfo,
-                mediaId:String
-        ):ListenableFuture<LibraryResult<MediaItem>>
-
-        {
-            val item =
-                    MediaItemTree.getItem(mediaId)
-                            ?:return Futures.immediateFuture(
-                LibraryResult.ofError(LibraryResult.RESULT_ERROR_BAD_VALUE)
-        )
-            return Futures.immediateFuture(LibraryResult.ofItem(item, *//* params= *//* null))
-        }
-
-        override fun
-
-        onSubscribe(
-                session:MediaLibrarySession,
-                browser:ControllerInfo,
-                parentId:String,
-                params:LibraryParams?
-        ):ListenableFuture<LibraryResult<Void>>
-
-        {
-            val children =
-                    MediaItemTree.getChildren(parentId)
-                            ?:return Futures.immediateFuture(
-                LibraryResult.ofError(LibraryResult.RESULT_ERROR_BAD_VALUE)
-        )
-            session.notifyChildrenChanged(browser, parentId, children.size, params)
-            return Futures.immediateFuture(LibraryResult.ofVoid())
-        }
-
-        override fun
-
-        onGetChildren(
-                session:MediaLibrarySession,
-                browser:ControllerInfo,
-                parentId:String,
-                page:Int,
-                pageSize:Int,
-                params:LibraryParams?
-        ):ListenableFuture<LibraryResult<ImmutableList<MediaItem>>>
-
-        {
-            val children =
-                    MediaItemTree.getChildren(parentId)
-                            ?:return Futures.immediateFuture(
-                LibraryResult.ofError(LibraryResult.RESULT_ERROR_BAD_VALUE)
-        )
-
-            return Futures.immediateFuture(LibraryResult.ofItemList(children, params))
-        }
-
-        override fun
-
-        onAddMediaItems(
-                mediaSession:MediaSession,
-                controller:MediaSession.ControllerInfo,
-                mediaItems:List<MediaItem>
-        ):ListenableFuture<List<MediaItem>>
-
-        {
-            val updatedMediaItems:List<MediaItem> =
-            mediaItems.map {
-            mediaItem ->
-            if (mediaItem.requestMetadata.searchQuery != null)
-                getMediaItemFromSearchQuery(mediaItem.requestMetadata.searchQuery !!)
-          else MediaItemTree.getItem(mediaItem.mediaId) ?:mediaItem
-        }
-            return Futures.immediateFuture(updatedMediaItems)
-        }
-
-        private fun getMediaItemFromSearchQuery(query:String):
-
-        MediaItem {
-            // Only accept query with pattern "play [Title]" or "[Title]"
-            // Where [Title]: must be exactly matched
-            // If no media with exact name found, play a random media instead
-            val mediaTitle =
-            if (query.startsWith("play ", ignoreCase = true)) {
-                query.drop(5)
-            } else {
-                query
-            }
-
-            return MediaItemTree.getItemFromTitle(mediaTitle) ?:MediaItemTree.getRandomItem()
-        }
-    }*/
-
+    @OptIn(markerClass = UnstableApi.class)
     private void initializeSessionAndPlayer() {
         player = new ExoPlayer.Builder(this)
                 .setAudioAttributes(AudioAttributes.DEFAULT, /* handleAudioFocus= */ true)
                 .build();
 //        MediaItemTree.initialize(assets);
-        mediaLibrarySession = new MediaLibrarySession.Builder(this, player, new MediaLibrarySession.Callback() {
-            @Override
-            public ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> onGetChildren(MediaLibrarySession session, MediaSession.ControllerInfo browser, String parentId, int page, int pageSize, @Nullable LibraryParams params) {
-                return MediaLibrarySession.Callback.super.onGetChildren(session, browser, parentId, page, pageSize, params);
-            }
-        }).build();
+        mediaLibrarySession = new MediaLibrarySession.Builder(this, player, new CustomMediaLibrarySessionCallback())
+                .setSessionActivity(getSingleTopActivity())
+                .setCustomLayout(ImmutableList.of(customCommands.get(0)))
+                .setBitmapLoader(new CacheBitmapLoader(new DataSourceBitmapLoader(/* context= */ this)))
+                .build();
+    }
+
+    private PendingIntent getSingleTopActivity() {
+        return PendingIntent.getActivity(
+                this,
+                0,
+                new Intent(this, Media3Activity.class),
+                immutableFlag | PendingIntent.FLAG_UPDATE_CURRENT
+        );
     }
 
     private CommandButton getShuffleCommandButton(SessionCommand sessionCommand) {
