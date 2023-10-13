@@ -12,12 +12,15 @@ import androidx.annotation.OptIn;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.media3.common.AudioAttributes;
+import androidx.media3.common.ForwardingPlayer;
+import androidx.media3.common.MediaItem;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.common.util.Util;
 import androidx.media3.datasource.DataSourceBitmapLoader;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.session.CacheBitmapLoader;
 import androidx.media3.session.CommandButton;
+import androidx.media3.session.LibraryResult;
 import androidx.media3.session.MediaLibraryService;
 import androidx.media3.session.MediaSession;
 import androidx.media3.session.MediaSessionService;
@@ -25,6 +28,7 @@ import androidx.media3.session.SessionCommand;
 import androidx.media3.session.SessionCommands;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.winjay.practice.R;
 import com.winjay.practice.media.media3.Media3Activity;
 import com.winjay.practice.utils.LogUtil;
@@ -104,6 +108,24 @@ public class Media3Service extends MediaLibraryService {
                     .setAvailableSessionCommands(availableSessionCommands.build())
                     .build();
         }
+
+        @Override
+        public ListenableFuture<LibraryResult<MediaItem>> onGetLibraryRoot(MediaLibrarySession session,
+                                                                           MediaSession.ControllerInfo browser,
+                                                                           @Nullable LibraryParams params) {
+            return MediaLibrarySession.Callback.super.onGetLibraryRoot(session, browser, params);
+//            return Futures.immediateFuture(LibraryResult.ofItem(MediaItemTree.getRootItem(), params));
+        }
+
+        @Override
+        public ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> onGetChildren(MediaLibrarySession session,
+                                                                                       MediaSession.ControllerInfo browser,
+                                                                                       String parentId,
+                                                                                       int page,
+                                                                                       int pageSize,
+                                                                                       @Nullable LibraryParams params) {
+            return MediaLibrarySession.Callback.super.onGetChildren(session, browser, parentId, page, pageSize, params);
+        }
     }
 
     @OptIn(markerClass = UnstableApi.class)
@@ -111,6 +133,19 @@ public class Media3Service extends MediaLibraryService {
         player = new ExoPlayer.Builder(this)
                 .setAudioAttributes(AudioAttributes.DEFAULT, /* handleAudioFocus= */ true)
                 .build();
+        ForwardingPlayer forwardingPlayer = new ForwardingPlayer(player) {
+            @Override
+            public void play() {
+                // Add custom logic
+                super.play();
+            }
+
+            @Override
+            public void setPlayWhenReady(boolean playWhenReady) {
+                // Add custom logic
+                super.setPlayWhenReady(playWhenReady);
+            }
+        };
 //        MediaItemTree.initialize(assets);
         mediaLibrarySession = new MediaLibrarySession.Builder(this, player, new CustomMediaLibrarySessionCallback())
                 .setSessionActivity(getSingleTopActivity())
