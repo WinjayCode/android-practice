@@ -13,9 +13,12 @@ import androidx.media3.session.MediaSession;
 import androidx.media3.session.MediaSessionService;
 import androidx.media3.session.SessionCommands;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.winjay.practice.media.media3.Media3Activity;
+import com.winjay.practice.media.media3.Media3SessionActivity;
+import com.winjay.practice.media.media3.data.Media3DataHelper;
+import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.utils.LogUtil;
+
+import java.util.List;
 
 /**
  *
@@ -26,6 +29,7 @@ public class Media3SessionService extends MediaSessionService {
     private static final String TAG = Media3SessionService.class.getSimpleName();
     private MediaSession mediaSession = null;
     private ExoPlayer player;
+    private Media3DataHelper media3DataHelper;
 
     @Override
     public void onCreate() {
@@ -53,20 +57,22 @@ public class Media3SessionService extends MediaSessionService {
                     .setAvailableSessionCommands(availableSessionCommands.build())
                     .build();
         }
-
-        @OptIn(markerClass = UnstableApi.class)
-        @Override
-        public ListenableFuture<MediaSession.MediaItemsWithStartPosition> onPlaybackResumption(MediaSession mediaSession, MediaSession.ControllerInfo controller) {
-            return MediaSession.Callback.super.onPlaybackResumption(mediaSession, controller);
-        }
     }
 
     private void initializeSessionAndPlayer() {
         player = new ExoPlayer.Builder(this)
                 .setAudioAttributes(AudioAttributes.DEFAULT, /* handleAudioFocus= */ true)
                 .build();
-//        new MediaItem.Builder().setMediaMetadata()
-//        player.setMediaItem();
+        media3DataHelper = new Media3DataHelper();
+        media3DataHelper.getMediaItems(new Media3DataHelper.GetDataCallback() {
+            @Override
+            public void onLoadFinished(List<MediaItem> mediaItems) {
+                HandlerManager.getInstance().postOnMainThread(() -> {
+                    LogUtil.d(TAG, "MediaItem.size=" + mediaItems.size());
+                    player.setMediaItems(mediaItems);
+                });
+            }
+        });
         mediaSession = new MediaSession.Builder(this, player)
                 .setSessionActivity(getSingleTopActivity())
                 .setCallback(new MediaSessionCallback())
@@ -77,7 +83,7 @@ public class Media3SessionService extends MediaSessionService {
         return PendingIntent.getActivity(
                 this,
                 0,
-                new Intent(this, Media3Activity.class),
+                new Intent(this, Media3SessionActivity.class),
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
         );
     }

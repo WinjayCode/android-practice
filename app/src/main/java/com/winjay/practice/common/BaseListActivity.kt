@@ -31,7 +31,7 @@ abstract class BaseListActivity : BaseActivity() {
         binding.mainRv.layoutManager = LinearLayoutManager(this)
         val mainAdapter = MainAdapter(ArrayList(getMainMap().keys))
         binding.mainRv.adapter = mainAdapter
-        mainAdapter.setOnItemClickListener { view, key ->
+        mainAdapter.setOnItemClickListener { _, key ->
             startActivity(getMainMap()[key])
         }
     }

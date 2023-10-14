@@ -13,19 +13,19 @@ import com.winjay.practice.MainAdapter;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.media.audio_focus.AudioFocusTestActivity;
+import com.winjay.practice.media.audio_record.AudioRecordActivity;
 import com.winjay.practice.media.audio_record.ktv.KTVActivity;
 import com.winjay.practice.media.camera.CameraListActivity;
 import com.winjay.practice.media.codec.MediaCodecActivity;
 import com.winjay.practice.media.exoplayer.ExoPlayerActivity;
 import com.winjay.practice.media.extractor_muxer.MediaExtractorAndMuxerActivity;
-import com.winjay.practice.media.media3.Media3Activity;
+import com.winjay.practice.media.media3.Media3ListActivity;
 import com.winjay.practice.media.media_list.ImageListActivity;
 import com.winjay.practice.media.media_list.MusicListActivity;
 import com.winjay.practice.media.media_list.VideoListActivity;
-import com.winjay.practice.media.music.MusicPlayActivity;
 import com.winjay.practice.media.mediasession.MediaSessionActivity;
+import com.winjay.practice.media.music.MusicPlayActivity;
 import com.winjay.practice.media.projection.MediaProjectionActivity;
-import com.winjay.practice.media.audio_record.AudioRecordActivity;
 import com.winjay.practice.media.video.VideoPlayActivity;
 import com.winjay.practice.usb.UsbActivity;
 
@@ -46,7 +46,7 @@ public class MediaListActivity extends BaseActivity {
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
         {
-            put("Media3", Media3Activity.class);
+            put("Media3", Media3ListActivity.class);
             put("MediaSession", MediaSessionActivity.class);
             put("AudioRecorder", AudioRecordActivity.class);
             put("KTV", KTVActivity.class);

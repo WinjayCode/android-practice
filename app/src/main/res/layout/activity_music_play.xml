@@ -27,7 +27,9 @@
         android:id="@+id/music_title_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="50dp"
+        android:layout_marginRight="10dp"
         android:ellipsize="marquee"
         android:focusable="true"
         android:focusableInTouchMode="true"
@@ -82,6 +84,17 @@
 
     <com.winjay.practice.media.ui.MediaSeekBar
         android:id="@+id/media_seek_bar"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="80dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/prev_iv" />
+
+    <com.winjay.practice.media.ui.Media3SeekBar
+        android:id="@+id/media3_seek_bar"
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:layout_marginLeft="80dp"

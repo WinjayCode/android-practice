@@ -1,7 +1,5 @@
 package com.winjay.practice.media.media3.data;
 
-import static android.support.v4.media.MediaDescriptionCompat.STATUS_NOT_DOWNLOADED;
-
 import android.net.Uri;
 
 import androidx.media3.common.MediaItem;
@@ -18,10 +16,9 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
- * @author F2848777
+ * @author Winjay
  * @date 2023-10-13
  */
 public class Media3DataHelper {
@@ -43,18 +40,22 @@ public class Media3DataHelper {
             public void onJsonDownloaded(JsonCatalog jsonCatalog) {
                 if (jsonCatalog != null) {
                     for (JsonMusic jsonMusic : jsonCatalog.music) {
-                        /*MediaMetadata.Builder builder = new MediaMetadata.Builder()
-                        .setAlbumTitle(jsonMusic.album)
+                        MediaMetadata.Builder builder = new MediaMetadata.Builder()
+                                .setAlbumTitle(jsonMusic.album)
                                 .setTitle(jsonMusic.title)
                                 .setArtist(jsonMusic.artist)
                                 .setGenre(jsonMusic.genre)
-                                .setIsBrowsable(isBrowsable)
-                                .setIsPlayable(isPlayable)
-                                .setArtworkUri(imageUri)
-                                .setMediaType(mediaType)
-
+                                .setIsBrowsable(false)
+                                .setIsPlayable(true)
+                                .setArtworkUri(Uri.parse(jsonMusic.image))
+                                .setMediaType(MediaMetadata.MEDIA_TYPE_MUSIC);
                         MediaMetadata mediaMetadata = builder.build();
-                        result.add(mediaItem);*/
+                        MediaItem mediaItem = new MediaItem.Builder()
+                                .setMediaId(jsonMusic.id)
+                                .setMediaMetadata(mediaMetadata)
+                                .setUri(Uri.parse(jsonMusic.source))
+                                .build();
+                        result.add(mediaItem);
                     }
                 }
 
@@ -88,6 +89,7 @@ public class Media3DataHelper {
 
     public interface DownloadCallback {
         void onJsonDownloaded(JsonCatalog jsonCatalog);
+
         void onJsonDownloadFailed();
     }
 

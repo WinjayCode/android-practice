@@ -30,7 +30,7 @@ import androidx.media3.session.SessionCommands;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.winjay.practice.R;
-import com.winjay.practice.media.media3.Media3Activity;
+import com.winjay.practice.media.media3.Media3SessionActivity;
 import com.winjay.practice.utils.LogUtil;
 
 import java.util.ArrayList;
@@ -42,8 +42,8 @@ import java.util.List;
  * @author Winjay
  * @date 2023-10-10
  */
-public class Media3Service extends MediaLibraryService {
-    private static final String TAG = Media3Service.class.getSimpleName();
+public class Media3LibraryService extends MediaLibraryService {
+    private static final String TAG = Media3LibraryService.class.getSimpleName();
     private ExoPlayer player;
     private MediaLibrarySession mediaLibrarySession = null;
     private List<CommandButton> customCommands = new ArrayList<>();
@@ -158,7 +158,7 @@ public class Media3Service extends MediaLibraryService {
         return PendingIntent.getActivity(
                 this,
                 0,
-                new Intent(this, Media3Activity.class),
+                new Intent(this, Media3SessionActivity.class),
                 immutableFlag | PendingIntent.FLAG_UPDATE_CURRENT
         );
     }
@@ -174,7 +174,7 @@ public class Media3Service extends MediaLibraryService {
 
     private PendingIntent getBackStackedActivity() {
         return TaskStackBuilder.create(this)
-                .addNextIntent(new Intent(Media3Service.this, Media3Activity.class))
+                .addNextIntent(new Intent(Media3LibraryService.this, Media3SessionActivity.class))
 //                .addNextIntent(new Intent(Media3Service.this, PlayerActivity.class))
                 .getPendingIntent(0, immutableFlag | PendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -183,12 +183,12 @@ public class Media3Service extends MediaLibraryService {
     private class MediaSessionServiceListener implements MediaSessionService.Listener {
         @Override
         public void onForegroundServiceStartNotAllowedException() {
-            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(Media3Service.this);
+            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(Media3LibraryService.this);
             ensureNotificationChannel(notificationManagerCompat);
-            PendingIntent pendingIntent = TaskStackBuilder.create(Media3Service.this)
-                    .addNextIntent(new Intent(Media3Service.this, Media3Activity.class))
+            PendingIntent pendingIntent = TaskStackBuilder.create(Media3LibraryService.this)
+                    .addNextIntent(new Intent(Media3LibraryService.this, Media3SessionActivity.class))
                     .getPendingIntent(0, immutableFlag | PendingIntent.FLAG_UPDATE_CURRENT);
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(Media3Service.this, CHANNEL_ID)
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(Media3LibraryService.this, CHANNEL_ID)
                     .setContentIntent(pendingIntent)
                     .setSmallIcon(R.drawable.media3_notification_small_icon)
                     .setContentTitle("Playback cannot be resumed")

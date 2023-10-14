@@ -367,7 +367,12 @@
         </service>
 
         <activity
-            android:name=".media.media3.Media3Activity"
+            android:name=".media.media3.Media3ListActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".media.media3.Media3SessionActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
 
@@ -381,8 +386,13 @@
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".media.media3.Media3LibraryActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
         <service
-            android:name=".media.media3.service.Media3Service"
+            android:name=".media.media3.service.Media3LibraryService"
             android:foregroundServiceType="mediaPlayback"
             android:exported="true">
             <intent-filter>

@@ -8,6 +8,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.media.mediasession.client.MediaBrowserHelper;
 import com.winjay.practice.media.mediasession.service.MediaBrowserService;
+import com.winjay.practice.media.ui.Media3SeekBar;
 import com.winjay.practice.media.ui.MediaSeekBar;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.MediaUtil;
@@ -52,6 +54,9 @@ public class MediaSessionActivity extends BaseActivity {
     @BindView(R.id.media_seek_bar)
     MediaSeekBar media_seek_bar;
 
+    @BindView(R.id.media3_seek_bar)
+    Media3SeekBar media3_seek_bar;
+
     @BindView(R.id.position_tv)
     TextView position_tv;
 
@@ -72,6 +77,8 @@ public class MediaSessionActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        media3_seek_bar.setVisibility(View.GONE);
 
         mMediaBrowserHelper = new MediaBrowserConnection(this);
         mMediaBrowserHelper.registerMediaControllerCallback(mMediaControllerCallback);
