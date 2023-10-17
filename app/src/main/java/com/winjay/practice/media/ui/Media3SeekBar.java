@@ -139,7 +139,7 @@ public class Media3SeekBar extends AppCompatSeekBar implements ValueAnimator.Ani
         public void onMediaMetadataChanged(MediaMetadata mediaMetadata) {
             setProgress(0);
             int max = (int) mPlayer.getDuration();
-            LogUtil.d(TAG, "max=" + max);
+//            LogUtil.d(TAG, "max=" + max);
             setMax(max);
         }
     }

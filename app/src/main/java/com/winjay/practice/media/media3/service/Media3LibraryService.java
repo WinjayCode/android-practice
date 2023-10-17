@@ -30,7 +30,8 @@ import androidx.media3.session.SessionCommands;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.winjay.practice.R;
-import com.winjay.practice.media.media3.Media3SessionActivity;
+import com.winjay.practice.media.media3.Media3Constant;
+import com.winjay.practice.media.media3.Media3LibraryActivity;
 import com.winjay.practice.utils.LogUtil;
 
 import java.util.ArrayList;
@@ -48,19 +49,13 @@ public class Media3LibraryService extends MediaLibraryService {
     private MediaLibrarySession mediaLibrarySession = null;
     private List<CommandButton> customCommands = new ArrayList<>();
 
-    private static final String CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON = "android.media3.session.demo.SHUFFLE_ON";
-    private static final String CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_OFF = "android.media3.session.demo.SHUFFLE_OFF";
-    private static final String CHANNEL_ID = "demo_session_notification_channel_id";
-    private final int immutableFlag = PendingIntent.FLAG_IMMUTABLE;
-    private static final int NOTIFICATION_ID = 123;
-
     @OptIn(markerClass = UnstableApi.class)
     @Override
     public void onCreate() {
         super.onCreate();
 
-        customCommands.add(getShuffleCommandButton(new SessionCommand(CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON, Bundle.EMPTY)));
-        customCommands.add(getShuffleCommandButton(new SessionCommand(CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_OFF, Bundle.EMPTY)));
+        customCommands.add(getShuffleCommandButton(new SessionCommand(Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON, Bundle.EMPTY)));
+        customCommands.add(getShuffleCommandButton(new SessionCommand(Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_OFF, Bundle.EMPTY)));
 
         initializeSessionAndPlayer();
         setListener(new MediaSessionServiceListener());
@@ -158,13 +153,13 @@ public class Media3LibraryService extends MediaLibraryService {
         return PendingIntent.getActivity(
                 this,
                 0,
-                new Intent(this, Media3SessionActivity.class),
-                immutableFlag | PendingIntent.FLAG_UPDATE_CURRENT
+                new Intent(this, Media3LibraryActivity.class),
+                PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
         );
     }
 
     private CommandButton getShuffleCommandButton(SessionCommand sessionCommand) {
-        boolean isOn = sessionCommand.customAction.equals(CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON);
+        boolean isOn = sessionCommand.customAction.equals(Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON);
         return new CommandButton.Builder()
                 .setDisplayName(getString(isOn ? R.string.exo_controls_shuffle_on_description : R.string.exo_controls_shuffle_off_description))
                 .setSessionCommand(sessionCommand)
@@ -174,9 +169,9 @@ public class Media3LibraryService extends MediaLibraryService {
 
     private PendingIntent getBackStackedActivity() {
         return TaskStackBuilder.create(this)
-                .addNextIntent(new Intent(Media3LibraryService.this, Media3SessionActivity.class))
+                .addNextIntent(new Intent(Media3LibraryService.this, Media3LibraryActivity.class))
 //                .addNextIntent(new Intent(Media3Service.this, PlayerActivity.class))
-                .getPendingIntent(0, immutableFlag | PendingIntent.FLAG_UPDATE_CURRENT);
+                .getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @UnstableApi
@@ -186,9 +181,9 @@ public class Media3LibraryService extends MediaLibraryService {
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(Media3LibraryService.this);
             ensureNotificationChannel(notificationManagerCompat);
             PendingIntent pendingIntent = TaskStackBuilder.create(Media3LibraryService.this)
-                    .addNextIntent(new Intent(Media3LibraryService.this, Media3SessionActivity.class))
-                    .getPendingIntent(0, immutableFlag | PendingIntent.FLAG_UPDATE_CURRENT);
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(Media3LibraryService.this, CHANNEL_ID)
+                    .addNextIntent(new Intent(Media3LibraryService.this, Media3LibraryActivity.class))
+                    .getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(Media3LibraryService.this, Media3Constant.CHANNEL_ID)
                     .setContentIntent(pendingIntent)
                     .setSmallIcon(R.drawable.media3_notification_small_icon)
                     .setContentTitle("Playback cannot be resumed")
@@ -199,17 +194,17 @@ public class Media3LibraryService extends MediaLibraryService {
                     )
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setAutoCancel(true);
-            notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
+            notificationManagerCompat.notify(Media3Constant.NOTIFICATION_ID, builder.build());
         }
     }
 
     @OptIn(markerClass = UnstableApi.class)
     private void ensureNotificationChannel(NotificationManagerCompat notificationManagerCompat) {
-        if (Util.SDK_INT < 26 || notificationManagerCompat.getNotificationChannel(CHANNEL_ID) != null) {
+        if (Util.SDK_INT < 26 || notificationManagerCompat.getNotificationChannel(Media3Constant.CHANNEL_ID) != null) {
             return;
         }
 
-        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Playback cannot be resumed", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel channel = new NotificationChannel(Media3Constant.CHANNEL_ID, "Playback cannot be resumed", NotificationManager.IMPORTANCE_DEFAULT);
         notificationManagerCompat.createNotificationChannel(channel);
     }
 }
