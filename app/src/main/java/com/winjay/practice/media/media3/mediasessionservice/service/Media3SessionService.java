@@ -1,4 +1,4 @@
-package com.winjay.practice.media.media3.service;
+package com.winjay.practice.media.media3.mediasessionservice.service;
 
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -24,8 +24,8 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.winjay.practice.R;
 import com.winjay.practice.media.media3.Media3Constant;
-import com.winjay.practice.media.media3.Media3SessionActivity;
-import com.winjay.practice.media.media3.data.Media3DataHelper;
+import com.winjay.practice.media.media3.mediasessionservice.Media3SessionActivity;
+import com.winjay.practice.media.media3.mediasessionservice.data.Media3DataHelper;
 import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.utils.LogUtil;
 

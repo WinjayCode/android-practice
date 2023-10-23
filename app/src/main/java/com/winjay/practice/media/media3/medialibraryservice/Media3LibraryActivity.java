@@ -1,4 +1,4 @@
-package com.winjay.practice.media.media3;
+package com.winjay.practice.media.media3.medialibraryservice;
 
 import android.content.ComponentName;
 import android.net.Uri;
@@ -24,7 +24,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.databinding.ActivityMusicPlayBinding;
-import com.winjay.practice.media.media3.service.Media3SessionService;
+import com.winjay.practice.media.media3.medialibraryservice.service.Media3LibraryService;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.MediaUtil;
 
@@ -44,7 +44,7 @@ public class Media3LibraryActivity extends BaseActivity implements View.OnClickL
     private ListenableFuture<MediaController> controllerFuture;
     private ListenableFuture<MediaBrowser> browserFuture;
     private MediaBrowser mediaBrowser;
-    private Player player;
+    private MediaController mediaController;
     private PlayerListener playerListener;
     private final Handler updatePositionHandler = new Handler();
 
@@ -69,20 +69,18 @@ public class Media3LibraryActivity extends BaseActivity implements View.OnClickL
         binding.nextIv.setOnClickListener(this);
         binding.playPauseIv.setOnClickListener(this);
 
-        // 普通可后台播放的 service
-        sessionToken = new SessionToken(this, new ComponentName(this, Media3SessionService.class));
         // 可获取媒体资源库的 service (通过MediaBrowser获取)
-//        sessionToken = new SessionToken(this, new ComponentName(this, Media3LibraryService.class));
+        sessionToken = new SessionToken(this, new ComponentName(this, Media3LibraryService.class));
 
         initMediaController();
-//        initMediaBrowser();
+        initMediaBrowser();
     }
 
     private final Runnable mUpdatePositionRunnable = new Runnable() {
         @Override
         public void run() {
             try {
-                binding.positionTv.setText(MediaUtil.formatDuration(player.getCurrentPosition()));
+                binding.positionTv.setText(MediaUtil.formatDuration(mediaController.getCurrentPosition()));
                 updatePositionHandler.postDelayed(mUpdatePositionRunnable, 1000);
             } catch (Exception e) {
                 updatePositionHandler.removeCallbacks(this);
@@ -104,8 +102,8 @@ public class Media3LibraryActivity extends BaseActivity implements View.OnClickL
                         .into(binding.albumIv);
             }
 
-            if (player.getDuration() != C.TIME_UNSET) {
-                binding.durationTv.setText(MediaUtil.formatDuration(player.getDuration()));
+            if (mediaController.getDuration() != C.TIME_UNSET) {
+                binding.durationTv.setText(MediaUtil.formatDuration(mediaController.getDuration()));
             }
         }
 
@@ -134,15 +132,15 @@ public class Media3LibraryActivity extends BaseActivity implements View.OnClickL
 //            playerView.setPlayer(mControllerFuture.get());
             try {
                 LogUtil.d(TAG, "get player");
-                player = controllerFuture.get();
+                mediaController = controllerFuture.get();
 
                 playerListener = new PlayerListener();
-                player.addListener(playerListener);
+                mediaController.addListener(playerListener);
 
-                if (player.getPlaybackState() != Player.STATE_IDLE) {
+                if (mediaController.getPlaybackState() != Player.STATE_IDLE) {
                     initMediaDisplay();
                 }
-                binding.media3SeekBar.setPlayer(player);
+                binding.media3SeekBar.setPlayer(mediaController);
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -150,10 +148,10 @@ public class Media3LibraryActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initMediaDisplay() {
-        if (player.getCurrentMediaItem() == null) {
+        if (mediaController.getCurrentMediaItem() == null) {
             return;
         }
-        MediaItem mediaItem = player.getCurrentMediaItem();
+        MediaItem mediaItem = mediaController.getCurrentMediaItem();
         binding.musicTitleTv.setText(mediaItem.mediaMetadata.title);
         binding.musicArtistTv.setText(mediaItem.mediaMetadata.artist);
 
@@ -165,7 +163,7 @@ public class Media3LibraryActivity extends BaseActivity implements View.OnClickL
                     .into(binding.albumIv);
         }
 
-        if (player.isPlaying()) {
+        if (mediaController.isPlaying()) {
             binding.playPauseIv.setImageResource(android.R.drawable.ic_media_pause);
         } else {
             binding.playPauseIv.setImageResource(android.R.drawable.ic_media_play);
@@ -174,8 +172,8 @@ public class Media3LibraryActivity extends BaseActivity implements View.OnClickL
         updatePositionHandler.removeCallbacks(mUpdatePositionRunnable);
         updatePositionHandler.post(mUpdatePositionRunnable);
 
-        if (player.getDuration() != C.TIME_UNSET) {
-            binding.durationTv.setText(MediaUtil.formatDuration(player.getDuration()));
+        if (mediaController.getDuration() != C.TIME_UNSET) {
+            binding.durationTv.setText(MediaUtil.formatDuration(mediaController.getDuration()));
         }
     }
 
@@ -224,16 +222,16 @@ public class Media3LibraryActivity extends BaseActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         if (v == binding.prevIv) {
-            player.seekToPreviousMediaItem();
+            mediaController.seekToPreviousMediaItem();
         }
         if (v == binding.nextIv) {
-            player.seekToNextMediaItem();
+            mediaController.seekToNextMediaItem();
         }
         if (v == binding.playPauseIv) {
-            if (player.isPlaying()) {
-                player.pause();
+            if (mediaController.isPlaying()) {
+                mediaController.pause();
             } else {
-                player.play();
+                mediaController.play();
             }
         }
     }
@@ -241,7 +239,7 @@ public class Media3LibraryActivity extends BaseActivity implements View.OnClickL
     @Override
     protected void onDestroy() {
         updatePositionHandler.removeCallbacks(mUpdatePositionRunnable);
-        player.removeListener(playerListener);
+        mediaController.removeListener(playerListener);
         MediaController.releaseFuture(controllerFuture);
         binding.media3SeekBar.disconnectPlayer();
 

@@ -1,4 +1,4 @@
-package com.winjay.practice.media.media3.service;
+package com.winjay.practice.media.media3.medialibraryservice.service;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -26,12 +26,16 @@ import androidx.media3.session.MediaSession;
 import androidx.media3.session.MediaSessionService;
 import androidx.media3.session.SessionCommand;
 import androidx.media3.session.SessionCommands;
+import androidx.media3.session.SessionResult;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.winjay.practice.R;
 import com.winjay.practice.media.media3.Media3Constant;
-import com.winjay.practice.media.media3.Media3LibraryActivity;
+import com.winjay.practice.media.media3.medialibraryservice.Media3LibraryActivity;
+import com.winjay.practice.media.media3.medialibraryservice.Media3LibraryPlayerActivity;
+import com.winjay.practice.media.media3.medialibraryservice.data.MediaItemTree;
 import com.winjay.practice.utils.LogUtil;
 
 import java.util.ArrayList;
@@ -47,15 +51,15 @@ public class Media3LibraryService extends MediaLibraryService {
     private static final String TAG = Media3LibraryService.class.getSimpleName();
     private ExoPlayer player;
     private MediaLibrarySession mediaLibrarySession = null;
-    private List<CommandButton> customCommands = new ArrayList<>();
+    private List<CommandButton> customCommandButtons = new ArrayList<>();
 
     @OptIn(markerClass = UnstableApi.class)
     @Override
     public void onCreate() {
         super.onCreate();
 
-        customCommands.add(getShuffleCommandButton(new SessionCommand(Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON, Bundle.EMPTY)));
-        customCommands.add(getShuffleCommandButton(new SessionCommand(Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_OFF, Bundle.EMPTY)));
+        customCommandButtons.add(getShuffleCommandButton(new SessionCommand(Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON, Bundle.EMPTY)));
+        customCommandButtons.add(getShuffleCommandButton(new SessionCommand(Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_OFF, Bundle.EMPTY)));
 
         initializeSessionAndPlayer();
         setListener(new MediaSessionServiceListener());
@@ -93,7 +97,7 @@ public class Media3LibraryService extends MediaLibraryService {
             LogUtil.d(TAG);
             SessionCommands.Builder availableSessionCommands =
                     MediaSession.ConnectionResult.DEFAULT_SESSION_AND_LIBRARY_COMMANDS.buildUpon();
-            for (CommandButton customCommand : customCommands) {
+            for (CommandButton customCommand : customCommandButtons) {
                 if (customCommand.sessionCommand != null) {
                     availableSessionCommands.add(customCommand.sessionCommand);
                 }
@@ -105,11 +109,62 @@ public class Media3LibraryService extends MediaLibraryService {
         }
 
         @Override
+        public ListenableFuture<SessionResult> onCustomCommand(MediaSession session,
+                                                               MediaSession.ControllerInfo controller,
+                                                               SessionCommand customCommand, Bundle args) {
+            String customAction = customCommand.customAction;
+            LogUtil.d(TAG, "customAction=" + customAction);
+            switch (customAction) {
+                case Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON:
+                    // Enable shuffling.
+                    player.setShuffleModeEnabled(true);
+                    // Change the custom layout to contain the `Disable shuffling` command.
+                    session.setCustomLayout(ImmutableList.of(customCommandButtons.get(1)));
+                    break;
+                case Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_OFF:
+                    // Disable shuffling.
+                    player.setShuffleModeEnabled(false);
+                    // Change the custom layout to contain the `Enable shuffling` command.
+                    session.setCustomLayout(ImmutableList.of(customCommandButtons.get(0)));
+                    break;
+            }
+            return Futures.immediateFuture(new SessionResult(SessionResult.RESULT_SUCCESS));
+        }
+
+        @Override
         public ListenableFuture<LibraryResult<MediaItem>> onGetLibraryRoot(MediaLibrarySession session,
                                                                            MediaSession.ControllerInfo browser,
                                                                            @Nullable LibraryParams params) {
-            return MediaLibrarySession.Callback.super.onGetLibraryRoot(session, browser, params);
-//            return Futures.immediateFuture(LibraryResult.ofItem(MediaItemTree.getRootItem(), params));
+            if (params != null && params.isRecent) {
+                // The service currently does not support playback resumption. Tell System UI by returning
+                // an error of type 'RESULT_ERROR_NOT_SUPPORTED' for a `params.isRecent` request. See
+                // https://github.com/androidx/media/issues/355
+                return Futures.immediateFuture(LibraryResult.ofError(LibraryResult.RESULT_ERROR_NOT_SUPPORTED));
+            }
+            return Futures.immediateFuture(LibraryResult.ofItem(MediaItemTree.getRootItem(), params));
+        }
+
+        @Override
+        public ListenableFuture<LibraryResult<MediaItem>> onGetItem(MediaLibrarySession session,
+                                                                    MediaSession.ControllerInfo browser,
+                                                                    String mediaId) {
+            MediaItem item = MediaItemTree.getItem(mediaId);
+            if (item == null) {
+                return Futures.immediateFuture(LibraryResult.ofError(LibraryResult.RESULT_ERROR_BAD_VALUE));
+            }
+            return Futures.immediateFuture(LibraryResult.ofItem(item, null));
+        }
+
+        @Override
+        public ListenableFuture<LibraryResult<Void>> onSubscribe(MediaLibrarySession session,
+                                                                 MediaSession.ControllerInfo browser,
+                                                                 String parentId, @Nullable LibraryParams params) {
+            List<MediaItem> children = MediaItemTree.getChildren(parentId);
+            if (children == null) {
+                return Futures.immediateFuture(LibraryResult.ofError(LibraryResult.RESULT_ERROR_BAD_VALUE));
+            }
+            session.notifyChildrenChanged(browser, parentId, children.size(), params);
+            return Futures.immediateFuture(LibraryResult.ofVoid());
         }
 
         @Override
@@ -119,7 +174,50 @@ public class Media3LibraryService extends MediaLibraryService {
                                                                                        int page,
                                                                                        int pageSize,
                                                                                        @Nullable LibraryParams params) {
-            return MediaLibrarySession.Callback.super.onGetChildren(session, browser, parentId, page, pageSize, params);
+            List<MediaItem> children = MediaItemTree.getChildren(parentId);
+            if (children == null) {
+                return Futures.immediateFuture(LibraryResult.ofError(LibraryResult.RESULT_ERROR_BAD_VALUE));
+            }
+            return Futures.immediateFuture(LibraryResult.ofItemList(children, params));
+        }
+
+        @Override
+        public ListenableFuture<List<MediaItem>> onAddMediaItems(MediaSession mediaSession,
+                                                                 MediaSession.ControllerInfo controller,
+                                                                 List<MediaItem> mediaItems) {
+            List<MediaItem> updatedMediaItems = new ArrayList<>();
+            for (MediaItem mediaItem : mediaItems) {
+                if (mediaItem.requestMetadata.searchQuery != null) {
+                    MediaItem updatedItem = getMediaItemFromSearchQuery(mediaItem.requestMetadata.searchQuery);
+                    updatedMediaItems.add(updatedItem);
+                } else {
+                    MediaItem item = MediaItemTree.getItem(mediaItem.mediaId);
+                    if (item != null) {
+                        updatedMediaItems.add(item);
+                    } else {
+                        updatedMediaItems.add(mediaItem);
+                    }
+                }
+            }
+            return Futures.immediateFuture(updatedMediaItems);
+        }
+
+        private MediaItem getMediaItemFromSearchQuery(String query) {
+            // Only accept query with pattern "play [Title]" or "[Title]"
+            // Where [Title]: must be exactly matched
+            // If no media with exact name found, play a random media instead
+            String mediaTitle;
+            if (query.toLowerCase().startsWith("play ")) {
+                mediaTitle = query.substring(5);
+            } else {
+                mediaTitle = query;
+            }
+
+            MediaItem item = MediaItemTree.getItemFromTitle(mediaTitle);
+            if (item == null) {
+                item = MediaItemTree.getRandomItem();
+            }
+            return item;
         }
     }
 
@@ -141,10 +239,10 @@ public class Media3LibraryService extends MediaLibraryService {
                 super.setPlayWhenReady(playWhenReady);
             }
         };
-//        MediaItemTree.initialize(assets);
+        MediaItemTree.initialize(getAssets());
         mediaLibrarySession = new MediaLibrarySession.Builder(this, player, new CustomMediaLibrarySessionCallback())
                 .setSessionActivity(getSingleTopActivity())
-                .setCustomLayout(ImmutableList.of(customCommands.get(0)))
+                .setCustomLayout(ImmutableList.of(customCommandButtons.get(0)))
                 .setBitmapLoader(new CacheBitmapLoader(new DataSourceBitmapLoader(/* context= */ this)))
                 .build();
     }
@@ -158,6 +256,13 @@ public class Media3LibraryService extends MediaLibraryService {
         );
     }
 
+    private PendingIntent getBackStackedActivity() {
+        return TaskStackBuilder.create(this)
+                .addNextIntent(new Intent(Media3LibraryService.this, Media3LibraryActivity.class))
+                .addNextIntent(new Intent(Media3LibraryService.this, Media3LibraryPlayerActivity.class))
+                .getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
     private CommandButton getShuffleCommandButton(SessionCommand sessionCommand) {
         boolean isOn = sessionCommand.customAction.equals(Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON);
         return new CommandButton.Builder()
@@ -165,13 +270,6 @@ public class Media3LibraryService extends MediaLibraryService {
                 .setSessionCommand(sessionCommand)
                 .setIconResId(isOn ? R.drawable.exo_icon_shuffle_off : R.drawable.exo_icon_shuffle_on)
                 .build();
-    }
-
-    private PendingIntent getBackStackedActivity() {
-        return TaskStackBuilder.create(this)
-                .addNextIntent(new Intent(Media3LibraryService.this, Media3LibraryActivity.class))
-//                .addNextIntent(new Intent(Media3Service.this, PlayerActivity.class))
-                .getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @UnstableApi

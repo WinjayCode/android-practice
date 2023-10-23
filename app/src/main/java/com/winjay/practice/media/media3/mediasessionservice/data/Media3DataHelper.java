@@ -1,4 +1,4 @@
-package com.winjay.practice.media.media3.data;
+package com.winjay.practice.media.media3.mediasessionservice.data;
 
 import android.net.Uri;
 

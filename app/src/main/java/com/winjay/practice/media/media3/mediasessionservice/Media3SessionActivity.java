@@ -1,4 +1,4 @@
-package com.winjay.practice.media.media3;
+package com.winjay.practice.media.media3.mediasessionservice;
 
 import android.content.ComponentName;
 import android.net.Uri;
@@ -23,7 +23,8 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.databinding.ActivityMusicPlayBinding;
-import com.winjay.practice.media.media3.service.Media3SessionService;
+import com.winjay.practice.media.media3.Media3Constant;
+import com.winjay.practice.media.media3.mediasessionservice.service.Media3SessionService;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.MediaUtil;
 
