@@ -251,7 +251,7 @@ public class Media3LibraryService extends MediaLibraryService {
         return PendingIntent.getActivity(
                 this,
                 0,
-                new Intent(this, Media3LibraryActivity.class),
+                new Intent(this, Media3LibraryPlayerActivity.class),
                 PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
         );
     }
