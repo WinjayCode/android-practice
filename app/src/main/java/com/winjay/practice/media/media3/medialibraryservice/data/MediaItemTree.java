@@ -137,7 +137,7 @@ public class MediaItemTree {
             String artist = mediaObject.getString("artist");
             String genre = mediaObject.getString("genre");
             List<MediaItem.SubtitleConfiguration> subtitleConfigurations = new ArrayList<>();
-            if (mediaObject.has("subtitle")) {
+            if (mediaObject.has("subtitles")) {
                 JSONArray subtitlesJson = mediaObject.getJSONArray("subtitles");
                 for (int i = 0; i < subtitlesJson.length(); i++) {
                     JSONObject subtitleObject = subtitlesJson.getJSONObject(i);
@@ -161,6 +161,50 @@ public class MediaItemTree {
                     subtitleConfigurations, album, artist, genre, sourceUri, imageUri));
             treeNodes.put(idInTree, idInTreeMediaItemNode);
 
+            if (treeNodes.get(idInTree) != null) {
+                titleMap.put(title.toLowerCase(), treeNodes.get(idInTree));
+            }
+
+            if (!treeNodes.containsKey(albumFolderIdInTree)) {
+                MediaItemNode albumFolderIdInTreeMediaItemNode = new MediaItemNode(buildMediaItem(album, albumFolderIdInTree,
+                        true, true, MediaMetadata.MEDIA_TYPE_ALBUM,
+                        subtitleConfigurations, null, null, null, null, null));
+                treeNodes.put(albumFolderIdInTree, albumFolderIdInTreeMediaItemNode);
+                if (treeNodes.get(ALBUM_ID) != null) {
+                    treeNodes.get(ALBUM_ID).addChild(albumFolderIdInTree);
+                }
+            }
+            if (treeNodes.get(albumFolderIdInTree) != null) {
+                treeNodes.get(albumFolderIdInTree).addChild(idInTree);
+            }
+
+            // add into artist folder
+            if (!treeNodes.containsKey(artistFolderIdInTree)) {
+                MediaItemNode artistFolderIdInTreeMediaItemNode = new MediaItemNode(buildMediaItem(artist, artistFolderIdInTree,
+                        true, true, MediaMetadata.MEDIA_TYPE_ARTIST,
+                        subtitleConfigurations, null, null, null, null, null));
+                treeNodes.put(artistFolderIdInTree, artistFolderIdInTreeMediaItemNode);
+                if (treeNodes.get(ARTIST_ID) != null) {
+                    treeNodes.get(ARTIST_ID).addChild(artistFolderIdInTree);
+                }
+            }
+            if (treeNodes.get(artistFolderIdInTree) != null) {
+                treeNodes.get(artistFolderIdInTree).addChild(idInTree);
+            }
+
+            // add into genre folder
+            if (!treeNodes.containsKey(genreFolderIdInTree)) {
+                MediaItemNode genreFolderIdInTreeMediaItemNode = new MediaItemNode(buildMediaItem(genre, genreFolderIdInTree,
+                        true, true, MediaMetadata.MEDIA_TYPE_GENRE,
+                        subtitleConfigurations, null, null, null, null, null));
+                treeNodes.put(genreFolderIdInTree, genreFolderIdInTreeMediaItemNode);
+                if (treeNodes.get(GENRE_ID) != null) {
+                    treeNodes.get(GENRE_ID).addChild(genreFolderIdInTree);
+                }
+            }
+            if (treeNodes.get(genreFolderIdInTree) != null) {
+                treeNodes.get(genreFolderIdInTree).addChild(idInTree);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -183,22 +227,39 @@ public class MediaItemTree {
     }
 
     public static MediaItem getRootItem() {
+        if (treeNodes.get(ROOT_ID) != null) {
+            return treeNodes.get(ROOT_ID).mediaItem;
+        }
         return null;
     }
 
     public static MediaItem getItem(String id) {
+        if (treeNodes.get(id) != null) {
+            return treeNodes.get(id).mediaItem;
+        }
         return null;
     }
 
     public static List<MediaItem> getChildren(String id) {
+        if (treeNodes.get(id) != null) {
+            return treeNodes.get(id).getChildren();
+        }
         return null;
     }
 
     public static MediaItem getItemFromTitle(String title) {
+        if (titleMap.get(title) != null) {
+            return titleMap.get(title).mediaItem;
+        }
         return null;
     }
 
     public static MediaItem getRandomItem() {
-        return null;
+        MediaItem curRoot = getRootItem();
+        while (curRoot.mediaMetadata.isBrowsable) {
+            List<MediaItem> children = getChildren(curRoot.mediaId);
+            curRoot = children.get((int) (Math.random() * children.size()));
+        }
+        return curRoot;
     }
 }
