@@ -57,7 +57,7 @@ public class Media3LibraryService extends MediaLibraryService {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        LogUtil.d(TAG);
         customCommandButtons.add(getShuffleCommandButton(new SessionCommand(Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON, Bundle.EMPTY)));
         customCommandButtons.add(getShuffleCommandButton(new SessionCommand(Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_OFF, Bundle.EMPTY)));
 

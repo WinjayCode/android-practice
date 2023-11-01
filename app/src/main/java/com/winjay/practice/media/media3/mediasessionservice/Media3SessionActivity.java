@@ -143,6 +143,26 @@ public class Media3SessionActivity extends BaseActivity implements View.OnClickL
         }, MoreExecutors.directExecutor());
     }
 
+    private void getCustomCommand() {
+        SessionCommands availableSessionCommands = mediaController.getAvailableSessionCommands();
+        for (SessionCommand sessionCommand : availableSessionCommands.commands) {
+            LogUtil.d(TAG, "commandCode=" + sessionCommand.commandCode + ",customAction=" + sessionCommand.customAction);
+            if (sessionCommand.commandCode == SessionCommand.COMMAND_CODE_CUSTOM) {
+                switch (sessionCommand.customAction) {
+                    case Media3Constant.CUSTOM_COMMAND:
+                        customSessionCommand = sessionCommand;
+                        break;
+                    case Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON:
+                        toggleShuffleModeOnCustomCommand = sessionCommand;
+                        break;
+                    case Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_OFF:
+                        toggleShuffleModeOffCustomCommand = sessionCommand;
+                        break;
+                }
+            }
+        }
+    }
+
     private void initMediaDisplay() {
         if (mediaController.getCurrentMediaItem() == null) {
             return;
@@ -173,6 +193,23 @@ public class Media3SessionActivity extends BaseActivity implements View.OnClickL
         }
     }
 
+    /**
+     * test custom command
+     */
+    private void testCustomCommand() {
+        ListenableFuture<SessionResult> sessionResultListenableFuture = mediaController.sendCustomCommand(customSessionCommand, Bundle.EMPTY);
+        sessionResultListenableFuture.addListener(() -> {
+            try {
+                SessionResult sessionResult = sessionResultListenableFuture.get();
+                if (SessionResult.RESULT_SUCCESS == sessionResult.resultCode) {
+                    LogUtil.d(TAG, "custom command send succeeded!");
+                }
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }, MoreExecutors.directExecutor());
+    }
+
     @Override
     public void onClick(View v) {
 //        testCustomCommand();
@@ -190,43 +227,6 @@ public class Media3SessionActivity extends BaseActivity implements View.OnClickL
                 mediaController.play();
             }
         }
-    }
-
-    private void getCustomCommand() {
-        SessionCommands availableSessionCommands = mediaController.getAvailableSessionCommands();
-        for (SessionCommand sessionCommand : availableSessionCommands.commands) {
-            LogUtil.d(TAG, "commandCode=" + sessionCommand.commandCode + ",customAction=" + sessionCommand.customAction);
-            if (sessionCommand.commandCode == SessionCommand.COMMAND_CODE_CUSTOM) {
-                switch (sessionCommand.customAction) {
-                    case Media3Constant.CUSTOM_COMMAND:
-                        customSessionCommand = sessionCommand;
-                        break;
-                    case Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON:
-                        toggleShuffleModeOnCustomCommand = sessionCommand;
-                        break;
-                    case Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_OFF:
-                        toggleShuffleModeOffCustomCommand = sessionCommand;
-                        break;
-                }
-            }
-        }
-    }
-
-    /**
-     * test custom command
-     */
-    private void testCustomCommand() {
-        ListenableFuture<SessionResult> sessionResultListenableFuture = mediaController.sendCustomCommand(customSessionCommand, Bundle.EMPTY);
-        sessionResultListenableFuture.addListener(() -> {
-            try {
-                SessionResult sessionResult = sessionResultListenableFuture.get();
-                if (SessionResult.RESULT_SUCCESS == sessionResult.resultCode) {
-                    LogUtil.d(TAG, "custom command send succeeded!");
-                }
-            } catch (ExecutionException | InterruptedException e) {
-                e.printStackTrace();
-            }
-        }, MoreExecutors.directExecutor());
     }
 
     @Override
