@@ -66,6 +66,7 @@ public class Media3LibraryPlayerActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
+        mediaController.pause();
         binding.playerView.setPlayer(null);
         releaseController();
 
@@ -77,7 +78,6 @@ public class Media3LibraryPlayerActivity extends BaseActivity {
         mediaControllerFuture = new MediaController.Builder(this, sessionToken).buildAsync();
         mediaControllerFuture.addListener(() -> {
             try {
-                LogUtil.d(TAG, "getMediaController");
                 mediaController = mediaControllerFuture.get();
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
@@ -120,12 +120,12 @@ public class Media3LibraryPlayerActivity extends BaseActivity {
         playerListener = new PlayerListener();
         mediaController.addListener(playerListener);
 
-//        mediaController.prepare();
-//        mediaController.play();
+        mediaController.prepare();
+        mediaController.play();
     }
 
     private void updateMediaMetadataUI(MediaMetadata mediaMetadata) {
-//        binding.mediaTitle.setText(mediaMetadata.title);
-//        binding.mediaArtist.setText(mediaMetadata.artist);
+        binding.mediaTitle.setText(mediaMetadata.title);
+        binding.mediaArtist.setText(mediaMetadata.artist);
     }
 }

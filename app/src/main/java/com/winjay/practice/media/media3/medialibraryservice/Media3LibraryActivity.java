@@ -66,12 +66,8 @@ public class Media3LibraryActivity extends BaseActivity {
         mediaListAdapter.setOnItemClickListener((view, position) -> {
             MediaItem selectedMediaItem = mediaListAdapter.getItem(position);
             if (selectedMediaItem != null && selectedMediaItem.mediaMetadata.isPlayable) {
-                LogUtil.d(TAG, "selectedMediaItem=" + selectedMediaItem.mediaMetadata.title);
                 mediaBrowser.setMediaItem(selectedMediaItem);
-//                mediaBrowser.setMediaItems(subItemMediaList);
-                Intent intent = Media3LibraryPlayerActivity.createIntent(
-                        Media3LibraryActivity.this, selectedMediaItem.mediaId);
-                startActivity(intent);
+                startActivity(Media3LibraryPlayerActivity.class);
             } else {
                 pushPathStack(selectedMediaItem);
             }
@@ -129,6 +125,7 @@ public class Media3LibraryActivity extends BaseActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(treePathStack.size() != 1);
         }
+        LogUtil.d(TAG, "mediaId=" + mediaItem.mediaId);
         ListenableFuture<LibraryResult<ImmutableList<MediaItem>>> childrenFuture = mediaBrowser.getChildren(
                 mediaItem.mediaId, 0, Integer.MAX_VALUE, null);
         subItemMediaList.clear();

@@ -129,6 +129,7 @@ public class Media3SessionService extends MediaSessionService {
             }
         });
         mediaSession = new MediaSession.Builder(this, player)
+                .setId(TAG) // used when app supports multiple playback
                 .setSessionActivity(getSingleTopActivity())
                 .setCustomLayout(ImmutableList.of(customCommandButtons.get(0)))
                 .setBitmapLoader(new CacheBitmapLoader(new DataSourceBitmapLoader(/* context= */ this)))

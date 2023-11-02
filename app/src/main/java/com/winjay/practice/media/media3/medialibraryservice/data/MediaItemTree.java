@@ -26,6 +26,7 @@ import java.util.Map;
  * @date 2023-10-23
  */
 public class MediaItemTree {
+    private static final String TAG = MediaItemTree.class.getSimpleName();
     private static Map<String, MediaItemNode> treeNodes = new HashMap<>();
     private static Map<String, MediaItemNode> titleMap = new HashMap<>();
     private static boolean isInitialized = false;
@@ -167,7 +168,7 @@ public class MediaItemTree {
 
             if (!treeNodes.containsKey(albumFolderIdInTree)) {
                 MediaItemNode albumFolderIdInTreeMediaItemNode = new MediaItemNode(buildMediaItem(album, albumFolderIdInTree,
-                        true, true, MediaMetadata.MEDIA_TYPE_ALBUM,
+                        false, true, MediaMetadata.MEDIA_TYPE_ALBUM,
                         subtitleConfigurations, null, null, null, null, null));
                 treeNodes.put(albumFolderIdInTree, albumFolderIdInTreeMediaItemNode);
                 if (treeNodes.get(ALBUM_ID) != null) {
@@ -181,7 +182,7 @@ public class MediaItemTree {
             // add into artist folder
             if (!treeNodes.containsKey(artistFolderIdInTree)) {
                 MediaItemNode artistFolderIdInTreeMediaItemNode = new MediaItemNode(buildMediaItem(artist, artistFolderIdInTree,
-                        true, true, MediaMetadata.MEDIA_TYPE_ARTIST,
+                        false, true, MediaMetadata.MEDIA_TYPE_ARTIST,
                         subtitleConfigurations, null, null, null, null, null));
                 treeNodes.put(artistFolderIdInTree, artistFolderIdInTreeMediaItemNode);
                 if (treeNodes.get(ARTIST_ID) != null) {
@@ -195,7 +196,7 @@ public class MediaItemTree {
             // add into genre folder
             if (!treeNodes.containsKey(genreFolderIdInTree)) {
                 MediaItemNode genreFolderIdInTreeMediaItemNode = new MediaItemNode(buildMediaItem(genre, genreFolderIdInTree,
-                        true, true, MediaMetadata.MEDIA_TYPE_GENRE,
+                        false, true, MediaMetadata.MEDIA_TYPE_GENRE,
                         subtitleConfigurations, null, null, null, null, null));
                 treeNodes.put(genreFolderIdInTree, genreFolderIdInTreeMediaItemNode);
                 if (treeNodes.get(GENRE_ID) != null) {

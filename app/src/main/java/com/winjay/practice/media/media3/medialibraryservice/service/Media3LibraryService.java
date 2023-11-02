@@ -135,6 +135,7 @@ public class Media3LibraryService extends MediaLibraryService {
         public ListenableFuture<LibraryResult<MediaItem>> onGetLibraryRoot(MediaLibrarySession session,
                                                                            MediaSession.ControllerInfo browser,
                                                                            @Nullable LibraryParams params) {
+            LogUtil.d(TAG);
             if (params != null && params.isRecent) {
                 // The service currently does not support playback resumption. Tell System UI by returning
                 // an error of type 'RESULT_ERROR_NOT_SUPPORTED' for a `params.isRecent` request. See
@@ -148,6 +149,7 @@ public class Media3LibraryService extends MediaLibraryService {
         public ListenableFuture<LibraryResult<MediaItem>> onGetItem(MediaLibrarySession session,
                                                                     MediaSession.ControllerInfo browser,
                                                                     String mediaId) {
+            LogUtil.d(TAG);
             MediaItem item = MediaItemTree.getItem(mediaId);
             if (item == null) {
                 return Futures.immediateFuture(LibraryResult.ofError(LibraryResult.RESULT_ERROR_BAD_VALUE));
@@ -159,6 +161,7 @@ public class Media3LibraryService extends MediaLibraryService {
         public ListenableFuture<LibraryResult<Void>> onSubscribe(MediaLibrarySession session,
                                                                  MediaSession.ControllerInfo browser,
                                                                  String parentId, @Nullable LibraryParams params) {
+            LogUtil.d(TAG);
             List<MediaItem> children = MediaItemTree.getChildren(parentId);
             if (children == null) {
                 return Futures.immediateFuture(LibraryResult.ofError(LibraryResult.RESULT_ERROR_BAD_VALUE));
@@ -174,6 +177,7 @@ public class Media3LibraryService extends MediaLibraryService {
                                                                                        int page,
                                                                                        int pageSize,
                                                                                        @Nullable LibraryParams params) {
+            LogUtil.d(TAG);
             List<MediaItem> children = MediaItemTree.getChildren(parentId);
             if (children == null) {
                 return Futures.immediateFuture(LibraryResult.ofError(LibraryResult.RESULT_ERROR_BAD_VALUE));
@@ -185,6 +189,7 @@ public class Media3LibraryService extends MediaLibraryService {
         public ListenableFuture<List<MediaItem>> onAddMediaItems(MediaSession mediaSession,
                                                                  MediaSession.ControllerInfo controller,
                                                                  List<MediaItem> mediaItems) {
+            LogUtil.d(TAG);
             List<MediaItem> updatedMediaItems = new ArrayList<>();
             for (MediaItem mediaItem : mediaItems) {
                 if (mediaItem.requestMetadata.searchQuery != null) {
@@ -203,6 +208,7 @@ public class Media3LibraryService extends MediaLibraryService {
         }
 
         private MediaItem getMediaItemFromSearchQuery(String query) {
+            LogUtil.d(TAG, "query=" + query);
             // Only accept query with pattern "play [Title]" or "[Title]"
             // Where [Title]: must be exactly matched
             // If no media with exact name found, play a random media instead
@@ -241,6 +247,7 @@ public class Media3LibraryService extends MediaLibraryService {
         };
         MediaItemTree.initialize(getAssets());
         mediaLibrarySession = new MediaLibrarySession.Builder(this, player, new CustomMediaLibrarySessionCallback())
+                .setId(TAG) // used when app supports multiple playback
                 .setSessionActivity(getSingleTopActivity())
                 .setCustomLayout(ImmutableList.of(customCommandButtons.get(0)))
                 .setBitmapLoader(new CacheBitmapLoader(new DataSourceBitmapLoader(/* context= */ this)))
