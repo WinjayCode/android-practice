@@ -73,7 +73,7 @@ public class AudioFocusTestService extends Service {
         mediaPlayer1.reset();
         try {
 //                mMediaPlayer.setDataSource("system/media/audio/ringtones/Basic_Bell.ogg");
-            AssetFileDescriptor afd = getAssets().openFd("audio/13730.mp3");
+            AssetFileDescriptor afd = getAssets().openFd("audio/chengdu.mp3");
             mediaPlayer1.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
 
             mediaPlayer1.prepareAsync();

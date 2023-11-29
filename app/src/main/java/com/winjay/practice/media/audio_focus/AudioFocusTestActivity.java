@@ -138,6 +138,9 @@ public class AudioFocusTestActivity extends BaseActivity {
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS:
                         LogUtil.d(TAG, "1:AUDIOFOCUS_LOSS");
+                        if (mediaPlayer1 != null) {
+                            mediaPlayer1.stop();
+                        }
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                         LogUtil.d(TAG, "1:AUDIOFOCUS_LOSS_TRANSIENT");
@@ -165,6 +168,9 @@ public class AudioFocusTestActivity extends BaseActivity {
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS:
                         LogUtil.d(TAG, "2:AUDIOFOCUS_LOSS");
+                        if (mediaPlayer2 != null) {
+                            mediaPlayer2.stop();
+                        }
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                         LogUtil.d(TAG, "2:AUDIOFOCUS_LOSS_TRANSIENT");
@@ -192,6 +198,9 @@ public class AudioFocusTestActivity extends BaseActivity {
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS:
                         LogUtil.d(TAG, "3:AUDIOFOCUS_LOSS");
+                        if (mediaPlayer3 != null) {
+                            mediaPlayer3.stop();
+                        }
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                         LogUtil.d(TAG, "3:AUDIOFOCUS_LOSS_TRANSIENT");
@@ -264,7 +273,7 @@ public class AudioFocusTestActivity extends BaseActivity {
         systemPlayer.reset();
         try {
 //                mMediaPlayer.setDataSource("system/media/audio/ringtones/Basic_Bell.ogg");
-            AssetFileDescriptor afd = getAssets().openFd("audio/13730.mp3");
+            AssetFileDescriptor afd = getAssets().openFd("audio/Daydream.mp3");
             systemPlayer.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
 
             systemPlayer.prepareAsync();
@@ -302,7 +311,7 @@ public class AudioFocusTestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_2)
     void btn2() {
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManagerLib2.requestFocus(AudioFocusManagerLib.AudioType.TEST)) {
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManagerLib2.requestFocus(AudioFocusManagerLib.AudioType.SPEECH)) {
             playMediaNum(2);
         }
     }
@@ -317,6 +326,7 @@ public class AudioFocusTestActivity extends BaseActivity {
     private MediaPlayer mediaPlayerNum = null;
 
     private void playMediaNum(int num) {
+        LogUtil.d(TAG, "num=" + num);
         if (num == 1) {
             mediaPlayerNum = mediaPlayer1;
         }
@@ -333,10 +343,10 @@ public class AudioFocusTestActivity extends BaseActivity {
                 fileName = "audio/chengdu.mp3";
             }
             if (num == 2) {
-                fileName = "audio/speaker_test.mp3";
+                fileName = "audio/y2096.wav";
             }
             if (num == 3) {
-                fileName = "audio/13730.mp3";
+                fileName = "audio/jazz_in_paris.mp3";
             }
 //            mediaPlayerNum.setDataSource(path);
             AssetFileDescriptor afd = getAssets().openFd(fileName);

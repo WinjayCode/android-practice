@@ -39,14 +39,6 @@ public class Media3LibraryPlayerActivity extends BaseActivity {
     private MediaController mediaController;
     private PlayerListener playerListener;
 
-    private static final String MEDIA_ITEM_ID_KEY = "MEDIA_ITEM_ID_KEY";
-
-    public static Intent createIntent(Context context, String mediaItemID) {
-        Intent intent = new Intent(context, Media3LibraryPlayerActivity.class);
-        intent.putExtra(MEDIA_ITEM_ID_KEY, mediaItemID);
-        return intent;
-    }
-
     @Override
     public boolean useViewBinding() {
         return true;
