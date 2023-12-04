@@ -3,6 +3,7 @@ package com.winjay.practice.media.audio_record;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
 import android.media.AudioDeviceInfo;
 import android.media.AudioFormat;
@@ -22,12 +23,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.media.audio_focus.AudioFocusManager;
-import com.winjay.practice.media.interfaces.MediaType;
+import com.winjay.practice.media.interfaces.AudioType;
 import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.PcmToWavUtil;
@@ -148,12 +150,15 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
         // 获取每一帧的字节流大小
         mRecordBufferSize = AudioRecord.getMinBufferSize(mSampleRateInHz, mChannelConfig, mAudioFormat);
         LogUtil.d(TAG, "mRecordBufferSize=" + mRecordBufferSize);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         mAudioRecord = new AudioRecord(mAudioSource, mSampleRateInHz, mChannelConfig, mAudioFormat, mRecordBufferSize);
     }
 
     private void initPlayer() {
         mediaPlayer = new MediaPlayer();
-        mAudioFocusManager = new AudioFocusManager(this, MediaType.MUSIC);
+        mAudioFocusManager = new AudioFocusManager(this);
         mAudioFocusManager.setOnAudioFocusChangeListener(new AudioFocusManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
@@ -284,7 +289,7 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
             if (mediaPlayer.isPlaying()) {
                 return;
             }
-            if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioFocusManager.requestFocus()) {
+            if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioFocusManager.requestAudioFocus(AudioType.MEDIA)) {
                 try {
                     mediaPlayer.reset();
                     mediaPlayer.setDataSource(filePath + ".wav");
@@ -303,7 +308,7 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         LogUtil.d(TAG);
-                        mAudioFocusManager.releaseAudioFocus();
+                        mAudioFocusManager.abandonAudioFocus();
                     }
                 });
             }
@@ -535,7 +540,7 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
             mediaPlayer = null;
         }
         if (mAudioFocusManager != null) {
-            mAudioFocusManager.releaseAudioFocus();
+            mAudioFocusManager.abandonAudioFocus();
             mAudioFocusManager = null;
         }
         FileUtil.delete(getExternalCacheDir().getPath());

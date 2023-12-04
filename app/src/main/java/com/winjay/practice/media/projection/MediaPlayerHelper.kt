@@ -5,9 +5,8 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.view.SurfaceHolder
 import com.winjay.practice.media.audio_focus.AudioFocusManager
-import com.winjay.practice.media.interfaces.MediaType
+import com.winjay.practice.media.interfaces.AudioType
 import com.winjay.practice.utils.LogUtil
-import java.lang.Exception
 
 /**
  * MediaPlayer
@@ -25,7 +24,7 @@ object MediaPlayerHelper {
     fun prepare(context: Context, videoPath: String, holder: SurfaceHolder, preparedListener: MediaPlayer.OnPreparedListener) {
         LogUtil.d(TAG, "videoPath=$videoPath")
         mediaPlayer = MediaPlayer()
-        audioFocusManager = AudioFocusManager(context, MediaType.MOVIE)
+        audioFocusManager = AudioFocusManager(context)
         mediaPlayer?.apply {
             try {
                 reset()
@@ -43,7 +42,7 @@ object MediaPlayerHelper {
 
     @JvmStatic
     fun play() {
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManager?.requestFocus()) {
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManager?.requestAudioFocus(AudioType.MEDIA)) {
             LogUtil.d(TAG)
             mediaPlayer?.start()
         }
@@ -59,6 +58,6 @@ object MediaPlayerHelper {
     fun release() {
         LogUtil.d(TAG)
         mediaPlayer?.release()
-        audioFocusManager?.releaseAudioFocus()
+        audioFocusManager?.abandonAudioFocus()
     }
 }

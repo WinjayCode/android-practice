@@ -3,7 +3,6 @@ package com.winjay.practice.media.audio_focus;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -12,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
-import com.winjay.practice.media.AudioFocusManagerLib;
+import com.winjay.practice.media.interfaces.AudioType;
 import com.winjay.practice.utils.LogUtil;
 
 import java.io.IOException;
@@ -38,12 +37,12 @@ public class AudioFocusTestActivity extends BaseActivity {
     @BindView(R.id.system_btn)
     Button systemBtn;
 
-    private AudioFocusManagerLib mMediaAudioFocusManager;
-    private AudioFocusManagerLib mSystemAudioFocusManager;
+    private AudioFocusManager mMediaAudioFocusManager;
+    private AudioFocusManager mSystemAudioFocusManager;
 
-    private AudioFocusManagerLib audioFocusManagerLib1;
-    private AudioFocusManagerLib audioFocusManagerLib2;
-    private AudioFocusManagerLib audioFocusManagerLib3;
+    private AudioFocusManager audioFocusManager1;
+    private AudioFocusManager audioFocusManager2;
+    private AudioFocusManager audioFocusManager3;
 
     private MediaPlayer musicPlayer;
     private MediaPlayer systemPlayer;
@@ -68,8 +67,8 @@ public class AudioFocusTestActivity extends BaseActivity {
         mediaPlayer2 = new MediaPlayer();
         mediaPlayer3 = new MediaPlayer();
 
-        mMediaAudioFocusManager = new AudioFocusManagerLib(this);
-        mMediaAudioFocusManager.setOnAudioFocusChangeListener(new AudioFocusManagerLib.OnAudioFocusChangeListener() {
+        mMediaAudioFocusManager = new AudioFocusManager(this);
+        mMediaAudioFocusManager.setOnAudioFocusChangeListener(new AudioFocusManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
                 switch (focusChange) {
@@ -98,8 +97,8 @@ public class AudioFocusTestActivity extends BaseActivity {
             }
         });
 
-        mSystemAudioFocusManager = new AudioFocusManagerLib(this);
-        mSystemAudioFocusManager.setOnAudioFocusChangeListener(new AudioFocusManagerLib.OnAudioFocusChangeListener() {
+        mSystemAudioFocusManager = new AudioFocusManager(this);
+        mSystemAudioFocusManager.setOnAudioFocusChangeListener(new AudioFocusManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
                 switch (focusChange) {
@@ -125,8 +124,8 @@ public class AudioFocusTestActivity extends BaseActivity {
         });
 
 
-        audioFocusManagerLib1 = new AudioFocusManagerLib(this);
-        audioFocusManagerLib1.setOnAudioFocusChangeListener(new AudioFocusManagerLib.OnAudioFocusChangeListener() {
+        audioFocusManager1 = new AudioFocusManager(this);
+        audioFocusManager1.setOnAudioFocusChangeListener(new AudioFocusManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
                 switch (focusChange) {
@@ -155,8 +154,8 @@ public class AudioFocusTestActivity extends BaseActivity {
             }
         });
 
-        audioFocusManagerLib2 = new AudioFocusManagerLib(this);
-        audioFocusManagerLib2.setOnAudioFocusChangeListener(new AudioFocusManagerLib.OnAudioFocusChangeListener() {
+        audioFocusManager2 = new AudioFocusManager(this);
+        audioFocusManager2.setOnAudioFocusChangeListener(new AudioFocusManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
                 switch (focusChange) {
@@ -185,8 +184,8 @@ public class AudioFocusTestActivity extends BaseActivity {
             }
         });
 
-        audioFocusManagerLib3 = new AudioFocusManagerLib(this);
-        audioFocusManagerLib3.setOnAudioFocusChangeListener(new AudioFocusManagerLib.OnAudioFocusChangeListener() {
+        audioFocusManager3 = new AudioFocusManager(this);
+        audioFocusManager3.setOnAudioFocusChangeListener(new AudioFocusManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
                 switch (focusChange) {
@@ -218,7 +217,7 @@ public class AudioFocusTestActivity extends BaseActivity {
 
     @OnClick(R.id.media_btn)
     void media() {
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mMediaAudioFocusManager.requestFocus(AudioFocusManagerLib.AudioType.MEDIA)) {
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mMediaAudioFocusManager.requestAudioFocus(AudioType.MEDIA)) {
             playMusic();
         }
     }
@@ -246,7 +245,7 @@ public class AudioFocusTestActivity extends BaseActivity {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 LogUtil.d(TAG);
-                mMediaAudioFocusManager.releaseAudioFocus();
+                mMediaAudioFocusManager.abandonAudioFocus();
             }
         });
         musicPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
@@ -260,7 +259,7 @@ public class AudioFocusTestActivity extends BaseActivity {
 
     @OnClick(R.id.system_btn)
     void system() {
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mSystemAudioFocusManager.requestFocus(AudioFocusManagerLib.AudioType.SYSTEM)) {
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mSystemAudioFocusManager.requestAudioFocus(AudioType.SYSTEM)) {
             playSystem();
         }
 
@@ -290,7 +289,7 @@ public class AudioFocusTestActivity extends BaseActivity {
         systemPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                mSystemAudioFocusManager.releaseAudioFocus();
+                mSystemAudioFocusManager.abandonAudioFocus();
             }
         });
         systemPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
@@ -304,21 +303,21 @@ public class AudioFocusTestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_1)
     void btn1() {
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManagerLib1.requestFocus(AudioFocusManagerLib.AudioType.MEDIA)) {
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManager1.requestAudioFocus(AudioType.MEDIA)) {
             playMediaNum(1);
         }
     }
 
     @OnClick(R.id.btn_2)
     void btn2() {
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManagerLib2.requestFocus(AudioFocusManagerLib.AudioType.SPEECH)) {
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManager2.requestAudioFocus(AudioType.SPEECH)) {
             playMediaNum(2);
         }
     }
 
     @OnClick(R.id.btn_3)
     void btn3() {
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManagerLib3.requestFocus(AudioFocusManagerLib.AudioType.TEST)) {
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManager3.requestAudioFocus(AudioType.TEST)) {
             playMediaNum(3);
         }
     }
@@ -367,13 +366,13 @@ public class AudioFocusTestActivity extends BaseActivity {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 if (num == 1) {
-                    audioFocusManagerLib1.releaseAudioFocus();
+                    audioFocusManager1.abandonAudioFocus();
                 }
                 if (num == 2) {
-                    audioFocusManagerLib2.releaseAudioFocus();
+                    audioFocusManager2.abandonAudioFocus();
                 }
                 if (num == 3) {
-                    audioFocusManagerLib3.releaseAudioFocus();
+                    audioFocusManager3.abandonAudioFocus();
                 }
             }
         });
@@ -427,11 +426,11 @@ public class AudioFocusTestActivity extends BaseActivity {
             mediaPlayer3 = null;
         }
 
-        mMediaAudioFocusManager.releaseAudioFocus();
-        mSystemAudioFocusManager.releaseAudioFocus();
+        mMediaAudioFocusManager.abandonAudioFocus();
+        mSystemAudioFocusManager.abandonAudioFocus();
 
-        audioFocusManagerLib1.releaseAudioFocus();
-        audioFocusManagerLib2.releaseAudioFocus();
-        audioFocusManagerLib3.releaseAudioFocus();
+        audioFocusManager1.abandonAudioFocus();
+        audioFocusManager2.abandonAudioFocus();
+        audioFocusManager3.abandonAudioFocus();
     }
 }

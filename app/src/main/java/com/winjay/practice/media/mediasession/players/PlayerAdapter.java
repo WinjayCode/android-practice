@@ -26,7 +26,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import androidx.annotation.NonNull;
 
 import com.winjay.practice.media.audio_focus.AudioFocusManager;
-import com.winjay.practice.media.interfaces.MediaType;
+import com.winjay.practice.media.interfaces.AudioType;
 
 /**
  * Abstract player implementation that handles playing music with proper handling of headphones
@@ -58,7 +58,7 @@ public abstract class PlayerAdapter {
 
     public PlayerAdapter(@NonNull Context context) {
         mApplicationContext = context.getApplicationContext();
-        mAudioFocusManager = new AudioFocusManager(mApplicationContext, MediaType.MUSIC);
+        mAudioFocusManager = new AudioFocusManager(mApplicationContext);
         mAudioFocusManager.setOnAudioFocusChangeListener(mAudioFocusChangeListener);
     }
 
@@ -69,7 +69,7 @@ public abstract class PlayerAdapter {
     public abstract boolean isPlaying();
 
     public final void play() {
-        if (mAudioFocusManager.requestAudioFocus()) {
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioFocusManager.requestAudioFocus(AudioType.MEDIA)) {
             registerAudioNoisyReceiver();
             onPlay();
         }

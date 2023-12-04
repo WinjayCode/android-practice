@@ -9,7 +9,7 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-import com.winjay.practice.media.AudioFocusManagerLib;
+import com.winjay.practice.media.interfaces.AudioType;
 import com.winjay.practice.utils.LogUtil;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class AudioFocusTestService extends Service {
     private static final String TAG = "AudioFocusTestService";
 
     private MediaPlayer mediaPlayer1;
-    private AudioFocusManagerLib audioFocusManagerLib1;
+    private AudioFocusManager audioFocusManager1;
 
     @Nullable
     @Override
@@ -37,8 +37,8 @@ public class AudioFocusTestService extends Service {
 
         mediaPlayer1 = new MediaPlayer();
 
-        audioFocusManagerLib1 = new AudioFocusManagerLib(this);
-        audioFocusManagerLib1.setOnAudioFocusChangeListener(new AudioFocusManagerLib.OnAudioFocusChangeListener() {
+        audioFocusManager1 = new AudioFocusManager(this);
+        audioFocusManager1.setOnAudioFocusChangeListener(new AudioFocusManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
                 switch (focusChange) {
@@ -64,7 +64,7 @@ public class AudioFocusTestService extends Service {
             }
         });
 
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManagerLib1.requestFocus(AudioFocusManagerLib.AudioType.SYSTEM)) {
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManager1.requestAudioFocus(AudioType.SYSTEM)) {
             playAudio();
         }
     }
@@ -91,7 +91,7 @@ public class AudioFocusTestService extends Service {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 LogUtil.d(TAG);
-                audioFocusManagerLib1.releaseAudioFocus();
+                audioFocusManager1.abandonAudioFocus();
             }
         });
         mediaPlayer1.setOnErrorListener(new MediaPlayer.OnErrorListener() {
@@ -116,6 +116,6 @@ public class AudioFocusTestService extends Service {
             mediaPlayer1 = null;
         }
 
-        audioFocusManagerLib1.releaseAudioFocus();
+        audioFocusManager1.abandonAudioFocus();
     }
 }

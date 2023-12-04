@@ -22,8 +22,8 @@ import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.media.MediaSessionHelper;
 import com.winjay.practice.media.audio_focus.AudioFocusManager;
 import com.winjay.practice.media.bean.AudioBean;
+import com.winjay.practice.media.interfaces.AudioType;
 import com.winjay.practice.media.interfaces.IMediaStatus;
-import com.winjay.practice.media.interfaces.MediaType;
 import com.winjay.practice.media.interfaces.SourceType;
 import com.winjay.practice.media.notification.MusicNotificationManager;
 import com.winjay.practice.media.receiver.MediaNotificationReceiver;
@@ -75,7 +75,7 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
         super.onCreate(savedInstanceState);
         registerReceiver();
         musicPlayer = new MediaPlayer();
-        mAudioFocusManager = new AudioFocusManager(this, MediaType.MUSIC);
+        mAudioFocusManager = new AudioFocusManager(this);
         musicPlayer.setAudioAttributes(mAudioFocusManager.getAudioAttributes());
         mMediaSessionHelper = new MediaSessionHelper(this);
         mAudioFocusManager.setOnAudioFocusChangeListener(new AudioFocusManager.OnAudioFocusChangeListener() {
@@ -94,7 +94,7 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
                         if (musicPlayer != null) {
                             musicPlayer.stop();
                             musicPlayer.release();
-                            mAudioFocusManager.releaseAudioFocus();
+                            mAudioFocusManager.abandonAudioFocus();
                             play_pause_iv.setImageResource(android.R.drawable.ic_media_play);
                         }
                         break;
@@ -120,7 +120,7 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
             mSourceType = SourceType.USB_TYPE;
             AudioBean audio = (AudioBean) getIntent().getParcelableExtra("audio");
             if (audio != null && !TextUtils.isEmpty(audio.getPath())) {
-                if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioFocusManager.requestFocus()) {
+                if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioFocusManager.requestAudioFocus(AudioType.MEDIA)) {
                     mMediaSessionHelper.registerMediaButton(AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
                     setLocalSource(audio.getPath());
                 }
@@ -133,7 +133,7 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
             mSourceType = SourceType.ASSETS_TYPE;
             getAssetsSource();
             if (mAssetsMusicList.length > 0) {
-                if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioFocusManager.requestFocus()) {
+                if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mAudioFocusManager.requestAudioFocus(AudioType.MEDIA)) {
                     mMediaSessionHelper.registerMediaButton(AudioManager.AUDIOFOCUS_REQUEST_GRANTED);
                     setAssetsSource();
                 }
@@ -299,7 +299,7 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
             musicPlayer.release();
             musicPlayer = null;
         }
-        mAudioFocusManager.releaseAudioFocus();
+        mAudioFocusManager.abandonAudioFocus();
         mMediaSessionHelper.unRegisterMediaButton();
         unregisterReceiver();
         MusicNotificationManager.getInstance(getApplicationContext()).cancel();

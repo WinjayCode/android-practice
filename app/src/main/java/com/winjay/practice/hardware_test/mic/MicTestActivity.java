@@ -1,5 +1,7 @@
 package com.winjay.practice.hardware_test.mic;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
@@ -8,11 +10,12 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.media.audio_focus.AudioFocusManager;
-import com.winjay.practice.media.interfaces.MediaType;
+import com.winjay.practice.media.interfaces.AudioType;
 import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.LogUtil;
 
@@ -95,7 +98,7 @@ public class MicTestActivity extends BaseActivity {
 
         mVUMeter.setRecorder(mAudioRecord);
 
-        audioFocusManager = new AudioFocusManager(this, MediaType.MUSIC);
+        audioFocusManager = new AudioFocusManager(this);
     }
 
     /**
@@ -109,6 +112,9 @@ public class MicTestActivity extends BaseActivity {
         // 获取每一帧的字节流大小
         mRecordBufferSize = AudioRecord.getMinBufferSize(mSampleRateInHz, mChannelConfig, mAudioFormat);
         LogUtil.d(TAG, "mRecordBufferSize=" + mRecordBufferSize);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         mAudioRecord = new AudioRecord(mAudioSource, mSampleRateInHz, mChannelConfig, mAudioFormat, mRecordBufferSize);
     }
 
@@ -228,7 +234,7 @@ public class MicTestActivity extends BaseActivity {
     public void playPcmStatic() {
         LogUtil.d(TAG);
         stopPlay();
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManager.requestFocus()) {
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManager.requestAudioFocus(AudioType.MEDIA)) {
             File file;
             LogUtil.d(TAG, "mMicType=" + mMicType);
             if (mMicType == 1) {
@@ -304,7 +310,7 @@ public class MicTestActivity extends BaseActivity {
             mAudioTrack.release();
         }
         if (audioFocusManager != null) {
-            audioFocusManager.releaseAudioFocus();
+            audioFocusManager.abandonAudioFocus();
         }
         if (pcmFile != null && pcmFile.exists()) {
             pcmFile.delete();
