@@ -14,7 +14,7 @@ import com.winjay.practice.media.interfaces.AudioType;
  * @date 12/26/20
  */
 public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListener {
-    private AudioManager mAudioManager;
+    private final AudioManager mAudioManager;
     private AudioFocusRequest mFocusRequest;
     private AudioAttributes mAudioAttributes;
     private OnAudioFocusChangeListener mAudioFocusChangeListener;
@@ -67,32 +67,36 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
                 case AudioType.TEST:
                     mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
                             .setAudioAttributes(mAudioAttributes)
-                            .setAcceptsDelayedFocusGain(true) // 允许延迟获得焦点
-                            .setWillPauseWhenDucked(true) // 不希望系统自动降低音量
+                            .setAcceptsDelayedFocusGain(true)
+                            .setWillPauseWhenDucked(true)
                             .setOnAudioFocusChangeListener(this)
                             .build();
                     break;
                 case AudioType.MEDIA:
                     mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
                             .setAudioAttributes(mAudioAttributes)
-                            .setAcceptsDelayedFocusGain(true) // 允许延迟获得焦点
-                            .setWillPauseWhenDucked(true) // 不希望系统自动降低音量
+                            .setAcceptsDelayedFocusGain(true)
+                            .setWillPauseWhenDucked(true)
                             .setOnAudioFocusChangeListener(this)
                             .build();
                     break;
                 case AudioType.SYSTEM:
+                    // For a concurrent interaction to take place, the following conditions must be met. The:
+                    // * Incoming focus request must ask for AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK
+                    // * Current focus holder doesn't setPauseWhenDucked(true)
+                    // * Current focus holder opts not to receive duck events
                     mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
                             .setAudioAttributes(mAudioAttributes)
-                            .setAcceptsDelayedFocusGain(true) // 允许延迟获得焦点
-                            .setWillPauseWhenDucked(true) // 不希望系统自动降低音量
+                            .setAcceptsDelayedFocusGain(true)
+                            .setWillPauseWhenDucked(true)
                             .setOnAudioFocusChangeListener(this)
                             .build();
                     break;
                 case AudioType.SPEECH:
                     mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE)
                             .setAudioAttributes(mAudioAttributes)
-                            .setAcceptsDelayedFocusGain(true) // 允许延迟获得焦点
-                            .setWillPauseWhenDucked(true) // 不希望系统自动降低音量
+                            .setAcceptsDelayedFocusGain(true)
+                            .setWillPauseWhenDucked(true)
                             .setOnAudioFocusChangeListener(this)
                             .build();
                     break;

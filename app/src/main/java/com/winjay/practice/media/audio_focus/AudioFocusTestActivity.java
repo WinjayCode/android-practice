@@ -149,6 +149,7 @@ public class AudioFocusTestActivity extends BaseActivity {
                         break;
                     case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                         LogUtil.d(TAG, "1:AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
+//                        mediaPlayer1.setVolume(0.2f, 0.2f);
                         break;
                 }
             }
@@ -310,7 +311,7 @@ public class AudioFocusTestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_2)
     void btn2() {
-        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManager2.requestAudioFocus(AudioType.SPEECH)) {
+        if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManager2.requestAudioFocus(AudioType.SYSTEM)) {
             playMediaNum(2);
         }
     }
@@ -358,7 +359,7 @@ public class AudioFocusTestActivity extends BaseActivity {
         mediaPlayerNum.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                LogUtil.d(TAG, "duration=" + mediaPlayerNum.getDuration());
+//                LogUtil.d(TAG, "duration=" + mediaPlayerNum.getDuration());
                 mediaPlayerNum.start();
             }
         });
