@@ -1,0 +1,7 @@
+[versions]
+androidxActivity = "1.6.0"
+
+[libraries]
+androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidxActivity" }
+
+[plugins]

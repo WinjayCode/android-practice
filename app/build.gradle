@@ -200,7 +200,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
 
     // activity
-    implementation 'androidx.activity:activity-ktx:1.6.0'
+    //implementation 'androidx.activity:activity-ktx:1.6.0'
+    implementation libs.androidx.activity.ktx
 
     // multidex
     implementation 'androidx.multidex:multidex:2.0.1'

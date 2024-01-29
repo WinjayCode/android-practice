@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.winjay.mirrorcast.BaseActivity;
 import com.winjay.mirrorcast.R;
+import com.winjay.mirrorcast.common.BaseActivity;
 import com.winjay.mirrorcast.databinding.ActivityCarHomeBinding;
 import com.winjay.mirrorcast.util.LogUtil;
 
@@ -56,6 +56,18 @@ public class CarLauncherActivity extends BaseActivity implements View.OnClickLis
         handleTime();
 
         initHomeViewPager();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        LogUtil.d(TAG);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogUtil.d(TAG);
     }
 
     private void initHomeViewPager() {
@@ -110,16 +122,16 @@ public class CarLauncherActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         if (v == binding.voiceIv) {
-            toast("语音助手");
+            dialogToast("语音助手");
         }
         if (v == binding.navigationIv) {
-            toast("导航");
+            dialogToast("导航");
         }
         if (v == binding.tiktokIv) {
-            toast("在线音乐");
+            dialogToast("在线音乐");
         }
         if (v == binding.phoneIv) {
-            toast("通话");
+            dialogToast("通话");
         }
         if (v == binding.homeIv) {
             if (binding.homeVp.getCurrentItem() == 0) {
@@ -163,6 +175,18 @@ public class CarLauncherActivity extends BaseActivity implements View.OnClickLis
                 binding.timeTv.setText(mSimpleDateFormat.format(mDate));
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogUtil.d(TAG);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LogUtil.d(TAG);
     }
 
     @Override

@@ -9,12 +9,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.winjay.mirrorcast.BaseFragment;
+import com.winjay.mirrorcast.AppApplication;
 import com.winjay.mirrorcast.Constants;
 import com.winjay.mirrorcast.R;
-import com.winjay.mirrorcast.app_mirror.AppSocketClientManager;
+import com.winjay.mirrorcast.aoa.AOAAccessoryManager;
+import com.winjay.mirrorcast.app_socket.AppSocketManager;
+import com.winjay.mirrorcast.common.BaseFragment;
 import com.winjay.mirrorcast.databinding.FragmentCarHomeTwoBinding;
-import com.winjay.mirrorcast.util.ActivityListUtil;
 import com.winjay.mirrorcast.util.LogUtil;
 
 import java.util.ArrayList;
@@ -97,17 +98,31 @@ public class CarHomeTwoFragment extends BaseFragment<FragmentCarHomeTwoBinding> 
             @Override
             public void onItemClick(AppBean appBean) {
                 if (appBean.getAppName().equals("镜像投屏")) {
-                    AppSocketClientManager.getInstance().sendMessage(Constants.APP_COMMAND_PHONE_MAIN_SCREEN_MIRROR_CAST);
+                    if (AppApplication.connectType == Constants.CONNECT_TYPE_AOA) {
+                        toast("有线连接暂不支持该功能！");
+                        return;
+                    }
+                    AppSocketManager.getInstance().sendMessage(Constants.APP_COMMAND_PHONE_MAIN_SCREEN_MIRROR_CAST);
                 } else if (appBean.getAppName().equals("应用投屏")) {
+                    if (AppApplication.connectType == Constants.CONNECT_TYPE_AOA) {
+                        toast("有线连接暂不支持该功能！");
+                        return;
+                    }
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.add(R.id.content_rl, new CarAppFragment());
                     transaction.addToBackStack("CarAppFragment");
                     transaction.commit();
                 } else if (appBean.getAppName().equals("返回车机系统")) {
+                    // TODO 此处的逻辑根据具体需求决定！（和ShowCarLauncherActivity对应）
                     LogUtil.d(TAG, "return car system.");
-                    AppSocketClientManager.getInstance().sendMessage(Constants.APP_COMMAND_RETURN_CAR_SYSTEM);
+                    if (AppApplication.connectType == Constants.CONNECT_TYPE_WIFI_DIRECT) {
+                        AppSocketManager.getInstance().sendMessage(Constants.APP_COMMAND_RETURN_CAR_SYSTEM);
+                    } else if (AppApplication.connectType == Constants.CONNECT_TYPE_AOA) {
+                        AOAAccessoryManager.getInstance().sendAOAMessage(Constants.APP_COMMAND_RETURN_CAR_SYSTEM);
+                    }
+
                     // close TipsActivity and CarLauncherActivity
-                    LogUtil.d(TAG, "activity count=" + ActivityListUtil.getActivityCount());
+                    /*LogUtil.d(TAG, "activity count=" + ActivityListUtil.getActivityCount());
                     for (int i = ActivityListUtil.getActivityCount() - 2; i < ActivityListUtil.getActivityCount(); i++) {
                         if (i < 0) {
                             break;
@@ -115,7 +130,7 @@ public class CarHomeTwoFragment extends BaseFragment<FragmentCarHomeTwoBinding> 
                         if (ActivityListUtil.getActivityByIndex(i) != null) {
                             ActivityListUtil.getActivityByIndex(i).finish();
                         }
-                    }
+                    }*/
                 } else {
                     toast("功能完善中！");
                 }

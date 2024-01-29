@@ -33,6 +33,8 @@ public class ScreenDecoderSocketServerManager implements ScreenDecoderSocketServ
             } catch (InterruptedException e) {
                 LogUtil.e(TAG, "error=" + e.getMessage());
                 e.printStackTrace();
+            } finally {
+                mScreenDecoderSocketServer = null;
             }
         }
         if (mScreenDecoder != null) {

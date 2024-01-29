@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.protobuf'
 }
 
 evaluationDependsOn(':scrcpy_server')
@@ -26,6 +27,9 @@ android {
             jniLibs.srcDirs = ['libs']
             jni {
                 srcDirs 'src/main/jni'
+            }
+            proto {
+                srcDir 'src/main/proto'
             }
         }
     }
@@ -53,24 +57,39 @@ android {
     buildFeatures {
         viewBinding true
     }
-
-    viewBinding {
-        enabled = true
-    }
 }
 
 dependencies {
-//    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.6.1'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
-    implementation files('libs/commons-codec-1.10-rep.jar')
 
     implementation "org.java-websocket:Java-WebSocket:1.5.3"
     implementation 'pub.devrel:easypermissions:3.0.0'
-    implementation 'com.tananaev:adblib:1.3'
+    implementation "com.google.protobuf:protobuf-lite:3.0.0"
+
+    implementation project(':adblib')
+}
+
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.0.0'
+    }
+    plugins {
+        javalite {
+            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                javalite {}
+            }
+        }
+    }
 }

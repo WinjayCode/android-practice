@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <SurfaceView
-        android:id="@+id/car_launcher_sv"
+    <TextureView
+        android:id="@+id/car_launcher_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />

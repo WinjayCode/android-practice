@@ -17,23 +17,7 @@ public final class Server {
         // not instantiable
     }
 
-    public static void main(String... args) throws Exception {
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                Ln.e("Exception on thread " + t, e);
-                suggestFix(e);
-            }
-        });
-
-        Options options = createOptions(args);
-
-        Ln.initLogLevel(options.getLogLevel());
-
-        scrcpy(options);
-    }
-
-    private static void scrcpy(Options options) throws IOException {
+    private static void scrcpy(Options options) {
         Ln.i("Device: " + Build.MANUFACTURER + " " + Build.MODEL + " (Android " + Build.VERSION.RELEASE + ")");
         final Device device = new Device(options);
         List<CodecOption> codecOptions = options.getCodecOptions();
@@ -44,22 +28,21 @@ public final class Server {
         boolean control = options.getControl();
         boolean sendDummyByte = options.getSendDummyByte();
 
-        String localIp = options.getLocalIp();
-        Ln.i("localIp=" + localIp);
+        String serverIp = options.getServerIp();
+        Ln.i("serverIp=" + serverIp);
         String serverPort = options.getServerPort();
         Ln.i("serverPort=" + serverPort);
         try {
             DroidScreenEncoder screenEncoder = new DroidScreenEncoder(options.getSendFrameMeta(), options.getBitRate(), options.getMaxFps(), codecOptions,
                     options.getEncoderName(), options.getDownsizeOnError());
 
-            DroidSocketClientManager.getInstance().connect(localIp, serverPort, device, new DroidSocketClient.OnSocketClientListener() {
+            DroidSocketClientManager.getInstance().connect(serverIp, serverPort, device, new DroidSocketClient.OnSocketClientListener() {
                 @Override
                 public void onClose() {
                     screenEncoder.stopStreamScreen();
                 }
             });
 
-            Thread controllerThread = null;
             if (control) {
                 final DroidController controller = new DroidController(device, options.getClipboardAutosync(), options.getPowerOn());
                 controller.control();
@@ -71,21 +54,18 @@ public final class Server {
                 Ln.i("Screen streaming start");
                 // synchronous
                 screenEncoder.streamScreen(device);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 // this is expected on close
-                Ln.i("Screen streaming error");
+                Ln.e("Screen streaming error, " + e.getMessage());
             } finally {
                 Ln.i("Screen streaming stopped");
                 screenEncoder.stopStreamScreen();
 //                initThread.interrupt();
-                if (controllerThread != null) {
-                    controllerThread.interrupt();
-                }
                 DroidSocketClientManager.getInstance().close();
             }
             System.exit(0);
         } catch (Exception e) {
-            Ln.i("scrcpy start error=" + e.getMessage());
+            Ln.e("scrcpy start error=" + e.getMessage());
         }
 
 //        try (DesktopConnection connection = DesktopConnection.open(tunnelForward, control, sendDummyByte)) {
@@ -338,10 +318,10 @@ public final class Server {
                         options.setSendDummyByte(false);
                     }
                     break;
-                case "local_ip":
+                case "server_ip":
                     if (!value.isEmpty()) {
-                        Ln.i("local_ip=" + value);
-                        options.setLocalIp(value);
+                        Ln.i("server_ip=" + value);
+                        options.setServerIp(value);
                     }
                     break;
                 case "server_port":
@@ -395,5 +375,21 @@ public final class Server {
                 }
             }
         }
+    }
+
+    public static void main(String... args) throws Exception {
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                Ln.e("Exception on thread " + t, e);
+                suggestFix(e);
+            }
+        });
+
+        Options options = createOptions(args);
+
+        Ln.initLogLevel(options.getLogLevel());
+
+        scrcpy(options);
     }
 }

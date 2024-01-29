@@ -17,6 +17,7 @@
         app:layout_constraintWidth_percent="0.6">
 
         <ImageView
+            android:id="@+id/car_iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"

@@ -1,0 +1,5 @@
+package com.winjay.mirrorcast.protobuf;
+message Test
+{
+  required bytes test_bytes = 1;
+}

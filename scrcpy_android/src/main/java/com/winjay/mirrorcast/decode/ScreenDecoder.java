@@ -32,11 +32,17 @@ public class ScreenDecoder {
             mMediaCodec.configure(mediaFormat, surface, null, 0);
             mMediaCodec.start();
         } catch (IOException e) {
+            LogUtil.e(TAG, "start decode error=" + e.getMessage());
             e.printStackTrace();
         }
     }
 
     public void decodeData(byte[] data) {
+        LogUtil.d(TAG, "data.length=" + data.length);
+        if (mMediaCodec == null) {
+            LogUtil.w(TAG, "mMediaCodec is null!");
+            return;
+        }
         try {
             int index = mMediaCodec.dequeueInputBuffer(100000);
 //            LogUtil.d(TAG, "index=" + index);

@@ -29,14 +29,14 @@ public class Options {
     private boolean sendFrameMeta = true; // send PTS so that the client may record properly
     private boolean sendDummyByte = true; // write a byte on start to detect connection issues
 
-    private String localIp;
+    private String serverIp;
 
-    public String getLocalIp() {
-        return localIp;
+    public String getServerIp() {
+        return serverIp;
     }
 
-    public void setLocalIp(String localIp) {
-        this.localIp = localIp;
+    public void setServerIp(String serverIp) {
+        this.serverIp = serverIp;
     }
 
     private String serverPort;

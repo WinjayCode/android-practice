@@ -110,7 +110,7 @@ public class DroidScreenEncoder implements Device.RotationListener {
                 Rect unlockedVideoRect = screenInfo.getUnlockedVideoSize().toRect();
                 int videoRotation = screenInfo.getVideoRotation();
                 int layerStack = device.getLayerStack();
-                Ln.i("videoRect.width=" + videoRect.width() + ", videoRect.height=" + videoRect.height());
+                Ln.d("videoRect.width=" + videoRect.width() + ", videoRect.height=" + videoRect.height());
                 setSize(format, videoRect.width(), videoRect.height());
 
                 format.setInteger(MediaFormat.KEY_BIT_RATE, videoRect.width() * videoRect.height() / 2);
@@ -183,7 +183,7 @@ public class DroidScreenEncoder implements Device.RotationListener {
                 if (outputBufferId >= 0) {
                     ByteBuffer byteBuffer = codec.getOutputBuffer(outputBufferId);
                     // 拿到每一帧 如果是I帧 则在I帧前面插入 sps pps
-                    encodeData(byteBuffer, bufferInfo);
+                    dealFrame(byteBuffer, bufferInfo);
                     codec.releaseOutputBuffer(outputBufferId, false);
                 }
             } catch (Exception e) {
@@ -194,37 +194,29 @@ public class DroidScreenEncoder implements Device.RotationListener {
         return false;
     }
 
-    public static final int NALU_SLICE = 1;
-    public static final int NALU_SLICE_DPA = 2;
-    public static final int NALU_SLICE_DPB = 3;
-    public static final int NALU_SLICE_DPC = 4;
-    public static final int NALU_SLICE_IDR = 5;
-    public static final int NALU_SEI = 6;
-    public static final int NALU_SPS = 7;
-    public static final int NALU_PPS = 8;
-    public static final int NALU_AUD = 9;
-    public static final int NALU_FILLER = 12;
+    public static final int NAL_I = 5;
+    public static final int NAL_SPS = 7;
     private byte[] sps_pps_buf;
 
     /**
-     * 绘制每一帧，因为录屏只有第一帧有 sps 、pps，所以我们需要在每一 I 帧之前插入 sps 、pps的内容
+     * 绘制每一帧，因为录屏 只有第一帧有 sps 、pps 和 vps，所以我们需要在每一 I 帧 之前插入 sps 、pps 和 vps 的内容
      *
      * @param byteBuffer
      * @param bufferInfo
      */
-    private void encodeData(ByteBuffer byteBuffer, MediaCodec.BufferInfo bufferInfo) {
+    private void dealFrame(ByteBuffer byteBuffer, MediaCodec.BufferInfo bufferInfo) {
         int offset = 4;
         if (byteBuffer.get(2) == 0x01) {
             offset = 3;
         }
-        // 取出起始码之后的NALU单元的NALU Header的后五位即为该NALU的Type类型
+
         int type = byteBuffer.get(offset) & 0x1f;
-        if (type == NALU_SPS) {
-            // sps_pps_buf 记录下来
+        // sps_pps_buf 帧记录下来
+        if (type == NAL_SPS) {
             sps_pps_buf = new byte[bufferInfo.size];
             byteBuffer.get(sps_pps_buf);
-        } else if (type == NALU_SLICE_IDR) {
-            // I帧 ，把 sps_pps 塞到I帧之前一起发出去
+        } else if (type == NAL_I) {
+            // I 帧 ，把 vps_sps_pps 帧塞到 I帧之前一起发出去
             final byte[] bytes = new byte[bufferInfo.size];
             byteBuffer.get(bytes);
 

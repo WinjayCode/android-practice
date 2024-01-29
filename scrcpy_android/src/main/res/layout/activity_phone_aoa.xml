@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/aoa_send_btn"
+            style="@style/BtnStyle"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="发送" />
+
+        <EditText
+            android:id="@+id/aoa_ed"
+            style="@style/BtnStyle"
+            android:layout_toLeftOf="@+id/aoa_send_btn"
+            android:hint="有线连接" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/aoa_msg_tv"
+        style="@style/BtnStyle"
+        android:layout_height="match_parent" />
+</LinearLayout>

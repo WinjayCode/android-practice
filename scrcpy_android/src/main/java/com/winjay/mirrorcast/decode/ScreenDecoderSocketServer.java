@@ -69,12 +69,16 @@ public class ScreenDecoderSocketServer extends WebSocketServer {
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        LogUtil.d(TAG, "onError =" + ex.toString());
+        LogUtil.e(TAG, "onError =" + ex.toString());
     }
 
     public void sendMessage(String message) {
         if (mWebSocket != null) {
-            mWebSocket.send(message);
+            try {
+                mWebSocket.send(message);
+            } catch (Exception e) {
+                LogUtil.e(TAG, e.getMessage());
+            }
         }
     }
 

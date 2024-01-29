@@ -30,8 +30,8 @@
             android:src="@android:drawable/ic_menu_close_clear_cancel" />
     </RelativeLayout>
 
-    <SurfaceView
-        android:id="@+id/mirror_window_sv"
+    <TextureView
+        android:id="@+id/mirror_window_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/control_bar_rl" />

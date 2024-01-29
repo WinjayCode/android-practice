@@ -26,8 +26,10 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.winjay.mirrorcast.AppApplication;
-import com.winjay.mirrorcast.BaseActivity;
-import com.winjay.mirrorcast.MainActivity;
+import com.winjay.mirrorcast.app_socket.AppSocketClientManager;
+import com.winjay.mirrorcast.app_socket.AppSocketManager;
+import com.winjay.mirrorcast.app_socket.AppSocketServerManager;
+import com.winjay.mirrorcast.common.BaseActivity;
 import com.winjay.mirrorcast.databinding.ActivityWifiDirectBinding;
 import com.winjay.mirrorcast.util.LogUtil;
 import com.winjay.mirrorcast.util.NetUtil;
@@ -92,11 +94,13 @@ public class WIFIDirectActivity extends BaseActivity {
             LogUtil.d(TAG, "getHostAddress: " + wifiP2pInfo.groupOwnerAddress.getHostAddress());
             StringBuilder stringBuilder = new StringBuilder();
             if (mWifiP2pDevice != null) {
+                stringBuilder.append("\n");
                 stringBuilder.append("连接的设备名：");
                 stringBuilder.append(mWifiP2pDevice.deviceName);
                 stringBuilder.append("\n");
                 stringBuilder.append("连接的设备的地址：");
                 stringBuilder.append(mWifiP2pDevice.deviceAddress);
+                stringBuilder.append("\n");
             }
 
             stringBuilder.append("\n");
@@ -109,12 +113,10 @@ public class WIFIDirectActivity extends BaseActivity {
 
             mWifiP2pInfo = wifiP2pInfo;
 
-            if (!wifiP2pInfo.isGroupOwner) {
-                AppApplication.destDeviceIp = wifiP2pInfo.groupOwnerAddress.getHostAddress();
-            }
-
-
-            if (wifiP2pInfo.groupFormed && !wifiP2pInfo.isGroupOwner) {
+            if (wifiP2pInfo.isGroupOwner) {
+                LogUtil.d(TAG, "current device is GO.");
+                AppSocketManager.getInstance().setIsWiFiDirectGroupOwner(true);
+            } else {
                 InetAddress inetAddress = NetUtil.getP2PInetAddress();
                 if (inetAddress != null) {
                     LogUtil.d(TAG, "show gc ip address:" + inetAddress.getHostAddress());
@@ -122,15 +124,22 @@ public class WIFIDirectActivity extends BaseActivity {
                             + "群员IP地址："
                             + inetAddress.getHostAddress() + "\n");
                 }
-                // send ip to GO
-                sendGCIP2GO();
+
+                // 如果对方设备为GO，那么自己就是GC，需要主动连接GO的socket server
+                LogUtil.d(TAG, "current device is GC.");
+//                AppSocketServerManager.getInstance().stopServer();
+
+                // TODO 偶现无法连接的问题，应该是AppSocketServerManager未连接上AppSocketService导致！
+                AppSocketClientManager.getInstance().connect(wifiP2pInfo.groupOwnerAddress.getHostAddress());
+                AppApplication.destDeviceIp = wifiP2pInfo.groupOwnerAddress.getHostAddress();
+                AppSocketManager.getInstance().setIsWiFiDirectGroupOwner(false);
             }
         }
 
         @Override
         public void onDisconnection() {
             LogUtil.d(TAG);
-            toast("设备连接断开！");
+            dialogToast("设备连接断开！");
             mWifiP2pDeviceList.clear();
             deviceAdapter.notifyDataSetChanged();
             binding.tvStatus.setText(null);
@@ -165,9 +174,9 @@ public class WIFIDirectActivity extends BaseActivity {
         }
     };
 
-    private void sendGCIP2GO() {
-        LogUtil.d(TAG);
-        new ClientThread(mWifiP2pInfo.groupOwnerAddress.getHostAddress()).start();
+    @Override
+    public boolean isFullScreen() {
+        return false;
     }
 
     @Override
@@ -178,7 +187,7 @@ public class WIFIDirectActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
         super.onCreate(savedInstanceState);
         setTitle("选择连接设备");
@@ -186,6 +195,7 @@ public class WIFIDirectActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.show();
         }
 
         initView();
@@ -203,12 +213,6 @@ public class WIFIDirectActivity extends BaseActivity {
                 }
             }
         });
-    }
-
-    private void openWifi() {
-//        toast("正在打开WIFI");
-        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        wifiManager.setWifiEnabled(true);
     }
 
     private void initView() {
@@ -229,6 +233,12 @@ public class WIFIDirectActivity extends BaseActivity {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setTitle("正在接收文件");
         progressDialog.setMax(100);
+    }
+
+    private void openWifi() {
+//        toast("正在打开WIFI");
+        wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(true);
     }
 
     private void initEvent() {
@@ -263,26 +273,27 @@ public class WIFIDirectActivity extends BaseActivity {
 
     private void connect() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            toast("请先授予位置权限");
+            dialogToast("请先授予位置权限");
             return;
         }
         WifiP2pConfig config = new WifiP2pConfig();
         if (config.deviceAddress != null && mWifiP2pDevice != null) {
             config.deviceAddress = mWifiP2pDevice.deviceAddress;
             config.wps.setup = WpsInfo.PBC;
+//            config.groupOwnerIntent = 15; // 指定本机作为组长（没用！！！）
             showLoadingDialog("正在连接 " + mWifiP2pDevice.deviceName);
             wifiP2pManager.connect(channel, config, new WifiP2pManager.ActionListener() {
                 @Override
                 public void onSuccess() {
                     LogUtil.d(TAG, "wifi p2p connect success.");
-                    toast("连接成功");
+                    dialogToast("连接成功");
                     dismissLoadingDialog();
                 }
 
                 @Override
                 public void onFailure(int reason) {
                     LogUtil.d(TAG, "connect onFailure=" + reason);
-                    toast("连接失败：" + reason);
+                    dialogToast("连接失败：" + reason);
                     dismissLoadingDialog();
                 }
             });
@@ -311,11 +322,11 @@ public class WIFIDirectActivity extends BaseActivity {
     private void search() {
         LogUtil.d(TAG);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            toast("请先授予位置权限");
+            dialogToast("请先授予位置权限");
             return;
         }
         if (!wifiP2pEnabled) {
-            toast("需要先打开Wifi");
+            dialogToast("需要先打开Wifi");
             return;
         }
         showLoadingDialog("正在搜索附近设备");
@@ -330,7 +341,7 @@ public class WIFIDirectActivity extends BaseActivity {
 
             @Override
             public void onFailure(int reasonCode) {
-                toast("搜索失败");
+                dialogToast("搜索失败");
                 cancelLoadingDialog();
             }
         });
@@ -340,14 +351,16 @@ public class WIFIDirectActivity extends BaseActivity {
      * 默认自己为GO
      */
     private void createGroup() {
+        LogUtil.d(TAG);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            toast("请先授予位置权限");
+            dialogToast("请先授予位置权限");
             return;
         }
         wifiP2pManager.createGroup(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
                 LogUtil.d(TAG, "createGroup success!");
+                search();
             }
 
             @Override
@@ -372,7 +385,7 @@ public class WIFIDirectActivity extends BaseActivity {
                 if (wifiP2pManager != null && channel != null) {
                     startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS));
                 } else {
-                    toast("当前设备不支持Wifi Direct!");
+                    dialogToast("当前设备不支持Wifi Direct!");
                 }
                 return true;
             case 1:

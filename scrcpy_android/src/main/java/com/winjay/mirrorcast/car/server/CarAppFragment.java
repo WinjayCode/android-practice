@@ -1,14 +1,11 @@
 package com.winjay.mirrorcast.car.server;
 
 
-import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.hardware.display.DisplayManager;
-import android.hardware.display.VirtualDisplay;
 import android.view.LayoutInflater;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,13 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.winjay.mirrorcast.AppApplication;
-import com.winjay.mirrorcast.BaseFragment;
 import com.winjay.mirrorcast.Constants;
-import com.winjay.mirrorcast.app_mirror.AppSocketClientManager;
+import com.winjay.mirrorcast.app_socket.AppSocketManager;
+import com.winjay.mirrorcast.common.BaseFragment;
 import com.winjay.mirrorcast.databinding.FragmentCarAppBinding;
 import com.winjay.mirrorcast.util.DisplayUtil;
-import com.winjay.mirrorcast.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +55,8 @@ public class CarAppFragment extends BaseFragment<FragmentCarAppBinding> {
         mAppListAdapter.setOnItemClickListener(new AppListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(AppBean appBean) {
-                int virtualDisplay = createVirtualDisplay();
-                AppSocketClientManager.getInstance().sendMessage(
+                int virtualDisplay = DisplayUtil.createVirtualDisplay(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                AppSocketManager.getInstance().sendMessage(
                         Constants.APP_COMMAND_PHONE_APP_MIRROR_CAST
                                 + Constants.COMMAND_SPLIT
                                 + appBean.getPkgName()
@@ -103,26 +98,6 @@ public class CarAppFragment extends BaseFragment<FragmentCarAppBinding> {
         appBean.setPkgName(resolveInfo.activityInfo.packageName);
         appBean.setEnterClass(resolveInfo.activityInfo.name);
         return appBean;
-    }
-
-    private int createVirtualDisplay() {
-        try {
-            LogUtil.d(TAG);
-            DisplayManager displayManager = (DisplayManager) AppApplication.context.getSystemService(Context.DISPLAY_SERVICE);
-            int[] screenSize = DisplayUtil.getScreenSize(AppApplication.context);
-            int flags = 139;
-            VirtualDisplay display = displayManager.createVirtualDisplay("app_mirror",
-                    screenSize[1], screenSize[0], screenSize[2], new SurfaceView(AppApplication.context).getHolder().getSurface(),
-                    flags);
-
-            int displayId = display.getDisplay().getDisplayId();
-            LogUtil.d(TAG, "virtual display ID=" + displayId);
-            return displayId;
-        } catch (Exception e) {
-            LogUtil.e(TAG, "createVirtualDisplay error " + e.getMessage());
-            e.printStackTrace();
-        }
-        return -1;
     }
 
     @Override

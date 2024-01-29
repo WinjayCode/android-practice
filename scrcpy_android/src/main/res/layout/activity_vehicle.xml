@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_wifi_p2p"
+        style="@style/BtnStyle"
+        android:layout_marginTop="50dp"
+        android:text="WIFI直连" />
+
+    <EditText
+        android:id="@+id/ip_ed"
+        style="@style/BtnStyle"
+        android:hint="192.168.49.1" />
+
+    <Button
+        android:id="@+id/btn_start_record"
+        style="@style/BtnStyle"
+        android:text="开始投屏"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/connect_mirror_cast_server"
+        style="@style/BtnStyle"
+        android:text="连接投屏服务" />
+
+    <Button
+        android:id="@+id/btn_start_receive"
+        style="@style/BtnStyle"
+        android:text="WIFI直连投屏测试" />
+
+    <Button
+        android:id="@+id/btn_car_home"
+        style="@style/BtnStyle"
+        android:text="WIFI直连CarLauncher"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_aoa"
+        style="@style/BtnStyle"
+        android:text="AOA有线投屏测试" />
+
+    <Button
+        android:id="@+id/btn_aoa_car_launcher"
+        style="@style/BtnStyle"
+        android:text="AOA有线CarLauncher" />
+</LinearLayout>
