@@ -59,7 +59,7 @@ class RemoteDisplayGLView @JvmOverloads constructor(context: Context, attrs: Att
                 // update receiver surface
 //                CarLife.receiver().setSurface(texture?.surface)
             }
-            LogUtil.d(TAG, "RemoteDisplayView onSurfaceCreated " + texture ?: "")
+            LogUtil.d(TAG, "RemoteDisplayView onSurfaceCreated $texture")
         }
 
         override fun onSurfaceChanged(gl: GL10, width: Int, height: Int) {
@@ -69,7 +69,7 @@ class RemoteDisplayGLView @JvmOverloads constructor(context: Context, attrs: Att
             texture?.setDefaultBufferSize(width, height)
 //            CarLife.receiver().onSurfaceSizeChanged(width, height)
 
-            LogUtil.d(TAG, "RemoteDisplayView onSurfaceChanged width=" + width + " height=" + height)
+            LogUtil.d(TAG, "RemoteDisplayView onSurfaceChanged width=$width height=$height")
         }
 
         override fun onDrawFrame(gl: GL10) {
