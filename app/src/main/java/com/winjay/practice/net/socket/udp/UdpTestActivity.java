@@ -50,11 +50,11 @@ import butterknife.BindView;
 public class UdpTestActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = UdpTestActivity.class.getSimpleName();
     //目的主机IP
-    private String SERVER_IP = "192.168.100.45";
+    private String SERVER_IP = "192.168.1.1";
     //目的主机端口
-    private int SERVER_PORT = 28500;
+    private int SERVER_PORT = 10000;
     //本机监听端口
-    private static final int LOCAL_PORT = 10400;
+    private static final int LOCAL_PORT = 10001;
     //本机IP
     private String LOCAL_IP;
     // 使用UPD协议的Socket
@@ -231,11 +231,6 @@ public class UdpTestActivity extends BaseActivity implements View.OnClickListene
         // 更新媒体库
 //        MediaUtil.removeFile(getApplicationContext(), MusicConstant.VOICE_CONTROL_VIDEO_PATH);
 //        MediaUtil.removeFile(getApplicationContext(), MusicConstant.SIGNAL_CONTROL_VIDEO_PATH);
-//
-//        FileUtil.deleteFolder(MusicConstant.VIDEO_PATH);
-//        FileUtil.deleteFolder(MusicConstant.UPDATE_AUDIO_PATH);
-//        FileUtil.deleteFolder(MusicConstant.BACKSTAGE_PATH);
-//        FileUtil.deleteFolder(MusicConstant.YUTONG_MUSIC_PATH);
 
         // 子设备资源更新状态汇报
         UdpUpdateStatusMessage udpUpdateStatusMessage = new UdpUpdateStatusMessage();
