@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.winjay.practice.MainAdapter;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
-import com.winjay.practice.net.ftp.FtpTestActivity;
+//import com.winjay.practice.net.ftp.FtpTestActivity;
 import com.winjay.practice.net.socket.SocketListActivity;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class NetListActivity extends BaseActivity {
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
         {
-            put("FTP", FtpTestActivity.class);
+//            put("FTP", FtpTestActivity.class);
             put("Socket", SocketListActivity.class);
         }
     };
