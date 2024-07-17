@@ -12,6 +12,7 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
+import com.google.android.material.color.DynamicColors;
 import com.winjay.dlna.cast.application.BaseApplication;
 import com.winjay.practice.crash.CrashHandler;
 import com.winjay.practice.utils.ActivityListUtil;
@@ -42,6 +43,8 @@ public class AppApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         mContext = getApplicationContext();
+        // Dynamic color
+        DynamicColors.applyToActivitiesIfAvailable(this);
         // scrcpy_android
         com.winjay.mirrorcast.AppApplication.context = mContext;
 

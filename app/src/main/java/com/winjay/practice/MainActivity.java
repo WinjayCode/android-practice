@@ -1,5 +1,6 @@
 package com.winjay.practice;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbManager;
@@ -159,7 +160,7 @@ public class MainActivity extends BaseActivity {
         intentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
         intentFilter.addAction(UsbUtil.ACTION_USB_PERMISSION);
         intentFilter.addAction(VolumeInfo.ACTION_VOLUME_STATE_CHANGED);
-        registerReceiver(usbDeviceReceiver, intentFilter);
+        registerReceiver(usbDeviceReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
 
     private void unregisterUSBReceiver() {

@@ -8,6 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>-->
     </style>
 
+    <!-- Dynamic Color application theme. -->
+    <style name="DynamicColorAppTheme" parent="@style/Theme.Material3.DayNight.NoActionBar"/>
+
     <!--启动背景-->
     <style name="AppThemeWelcome" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@mipmap/welcome_bg</item>
