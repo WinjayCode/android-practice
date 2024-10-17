@@ -1,11 +1,15 @@
 package com.winjay.practice.media.video;
 
+import android.app.PictureInPictureParams;
+import android.graphics.Rect;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Rational;
+import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -13,9 +17,8 @@ import androidx.annotation.Nullable;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
-import com.winjay.practice.utils.AssetHelper;
 import com.winjay.practice.media.bean.VideoBean;
-import com.winjay.practice.utils.FileUtil;
+import com.winjay.practice.utils.AssetHelper;
 import com.winjay.practice.utils.LogUtil;
 
 import java.io.File;
@@ -85,6 +88,8 @@ public class VideoPlayActivity extends BaseActivity {
 //            setVideoUri(videoBeans.get(videoBeans.size() - 1).getUri());
             setVideoPath(videoFile.getAbsolutePath());
         }
+
+        mVideoView.addOnLayoutChangeListener(mOnLayoutChangeListener);
     }
 
     private void setVideoPath(String path) {
@@ -265,6 +270,38 @@ public class VideoPlayActivity extends BaseActivity {
         LogUtil.d(TAG, "locationMetadata=" + locationMetadata);
         return locationMetadata;
     }
+
+    // 当用户按home键时，在onPause之前调用
+    @Override
+    public void onUserLeaveHint() {
+        // 进入PIP（画中画）模式
+//        enterPictureInPictureMode();
+        enterPictureInPictureMode(updatePictureInPictureParams());
+    }
+
+    private PictureInPictureParams updatePictureInPictureParams() {
+        // Calculate the aspect ratio of the PiP screen.
+        Rational aspectRatio = new Rational(mVideoView.getWidth(), mVideoView.getHeight());
+        // The movie view turns into the picture-in-picture mode.
+        Rect visibleRect = new Rect();
+        mVideoView.getGlobalVisibleRect(visibleRect);
+        PictureInPictureParams params = new PictureInPictureParams.Builder()
+                .setAspectRatio(aspectRatio)
+                // Specify the portion of the screen that turns into the picture-in-picture mode.
+                // This makes the transition animation smoother.
+                .setSourceRectHint(visibleRect)
+                // The screen automatically turns into the picture-in-picture mode when it is hidden
+                // by the "Home" button.
+                .setAutoEnterEnabled(true)
+                .build();
+        setPictureInPictureParams(params);
+        return params;
+    }
+
+    private final View.OnLayoutChangeListener mOnLayoutChangeListener =
+            (v, oldLeft, oldTop, oldRight, oldBottom, newLeft, newTop, newRight, newBottom) -> {
+                updatePictureInPictureParams();
+            };
 
     @Override
     protected void onDestroy() {
