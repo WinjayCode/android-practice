@@ -7,7 +7,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +16,7 @@ import android.widget.RemoteViews;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.RemoteInput;
 
 import com.winjay.practice.Constants;
 import com.winjay.practice.R;
@@ -45,6 +45,8 @@ public class NotificationActivity extends BaseActivity {
 
     private int notificationGrade = 1;
 
+    public static final String KEY_TEXT_REPLY = "key_text_reply";
+
     @Override
     protected String[] permissions() {
         // android 13 运行时通知权限
@@ -60,9 +62,9 @@ public class NotificationActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationChannel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID, Constants.NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+        mNotificationChannel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID,
+                Constants.NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
         mNotificationManager.createNotificationChannel(mNotificationChannel);
-
 
         visibility_rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -82,6 +84,8 @@ public class NotificationActivity extends BaseActivity {
                 }
             }
         });
+
+        handleReplyNotification();
     }
 
     /**
@@ -185,18 +189,67 @@ public class NotificationActivity extends BaseActivity {
         if (notificationGrade == 1) {
             // 任何情况下都会显示
             builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-            builder.setContentText("Public");
+            builder.setContentText("Public-任何情况下都会显示");
         } else if (notificationGrade == 2) {
             // 只有当没有锁屏的时候会显示
             builder.setVisibility(NotificationCompat.VISIBILITY_PRIVATE);
-            builder.setContentText("Private");
+            builder.setContentText("Private-只有当没有锁屏的时候会显示");
         } else if (notificationGrade == 3) {
             // 在pin、password等安全锁和没有锁屏的情况下才能够显示
             builder.setVisibility(NotificationCompat.VISIBILITY_SECRET);
-            builder.setContentText("Secret");
+            builder.setContentText("Secret-在pin、password等安全锁和没有锁屏的情况下才能够显示");
         }
 
         // 发出通知
         mNotificationManager.notify(++NOTIFICATION_ID, builder.build());
+    }
+
+    @OnClick(R.id.reply_notification)
+    void replyNotification() {
+        LogUtil.d(TAG);
+        sendReplyNotification("I am a reply notification.");
+    }
+
+    private void sendReplyNotification(String content) {
+        // 创建通知
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.mipmap.icon)
+                .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
+                .setCategory(Notification.CATEGORY_MESSAGE)
+                .setContentTitle("Reply Notification")
+                .setContentText(content)
+                .setGroup("haha");
+
+        Intent replyIntent = new Intent(this, NotificationActivity.class);
+        replyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY)
+                .setLabel("快速回复")
+                .build();
+        NotificationCompat.Action actionReply = new NotificationCompat.Action.Builder(0, "回复", pendingIntent)
+                .addRemoteInput(remoteInput).build();
+        builder.setFullScreenIntent(pendingIntent, true)
+                .addAction(actionReply);
+
+        // 发出通知
+        mNotificationManager.notify(1, builder.build());
+    }
+
+    // 该操作建议放到BroadCastReceiver中或者其他地方处理，否则会启动多次activity
+    private void handleReplyNotification() {
+        LogUtil.d(TAG);
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle resultsFromIntent = RemoteInput.getResultsFromIntent(intent);
+            if (resultsFromIntent == null) {
+                LogUtil.d(TAG, "no reply msg!");
+                return;
+            }
+
+            String replyMsg = (String) resultsFromIntent.getCharSequence(KEY_TEXT_REPLY);
+            LogUtil.d(TAG, "reply msg=" + replyMsg);
+
+            sendReplyNotification(replyMsg);
+        }
     }
 }
