@@ -55,8 +55,7 @@ class MediaProjectionActivity : BaseActivity() {
 
     override fun permissions(): Array<String> {
         return arrayOf(
-            Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.RECORD_AUDIO
         )
     }
 

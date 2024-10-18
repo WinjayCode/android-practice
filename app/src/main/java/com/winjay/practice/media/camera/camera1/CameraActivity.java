@@ -95,8 +95,7 @@ public class CameraActivity extends BaseActivity implements EasyPermissions.Perm
     ////////////////////////////////////////// permission //////////////////////////////////////////
     @AfterPermissionGranted(RC_PERMISSION)
     private void requiresPermissions() {
-        String[] perms = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] perms = {Manifest.permission.CAMERA};
         if (EasyPermissions.hasPermissions(this, perms)) {
             LogUtil.d(TAG, "Already have permission, do the thing!");
             // Already have permission, do the thing

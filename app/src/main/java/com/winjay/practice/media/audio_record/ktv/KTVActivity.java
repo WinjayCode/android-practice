@@ -25,8 +25,6 @@ public class KTVActivity extends BaseActivity {
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static final String[] PERMISSIONS = {
             Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
     };
 
     private static final int SAMPLE_RATE = 44100;

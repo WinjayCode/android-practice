@@ -496,8 +496,7 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
     ////////////////////////////////////////// permission //////////////////////////////////////////
     @AfterPermissionGranted(RC_PERMISSION)
     private void requiresPermissions() {
-        String[] perms = {Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] perms = {Manifest.permission.RECORD_AUDIO};
         if (EasyPermissions.hasPermissions(this, perms)) {
             LogUtil.d(TAG, "Already have permission, scan files!");
             // Already have permission, do the thing

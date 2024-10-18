@@ -13,13 +13,22 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 
-    <!-- 读取和写入存储权限 -->
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~存储权限 start~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <!-- 读取和写入存储权限(old) -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- 媒体的拍摄位置 -->
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <!-- Android11 以上版本 -->
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <!-- Android 13版本适配，细化存储权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <!-- Android 14版本适配，部分允许还是全部允许-->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~存储权限 end~~~~~~~~~~~~~~~~~~~~~~~ -->
+
 
     <uses-feature android:name="android.hardware.usb.host" />
     <uses-permission android:name="android.hardware.usb.host" />

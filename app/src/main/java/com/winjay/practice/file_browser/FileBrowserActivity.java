@@ -39,11 +39,6 @@ public class FileBrowserActivity extends BaseActivity {
     private File[] files;
 
     @Override
-    protected String[] permissions() {
-        return new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    }
-
-    @Override
     public boolean useViewBinding() {
         return true;
     }
