@@ -67,14 +67,14 @@ public class MediaMountedReceiver extends BroadcastReceiver {
                 case Intent.ACTION_MEDIA_SCANNER_FINISHED:
                     LogUtil.i(TAG, "ACTION_MEDIA_SCANNER_FINISHED");
                     break;
-                // USB设备插入（静态广播无法收到？）
+                // USB设备插入（静态广播无法收到!）
                 case UsbManager.ACTION_USB_DEVICE_ATTACHED:
                     LogUtil.i(TAG, "ACTION_USB_DEVICE_ATTACHED");
                     UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                     LogUtil.d(TAG, "usb attach=" + device.toString());
 //                    Toast.makeText(context, device.toString(), Toast.LENGTH_SHORT).show();
                     break;
-                // USB设备拔出（静态广播无法收到？）
+                // USB设备拔出（静态广播无法收到!）
                 case UsbManager.ACTION_USB_DEVICE_DETACHED:
                     LogUtil.i(TAG, "ACTION_USB_DEVICE_DETACHED");
                     UsbDevice device2 = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);

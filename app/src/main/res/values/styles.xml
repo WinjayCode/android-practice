@@ -1,4 +1,5 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:androidprv="http://schemas.android.com/apk/prv/res/android">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -9,7 +10,11 @@
     </style>
 
     <!-- Dynamic Color application theme. -->
-    <style name="DynamicColorAppTheme" parent="@style/Theme.Material3.DayNight.NoActionBar"/>
+    <style name="DynamicColorAppTheme" parent="@style/Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
 
     <!--启动背景-->
     <style name="AppThemeWelcome" parent="Theme.AppCompat.NoActionBar">
@@ -46,7 +51,7 @@
 
     <style name="MySearchView" parent="Widget.AppCompat.SearchView" />
 
-    <style name="MyDialog">
+    <style name="MyDialog" parent="@android:style/DeviceDefault.ButtonBar.AlertDialog">
         <!-- 背景颜色及和透明程度 -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <!-- 是否去除边框 -->

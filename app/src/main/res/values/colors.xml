@@ -10,4 +10,6 @@
     <color name="white_color_transparent_80">#ccffffff</color>
 
     <color name="reveal_color">#1b000000</color>
+
+    <color name="test_light_night_color">@android:color/black</color>
 </resources>

@@ -93,6 +93,8 @@
             android:name="application_name"
             android:value="application_value" />
 
+        <!-- android:showWhenLocked="true" 可以使Activity显示在锁屏页面上-->
+
         <!--configChanges：配置中的属性发生变化时，activity不会重建-->
         <!--launchMode：activity启动模式（standard、singleTop、singleTask、singleInstance）-->
         <!--excludeFromRecents：activity不会出现在历史activity列表中-->
