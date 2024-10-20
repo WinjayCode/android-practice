@@ -250,6 +250,9 @@ public class NotificationActivity extends BaseActivity {
             LogUtil.d(TAG, "reply msg=" + replyMsg);
 
             sendReplyNotification(replyMsg);
+
+            // 可实现类似回复短信，显示最近3条回复的效果
+//            mNotificationManager.cancel(1);
         }
     }
 }
