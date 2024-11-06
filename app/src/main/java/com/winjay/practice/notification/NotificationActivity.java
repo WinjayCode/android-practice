@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import android.widget.RemoteViews;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.Person;
 import androidx.core.app.RemoteInput;
 
 import com.winjay.practice.Constants;
@@ -110,6 +112,8 @@ public class NotificationActivity extends BaseActivity {
         builder.setContentText("I am a basic notification");
         builder.setSubText("it is really basic");
         builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        // android13之前的版本可以实现常驻通知栏，android14之后用户在未锁屏的情况下可以删除，但是在锁屏下仍然不可以删除
+        builder.setOngoing(true);
 
         // 发出通知
         mNotificationManager.notify(++NOTIFICATION_ID, builder.build());
@@ -211,14 +215,26 @@ public class NotificationActivity extends BaseActivity {
     }
 
     private void sendReplyNotification(String content) {
+        Uri uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+                "://" + getResources().getResourcePackageName(R.mipmap.ic_launcher_round)
+                + '/' + getResources().getResourceTypeName(R.mipmap.ic_launcher_round)
+                + '/' + getResources().getResourceEntryName(R.mipmap.ic_launcher_round));
+        Uri uri2 = Uri.parse("android.resource://com.winjay.practice/" + R.mipmap.ic_launcher_round);
+        Person person = new Person.Builder()
+                .setName("Name:Winjay")
+                .setUri(uri2.toString())
+                .build();
+
         // 创建通知
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.icon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round))
                 .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
                 .setCategory(Notification.CATEGORY_MESSAGE)
                 .setContentTitle("Reply Notification")
                 .setContentText(content)
-                .setGroup("haha");
+                .setGroup("haha")
+                .addPerson(person);
 
         Intent replyIntent = new Intent(this, NotificationActivity.class);
         replyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

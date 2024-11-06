@@ -1,5 +1,7 @@
 package com.winjay.practice.common;
 
+import android.app.KeyguardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -167,6 +169,27 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
     public void startActivity(Class<?> cls) {
         Intent intent = new Intent(this, cls);
         startActivity(intent);
+
+        /*KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+        if (keyguardManager.isKeyguardLocked()) {
+            if (keyguardManager.isKeyguardSecure()) {
+//                KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("");
+//                keyguardLock.disableKeyguard();
+
+                // 如果需要密码解锁，调起解锁页面
+//                Intent intent = keyguardManager.createConfirmDeviceCredentialIntent(null, null);
+//                startActivityForResult(intent, REQUEST_CODE_UNLOCK);
+//                startActivity(intent);
+
+                keyguardManager.requestDismissKeyguard(this, null);
+            } else {
+                // 如果不需要密码，直接解锁
+                keyguardManager.requestDismissKeyguard(this, null);
+            }
+        } else {
+            // 直接启动下一个 Activity
+            startActivity(new Intent(this, cls));
+        }*/
     }
 
     public void startActivityForResult(Intent intent) {
