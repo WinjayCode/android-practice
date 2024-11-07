@@ -32,6 +32,8 @@ public class EmptyActivity extends AppCompatActivity {
         LogUtil.d(TAG, "111");
         super.onResume();
         LogUtil.d(TAG, "222");
+        // onResume（）回调时，View的渲染流程还没开始，所以如果我们想在界面绘制出来后做点什么，
+        // 那么在onResume里面显然是不合适的，它先于measure等流程了。所以可以使用IdleHandler来完成。
         // 统计布局渲染时间
         final long start = System.currentTimeMillis();
         Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {

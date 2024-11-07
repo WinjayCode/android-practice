@@ -2,6 +2,8 @@
     <string name="app_name">Winjay</string>
 
     <string name="autoclick_accessibility_description">自动点击服务</string>
+    <string name="app_foreground_accessibility_description">前后台判断服务</string>
+    <string name="skip_ad_description">跳过广告服务</string>
 
     <string name="appwidget_text">时钟</string>
     <string name="add_widget">时钟</string>

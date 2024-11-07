@@ -199,7 +199,8 @@ public class DroidScreenEncoder implements Device.RotationListener {
     private byte[] sps_pps_buf;
 
     /**
-     * 绘制每一帧，因为录屏 只有第一帧有 sps 、pps 和 vps，所以我们需要在每一 I 帧 之前插入 sps 、pps 和 vps 的内容
+     * 绘制每一帧，因为录屏 只有第一帧有 sps 、pps 和 vps，所以我们需要在每一 I 帧 之前插入 sps 、pps 和 vps 的内容？
+     * 不是必须的吧？？？
      *
      * @param byteBuffer
      * @param bufferInfo
@@ -210,6 +211,7 @@ public class DroidScreenEncoder implements Device.RotationListener {
             offset = 3;
         }
 
+        // 取出起始码字节后的第一个字节（NALU Header）的后5位bit，用来判断NALU类型
         int type = byteBuffer.get(offset) & 0x1f;
         // sps_pps_buf 帧记录下来
         if (type == NAL_SPS) {

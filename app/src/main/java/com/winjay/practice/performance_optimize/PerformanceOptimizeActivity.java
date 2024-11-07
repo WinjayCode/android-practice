@@ -25,7 +25,7 @@ public class PerformanceOptimizeActivity extends BaseActivity {
 
     public String[] groupStrings = {
             "布局优化(1.删除布局中无用的控件和层级 2.有选择的使用性能较差的ViewGroup，比如RelativeLayout)",
-            "绘制优化(View的onDraw方法要避免执行大量的操作)",
+            "渲染优化(View的onDraw方法要避免执行大量的操作)",
             "内存泄漏优化(1.开发过程中避免写出有内存泄漏的代码 2.通过分析工具来找出潜在的内存泄漏)",
             "响应速度优化(避免在主线程执行耗时操作，耗时操作放到子线程中)",
             "ListView优化",

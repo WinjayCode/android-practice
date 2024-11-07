@@ -269,6 +269,56 @@ public class Test {
 //        System.out.println("a=" + a); // 3
 //        System.out.println("b=" + b); // 6
         // 值传递的时候，形参变化不会影响实参
+
+        // 输入的字符串： qqqyyyyyavvveqqs
+        //输出结果： q3y5a1v3e1q2s1
+//        StringBuilder output = new StringBuilder();
+//        StringBuilder input = new StringBuilder("qqqyyyyyavvveqqs");
+//        int length = input.length();
+//        int count = 1;
+//        for (int i = 0; i < length - 1; i++) {
+//            if (input.charAt(i) == input.charAt(i + 1)) {
+//                int outLength = output.length();
+//                if (outLength > 0) {
+//                    if (output.charAt(outLength - 2) == input.charAt(i)) {
+//                        output.deleteCharAt(outLength - 1);
+//                        output.append(++count);
+//                    }
+//                } else {
+//                    output.append(input.charAt(i));
+//                    output.append(++count);
+//                }
+//            } else {
+//                count = 0;
+//                output.append(input.charAt(i + 1));
+//                output.append(++count);
+//            }
+//        }
+//        System.out.println(output);
+    }
+
+    public static String countContinuousLetters(String input) {
+        if (input == null || input.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder result = new StringBuilder();
+        char[] chars = input.toCharArray();
+        int count = 1;
+
+        for (int i = 1; i < chars.length; i++) {
+            if (Character.toLowerCase(chars[i]) == Character.toLowerCase(chars[i - 1])) {
+                count++;
+            } else {
+                result.append(chars[i - 1]).append(count);
+                count = 1;
+            }
+        }
+
+        // 添加最后一个字符和计数
+        result.append(chars[chars.length - 1]).append(count);
+
+        return result.toString();
     }
 
     private static void swap(int a, int b) {

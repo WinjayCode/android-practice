@@ -10,8 +10,8 @@ import android.hardware.usb.UsbManager;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 
-import com.google.protobuf.ByteString;
-import com.winjay.mirrorcast.protobuf.TestProto;
+//import com.google.protobuf.ByteString;
+//import com.winjay.mirrorcast.protobuf.TestProto;
 import com.winjay.mirrorcast.util.LogUtil;
 
 import java.io.FileDescriptor;

@@ -1,7 +1,8 @@
 package com.winjay.practice.design_pattern.singleton;
 
 /**
- * 双检锁
+ * 双重检查锁定（Double-Checked Locking）：这是一种优化懒汉式的方法，它减少了同步带来的开销，但需要正确实现以避免内存一致性问题。
+ * 双重检查锁定可以减少同步带来的开销，但需要 volatile 保证内存可见性。
  *
  * <p>在真正需要使用对象时才去创建该单例类对象</p>
  *

@@ -14,8 +14,8 @@ import android.hardware.usb.UsbManager;
 import android.os.Looper;
 import android.text.TextUtils;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.winjay.mirrorcast.protobuf.TestProto;
+//import com.google.protobuf.InvalidProtocolBufferException;
+//import com.winjay.mirrorcast.protobuf.TestProto;
 import com.winjay.mirrorcast.util.LogUtil;
 
 import java.util.concurrent.LinkedBlockingQueue;

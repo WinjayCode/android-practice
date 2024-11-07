@@ -6,12 +6,15 @@ import android.content.IntentFilter;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.winjay.g2048.activity.Game2048Activity;
+import com.winjay.practice.accessibility.AccessibilityServiceHelper;
+import com.winjay.practice.accessibility.AppForegroundAccessibilityService;
 import com.winjay.practice.activity_manager.ActivityManagerActivity;
 import com.winjay.practice.alarm.AlarmActivity;
 import com.winjay.practice.architecture_mode.ArchitectureModeListActivity;
@@ -152,6 +155,16 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         LogUtil.d(TAG);
         registerUSBReceiver();
+
+
+//        if (AccessibilityServiceHelper.isAccessibilitySettingsOn(this)) {
+//
+//        } else {
+//            LogUtil.d(TAG, "打开辅助页面");
+//            Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(intent);
+//        }
     }
 
     private void registerUSBReceiver() {
