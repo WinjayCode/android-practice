@@ -137,6 +137,7 @@
             android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:exported="true"
+            android:showWhenLocked="true"
             android:screenOrientation="portrait" />
 
         <!-- architecture mode start -->
@@ -464,6 +465,11 @@
 
         <activity
             android:name=".media.camera.camerax.CameraXActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".media.camera.GalleryActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
 

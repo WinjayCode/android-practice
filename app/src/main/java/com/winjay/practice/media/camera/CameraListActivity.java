@@ -36,6 +36,7 @@ public class CameraListActivity extends BaseActivity {
             put("Camera1", CameraActivity.class);
             put("Camera2", Camera2Activity.class);
             put("CameraX", CameraXActivity.class);
+            put("Gallery", GalleryActivity.class);
         }
     };
 

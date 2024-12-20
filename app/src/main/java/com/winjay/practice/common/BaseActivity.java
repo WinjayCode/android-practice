@@ -1,7 +1,5 @@
 package com.winjay.practice.common;
 
-import android.app.KeyguardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -80,6 +78,21 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
         unbinder = ButterKnife.bind(this);
 
         requestPermissions();
+
+
+        // 延迟关闭启动画面SplashScreen
+        /*View contentView = findViewById(android.R.id.content);
+        contentView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                if (isDataReady) {//判断是否可以关闭启动动画，可以则返回true
+                    contentView.getViewTreeObserver().removeOnPreDrawListener(this);
+                }
+                return isDataReady;
+            }
+        });
+        Thread.sleep(5000); //模拟耗时
+        isDataReady = true;*/
     }
 
     public boolean isFullScreen() {

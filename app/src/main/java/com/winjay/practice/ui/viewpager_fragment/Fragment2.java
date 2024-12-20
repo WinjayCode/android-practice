@@ -1,5 +1,7 @@
 package com.winjay.practice.ui.viewpager_fragment;
 
+import android.view.View;
+
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseFragment;
 import com.winjay.practice.utils.LogUtil;
@@ -21,5 +23,19 @@ public class Fragment2 extends BaseFragment {
     @Override
     protected void lazyLoad() {
         LogUtil.d(TAG, "lazyLoad()");
+        View tv = findViewById(R.id.fragment_2_tv);
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtil.d(TAG, "onClick");
+            }
+        });
+        tv.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                LogUtil.d(TAG, "onLongClick");
+                return true;
+            }
+        });
     }
 }
