@@ -354,6 +354,9 @@ public class StorageActivity extends BaseActivity {
                 // Callback is invoked after the user selects media items or closes the photo picker.
                 if (!uris.isEmpty()) {
                     LogUtil.d(TAG, "Number of items selected: " + uris.size());
+                    for (int i = 0; i < uris.size(); i++) {
+                        LogUtil.d(TAG, "path=" + FileUtil.getPathFromUri(this, uris.get(i)));
+                    }
                 } else {
                     LogUtil.w(TAG, "No media selected");
                 }
