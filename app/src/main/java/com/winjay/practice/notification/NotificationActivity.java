@@ -8,8 +8,10 @@ import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioGroup;
@@ -19,11 +21,15 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.Person;
 import androidx.core.app.RemoteInput;
+import androidx.core.content.pm.ShortcutInfoCompat;
+import androidx.core.graphics.drawable.IconCompat;
 
 import com.winjay.practice.Constants;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
+
+import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -102,6 +108,14 @@ public class NotificationActivity extends BaseActivity {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.baidu.com"));
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
+        Uri uri2 = Uri.parse("android.resource://com.winjay.practice/" + R.mipmap.ic_launcher_round);
+        Person person = new Person.Builder()
+                .setName("Name:Winjay")
+                .setIcon(IconCompat.createWithContentUri(uri2))
+//                .setUri(uri2.toString())
+                .setImportant(true)
+                .build();
+
         // 创建通知
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID);
         builder.setSmallIcon(R.mipmap.icon);
@@ -111,12 +125,71 @@ public class NotificationActivity extends BaseActivity {
         builder.setContentTitle("Basic Notification");
         builder.setContentText("I am a basic notification");
         builder.setSubText("it is really basic");
-        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        builder.setPriority(NotificationCompat.PRIORITY_MAX);
         // android13之前的版本可以实现常驻通知栏，android14之后用户在未锁屏的情况下可以删除，但是在锁屏下仍然不可以删除
         builder.setOngoing(true);
+        builder.addPerson(person);
+        builder.setCategory(Notification.CATEGORY_MESSAGE);
+        builder.setGroup("111");
 
         // 发出通知
         mNotificationManager.notify(++NOTIFICATION_ID, builder.build());
+
+//        test();
+    }
+
+    private void test() {
+        NotificationChannel channel = new NotificationChannel("channel_id", "Channel Name", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "channel_id")
+                .setSmallIcon(R.drawable.voice_drawable) // 设置通知小图标
+                .setContentTitle("Sienna") // 设置通知标题
+                .setContentText("Sounds good. See you there!") // 设置通知内容
+                .setPriority(NotificationCompat.PRIORITY_HIGH) // 设置通知优先级
+                .setAutoCancel(true); // 设置通知自动取消
+
+        // 如果有头像资源，可以这样设置
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.artwork_placeholder);
+        builder.setLargeIcon(bitmap);
+
+        // 设置时间戳
+        long timestamp = System.currentTimeMillis();
+        builder.setWhen(timestamp);
+
+        // 如果有消息时间，可以这样设置
+        builder.setShowWhen(true);
+        builder.setTicker("5m ago");
+
+        // 如果是消息类型的通知，可以使用MessagingStyle
+        NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle("Sienna")
+                .setConversationTitle("Chat Title");
+
+        // 添加消息
+        messagingStyle.addMessage("Hi", timestamp, "Sienna");
+        messagingStyle.addMessage("How are you?", timestamp + 1000, "Sienna");
+        messagingStyle.addMessage("Sounds good. See you there!", timestamp + 2000, "Sienna");
+
+        builder.setStyle(messagingStyle);
+
+        /*// 获取NotificationManager服务
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+        // 显示通知
+        notificationManager.notify(1, builder.build());*/
+
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("key", false);
+        builder.addExtras(bundle);
+
+        visibility_rg.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mNotificationManager.notify(1, builder.build());
+            }
+        }, 5000);
+//        mNotificationManager.notify(1, builder.build());
     }
 
     /**
@@ -222,13 +295,15 @@ public class NotificationActivity extends BaseActivity {
         Uri uri2 = Uri.parse("android.resource://com.winjay.practice/" + R.mipmap.ic_launcher_round);
         Person person = new Person.Builder()
                 .setName("Name:Winjay")
+                .setIcon(IconCompat.createWithContentUri(uri2))
                 .setUri(uri2.toString())
+                .setImportant(true)
                 .build();
 
         // 创建通知
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.icon)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_round))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.icon))
                 .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
                 .setCategory(Notification.CATEGORY_MESSAGE)
                 .setContentTitle("Reply Notification")
@@ -247,8 +322,24 @@ public class NotificationActivity extends BaseActivity {
         builder.setFullScreenIntent(pendingIntent, true)
                 .addAction(actionReply);
 
+        NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat
+                .MessagingStyle(person).
+                addMessage("MessageStyle", 1000, "sender");
+        builder.setStyle(messagingStyle);
+
+        // Create a sharing shortcut.
+        String shortcutId = "shortcutId";
+        ShortcutInfoCompat shortcut = new ShortcutInfoCompat.Builder(this, shortcutId).setCategories(Collections.singleton("CATEGORY_TEXT_SHARE_TARGET")).setIntent(new Intent(Intent.ACTION_DEFAULT)).setLongLived(true).setShortLabel(person.getName()).build();
+
+        // Create a bubble metadata.
+        NotificationCompat.BubbleMetadata bubbleData = new NotificationCompat.BubbleMetadata.Builder(pendingIntent, IconCompat.createWithResource(this, R.drawable.album_jazz_blues)).setDesiredHeight(600).build();
+
+        builder.setBubbleMetadata(bubbleData);
+        builder.setShortcutId(shortcutId);
+        builder.setShortcutInfo(shortcut);
+
         // 发出通知
-        mNotificationManager.notify(1, builder.build());
+        mNotificationManager.notify(++NOTIFICATION_ID, builder.build());
     }
 
     // 该操作建议放到BroadCastReceiver中或者其他地方处理，否则会启动多次activity

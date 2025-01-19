@@ -125,7 +125,7 @@ public class DownloadManagerActivity extends BaseActivity implements EasyPermiss
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
             intentFilter.addAction(DownloadManager.ACTION_NOTIFICATION_CLICKED);
-            registerReceiver(mDownloadReceiver, intentFilter);
+            registerReceiver(mDownloadReceiver, intentFilter, Context.RECEIVER_EXPORTED);
         }
 
     }

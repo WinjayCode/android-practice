@@ -690,7 +690,7 @@ public class TestActivity extends AppCompatActivity {
         intentFilter.addAction(ACTION_HDMI_PLUGGED);
         intentFilter.addAction("test");
 //        registerReceiver(mReceiver, intentFilter);
-        registerReceiver(mReceiver, intentFilter, "haha", HandlerManager.getInstance().getSubHandler());
+        registerReceiver(mReceiver, intentFilter, "haha", HandlerManager.getInstance().getSubHandler(), Context.RECEIVER_EXPORTED);
     }
 
     private void unregisterHDMI() {

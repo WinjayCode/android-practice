@@ -24,18 +24,18 @@
                 android:id="@+id/test_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TEST"
                 android:background="@drawable/statelist_drawable"
+                android:text="TEST"
                 app:layout_constraintRight_toRightOf="parent" />
 
             <Button
                 android:id="@+id/test_btn2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TEST2"
                 android:background="@drawable/statelist_drawable"
+                android:text="TEST2"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/test_btn"/>
+                app:layout_constraintTop_toBottomOf="@+id/test_btn" />
 
             <Button
                 android:id="@+id/setting"

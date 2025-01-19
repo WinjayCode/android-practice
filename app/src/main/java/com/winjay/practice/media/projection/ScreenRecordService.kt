@@ -268,7 +268,7 @@ class ScreenRecordService : Service() {
         if (mediaProjectionControlReceiver == null) {
             mediaProjectionControlReceiver = MediaProjectionControlReceiver()
             val intentFilter = IntentFilter("stop")
-            registerReceiver(mediaProjectionControlReceiver, intentFilter)
+            registerReceiver(mediaProjectionControlReceiver, intentFilter, RECEIVER_EXPORTED)
         }
     }
 

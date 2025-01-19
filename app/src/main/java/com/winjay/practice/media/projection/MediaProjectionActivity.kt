@@ -14,11 +14,9 @@ import butterknife.OnClick
 import com.winjay.practice.R
 import com.winjay.practice.common.BaseActivity
 import com.winjay.practice.databinding.ProjectionActivityBinding
-import com.winjay.practice.thread.HandlerManager
 import com.winjay.practice.utils.BitmapUtil
 import com.winjay.practice.utils.FileUtil
 import com.winjay.practice.utils.LogUtil
-import kotlinx.coroutines.delay
 import java.io.File
 
 /**
@@ -122,7 +120,7 @@ class MediaProjectionActivity : BaseActivity() {
             mMediaProjectionReceiver = MediaProjectionReceiver()
             val intentFilter = IntentFilter("bitmap")
             intentFilter.addAction("play")
-            registerReceiver(mMediaProjectionReceiver, intentFilter)
+            registerReceiver(mMediaProjectionReceiver, intentFilter, RECEIVER_EXPORTED)
         }
     }
 

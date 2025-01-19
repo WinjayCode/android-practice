@@ -1,5 +1,6 @@
 package com.winjay.practice.media.music;
 
+import android.content.Context;
 import android.content.IntentFilter;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -279,7 +280,7 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
         intentFilter.addAction(Constants.ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_PLAY);
         intentFilter.addAction(Constants.ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_NEXT);
         intentFilter.addAction(Constants.ACTION_MEDIA_NOTIFICATION_PENDINGINTENT_CLOSE);
-        registerReceiver(mMediaNotificationReceiver, intentFilter);
+        registerReceiver(mMediaNotificationReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
 
     private void unregisterReceiver() {

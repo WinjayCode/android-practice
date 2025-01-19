@@ -3,6 +3,7 @@ package com.winjay.practice.utils;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 
 import java.io.ByteArrayInputStream;
@@ -105,5 +106,30 @@ public class BitmapUtil {
 
     public static Bitmap bytes2Bitmap(byte[] bytes) {
         return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    }
+
+    /**
+     * 计算Bitmap平均亮度
+     * @param bitmap
+     * @return
+     */
+    public static double calculateBrightness(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        double totalBrightness = 0;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int pixelColor = bitmap.getPixel(x, y);
+                totalBrightness += calculatePixelBrightness(pixelColor);
+            }
+        }
+        return totalBrightness / (width * height);
+    }
+
+    public static double calculatePixelBrightness(int pixelColor) {
+        int red = Color.red(pixelColor);
+        int green = Color.green(pixelColor);
+        int blue = Color.blue(pixelColor);
+        return 0.299 * red + 0.587 * green + 0.114 * blue; // Luminance formula
     }
 }
