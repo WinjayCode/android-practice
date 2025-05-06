@@ -140,9 +140,9 @@ public class Media3SessionService extends MediaSessionService {
     private CommandButton getShuffleCommandButton(SessionCommand sessionCommand) {
         boolean isOn = sessionCommand.customAction.equals(Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON);
         return new CommandButton.Builder()
-                .setDisplayName(getString(isOn ? R.string.exo_controls_shuffle_on_description : R.string.exo_controls_shuffle_off_description))
+                .setDisplayName(getString(isOn ? com.google.android.exoplayer2.R.string.exo_controls_shuffle_on_description : com.google.android.exoplayer2.R.string.exo_controls_shuffle_off_description))
                 .setSessionCommand(sessionCommand)
-                .setIconResId(isOn ? R.drawable.exo_icon_shuffle_off : R.drawable.exo_icon_shuffle_on)
+                .setIconResId(isOn ? com.google.android.exoplayer2.R.drawable.exo_icon_shuffle_off : com.google.android.exoplayer2.R.drawable.exo_icon_shuffle_on)
                 .build();
     }
 

@@ -8,13 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.winjay.practice.utils.JsonUtil;
-import com.winjay.practice.utils.LogUtil;
-
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 数据适配器
@@ -51,12 +45,11 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.item_tv)
         TextView item_tv;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            item_tv = itemView.findViewById(R.id.item_tv);
             item_tv.setOnClickListener(this);
         }
 

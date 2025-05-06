@@ -6,13 +6,10 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.winjay.practice.MainActivity_ViewBinding
 import com.winjay.practice.MainAdapter
-import com.winjay.practice.R
 import com.winjay.practice.bluetooth.a2dp.A2dpActivity
 import com.winjay.practice.bluetooth.ble.BleClientActivity
 import com.winjay.practice.bluetooth.ble.BleServerActivity
@@ -22,7 +19,6 @@ import com.winjay.practice.bluetooth.call.BluetoothCallActivity
 import com.winjay.practice.common.BaseActivity
 import com.winjay.practice.databinding.MainActivityBinding
 import com.winjay.practice.utils.LogUtil
-import java.util.*
 
 /**
  * 蓝牙相关

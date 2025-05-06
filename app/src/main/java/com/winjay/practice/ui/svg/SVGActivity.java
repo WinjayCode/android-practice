@@ -2,16 +2,16 @@ package com.winjay.practice.ui.svg;
 
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * SVG学习
@@ -26,13 +26,10 @@ public class SVGActivity extends BaseActivity {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
-    @BindView(R.id.svg_iv)
     AppCompatImageView svg_iv;
 
-    @BindView(R.id.planet_svg_iv)
     AppCompatImageView planet_svg_iv;
 
-    @BindView(R.id.search_svg_iv)
     AppCompatImageView search_svg_iv;
 
     @Override
@@ -40,7 +37,32 @@ public class SVGActivity extends BaseActivity {
         return R.layout.svg_activity;
     }
 
-    @OnClick(R.id.svg_iv)
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        svg_iv = findViewById(R.id.svg_iv);
+        svg_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animate();
+            }
+        });
+        planet_svg_iv = findViewById(R.id.planet_svg_iv);
+        planet_svg_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                planet();
+            }
+        });
+        search_svg_iv = findViewById(R.id.search_svg_iv);
+        search_svg_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search();
+            }
+        });
+    }
+
     void animate() {
         LogUtil.d(TAG, "animate()");
         Drawable drawable = svg_iv.getDrawable();
@@ -52,7 +74,6 @@ public class SVGActivity extends BaseActivity {
         search();
     }
 
-    @OnClick(R.id.planet_svg_iv)
     void planet() {
         LogUtil.d(TAG, "planet()");
         Drawable drawable = planet_svg_iv.getDrawable();
@@ -61,7 +82,6 @@ public class SVGActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.search_svg_iv)
     void search() {
         LogUtil.d(TAG, "search()");
         Drawable drawable = search_svg_iv.getDrawable();

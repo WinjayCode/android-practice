@@ -27,9 +27,6 @@ import com.winjay.practice.utils.MediaUtil;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * MediaSession客户端
  *
@@ -39,28 +36,20 @@ import butterknife.OnClick;
 public class MediaSessionActivity extends BaseActivity {
     private static final String TAG = MediaSessionActivity.class.getSimpleName();
 
-    @BindView(R.id.music_title_tv)
     TextView mMusicTitleTV;
 
-    @BindView(R.id.music_artist_tv)
     TextView music_artist_tv;
 
-    @BindView(R.id.play_pause_iv)
     ImageView play_pause_iv;
 
-    @BindView(R.id.album_iv)
     ImageView album_iv;
 
-    @BindView(R.id.media_seek_bar)
     MediaSeekBar media_seek_bar;
 
-    @BindView(R.id.media3_seek_bar)
     Media3SeekBar media3_seek_bar;
 
-    @BindView(R.id.position_tv)
     TextView position_tv;
 
-    @BindView(R.id.duration_tv)
     TextView duration_tv;
 
     private MediaBrowserHelper mMediaBrowserHelper;
@@ -77,12 +66,38 @@ public class MediaSessionActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mMusicTitleTV = findViewById(R.id.music_title_tv);
+        music_artist_tv = findViewById(R.id.music_artist_tv);
+        play_pause_iv = findViewById(R.id.play_pause_iv);
+        album_iv = findViewById(R.id.album_iv);
+        media_seek_bar = findViewById(R.id.media_seek_bar);
+        media3_seek_bar = findViewById(R.id.media3_seek_bar);
+        position_tv = findViewById(R.id.position_tv);
+        duration_tv = findViewById(R.id.duration_tv);
         media3_seek_bar.setVisibility(View.GONE);
 
         mMediaBrowserHelper = new MediaBrowserConnection(this);
         mMediaBrowserHelper.registerMediaControllerCallback(mMediaControllerCallback);
         mMediaBrowserHelper.onStart();
+
+        findViewById(R.id.play_pause_iv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playPauseSwitch();
+            }
+        });
+        findViewById(R.id.prev_iv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prevClick();
+            }
+        });
+        findViewById(R.id.next_iv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextClick();
+            }
+        });
     }
 
     private class MediaBrowserConnection extends MediaBrowserHelper {
@@ -171,7 +186,6 @@ public class MediaSessionActivity extends BaseActivity {
         }
     };
 
-    @OnClick(R.id.play_pause_iv)
     void playPauseSwitch() {
         if (mIsPlaying) {
             mMediaBrowserHelper.getTransportControls().pause();
@@ -183,12 +197,10 @@ public class MediaSessionActivity extends BaseActivity {
         mMediaBrowserHelper.getTransportControls().sendCustomAction(mCustomAction, null);
     }
 
-    @OnClick(R.id.prev_iv)
     void prevClick() {
         mMediaBrowserHelper.getTransportControls().skipToPrevious();
     }
 
-    @OnClick(R.id.next_iv)
     void nextClick() {
         mMediaBrowserHelper.getTransportControls().skipToNext();
     }

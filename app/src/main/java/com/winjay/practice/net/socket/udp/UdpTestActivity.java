@@ -27,17 +27,14 @@ import com.winjay.practice.utils.ByteUtil;
 import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.FtpUtil;
 import com.winjay.practice.utils.LogUtil;
-import com.winjay.practice.utils.MediaUtil;
 import com.winjay.practice.utils.NetUtil;
 
 import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.DatagramSocket;
 import java.util.Arrays;
 
-import butterknife.BindView;
 
 /**
  * Socket使用UDP协议的示例
@@ -62,22 +59,16 @@ public class UdpTestActivity extends BaseActivity implements View.OnClickListene
     private UdpReceiveThread udpReceiveThread;
     private UdpSendThread udpSendThread;
 
-    @BindView(R.id.info_tv)
     TextView info_tv;
 
-    @BindView(R.id.query_vin_btn)
     Button query_vin_btn;
 
-    @BindView(R.id.response_btn)
     Button response_btn;
 
-    @BindView(R.id.update_status_btn)
     Button update_status_btn;
 
-    @BindView(R.id.send_data_tv)
     TextView send_data_tv;
 
-    @BindView(R.id.receive_data_tv)
     TextView receive_data_tv;
 
     private int messageSerialNumber;
@@ -91,6 +82,12 @@ public class UdpTestActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        info_tv = findViewById(R.id.info_tv);
+        query_vin_btn = findViewById(R.id.query_vin_btn);
+        response_btn = findViewById(R.id.response_btn);
+        update_status_btn = findViewById(R.id.update_status_btn);
+        send_data_tv = findViewById(R.id.send_data_tv);
+        receive_data_tv = findViewById(R.id.receive_data_tv);
         SERVER_IP = getIntent().getStringExtra("ip");
         SERVER_PORT = Integer.parseInt(getIntent().getStringExtra("port"));
 
@@ -355,46 +352,40 @@ public class UdpTestActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.query_vin_btn:
-                UdpQueryParamsMessage udpQueryParamsMessage = new UdpQueryParamsMessage();
-                udpQueryParamsMessage.setSN(getSN());
-                udpQueryParamsMessage.setMessageSerialNumber(ByteUtil.hexToByte(Integer.toHexString(messageSerialNumber++)));
-                udpQueryParamsMessage.setParamsIdList(UdpQueryParamsMessage.VIN, UdpQueryParamsMessage.CHE_GONG_NUM);
-                sendUpdMessage(udpQueryParamsMessage.getMessage());
-                send_data_tv.append("\n数据起始符：\n" + ByteUtil.bytesToHex(UdpMessage.MESSAGE_START));
-                send_data_tv.append("\n消息头：\n" + ByteUtil.bytesToHex(udpQueryParamsMessage.getMessageHead()));
-                send_data_tv.append("\n消息体：\n" + ByteUtil.bytesToHex(udpQueryParamsMessage.getMessageBody()));
-                send_data_tv.append("\n校验数据：\n" + ByteUtil.bytesToHex(udpQueryParamsMessage.getMessageCheck()));
-                send_data_tv.append("\n数据结束符：\n" + ByteUtil.bytesToHex(UdpMessage.MESSAGE_END));
-                break;
-            case R.id.response_btn:
-                UdpCommonResponseMessage udpCommonResponseMessage = new UdpCommonResponseMessage();
-                udpCommonResponseMessage.setSN(getSN());
-                udpCommonResponseMessage.setMessageSerialNumber(ByteUtil.hexToByte(Integer.toHexString(messageSerialNumber++)));
-                udpCommonResponseMessage.setResponseSerialNumber(ByteUtil.hexToByte(Integer.toHexString(1)));
-                udpCommonResponseMessage.setResponseId(ByteUtil.intToByte2(1));
-                udpCommonResponseMessage.setResult(ByteUtil.hexToByte(Integer.toHexString(0)));
-                sendUpdMessage(udpCommonResponseMessage.getMessage());
-                send_data_tv.append("\n数据起始符：\n" + ByteUtil.bytesToHex(UdpMessage.MESSAGE_START));
-                send_data_tv.append("\n消息头：\n" + ByteUtil.bytesToHex(udpCommonResponseMessage.getMessageHead()));
-                send_data_tv.append("\n消息体：\n" + ByteUtil.bytesToHex(udpCommonResponseMessage.getMessageBody()));
-                send_data_tv.append("\n校验数据：\n" + ByteUtil.bytesToHex(udpCommonResponseMessage.getMessageCheck()));
-                send_data_tv.append("\n数据结束符：\n" + ByteUtil.bytesToHex(UdpMessage.MESSAGE_END));
-                break;
-            case R.id.update_status_btn:
-                UdpUpdateStatusMessage udpUpdateStatusMessage = new UdpUpdateStatusMessage();
-                udpUpdateStatusMessage.setSN(getSN());
-                udpUpdateStatusMessage.setMessageSerialNumber(ByteUtil.hexToByte(Integer.toHexString(messageSerialNumber++)));
-                sendUpdMessage(udpUpdateStatusMessage.getMessage());
-                send_data_tv.append("\n数据起始符：\n" + ByteUtil.bytesToHex(UdpMessage.MESSAGE_START));
-                send_data_tv.append("\n消息头：\n" + ByteUtil.bytesToHex(udpUpdateStatusMessage.getMessageHead()));
-                send_data_tv.append("\n消息体：\n" + ByteUtil.bytesToHex(udpUpdateStatusMessage.getMessageBody()));
-                send_data_tv.append("\n校验数据：\n" + ByteUtil.bytesToHex(udpUpdateStatusMessage.getMessageCheck()));
-                send_data_tv.append("\n数据结束符：\n" + ByteUtil.bytesToHex(UdpMessage.MESSAGE_END));
-                break;
-            default:
-                break;
+        if (v.getId() == R.id.query_vin_btn) {
+            UdpQueryParamsMessage udpQueryParamsMessage = new UdpQueryParamsMessage();
+            udpQueryParamsMessage.setSN(getSN());
+            udpQueryParamsMessage.setMessageSerialNumber(ByteUtil.hexToByte(Integer.toHexString(messageSerialNumber++)));
+            udpQueryParamsMessage.setParamsIdList(UdpQueryParamsMessage.VIN, UdpQueryParamsMessage.CHE_GONG_NUM);
+            sendUpdMessage(udpQueryParamsMessage.getMessage());
+            send_data_tv.append("\n数据起始符：\n" + ByteUtil.bytesToHex(UdpMessage.MESSAGE_START));
+            send_data_tv.append("\n消息头：\n" + ByteUtil.bytesToHex(udpQueryParamsMessage.getMessageHead()));
+            send_data_tv.append("\n消息体：\n" + ByteUtil.bytesToHex(udpQueryParamsMessage.getMessageBody()));
+            send_data_tv.append("\n校验数据：\n" + ByteUtil.bytesToHex(udpQueryParamsMessage.getMessageCheck()));
+            send_data_tv.append("\n数据结束符：\n" + ByteUtil.bytesToHex(UdpMessage.MESSAGE_END));
+        } else if (v.getId() == R.id.response_btn) {
+            UdpCommonResponseMessage udpCommonResponseMessage = new UdpCommonResponseMessage();
+            udpCommonResponseMessage.setSN(getSN());
+            udpCommonResponseMessage.setMessageSerialNumber(ByteUtil.hexToByte(Integer.toHexString(messageSerialNumber++)));
+            udpCommonResponseMessage.setResponseSerialNumber(ByteUtil.hexToByte(Integer.toHexString(1)));
+            udpCommonResponseMessage.setResponseId(ByteUtil.intToByte2(1));
+            udpCommonResponseMessage.setResult(ByteUtil.hexToByte(Integer.toHexString(0)));
+            sendUpdMessage(udpCommonResponseMessage.getMessage());
+            send_data_tv.append("\n数据起始符：\n" + ByteUtil.bytesToHex(UdpMessage.MESSAGE_START));
+            send_data_tv.append("\n消息头：\n" + ByteUtil.bytesToHex(udpCommonResponseMessage.getMessageHead()));
+            send_data_tv.append("\n消息体：\n" + ByteUtil.bytesToHex(udpCommonResponseMessage.getMessageBody()));
+            send_data_tv.append("\n校验数据：\n" + ByteUtil.bytesToHex(udpCommonResponseMessage.getMessageCheck()));
+            send_data_tv.append("\n数据结束符：\n" + ByteUtil.bytesToHex(UdpMessage.MESSAGE_END));
+        } else if (v.getId() == R.id.update_status_btn) {
+            UdpUpdateStatusMessage udpUpdateStatusMessage = new UdpUpdateStatusMessage();
+            udpUpdateStatusMessage.setSN(getSN());
+            udpUpdateStatusMessage.setMessageSerialNumber(ByteUtil.hexToByte(Integer.toHexString(messageSerialNumber++)));
+            sendUpdMessage(udpUpdateStatusMessage.getMessage());
+            send_data_tv.append("\n数据起始符：\n" + ByteUtil.bytesToHex(UdpMessage.MESSAGE_START));
+            send_data_tv.append("\n消息头：\n" + ByteUtil.bytesToHex(udpUpdateStatusMessage.getMessageHead()));
+            send_data_tv.append("\n消息体：\n" + ByteUtil.bytesToHex(udpUpdateStatusMessage.getMessageBody()));
+            send_data_tv.append("\n校验数据：\n" + ByteUtil.bytesToHex(udpUpdateStatusMessage.getMessageCheck()));
+            send_data_tv.append("\n数据结束符：\n" + ByteUtil.bytesToHex(UdpMessage.MESSAGE_END));
         }
     }
 

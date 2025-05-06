@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,9 +17,6 @@ import com.winjay.practice.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * PackageManager学习
@@ -34,7 +32,6 @@ public class PackageManagerActivity extends BaseActivity {
     private final static int THIRD_APP = 3;
     private final static int SDCARD_APP = 4;
 
-    @BindView(R.id.app_list_rv)
     RecyclerView app_list_rv;
 
     @Override
@@ -45,11 +42,18 @@ public class PackageManagerActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        app_list_rv = findViewById(R.id.app_list_rv);
         pm = getPackageManager();
         app_list_rv.setLayoutManager(new LinearLayoutManager(this));
+
+        findViewById(R.id.all_app_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                allApp();
+            }
+        });
     }
 
-    @OnClick(R.id.all_app_btn)
     void allApp() {
         AppListAdapter adapter = new AppListAdapter(this, getAppInfo(ALL_APP));
         app_list_rv.setAdapter(adapter);

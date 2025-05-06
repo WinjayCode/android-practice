@@ -46,9 +46,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * Android存储
  *
@@ -65,10 +62,8 @@ public class StorageActivity extends BaseActivity {
     //
     private static final int OPEN_DOCUMENT_TREE = 3;
 
-    @BindView(R.id.open_img)
     ImageView open_img;
 
-    @BindView(R.id.img_location_tv)
     TextView img_location_tv;
 
     private Uri deleteFileUri;
@@ -83,7 +78,8 @@ public class StorageActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        open_img = findViewById(R.id.open_img);
+        img_location_tv = findViewById(R.id.img_location_tv);
         userDao = MyDatabase.Companion.getDatabase().userDao();
 
 //        File file = new File(getFilesDir(), "internal_test_dir");
@@ -91,9 +87,107 @@ public class StorageActivity extends BaseActivity {
 //
 //        File file2 = new File(getExternalFilesDir(null), "external_test_dir");
 //        file2.mkdir();
+
+        findViewById(R.id.directory_structure_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                directoryStructure();
+            }
+        });
+        findViewById(R.id.all_files_access_permission_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    getAllFilesAccessPermission();
+                }
+            }
+        });
+        findViewById(R.id.create_share_doc_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createShareDocBtn();
+            }
+        });
+        findViewById(R.id.open_share_doc_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openShareDocBtn();
+            }
+        });
+        findViewById(R.id.open_share_doc_tree_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDirectory();
+            }
+        });
+        findViewById(R.id.delete_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteFile();
+            }
+        });
+        findViewById(R.id.single_pic_select_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                singlePicSelectBtn();
+            }
+        });
+        findViewById(R.id.multi_pic_select_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                multiPicSelectBtn();
+            }
+        });
+        findViewById(R.id.save_sp_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveSp();
+            }
+        });
+        findViewById(R.id.get_sp_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSp();
+            }
+        });
+        findViewById(R.id.insert_data_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                insertData();
+            }
+        });
+        findViewById(R.id.database_all_data_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                databaseAllData();
+            }
+        });
+        findViewById(R.id.delete_data_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteData();
+            }
+        });
+        findViewById(R.id.query_data_by_id_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                queryDataById();
+            }
+        });
+        findViewById(R.id.query_data_by_parameter_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                queryDataByParameter();
+            }
+        });
+        findViewById(R.id.update_data_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateData();
+            }
+        });
     }
 
-    @OnClick(R.id.directory_structure_btn)
     void directoryStructure() {
         startActivity(DirectoryStructureActivity.class);
     }
@@ -101,7 +195,6 @@ public class StorageActivity extends BaseActivity {
     /////////////////////////////////////////////////////// 文档和其他文件 ///////////////////////////////////////////////////////
     // 申请所有文件访问权限
     @RequiresApi(api = Build.VERSION_CODES.R)
-    @OnClick(R.id.all_files_access_permission_btn)
     void getAllFilesAccessPermission() {
         if (!Environment.isExternalStorageManager()) {
             // 所有应用列表
@@ -153,7 +246,6 @@ public class StorageActivity extends BaseActivity {
     }
 
     // 使用SAF（存储访问框架）创建共享文件
-    @OnClick(R.id.create_share_doc_btn)
     void createShareDocBtn() {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -169,7 +261,6 @@ public class StorageActivity extends BaseActivity {
     }
 
     // 使用SAF（存储访问框架）打开共享文件
-    @OnClick(R.id.open_share_doc_btn)
     void openShareDocBtn() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -191,7 +282,6 @@ public class StorageActivity extends BaseActivity {
     }
 
     // 使用SAF（存储访问框架）授予对目录内容的访问权限
-    @OnClick(R.id.open_share_doc_tree_btn)
     public void openDirectory() {
         // Choose a directory using the system's file picker.
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
@@ -203,7 +293,6 @@ public class StorageActivity extends BaseActivity {
         startActivityForResult(intent, OPEN_DOCUMENT_TREE);
     }
 
-    @OnClick(R.id.delete_btn)
     public void deleteFile() {
         if (deleteFileUri != null) {
             boolean result = FileUtil.deleteFileFromUri(this, deleteFileUri);
@@ -317,7 +406,6 @@ public class StorageActivity extends BaseActivity {
                 }
             });
 
-    @OnClick(R.id.single_pic_select_btn)
     void singlePicSelectBtn() {
         boolean photoPickerAvailable = ActivityResultContracts.PickVisualMedia.isPhotoPickerAvailable();
         toast("photo picker is " + (photoPickerAvailable ? "available" : "unavailable"));
@@ -363,7 +451,6 @@ public class StorageActivity extends BaseActivity {
             });
 
     // 如果照片选择器不可用，且支持库调用 ACTION_OPEN_DOCUMENT intent 操作，则系统会忽略指定的可选媒体文件数量上限。
-    @OnClick(R.id.multi_pic_select_btn)
     void multiPicSelectBtn() {
 //        boolean photoPickerAvailable = ActivityResultContracts.PickVisualMedia.isPhotoPickerAvailable();
         toast("photo picker is " + (isPhotoPickerAvailable() ? "available" : "unavailable"));
@@ -461,12 +548,10 @@ public class StorageActivity extends BaseActivity {
     /////////////////////////////////////////////////////// 键值对数据 ///////////////////////////////////////////////////////
     int spInt = 0;
 
-    @OnClick(R.id.save_sp_btn)
     void saveSp() {
         PreferenceUtil.putIntAsync(this, "sp_key", spInt++);
     }
 
-    @OnClick(R.id.get_sp_btn)
     void getSp() {
         toast(String.valueOf(PreferenceUtil.getInt(this, "sp_key", spInt)));
     }
@@ -476,7 +561,6 @@ public class StorageActivity extends BaseActivity {
     private User user = new User(1, 1 + "_first_name", 1 + "_last_name");
     private User user2 = new User(2, 2 + "_first_name", 2 + "_last_name");
 
-    @OnClick(R.id.insert_data_btn)
     void insertData() {
         HandlerManager.getInstance().postOnSubThread(new Runnable() {
             @Override
@@ -486,7 +570,6 @@ public class StorageActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.database_all_data_btn)
     void databaseAllData() {
         HandlerManager.getInstance().postOnSubThread(new Runnable() {
             @Override
@@ -499,7 +582,6 @@ public class StorageActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.delete_data_btn)
     void deleteData() {
         HandlerManager.getInstance().postOnSubThread(new Runnable() {
             @Override
@@ -509,7 +591,6 @@ public class StorageActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.query_data_by_id_btn)
     void queryDataById() {
         HandlerManager.getInstance().postOnSubThread(new Runnable() {
             @Override
@@ -522,7 +603,6 @@ public class StorageActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.query_data_by_parameter_btn)
     void queryDataByParameter() {
         HandlerManager.getInstance().postOnSubThread(new Runnable() {
             @Override
@@ -533,7 +613,6 @@ public class StorageActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.update_data_btn)
     void updateData() {
         HandlerManager.getInstance().postOnSubThread(new Runnable() {
             @Override

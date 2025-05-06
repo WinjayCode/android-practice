@@ -19,8 +19,6 @@ import com.winjay.practice.ipc.messenger.MessengerActivity;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import butterknife.BindView;
-
 /**
  * IPC
  *
@@ -28,7 +26,6 @@ import butterknife.BindView;
  * @date 2022-04-11
  */
 public class IPCListActivity extends BaseActivity {
-    @BindView(R.id.main_rv)
     RecyclerView main_rv;
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
@@ -48,6 +45,7 @@ public class IPCListActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        main_rv = findViewById(R.id.main_rv);
         main_rv.setLayoutManager(new LinearLayoutManager(this));
         MainAdapter mainAdapter = new MainAdapter(new ArrayList<>(mainMap.keySet()));
         main_rv.setAdapter(mainAdapter);

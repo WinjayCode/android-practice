@@ -2,11 +2,11 @@ package com.winjay.practice.ui.custom_view;
 
 import android.animation.Animator;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -15,9 +15,6 @@ import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.ui.view.AncientPoetryTextView;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * 自定义view展示
  *
@@ -25,13 +22,10 @@ import butterknife.OnClick;
  * @date 2020/8/25
  */
 public class CustomViewActivity extends BaseActivity {
-    @BindView(R.id.oval)
     ImageView ovalIV;
 
-    @BindView(R.id.rect)
     ImageView rectIV;
 
-    @BindView(R.id.ap_tv)
     AncientPoetryTextView apTV;
 
     @Override
@@ -42,13 +36,26 @@ public class CustomViewActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ovalIV = findViewById(R.id.oval);
+        ovalIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ovalClick();
+            }
+        });
+        rectIV = findViewById(R.id.rect);
+        rectIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rectClick();
+            }
+        });
+        apTV = findViewById(R.id.ap_tv);
         apTV.setLineMaxCharNum(6);
         apTV.setMaxLine(4);
         apTV.setText("床前明月光，疑是地上霜。举头望明月，低头思故乡。");
     }
 
-    @OnClick(R.id.oval)
     void ovalClick() {
         // 以圆的形式展示、揭示开来
         Animator animator = ViewAnimationUtils.createCircularReveal(
@@ -62,7 +69,6 @@ public class CustomViewActivity extends BaseActivity {
         animator.start();
     }
 
-    @OnClick(R.id.rect)
     void rectClick() {
         Animator animator = ViewAnimationUtils.createCircularReveal(
                 rectIV,

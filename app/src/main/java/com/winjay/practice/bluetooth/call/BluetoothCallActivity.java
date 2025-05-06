@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothProfile;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
@@ -16,9 +17,6 @@ import com.winjay.practice.utils.LogUtil;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * 蓝牙电话（连接车机打电话）
  *
@@ -28,7 +26,6 @@ import butterknife.OnClick;
 public class BluetoothCallActivity extends BaseActivity {
     private static final String TAG = BluetoothCallActivity.class.getSimpleName();
 
-    @BindView(R.id.number_et)
     EditText number_et;
 
     @Override
@@ -39,9 +36,15 @@ public class BluetoothCallActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        number_et = findViewById(R.id.number_et);
+        number_et.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                call();
+            }
+        });
     }
 
-    @OnClick(R.id.call_btn)
     void call() {
         String number = number_et.getText().toString();
         if (TextUtils.isEmpty(number)) {

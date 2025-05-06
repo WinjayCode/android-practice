@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'com.winjay.adblib'
-    compileSdk 33
+    compileSdk = 35
 
     defaultConfig {
         minSdk 26

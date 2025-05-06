@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespace = "com.winjay.g2048"
     compileSdkVersion 31
 
     defaultConfig {

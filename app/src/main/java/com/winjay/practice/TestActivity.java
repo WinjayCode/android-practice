@@ -37,10 +37,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.winjay.annotations.BindView;
-import com.winjay.annotations.OnClick;
-import com.winjay.bind.BindHelper;
-import com.winjay.bind.Unbinder;
 import com.winjay.practice.hook.HookSetOnClickListenerHelper;
 import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.ui.view.RecognitionView;
@@ -83,13 +79,9 @@ public class TestActivity extends AppCompatActivity {
 
     private Handler mHandler;
 
-    @BindView(R.id.animation)
     Button animation;
 
-    @BindView(R.id.root_rl)
     ConstraintLayout root_rl;
-
-    private Unbinder mUnbinder;
 
     private boolean isTest = false;
 
@@ -106,15 +98,28 @@ public class TestActivity extends AppCompatActivity {
 //            }
 //        });
         setContentView(R.layout.test_activity);
-        mUnbinder = BindHelper.bind(this);
-
-        registerHDMI();
-
+        animation = findViewById(R.id.animation);
+        root_rl = findViewById(R.id.root_rl);
         mTestSV = findViewById(R.id.test_sv);
         testRL = findViewById(R.id.re_rl);
         skillLL = findViewById(R.id.skill_ll);
         editText = findViewById(R.id.edit);
         testBtn = findViewById(R.id.test_btn);
+
+        findViewById(R.id.mute).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mute(v);
+            }
+        });
+        findViewById(R.id.unmute).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                unmute(v);
+            }
+        });
+
+        registerHDMI();
 
         testBtn.setOnClickListener(v -> {
             LogUtil.d("HookSetOnClickListener", "111");
@@ -485,10 +490,6 @@ public class TestActivity extends AppCompatActivity {
         }
         unbindService(mConnection);
 
-        if (mUnbinder != null) {
-            mUnbinder.unbind();
-        }
-
         unregisterHDMI();
     }
 
@@ -521,12 +522,10 @@ public class TestActivity extends AppCompatActivity {
         }
     };
 
-    @OnClick(R.id.mute)
     void mute(View view) {
         VolumeUtil.muteVolume(this, AudioManager.STREAM_MUSIC);
     }
 
-    @OnClick(R.id.unmute)
     void unmute(View view) {
         VolumeUtil.unMuteVolume(this, AudioManager.STREAM_MUSIC);
     }

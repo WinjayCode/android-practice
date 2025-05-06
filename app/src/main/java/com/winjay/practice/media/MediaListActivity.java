@@ -34,8 +34,6 @@ import com.winjay.practice.usb.UsbActivity;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import butterknife.BindView;
-
 /**
  * 多媒体分类集合
  *
@@ -43,7 +41,6 @@ import butterknife.BindView;
  * @date 21/01/21
  */
 public class MediaListActivity extends BaseActivity {
-    @BindView(R.id.main_rv)
     RecyclerView main_rv;
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
@@ -88,6 +85,7 @@ public class MediaListActivity extends BaseActivity {
         if (!hasPermissions()) {
             requestPermissions();
         }
+        main_rv = findViewById(R.id.main_rv);
         main_rv.setLayoutManager(new LinearLayoutManager(this));
         MainAdapter mainAdapter = new MainAdapter(new ArrayList<>(mainMap.keySet()));
         main_rv.setAdapter(mainAdapter);

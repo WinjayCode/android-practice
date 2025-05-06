@@ -8,6 +8,7 @@ import android.media.AudioRecord;
 import android.media.AudioTrack;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -28,9 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * Mic Test
@@ -66,7 +64,6 @@ public class MicTestActivity extends BaseActivity {
      */
     private boolean mWhetherRecord = false;
 
-    @BindView(R.id.uvMeter)
     VUMeter mVUMeter;
 
     private File pcmFile;
@@ -96,9 +93,31 @@ public class MicTestActivity extends BaseActivity {
         }
         initAudioRecord();
 
+        mVUMeter = findViewById(R.id.uvMeter);
         mVUMeter.setRecorder(mAudioRecord);
 
         audioFocusManager = new AudioFocusManager(this);
+
+        findViewById(R.id.recordButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startRecord();
+            }
+        });
+
+        findViewById(R.id.stopButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopRecord();
+            }
+        });
+
+        findViewById(R.id.playButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playPcmStatic();
+            }
+        });
     }
 
     /**
@@ -121,7 +140,6 @@ public class MicTestActivity extends BaseActivity {
     /**
      * 开始录音
      */
-    @OnClick(R.id.recordButton)
     void startRecord() {
         LogUtil.d(TAG);
         stopPlay();
@@ -224,13 +242,11 @@ public class MicTestActivity extends BaseActivity {
     /**
      * 结束录音
      */
-    @OnClick(R.id.stopButton)
     void stopRecord() {
         mWhetherRecord = false;
     }
 
     // AudioTrack静态模式播放
-    @OnClick(R.id.playButton)
     public void playPcmStatic() {
         LogUtil.d(TAG);
         stopPlay();

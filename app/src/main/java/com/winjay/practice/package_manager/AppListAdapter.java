@@ -14,9 +14,6 @@ import com.winjay.practice.R;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.MyHolder> {
     private Context mContext;
     private List<PMAppInfo> listData;
@@ -47,18 +44,17 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.MyHolder
     }
 
     public class MyHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.app_icon_iv)
         ImageView app_icon_iv;
 
-        @BindView(R.id.app_name_tv)
         TextView app_name_tv;
 
-        @BindView(R.id.pkg_name_tv)
         TextView pkg_name_tv;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            app_icon_iv = itemView.findViewById(R.id.app_icon_iv);
+            app_name_tv = itemView.findViewById(R.id.app_name_tv);
+            pkg_name_tv = itemView.findViewById(R.id.pkg_name_tv);
         }
     }
 }

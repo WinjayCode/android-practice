@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Size;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,9 +34,6 @@ import com.winjay.practice.utils.LogUtil;
 import java.io.File;
 import java.io.IOException;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * 音乐播放器
  * <p>
@@ -55,13 +53,10 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
     private String[] mAssetsMusicList;
     private int mCurrentIndex = 0;
 
-    @BindView(R.id.music_title_tv)
     TextView mMusicTitleTV;
 
-    @BindView(R.id.play_pause_iv)
     ImageView play_pause_iv;
 
-    @BindView(R.id.album_iv)
     ImageView album_iv;
 
     private int mSourceType;
@@ -74,6 +69,9 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mMusicTitleTV = findViewById(R.id.music_title_tv);
+        play_pause_iv = findViewById(R.id.play_pause_iv);
+        album_iv = findViewById(R.id.album_iv);
         registerReceiver();
         musicPlayer = new MediaPlayer();
         mAudioFocusManager = new AudioFocusManager(this);
@@ -140,6 +138,25 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
                 }
             }
         }
+
+        findViewById(R.id.play_pause_iv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playPauseSwitch();
+            }
+        });
+        findViewById(R.id.prev_iv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prevClick();
+            }
+        });
+        findViewById(R.id.next_iv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextClick();
+            }
+        });
     }
 
     private void setLocalSource(String path) {
@@ -207,7 +224,6 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
         });
     }
 
-    @OnClick(R.id.play_pause_iv)
     void playPauseSwitch() {
         if (musicPlayer.isPlaying()) {
             pause();
@@ -216,12 +232,10 @@ public class MusicPlayActivity extends BaseActivity implements IMediaStatus {
         }
     }
 
-    @OnClick(R.id.prev_iv)
     void prevClick() {
         prev();
     }
 
-    @OnClick(R.id.next_iv)
     void nextClick() {
         next();
     }

@@ -1,9 +1,12 @@
 package com.winjay.practice.crash;
 
+import android.os.Bundle;
+import android.view.View;
+
+import androidx.annotation.Nullable;
+
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
-
-import butterknife.OnClick;
 
 /**
  * 崩溃信息手机测试
@@ -18,7 +21,17 @@ public class CrashTestActivity extends BaseActivity {
         return R.layout.crash_test_activity;
     }
 
-    @OnClick(R.id.crash_test_btn)
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        findViewById(R.id.crash_test_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                crashTest();
+            }
+        });
+    }
+
     void crashTest() {
         throw new RuntimeException("崩溃测试，这是app自己抛出的异常！");
     }

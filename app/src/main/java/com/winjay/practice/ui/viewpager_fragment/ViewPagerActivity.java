@@ -14,8 +14,6 @@ import com.winjay.practice.utils.LogUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-
 /**
  * ViewPager + Fragment
  *
@@ -25,7 +23,6 @@ import butterknife.BindView;
 public class ViewPagerActivity extends BaseActivity {
     private static final String TAG = ViewPagerActivity.class.getSimpleName();
 
-    @BindView(R.id.vp)
     ViewPager mVP;
 
     @Override
@@ -36,6 +33,7 @@ public class ViewPagerActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mVP = findViewById(R.id.vp);
         initData();
     }
 

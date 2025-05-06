@@ -1,14 +1,15 @@
 package com.winjay.practice.net.socket.udp;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.EditText;
+
+import androidx.annotation.Nullable;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * @author Winjay
@@ -17,10 +18,8 @@ import butterknife.OnClick;
 public class UdpMainActivity extends BaseActivity {
     private static final String TAG = UdpMainActivity.class.getSimpleName();
 
-    @BindView(R.id.ip_et)
     EditText ipEt;
 
-    @BindView(R.id.port_et)
     EditText portEt;
 
     @Override
@@ -28,7 +27,19 @@ public class UdpMainActivity extends BaseActivity {
         return R.layout.udp_main_activity;
     }
 
-    @OnClick(R.id.bind_btn)
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ipEt = findViewById(R.id.ip_et);
+        portEt = findViewById(R.id.port_et);
+        findViewById(R.id.bind_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bind();
+            }
+        });
+    }
+
     void bind() {
         if (TextUtils.isEmpty(ipEt.getText().toString())) {
             toast("输入目的IP！");

@@ -4,14 +4,15 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
 import android.widget.RemoteViews;
 
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
-
-import butterknife.OnClick;
 
 /**
  * RemoteViews学习
@@ -26,7 +27,17 @@ public class RemoteViewsNotificationActivity extends BaseActivity {
         return R.layout.remote_views_activity;
     }
 
-    @OnClick(R.id.notification_btn)
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        findViewById(R.id.notification_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notification();
+            }
+        });
+    }
+
     void notification() {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 

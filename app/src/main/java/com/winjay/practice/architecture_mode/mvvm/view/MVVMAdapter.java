@@ -15,9 +15,6 @@ import com.winjay.practice.utils.LogUtil;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class MVVMAdapter extends RecyclerView.Adapter<MVVMAdapter.ViewHolder> {
     private static final String TAG = MVVMAdapter.class.getSimpleName();
     private List<MVVMDataBean> mData;
@@ -45,12 +42,11 @@ public class MVVMAdapter extends RecyclerView.Adapter<MVVMAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_tv)
         TextView item_tv;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            item_tv = itemView.findViewById(R.id.item_tv);
         }
     }
 }

@@ -14,21 +14,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.winjay.practice.R;
 import com.winjay.practice.media.bean.AudioBean;
 import com.winjay.practice.utils.LogUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 音频数据适配器
@@ -111,15 +105,14 @@ public class MusicListAdapter extends RecyclerView.Adapter<MusicListAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.music_iv)
         ImageView music_iv;
 
-        @BindView(R.id.music_tv)
         TextView music_tv;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            music_iv = itemView.findViewById(R.id.music_iv);
+            music_tv = itemView.findViewById(R.id.music_tv);
             itemView.setOnClickListener(this);
         }
 

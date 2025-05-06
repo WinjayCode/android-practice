@@ -44,8 +44,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -93,16 +91,12 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
 
     private String filePath;
 
-    @BindView(R.id.recorder_save_path)
     TextView mSavePath;
 
-    @BindView(R.id.record_btn)
     Button mRecordBtn;
 
-    @BindView(R.id.play_wav_btn)
     Button mPlayWavBtn;
 
-    @BindView(R.id.recording_tv)
     TextView recording_tv;
 
     private MediaPlayer mediaPlayer;
@@ -118,6 +112,10 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSavePath = findViewById(R.id.recorder_save_path);
+        mRecordBtn = findViewById(R.id.record_btn);
+        mPlayWavBtn = findViewById(R.id.play_wav_btn);
+        recording_tv = findViewById(R.id.recording_tv);
         requiresPermissions();
 
         mRecordBtn.setOnTouchListener(new View.OnTouchListener() {
@@ -135,6 +133,43 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
                         break;
                 }
                 return false;
+            }
+        });
+
+        findViewById(R.id.start_record).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startRecord();
+            }
+        });
+        findViewById(R.id.stop_record).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopRecord();
+            }
+        });
+        findViewById(R.id.play_wav_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playWav();
+            }
+        });
+        findViewById(R.id.system_play_wav_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playWavBySystem();
+            }
+        });
+        findViewById(R.id.play_pcm_static_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playPcmStatic();
+            }
+        });
+        findViewById(R.id.get_mic_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getMic();
             }
         });
     }
@@ -192,7 +227,6 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
     /**
      * 开始录音
      */
-    @OnClick(R.id.start_record)
     void startRecord() {
         if (recording_tv.getVisibility() == View.GONE) {
             recording_tv.setVisibility(View.VISIBLE);
@@ -237,7 +271,6 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
     /**
      * 结束录音
      */
-    @OnClick(R.id.stop_record)
     void stopRecord() {
         recording_tv.setVisibility(View.GONE);
         mWhetherRecord = false;
@@ -283,7 +316,6 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
         return reversed;
     }
 
-    @OnClick(R.id.play_wav_btn)
     void playWav() {
         if (handlerWavFile != null && handlerWavFile.exists()) {
             if (mediaPlayer.isPlaying()) {
@@ -315,7 +347,6 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
         }
     }
 
-    @OnClick(R.id.system_play_wav_btn)
     public void playWavBySystem() {
         if (handlerWavFile != null && handlerWavFile.exists()) {
             Intent intent = new Intent();
@@ -335,7 +366,6 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @OnClick(R.id.play_pcm_static_btn)
     public void playPcmStatic() {
         if (pcmFile != null && pcmFile.exists()) {
             try {
@@ -392,7 +422,6 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @OnClick(R.id.play_pcm_stream_btn)
     public void playPcmStream() {
         if (pcmFile != null && pcmFile.exists()) {
             if (mAudioTrackThread != null) {
@@ -475,7 +504,6 @@ public class AudioRecordActivity extends BaseActivity implements EasyPermissions
         }
     }
 
-    @OnClick(R.id.get_mic_btn)
     void getMic() {
         AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         AudioDeviceInfo[] devices = mAudioManager.getDevices(AudioManager.GET_DEVICES_INPUTS);

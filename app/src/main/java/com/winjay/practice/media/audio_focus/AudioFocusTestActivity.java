@@ -4,6 +4,7 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
@@ -16,9 +17,6 @@ import com.winjay.practice.utils.LogUtil;
 
 import java.io.IOException;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * 连续申请焦点，焦点最后也会依次释放
  *
@@ -28,13 +26,10 @@ import butterknife.OnClick;
 public class AudioFocusTestActivity extends BaseActivity {
     private static final String TAG = AudioFocusTestActivity.class.getSimpleName();
 
-    @BindView(R.id.audio_matrix)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.media_btn)
     Button mediaBtn;
 
-    @BindView(R.id.system_btn)
     Button systemBtn;
 
     private AudioFocusManager mMediaAudioFocusManager;
@@ -59,6 +54,40 @@ public class AudioFocusTestActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mRecyclerView = findViewById(R.id.audio_matrix);
+        mediaBtn = findViewById(R.id.media_btn);
+        mediaBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                media();
+            }
+        });
+        systemBtn = findViewById(R.id.system_btn);
+        systemBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                system();
+            }
+        });
+
+        findViewById(R.id.btn_1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn1();
+            }
+        });
+        findViewById(R.id.btn_2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn2();
+            }
+        });
+        findViewById(R.id.btn_3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn3();
+            }
+        });
 
         musicPlayer = new MediaPlayer();
         systemPlayer = new MediaPlayer();
@@ -216,7 +245,6 @@ public class AudioFocusTestActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.media_btn)
     void media() {
         if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mMediaAudioFocusManager.requestAudioFocus(AudioType.MEDIA)) {
             playMusic();
@@ -258,7 +286,6 @@ public class AudioFocusTestActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.system_btn)
     void system() {
         if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == mSystemAudioFocusManager.requestAudioFocus(AudioType.SYSTEM)) {
             playSystem();
@@ -302,21 +329,18 @@ public class AudioFocusTestActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.btn_1)
     void btn1() {
         if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManager1.requestAudioFocus(AudioType.MEDIA)) {
             playMediaNum(1);
         }
     }
 
-    @OnClick(R.id.btn_2)
     void btn2() {
         if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManager2.requestAudioFocus(AudioType.SYSTEM)) {
             playMediaNum(2);
         }
     }
 
-    @OnClick(R.id.btn_3)
     void btn3() {
         if (AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioFocusManager3.requestAudioFocus(AudioType.TEST)) {
             playMediaNum(3);

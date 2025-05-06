@@ -10,8 +10,6 @@ import android.media.MediaPlayer
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.view.View
-import butterknife.OnClick
-import com.winjay.practice.R
 import com.winjay.practice.common.BaseActivity
 import com.winjay.practice.databinding.ProjectionActivityBinding
 import com.winjay.practice.utils.BitmapUtil
@@ -67,16 +65,17 @@ class MediaProjectionActivity : BaseActivity() {
         }
 
         registerMediaProjectionReceiver()
+
+        binding.screenCaptureBtn.setOnClickListener { screenCapture() }
+        binding.mediaProjectionBtn.setOnClickListener { mediaProjection() }
     }
 
-    @OnClick(R.id.screen_capture_btn)
     fun screenCapture() {
         mediaProjectionManager.createScreenCaptureIntent().apply {
             startActivityForResult(this, SCREEN_CAPTURE_MODE)
         }
     }
 
-    @OnClick(R.id.media_projection_btn)
     fun mediaProjection() {
         if (!isRecord) {
             isRecord = true

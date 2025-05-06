@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.BindView;
-
 /**
  * ImageLoader使用学
  *
@@ -47,7 +45,6 @@ public class ImageLoaderActivity extends BaseActivity implements OnScrollListene
     private List<String> mUrList = new ArrayList<>();
     ImageLoader mImageLoader;
 
-    @BindView(R.id.image_gv)
     GridView mImageGridView;
 
     private BaseAdapter mImageAdapter;
@@ -120,6 +117,7 @@ public class ImageLoaderActivity extends BaseActivity implements OnScrollListene
     }
 
     private void initView() {
+        mImageGridView = findViewById(R.id.image_gv);
         mImageAdapter = new ImageAdapter(this);
         mImageGridView.setAdapter(mImageAdapter);
         mImageGridView.setOnScrollListener(this);

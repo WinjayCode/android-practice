@@ -4,7 +4,8 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    namespace = "com.winjay.dlna"
+    compileSdk = 35
 
     defaultConfig {
         minSdk 29
@@ -35,6 +36,10 @@ android {
     viewBinding {
         enabled = true
     }
+
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {
@@ -61,5 +66,5 @@ dependencies {
     implementation files('libs/universal-image-loader-1.8.4-with-sources.jar')
 
     // exoplayer
-    implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
+    implementation libs.exoplayer
 }

@@ -7,8 +7,6 @@ import androidx.annotation.Nullable;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 
-import butterknife.BindView;
-
 /**
  * 触摸面板测试
  *
@@ -17,7 +15,6 @@ import butterknife.BindView;
  */
 public class TouchPanelCheckActivity extends BaseActivity {
 
-    @BindView(R.id.touch_panel_check_view)
     TouchPanelView touch_panel_check_view;
 
     @Override
@@ -33,6 +30,7 @@ public class TouchPanelCheckActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        touch_panel_check_view = findViewById(R.id.touch_panel_check_view);
         touch_panel_check_view.setTestSuccessListener(() -> toast("测试OK！"));
     }
 }

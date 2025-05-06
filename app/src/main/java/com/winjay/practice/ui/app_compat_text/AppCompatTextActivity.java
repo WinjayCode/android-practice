@@ -13,9 +13,6 @@ import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * AppCompatTextView使用
  * <p>
@@ -33,10 +30,8 @@ import butterknife.OnClick;
 public class AppCompatTextActivity extends BaseActivity {
     private final String TAG = AppCompatTextActivity.class.getSimpleName();
 
-    @BindView(R.id.app_compat_tv)
     AppCompatTextView appCompatTextView;
 
-    @BindView(R.id.scroll_tv)
     AppCompatTextView scroll_tv;
 
     int i = 0;
@@ -49,6 +44,8 @@ public class AppCompatTextActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appCompatTextView = findViewById(R.id.app_compat_tv);
+        scroll_tv = findViewById(R.id.scroll_tv);
 //        changeHeight();
 //        appCompatTextView.postDelayed(new Runnable() {
 //            @Override
@@ -77,6 +74,19 @@ public class AppCompatTextActivity extends BaseActivity {
             smallestWidthDP = heightDP;
         }
         LogUtil.d(TAG, "smallestWidthDP=" + smallestWidthDP);
+
+        findViewById(R.id.hehe).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hehe(v);
+            }
+        });
+        findViewById(R.id.haha).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                haha(v);
+            }
+        });
     }
 
     private void changeHeight() {
@@ -94,12 +104,10 @@ public class AppCompatTextActivity extends BaseActivity {
         });
     }
 
-    @OnClick(R.id.hehe)
     void hehe(View view) {
         Toast.makeText(this, "hehe", Toast.LENGTH_SHORT).show();
     }
 
-    @OnClick(R.id.haha)
     void haha(View view) {
         Toast.makeText(this, "haha", Toast.LENGTH_SHORT).show();
     }

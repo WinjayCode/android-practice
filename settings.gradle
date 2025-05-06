@@ -1,13 +1,62 @@
-include ':app'
-include ':virus_broadcast'
-include ':ioclibrary'
-include ':winjay-bind'
-include ':winjay-compiler'
-include ':winjay-annotations'
-include ':winjay-imageloader'
-include ':puzzle'
-include ':game_2048'
-include ':dlna'
-include ':scrcpy_server'
-include ':scrcpy_android'
-include ':adblib'
+pluginManagement {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        // 添加这个是为了引用github上的第三方库
+        maven {
+            url 'https://jitpack.io'
+        }
+        maven {
+            url "http://4thline.org/m2/"
+            allowInsecureProtocol = true
+        }
+
+
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        // 添加这个是为了引用github上的第三方库
+        maven {
+            url 'https://jitpack.io'
+        }
+        maven {
+            url "http://4thline.org/m2/"
+            allowInsecureProtocol = true
+        }
+        
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "android-practice"
+//include(":app")
+
+include ":app"
+include ":virus_broadcast"
+include ":ioclibrary"
+include ":winjay-bind"
+include ":winjay-compiler"
+include ":winjay-annotations"
+include ":winjay-imageloader"
+include ":puzzle"
+include ":game_2048"
+include ":dlna"
+include ":scrcpy_server"
+include ":scrcpy_android"
+include ":adblib"

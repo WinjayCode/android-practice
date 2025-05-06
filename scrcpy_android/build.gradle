@@ -1,13 +1,14 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
-    id 'com.google.protobuf'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.google.protobuf)
+    alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 evaluationDependsOn(':scrcpy_server')
 
 android {
-    compileSdk 33
+    namespace = "com.winjay.mirrorcast"
+    compileSdk = 35
 
     defaultConfig {
         minSdk 26
@@ -56,6 +57,7 @@ android {
 
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
 }
 
@@ -70,7 +72,7 @@ dependencies {
 
     implementation "org.java-websocket:Java-WebSocket:1.5.3"
     implementation 'pub.devrel:easypermissions:3.0.0'
-    implementation "com.google.protobuf:protobuf-lite:3.0.0"
+    implementation "com.google.protobuf:protobuf-javalite:3.25.1"
 
     implementation project(':adblib')
 }
@@ -78,17 +80,14 @@ dependencies {
 
 protobuf {
     protoc {
-        artifact = 'com.google.protobuf:protoc:3.0.0'
-    }
-    plugins {
-        javalite {
-            artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
-        }
+        artifact = 'com.google.protobuf:protoc:3.25.1'
     }
     generateProtoTasks {
         all().each { task ->
-            task.plugins {
-                javalite {}
+            task.builtins {
+                java {
+                    option "lite"
+                }
             }
         }
     }

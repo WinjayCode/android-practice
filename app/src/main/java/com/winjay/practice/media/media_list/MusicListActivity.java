@@ -22,7 +22,6 @@ import com.winjay.practice.utils.LogUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
@@ -36,7 +35,6 @@ public class MusicListActivity extends BaseActivity implements EasyPermissions.P
     //    private static final String INTERNAL_STORAGE_PATH = "/storage/emulated/0/";
     private static final String INTERNAL_STORAGE_PATH = Environment.getExternalStorageDirectory().getPath();
 
-    @BindView(R.id.music_rv)
     RecyclerView mMusicRV;
 
     private MusicListAdapter mMusicListAdapter;
@@ -62,6 +60,7 @@ public class MusicListActivity extends BaseActivity implements EasyPermissions.P
     }
 
     private void initView() {
+        mMusicRV = findViewById(R.id.music_rv);
         mMusicRV.setLayoutManager(new LinearLayoutManager(this));
         mMusicListAdapter = new MusicListAdapter(this);
         mMusicRV.setAdapter(mMusicListAdapter);

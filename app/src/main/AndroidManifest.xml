@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.winjay.practice">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
@@ -89,6 +88,7 @@
     <!-- android:persistent="true"：1.在系统刚起来的时候，该App也会被启动起来 2.该App被强制杀掉后，系统会重启该App。这种情况只针对系统内置的App，第三方安装的App不会被重启。 -->
     <!-- android:usesCleartextTraffic="true"：指示应用程序是否打算使用明文网络流量，例如明文HTTP -->
     <!-- android:requestLegacyExternalStorage="true"：目标版本API<=29时,采用旧的存储模型运行的。目标版本API>29时该配置无效，强制使用分区存储 -->
+    <!-- android:defaultToDeviceProtectedStorage="true" 该属性将应用的默认存储位置从凭据加密存储（Credential Encrypted Storage，CE）重定向到设备加密存储（Device Encrypted Storage，DE）。这意味着在直接启动模式下，应用可以直接访问设备加密存储中的数据。 -->
     <application
         android:name=".AppApplication"
         android:allowBackup="true"
@@ -104,8 +104,6 @@
         <meta-data
             android:name="application_name"
             android:value="application_value" />
-
-        <!-- android:showWhenLocked="true" 可以使Activity显示在锁屏页面上-->
 
         <!--configChanges：配置中的属性发生变化时，activity不会重建-->
         <!--launchMode：activity启动模式（standard、singleTop、singleTask、singleInstance）-->
@@ -132,13 +130,17 @@
 
         <!--android:finishOnTaskLaunch="true"表示：当返回到这个Task时，该activity会被销毁，其他的不会被销毁。-->
         <!--android:finishOnTaskLaunch=true 放 root activity就无效，放在一个 Task 的其他activity就有效。-->
+
+        <!-- android:showWhenLocked="true" 可以使Activity显示在锁屏页面上-->
+        <!-- android:directBootAware="true" 在设备启动但用户尚未解锁时，系统会进入“直接启动”模式。此模式允许应用在用户解锁之前执行一些关键任务-->
+        <!-- 在直接启动模式下，应用可以访问设备加密存储空间（Device Encrypted Storage），但无法访问凭据加密存储空间（Credential Encrypted Storage）。通过调用 Context.createDeviceProtectedStorageContext() 创建上下文来访问设备加密存储 -->
         <activity
             android:name=".MainActivity"
-            android:clearTaskOnLaunch="true"
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:exported="true"
             android:showWhenLocked="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:directBootAware="true"/>
 
         <!-- architecture mode start -->
         <activity

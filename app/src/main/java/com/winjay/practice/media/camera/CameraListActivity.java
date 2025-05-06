@@ -19,8 +19,6 @@ import com.winjay.practice.media.camera.camerax.CameraXActivity;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import butterknife.BindView;
-
 /**
  * 相机版本集合
  *
@@ -28,7 +26,6 @@ import butterknife.BindView;
  * @date 2021-04-01
  */
 public class CameraListActivity extends BaseActivity {
-    @BindView(R.id.main_rv)
     RecyclerView main_rv;
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
@@ -56,6 +53,7 @@ public class CameraListActivity extends BaseActivity {
         if (!hasPermissions()) {
             requestPermissions();
         }
+        main_rv = findViewById(R.id.main_rv);
         main_rv.setLayoutManager(new LinearLayoutManager(this));
         MainAdapter mainAdapter = new MainAdapter(new ArrayList<>(mainMap.keySet()));
         main_rv.setAdapter(mainAdapter);

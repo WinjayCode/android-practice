@@ -3,8 +3,8 @@ package com.winjay.practice.media.codec.decode;
 import android.graphics.SurfaceTexture;
 import android.media.MediaFormat;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.TextureView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
@@ -23,9 +23,6 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * 解码音视频
  *
@@ -42,7 +39,6 @@ public class DecodeMediaActivity extends BaseActivity {
     private AsyncVideoDecode asyncVideoDecode;
     private AsyncAudioDecode asyncAudioDecode;
 
-    @BindView(R.id.texture_view)
     TextureView mTextureView;
 
     @Override
@@ -53,7 +49,7 @@ public class DecodeMediaActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mTextureView = findViewById(R.id.texture_view);
         videoPath = getExternalFilesDir(null).getPath() + File.separator + "test.mp4";
         File file = new File(videoPath);
         if (!file.exists()) {
@@ -87,9 +83,21 @@ public class DecodeMediaActivity extends BaseActivity {
 
             }
         });
+
+        findViewById(R.id.sync_decode_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                syncDecode();
+            }
+        });
+        findViewById(R.id.async_decode_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                asyncDecode();
+            }
+        });
     }
 
-    @OnClick(R.id.sync_decode_btn)
     void syncDecode() {
         stopMedia();
         syncVideoDecode = new SyncVideoDecode(videoPath, mTextureView.getSurfaceTexture());
@@ -98,7 +106,6 @@ public class DecodeMediaActivity extends BaseActivity {
         mExecutorService.execute(syncAudioDecode);
     }
 
-    @OnClick(R.id.async_decode_btn)
     void asyncDecode() {
         stopMedia();
         asyncVideoDecode = new AsyncVideoDecode(videoPath, mTextureView.getSurfaceTexture());

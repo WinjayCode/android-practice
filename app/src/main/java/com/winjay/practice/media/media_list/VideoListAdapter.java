@@ -18,9 +18,6 @@ import com.winjay.practice.media.bean.VideoBean;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * 视频数据适配器
  *
@@ -71,15 +68,14 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.video_iv)
         ImageView video_iv;
 
-        @BindView(R.id.video_tv)
         TextView video_tv;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            video_iv = itemView.findViewById(R.id.video_iv);
+            video_tv = itemView.findViewById(R.id.video_tv);
             itemView.setOnClickListener(this);
         }
 

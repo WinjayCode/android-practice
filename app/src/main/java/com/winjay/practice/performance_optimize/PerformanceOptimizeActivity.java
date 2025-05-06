@@ -14,8 +14,6 @@ import androidx.annotation.Nullable;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 
-import butterknife.BindView;
-
 /**
  * 性能优化学习
  *
@@ -23,7 +21,6 @@ import butterknife.BindView;
  * @date 2021-09-09
  */
 public class PerformanceOptimizeActivity extends BaseActivity {
-    @BindView(R.id.elv)
     ExpandableListView elv;
 
     public String[] groupStrings = {
@@ -87,6 +84,7 @@ public class PerformanceOptimizeActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        elv = findViewById(R.id.elv);
         elv.setAdapter(new MyAdapter());
         // 设置分组项的点击监听事件
         elv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {

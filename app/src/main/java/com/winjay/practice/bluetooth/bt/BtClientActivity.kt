@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
-import butterknife.OnClick
 import com.winjay.practice.R
 import com.winjay.practice.bluetooth.BtUtil
 import com.winjay.practice.common.BaseActivity
@@ -64,6 +63,9 @@ class BtClientActivity : BaseActivity() {
 
         BtUtil.bluetooth.cancelDiscovery()
         BtUtil.bluetooth.startDiscovery()
+
+        binding.scanBtn.setOnClickListener { scan() }
+        binding.sendMsgBtn.setOnClickListener { sendMsg() }
     }
 
     private fun initRecyclerView() {
@@ -123,7 +125,6 @@ class BtClientActivity : BaseActivity() {
         }
     }
 
-    @OnClick(R.id.scan_btn)
     fun scan() {
         bluetoothListData.clear()
         bluetoothListAdapter.notifyDataSetChanged()
@@ -140,7 +141,6 @@ class BtClientActivity : BaseActivity() {
         BtUtil.bluetooth.startDiscovery()
     }
 
-    @OnClick(R.id.send_msg_btn)
     fun sendMsg() {
         if (this::handleSocket.isInitialized) {
             handleSocket.sendMsg(binding.sendEdit.text.toString())

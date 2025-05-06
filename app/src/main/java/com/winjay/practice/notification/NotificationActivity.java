@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioGroup;
@@ -31,9 +30,6 @@ import com.winjay.practice.utils.LogUtil;
 
 import java.util.Collections;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * Notification学习（未适配高版本）
  *
@@ -48,7 +44,6 @@ public class NotificationActivity extends BaseActivity {
 
     private int NOTIFICATION_ID = 0;
 
-    @BindView(R.id.visibility_rg)
     RadioGroup visibility_rg;
 
     private int notificationGrade = 1;
@@ -69,6 +64,7 @@ public class NotificationActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        visibility_rg = findViewById(R.id.visibility_rg);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationChannel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID,
                 Constants.NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
@@ -77,23 +73,48 @@ public class NotificationActivity extends BaseActivity {
         visibility_rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.rb_1:
-                        notificationGrade = 1;
-                        break;
-                    case R.id.rb_2:
-                        notificationGrade = 2;
-                        break;
-                    case R.id.rb_3:
-                        notificationGrade = 3;
-                        break;
-                    default:
-                        break;
+                if (checkedId == R.id.rb_1) {
+                    notificationGrade = 1;
+                } else if (checkedId == R.id.rb_2) {
+                    notificationGrade = 2;
+                } else if (checkedId == R.id.rb_3) {
+                    notificationGrade = 3;
                 }
             }
         });
 
         handleReplyNotification();
+
+        findViewById(R.id.basic_notification).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                basic(v);
+            }
+        });
+        findViewById(R.id.collapsed_notification).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                collapsed();
+            }
+        });
+        findViewById(R.id.headsup_notification).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                headsup();
+            }
+        });
+        findViewById(R.id.visibility_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                visibility();
+            }
+        });
+        findViewById(R.id.reply_notification).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replyNotification();
+            }
+        });
     }
 
     /**
@@ -101,7 +122,6 @@ public class NotificationActivity extends BaseActivity {
      *
      * @param view
      */
-    @OnClick(R.id.basic_notification)
     void basic(View view) {
         LogUtil.d(TAG);
         // 创建点击意图
@@ -144,7 +164,7 @@ public class NotificationActivity extends BaseActivity {
         notificationManager.createNotificationChannel(channel);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "channel_id")
-                .setSmallIcon(R.drawable.voice_drawable) // 设置通知小图标
+                .setSmallIcon(R.mipmap.icon) // 设置通知小图标
                 .setContentTitle("Sienna") // 设置通知标题
                 .setContentText("Sounds good. See you there!") // 设置通知内容
                 .setPriority(NotificationCompat.PRIORITY_HIGH) // 设置通知优先级
@@ -195,7 +215,6 @@ public class NotificationActivity extends BaseActivity {
     /**
      * 折叠类型的通知
      */
-    @OnClick(R.id.collapsed_notification)
     void collapsed() {
         LogUtil.d(TAG);
         // 通过RemoteViews来创建自定义的Collapsed Notification视图
@@ -230,7 +249,6 @@ public class NotificationActivity extends BaseActivity {
     /**
      * 悬挂类型的通知
      */
-    @OnClick(R.id.headsup_notification)
     void headsup() {
         LogUtil.d(TAG);
         // 创建通知
@@ -255,7 +273,6 @@ public class NotificationActivity extends BaseActivity {
     /**
      * Notification显示等级
      */
-    @OnClick(R.id.visibility_btn)
     void visibility() {
         LogUtil.d(TAG);
         // 创建通知
@@ -281,7 +298,6 @@ public class NotificationActivity extends BaseActivity {
         mNotificationManager.notify(++NOTIFICATION_ID, builder.build());
     }
 
-    @OnClick(R.id.reply_notification)
     void replyNotification() {
         LogUtil.d(TAG);
         sendReplyNotification("I am a reply notification.");

@@ -23,7 +23,6 @@ import com.winjay.practice.utils.LogUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
@@ -37,7 +36,6 @@ public class VideoListActivity extends BaseActivity implements EasyPermissions.P
     //    private static final String INTERNAL_STORAGE_PATH = "/storage/emulated/0/";
     private static final String INTERNAL_STORAGE_PATH = Environment.getExternalStorageDirectory().getPath();
 
-    @BindView(R.id.video_rv)
     RecyclerView mVideoRV;
 
     private VideoListAdapter mVideoListAdapter;
@@ -65,6 +63,7 @@ public class VideoListActivity extends BaseActivity implements EasyPermissions.P
 
     private void initView() {
         // video
+        mVideoRV = findViewById(R.id.video_rv);
         mVideoRV.setLayoutManager(new GridLayoutManager(this, 3));
         mVideoListAdapter = new VideoListAdapter(this);
         mVideoRV.setAdapter(mVideoListAdapter);

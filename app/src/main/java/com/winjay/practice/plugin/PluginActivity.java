@@ -2,6 +2,7 @@ package com.winjay.practice.plugin;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
@@ -12,7 +13,6 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import butterknife.OnClick;
 import dalvik.system.DexClassLoader;
 import dalvik.system.PathClassLoader;
 
@@ -33,9 +33,21 @@ public class PluginActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        findViewById(R.id.load_plugin_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadPlugin();
+            }
+        });
+        findViewById(R.id.merge_plugin_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mergeDex();
+            }
+        });
     }
 
-    @OnClick(R.id.load_plugin_btn)
     void loadPlugin() {
         //在android28（9.0）虚拟机上测试成功
         PathClassLoader pathClassLoader = new PathClassLoader("/sdcard/PluginTest.dex", null);
@@ -48,7 +60,6 @@ public class PluginActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.merge_plugin_btn)
     void mergeDex() {
         loadClass(this, "/sdcard/PluginTest.dex");
         try {

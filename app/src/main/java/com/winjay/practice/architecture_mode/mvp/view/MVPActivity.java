@@ -8,11 +8,9 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.winjay.practice.R;
-import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.architecture_mode.mvp.presenter.MVPPresenter;
+import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
-
-import butterknife.BindView;
 
 /**
  * MVP中View层
@@ -23,10 +21,8 @@ import butterknife.BindView;
 public class MVPActivity extends BaseActivity implements IMVPView {
     private static final String TAG = "MVPActivity";
 
-    @BindView(R.id.mvp_btn)
     Button mMVPBtn;
 
-    @BindView(R.id.mvp_data_tv)
     TextView mMVPTV;
 
     private MVPPresenter mMVPPresenter;
@@ -39,6 +35,9 @@ public class MVPActivity extends BaseActivity implements IMVPView {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mMVPBtn = findViewById(R.id.mvp_btn);
+        mMVPTV = findViewById(R.id.mvp_data_tv);
 
         mMVPPresenter = new MVPPresenter();
         mMVPPresenter.attachView(this);

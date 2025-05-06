@@ -35,7 +35,6 @@ import com.winjay.practice.utils.UsbUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -52,10 +51,8 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
     private MediaStoreChangeObserver mMediaStoreChangeObserver;
     private final int RC_PERMISSION = 100;
 
-    @BindView(R.id.video_rv)
     RecyclerView mVideoRV;
 
-    @BindView(R.id.music_rv)
     RecyclerView mMusicRV;
 
     private VideoListAdapter mVideoListAdapter;
@@ -96,6 +93,8 @@ public class UsbActivity extends BaseActivity implements EasyPermissions.Permiss
     }
 
     private void initView() {
+        mVideoRV = findViewById(R.id.video_rv);
+        mMusicRV = findViewById(R.id.music_rv);
         // video
         mVideoRV.setLayoutManager(new GridLayoutManager(this, 3));
         mVideoListAdapter = new VideoListAdapter(this);

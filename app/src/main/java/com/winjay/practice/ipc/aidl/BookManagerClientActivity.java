@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
@@ -17,8 +18,6 @@ import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
 
 import java.util.List;
-
-import butterknife.OnClick;
 
 /**
  * IPC-AIDL-客户端
@@ -41,6 +40,24 @@ public class BookManagerClientActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        findViewById(R.id.bind_service).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bindService();
+            }
+        });
+        findViewById(R.id.add_book).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addBook();
+            }
+        });
+        findViewById(R.id.get_book_list).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getBookList();
+            }
+        });
     }
 
     /**
@@ -56,14 +73,12 @@ public class BookManagerClientActivity extends BaseActivity {
 //        startService(intent);
     }
 
-    @OnClick(R.id.bind_service)
     void bindService() {
         if (bookManager == null) {
             bindBookManagerService();
         }
     }
 
-    @OnClick(R.id.add_book)
     void addBook() {
         if (bookManager != null) {
             try {
@@ -75,7 +90,6 @@ public class BookManagerClientActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.get_book_list)
     void getBookList() {
         if (bookManager != null) {
             try {

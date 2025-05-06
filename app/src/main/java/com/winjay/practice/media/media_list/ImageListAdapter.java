@@ -17,9 +17,6 @@ import com.winjay.practice.media.MediaCollectionHelper.ImageBean;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * 图片数据适配器
  *
@@ -69,12 +66,11 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.image_iv)
         ImageView image_iv;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            image_iv = itemView.findViewById(R.id.image_iv);
             itemView.setOnClickListener(this);
         }
 

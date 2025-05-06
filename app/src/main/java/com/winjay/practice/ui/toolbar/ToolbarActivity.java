@@ -48,18 +48,12 @@ public class ToolbarActivity extends AppCompatActivity {
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_search:
-                        Toast.makeText(ToolbarActivity.this, "Search", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.action_share:
-                        Toast.makeText(ToolbarActivity.this, "Share", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.action_setting:
-                        Toast.makeText(ToolbarActivity.this, "Setting", Toast.LENGTH_SHORT).show();
-                        break;
-                    default:
-                        break;
+                if (item.getItemId() == R.id.action_search) {
+                    Toast.makeText(ToolbarActivity.this, "Search", Toast.LENGTH_SHORT).show();
+                } else if (item.getItemId() == R.id.action_share) {
+                    Toast.makeText(ToolbarActivity.this, "Share", Toast.LENGTH_SHORT).show();
+                } else if (item.getItemId() == R.id.action_setting) {
+                    Toast.makeText(ToolbarActivity.this, "Setting", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }

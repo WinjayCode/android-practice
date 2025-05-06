@@ -4,20 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.winjay.practice.R;
-import com.winjay.practice.package_manager.PMAppInfo;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class AppProcessAdapter extends RecyclerView.Adapter<AppProcessAdapter.MyHolder> {
     private Context mContext;
@@ -49,21 +43,20 @@ public class AppProcessAdapter extends RecyclerView.Adapter<AppProcessAdapter.My
 
     public class MyHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.pid_tv)
         AppCompatTextView pid_tv;
 
-        @BindView(R.id.uid_tv)
         AppCompatTextView uid_tv;
 
-        @BindView(R.id.memory_size_tv)
         AppCompatTextView memory_size_tv;
 
-        @BindView(R.id.process_name_tv)
         AppCompatTextView process_name_tv;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            pid_tv = itemView.findViewById(R.id.pid_tv);
+            uid_tv = itemView.findViewById(R.id.pid_tv);
+            memory_size_tv = itemView.findViewById(R.id.pid_tv);
+            process_name_tv = itemView.findViewById(R.id.pid_tv);
         }
     }
 }

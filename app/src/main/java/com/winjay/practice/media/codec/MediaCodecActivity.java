@@ -16,8 +16,6 @@ import com.winjay.practice.media.codec.decode.DecodeMediaActivity;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import butterknife.BindView;
-
 /**
  * 多媒体编解码器
  *
@@ -26,7 +24,6 @@ import butterknife.BindView;
  */
 public class MediaCodecActivity extends BaseActivity {
 
-    @BindView(R.id.main_rv)
     RecyclerView main_rv;
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
@@ -44,6 +41,7 @@ public class MediaCodecActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        main_rv = findViewById(R.id.main_rv);
         main_rv.setLayoutManager(new LinearLayoutManager(this));
         MainAdapter mainAdapter = new MainAdapter(new ArrayList<>(mainMap.keySet()));
         main_rv.setAdapter(mainAdapter);

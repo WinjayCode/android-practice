@@ -12,8 +12,6 @@ import com.winjay.practice.common.BaseActivity;
 
 import java.util.Arrays;
 
-import butterknife.BindView;
-
 /**
  * 系统信息
  * System.getProperty：Java属性
@@ -23,7 +21,6 @@ import butterknife.BindView;
  * @date 2020/9/8
  */
 public class SystemInfoActivity extends BaseActivity {
-    @BindView(R.id.system_info_tv)
     AppCompatTextView system_info_tv;
 
     @Override
@@ -34,6 +31,7 @@ public class SystemInfoActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        system_info_tv = findViewById(R.id.system_info_tv);
         system_info_tv.setMovementMethod(ScrollingMovementMethod.getInstance());
         getSystemInfo();
     }

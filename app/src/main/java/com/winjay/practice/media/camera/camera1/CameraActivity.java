@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,8 +19,6 @@ import com.winjay.practice.utils.LogUtil;
 import java.io.File;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -34,13 +33,10 @@ public class CameraActivity extends BaseActivity implements EasyPermissions.Perm
     private Context mContext;
     private final int RC_PERMISSION = 100;
 
-    @BindView(R.id.preview_sv)
     SurfaceView previewView;
 
-    @BindView(R.id.img_pic)
     ImageView imgPic;
 
-    @BindView(R.id.pic_path_tv)
     TextView tvPicDir;
 
     CameraTakeManager manager;
@@ -54,7 +50,28 @@ public class CameraActivity extends BaseActivity implements EasyPermissions.Perm
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+        previewView = findViewById(R.id.preview_sv);
+        imgPic = findViewById(R.id.img_pic);
+        tvPicDir = findViewById(R.id.pic_path_tv);
         requiresPermissions();
+        findViewById(R.id.btn_take_photo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePhoto();
+            }
+        });
+        findViewById(R.id.switch_camera_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchCamera();
+            }
+        });
+        findViewById(R.id.switch_flash_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchFlashlight();
+            }
+        });
     }
 
     private void init() {
@@ -74,19 +91,16 @@ public class CameraActivity extends BaseActivity implements EasyPermissions.Perm
         });
     }
 
-    @OnClick({R.id.btn_take_photo})
     void takePhoto() {
         LogUtil.d(TAG);
         manager.takePhoto();
     }
 
-    @OnClick(R.id.switch_camera_btn)
     void switchCamera() {
         LogUtil.d(TAG);
         manager.switchCamera();
     }
 
-    @OnClick(R.id.switch_flash_btn)
     void switchFlashlight() {
         LogUtil.d(TAG);
         manager.switchFlashlight();

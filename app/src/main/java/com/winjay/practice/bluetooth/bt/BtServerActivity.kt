@@ -4,11 +4,8 @@ import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.os.Bundle
 import android.view.View
-import butterknife.OnClick
-import com.winjay.practice.R
 import com.winjay.practice.bluetooth.BtUtil
 import com.winjay.practice.common.BaseActivity
-import com.winjay.practice.databinding.A2dpActivityBinding
 import com.winjay.practice.databinding.BtServerActivityBinding
 import com.winjay.practice.utils.LogUtil
 
@@ -39,6 +36,8 @@ class BtServerActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         acceptThread = AcceptThread(readListener, writeListener)
         acceptThread.start()
+
+        binding.sendMsgBtn.setOnClickListener { sendMsg() }
     }
 
     val readListener = object : HandleSocket.BluetoothListener {
@@ -132,7 +131,6 @@ class BtServerActivity : BaseActivity() {
         }
     }
 
-    @OnClick(R.id.send_msg_btn)
     fun sendMsg() {
         if (this::handleSocket.isInitialized) {
             handleSocket.sendMsg(binding.sendEdit.text.toString())

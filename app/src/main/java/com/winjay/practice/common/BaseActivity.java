@@ -22,8 +22,6 @@ import com.winjay.practice.utils.ToastUtil;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -35,7 +33,6 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 public abstract class BaseActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks {
     private static final String TAG = "BaseActivity";
-    private Unbinder unbinder;
     private final int RC_PERMISSION = 100;
 
     private ActivityResultLauncher<Intent> activityResultLauncher;
@@ -74,8 +71,6 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), getActivityResultCallback());
 
         setTitle(getClass().getSimpleName().replace("Activity", ""));
-
-        unbinder = ButterKnife.bind(this);
 
         requestPermissions();
 
@@ -142,7 +137,6 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbinder.unbind();
     }
 
     /**

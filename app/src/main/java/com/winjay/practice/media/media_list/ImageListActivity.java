@@ -15,7 +15,6 @@ import com.winjay.practice.media.image.ImagePlayActivity;
 
 import java.util.List;
 
-import butterknife.BindView;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
@@ -27,7 +26,6 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class ImageListActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
     private static final String TAG = ImageListActivity.class.getSimpleName();
 
-    @BindView(R.id.image_rv)
     RecyclerView mImageRV;
 
     private ImageListAdapter mImageListAdapter;
@@ -48,6 +46,7 @@ public class ImageListActivity extends BaseActivity implements EasyPermissions.P
     }
 
     private void initView() {
+        mImageRV = findViewById(R.id.image_rv);
         mImageRV.setLayoutManager(new GridLayoutManager(this, 3));
         mImageListAdapter = new ImageListAdapter(this);
         mImageRV.setAdapter(mImageListAdapter);

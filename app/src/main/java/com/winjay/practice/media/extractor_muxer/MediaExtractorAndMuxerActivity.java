@@ -2,6 +2,7 @@ package com.winjay.practice.media.extractor_muxer;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -13,9 +14,6 @@ import com.winjay.practice.utils.LogUtil;
 
 import java.io.File;
 import java.util.Arrays;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * MediaExtractor 的基础使用，并分离视频轨和音频轨
@@ -32,7 +30,6 @@ public class MediaExtractorAndMuxerActivity extends BaseActivity {
     private static final String AUDIO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/test.M4A";
     private static String mDestPath;
 
-    @BindView(R.id.video_info_tv)
     TextView videoInfoTV;
 
     private MyMediaExtractor myMediaExtractor;
@@ -49,7 +46,7 @@ public class MediaExtractorAndMuxerActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        videoInfoTV = findViewById(R.id.video_info_tv);
         mDestPath = getExternalCacheDir() + File.separator + "mixVideo";
 
         sb = new StringBuilder();
@@ -120,9 +117,15 @@ public class MediaExtractorAndMuxerActivity extends BaseActivity {
                 });
             }
         });
+
+        findViewById(R.id.muxer_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                muxer();
+            }
+        });
     }
 
-    @OnClick({R.id.muxer_btn})
     void muxer() {
         mMyMediaMuxer.start();
     }

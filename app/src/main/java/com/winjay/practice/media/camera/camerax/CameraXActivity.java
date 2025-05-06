@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,9 +28,6 @@ import com.winjay.practice.utils.LogUtil;
 
 import java.io.File;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * CameraX
  *
@@ -43,13 +41,10 @@ public class CameraXActivity extends BaseActivity {
     private CameraSelector mCameraSelector;
     private String savePath;
 
-    @BindView(R.id.preview)
     PreviewView previewView;
 
-    @BindView(R.id.img_pic)
     ImageView imgPic;
 
-    @BindView(R.id.pic_path_tv)
     TextView tvPicDir;
 
     @Override
@@ -60,12 +55,34 @@ public class CameraXActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        previewView = findViewById(R.id.preview);
+        imgPic = findViewById(R.id.img_pic);
+        tvPicDir = findViewById(R.id.pic_path_tv);
         savePath = getExternalCacheDir() + File.separator + "camera" + File.separator;
 
         //选择后置摄像头
         mCameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
         startCamera();
+
+        findViewById(R.id.btn_take_photo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePhoto();
+            }
+        });
+        findViewById(R.id.switch_camera_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchCamera();
+            }
+        });
+        findViewById(R.id.switch_flash_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchFlashlight();
+            }
+        });
     }
 
     /**
@@ -107,7 +124,6 @@ public class CameraXActivity extends BaseActivity {
         }, ContextCompat.getMainExecutor(this));
     }
 
-    @OnClick({R.id.btn_take_photo})
     void takePhoto() {
         LogUtil.d(TAG);
         if (mImageCapture != null) {
@@ -165,7 +181,6 @@ public class CameraXActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.switch_camera_btn)
     void switchCamera() {
         LogUtil.d(TAG);
         /**
@@ -177,7 +192,6 @@ public class CameraXActivity extends BaseActivity {
         startCamera();
     }
 
-    @OnClick(R.id.switch_flash_btn)
     void switchFlashlight() {
         LogUtil.d(TAG);
     }

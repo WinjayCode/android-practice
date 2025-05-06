@@ -45,8 +45,6 @@ import com.winjay.puzzle.activity.PuzzleMainActivity;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import butterknife.BindView;
-
 /**
  * @author Winjay
  * @date 2019/3/21
@@ -54,7 +52,6 @@ import butterknife.BindView;
 public class MainActivity extends BaseActivity {
     private final String TAG = "MainActivity";
 
-    @BindView(R.id.main_rv)
     RecyclerView main_rv;
 
     private USBDeviceReceiver usbDeviceReceiver;
@@ -102,6 +99,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogUtil.d(TAG);
+        main_rv = findViewById(R.id.main_rv);
         main_rv.setLayoutManager(new LinearLayoutManager(this));
         MainAdapter mainAdapter = new MainAdapter(new ArrayList<>(mainMap.keySet()));
         main_rv.setAdapter(mainAdapter);

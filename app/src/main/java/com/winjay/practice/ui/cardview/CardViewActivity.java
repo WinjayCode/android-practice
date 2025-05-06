@@ -2,6 +2,7 @@ package com.winjay.practice.ui.cardview;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
@@ -9,8 +10,6 @@ import com.winjay.practice.MainActivity;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
-
-import butterknife.OnClick;
 
 /**
  * CardView使用
@@ -44,9 +43,14 @@ public class CardViewActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogUtil.d(TAG, "onCreate()");
+        findViewById(R.id.card_view_tv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startMainActivity();
+            }
+        });
     }
 
-    @OnClick(R.id.card_view_tv)
     void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

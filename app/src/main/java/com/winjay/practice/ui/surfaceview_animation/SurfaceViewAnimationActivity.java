@@ -16,28 +16,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 public class SurfaceViewAnimationActivity extends BaseActivity {
     public static final String TAG = SurfaceViewAnimationActivity.class.getSimpleName();
 
-    @BindView(R.id.fsv)
     FrameSurfaceView mFrameSurfaceView;
 
-    @BindView(R.id.fsv_2)
     FrameSurfaceView mFrameSurfaceView2;
 
-    @BindView(R.id.pause)
     Button pauseBtn;
 
-    @BindView(R.id.resume)
     Button resumeBtn;
 
-    @BindView(R.id.test)
     ConstraintLayout testCL;
 
-    @BindView(R.id.root_rl)
     ConstraintLayout root_rl;
 
     private List<Integer> mBitmapList = Arrays.asList(
@@ -122,7 +113,12 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mFrameSurfaceView = findViewById(R.id.fsv);
+        mFrameSurfaceView2 = findViewById(R.id.fsv_2);
+        pauseBtn = findViewById(R.id.pause);
+        resumeBtn = findViewById(R.id.resume);
+        testCL = findViewById(R.id.test);
+        root_rl = findViewById(R.id.root_rl);
         mFrameSurfaceView.setBitmapIds(mBitmapList);
         mFrameSurfaceView.setRepeatCount(FrameSurfaceView.INFINITE);
 
@@ -150,15 +146,38 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
 //                testCL.setVisibility(View.VISIBLE);
 //            }
 //        }, 5000);
+
+        findViewById(R.id.pause).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pauseAnim();
+            }
+        });
+        findViewById(R.id.resume).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resumeAnim();
+            }
+        });
+        findViewById(R.id.replace).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceAnim();
+            }
+        });
+        findViewById(R.id.show_hide).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showOrHide();
+            }
+        });
     }
 
-    @OnClick(R.id.pause)
     void pauseAnim() {
         LogUtil.d(TAG, "pause()");
         mFrameSurfaceView.pause();
     }
 
-    @OnClick(R.id.resume)
     void resumeAnim() {
         LogUtil.d(TAG, "resume()");
         mFrameSurfaceView.resume();
@@ -166,7 +185,6 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
 
     private boolean mSwitch = false;
 
-    @OnClick(R.id.replace)
     void replaceAnim() {
         LogUtil.d(TAG, "replaceAnim()");
         if (mSwitch) {
@@ -182,7 +200,6 @@ public class SurfaceViewAnimationActivity extends BaseActivity {
         }
     }
 
-    @OnClick(R.id.show_hide)
     void showOrHide() {
         if (mFrameSurfaceView.getVisibility() == View.VISIBLE) {
             mFrameSurfaceView.setVisibility(View.GONE);

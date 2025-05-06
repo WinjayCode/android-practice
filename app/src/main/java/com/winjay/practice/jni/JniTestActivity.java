@@ -9,8 +9,6 @@ import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
 
-import butterknife.BindView;
-
 /**
  * JNI和NDK学习
  *
@@ -22,7 +20,6 @@ public class JniTestActivity extends BaseActivity {
 
     private static TextView jni_call_java_tv;
 
-    @BindView(R.id.java_call_jni_tv)
     TextView java_call_jni_tv;
 
     static {
@@ -43,6 +40,7 @@ public class JniTestActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         jni_call_java_tv = findViewById(R.id.jni_call_java_tv);
+        java_call_jni_tv = findViewById(R.id.java_call_jni_tv);
         java_call_jni_tv.setText(get());
         set("jni ndk");
     }

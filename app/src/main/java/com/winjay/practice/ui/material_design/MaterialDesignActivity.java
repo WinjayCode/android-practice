@@ -17,9 +17,6 @@ import androidx.palette.graphics.Palette;
 import com.winjay.practice.R;
 import com.winjay.practice.utils.LogUtil;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 /**
  * Material Design
  *
@@ -29,17 +26,16 @@ import butterknife.ButterKnife;
 public class MaterialDesignActivity extends Activity {
     private static final String TAG = MaterialDesignActivity.class.getSimpleName();
 
-    @BindView(R.id.tv_rect)
     AppCompatTextView tv_rect;
 
-    @BindView(R.id.tv_circle)
     AppCompatTextView tv_circle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.material_design_activity);
-        ButterKnife.bind(this);
+        tv_rect = findViewById(R.id.tv_rect);
+        tv_circle = findViewById(R.id.tv_circle);
         paletteTest();
         clippingTest();
     }

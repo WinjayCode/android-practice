@@ -8,10 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.winjay.practice.R;
-import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.architecture_mode.mvc.model.MVCModel;
-
-import butterknife.BindView;
+import com.winjay.practice.common.BaseActivity;
 
 /**
  * MVC中的View和Controller层
@@ -20,10 +18,8 @@ import butterknife.BindView;
  * @date 2020-01-10
  */
 public class MVCActivity extends BaseActivity {
-    @BindView(R.id.mvc_btn)
     Button mMVCBtn;
 
-    @BindView(R.id.mvc_data_tv)
     TextView mMVCTV;
 
     private MVCModel mMVCModel;
@@ -37,6 +33,8 @@ public class MVCActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mMVCModel = new MVCModel();
+        mMVCBtn = findViewById(R.id.mvc_btn);
+        mMVCTV = findViewById(R.id.mvc_data_tv);
         mMVCBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

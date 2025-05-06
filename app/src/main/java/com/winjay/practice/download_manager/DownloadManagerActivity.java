@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,8 +23,6 @@ import com.winjay.practice.utils.LogUtil;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -46,7 +45,6 @@ public class DownloadManagerActivity extends BaseActivity implements EasyPermiss
     private final String APK_URL = "http://sw.bos.baidu.com/sw-search-sp/software/19de58890ffb8/QQ_8.6.18804.0_setup.exe";
     private long mDownloadId;
 
-    @BindView(R.id.img)
     ImageView mImg;
 
     private DownloadReceiver mDownloadReceiver;
@@ -67,9 +65,16 @@ public class DownloadManagerActivity extends BaseActivity implements EasyPermiss
         registerReceiver();
 
         requiresPermissions();
+
+        mImg = findViewById(R.id.img);
+        findViewById(R.id.download_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                download();
+            }
+        });
     }
 
-    @OnClick(R.id.download_btn)
     void download() {
         LogUtil.d(TAG);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(mDownloadUrl));

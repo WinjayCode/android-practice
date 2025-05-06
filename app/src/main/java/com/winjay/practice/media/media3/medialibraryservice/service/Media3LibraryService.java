@@ -273,9 +273,9 @@ public class Media3LibraryService extends MediaLibraryService {
     private CommandButton getShuffleCommandButton(SessionCommand sessionCommand) {
         boolean isOn = sessionCommand.customAction.equals(Media3Constant.CUSTOM_COMMAND_TOGGLE_SHUFFLE_MODE_ON);
         return new CommandButton.Builder()
-                .setDisplayName(getString(isOn ? R.string.exo_controls_shuffle_on_description : R.string.exo_controls_shuffle_off_description))
+                .setDisplayName(getString(isOn ? com.google.android.exoplayer2.R.string.exo_controls_shuffle_on_description : com.google.android.exoplayer2.R.string.exo_controls_shuffle_off_description))
                 .setSessionCommand(sessionCommand)
-                .setIconResId(isOn ? R.drawable.exo_icon_shuffle_off : R.drawable.exo_icon_shuffle_on)
+                .setIconResId(isOn ? com.google.android.exoplayer2.R.drawable.exo_icon_shuffle_off : com.google.android.exoplayer2.R.drawable.exo_icon_shuffle_on)
                 .build();
     }
 
@@ -290,7 +290,7 @@ public class Media3LibraryService extends MediaLibraryService {
                     .getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(Media3LibraryService.this, Media3Constant.CHANNEL_ID)
                     .setContentIntent(pendingIntent)
-                    .setSmallIcon(R.drawable.media3_notification_small_icon)
+                    .setSmallIcon(androidx.media3.session.R.drawable.media3_notification_small_icon)
                     .setContentTitle("Playback cannot be resumed")
                     .setStyle(
                             new NotificationCompat.BigTextStyle().bigText("Press on the play button on the media notification if it" +

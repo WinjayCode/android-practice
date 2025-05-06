@@ -1,12 +1,13 @@
 plugins {
-    id 'com.android.application'
+    alias(libs.plugins.android.application)
     id 'kotlin-android'
-    id 'kotlin-kapt'
+    alias(libs.plugins.google.devtools.ksp)
     id 'kotlin-parcelize'
 }
 
 android {
-    compileSdkVersion 34
+    namespace = "com.winjay.practice"
+    compileSdk = 35
 
     defaultConfig {
         applicationId "com.winjay.practice"
@@ -119,6 +120,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
     lintOptions {//设置编译的lint开关，程序在build的时候，会执行lint检查，有任何的错误或者警告提示，都会终止构建
         abortOnError false
     }
@@ -126,6 +131,8 @@ android {
     buildFeatures {
         viewBinding true
         dataBinding true
+        buildConfig true
+        aidl true
     }
 
     viewBinding {
@@ -171,6 +178,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    // ----------------------- libs -----------------------
     // unit test
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -200,8 +208,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
 
     // activity
-    //implementation 'androidx.activity:activity-ktx:1.6.0'
-    implementation libs.androidx.activity.ktx
+    implementation 'androidx.activity:activity-ktx:1.6.0'
 
     // multidex
     implementation 'androidx.multidex:multidex:2.0.1'
@@ -219,7 +226,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
 
     // kotlin
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation libs.androidx.core.ktx
 //    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.3"
@@ -243,10 +250,10 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     // To use Kotlin annotation processing tool (kapt)
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
 
     // exoplayer
-    implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
+    implementation libs.exoplayer
 
     // palette
     implementation 'androidx.palette:palette-ktx:1.0.0'
@@ -279,34 +286,23 @@ dependencies {
 
     //    implementation project(':ioclibrary')
 
-    // butterknife
-    implementation 'com.jakewharton:butterknife:10.2.1'
-    kapt 'com.jakewharton:butterknife-compiler:10.2.1'
-
     // glide
     implementation 'com.github.bumptech.glide:glide:4.8.0'
-    kapt 'com.github.bumptech.glide:compiler:4.8.0'
+    ksp 'com.github.bumptech.glide:compiler:4.8.0'
 
-    // winjay-bind
+    // ----------------------- project -----------------------
+    // winjay-bind (参考butterknife注解框架，已废弃！)
     implementation project(':winjay-bind')
     implementation project(':winjay-annotations')
-    kapt project(':winjay-compiler')
-
+    ksp project(':winjay-compiler')
     // winjay-imageloader
     implementation project(':winjay-imageloader')
-
     // 拼图游戏
     implementation project(':puzzle')
     // 2048游戏
     implementation project(':game_2048')
-
     // dlna
     implementation project(':dlna')
-
     // scrcpy_android
     implementation project(':scrcpy_android')
-}
-
-repositories {
-    mavenCentral()
 }

@@ -24,6 +24,7 @@ import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,8 +43,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
@@ -90,13 +89,10 @@ public class Camera2Activity extends BaseActivity implements EasyPermissions.Per
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
 
-    @BindView(R.id.preview_texture_view)
     TextureView mTextureView;
 
-    @BindView(R.id.img_pic)
     ImageView imgPic;
 
-    @BindView(R.id.pic_path_tv)
     TextView tvPicDir;
 
     @Override
@@ -107,10 +103,32 @@ public class Camera2Activity extends BaseActivity implements EasyPermissions.Per
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTextureView = findViewById(R.id.preview_texture_view);
+        imgPic = findViewById(R.id.img_pic);
+        tvPicDir = findViewById(R.id.pic_path_tv);
         handlerThread.start();
         mCameraHandler = new Handler(handlerThread.getLooper());
         savePath = getExternalCacheDir() + File.separator + "camera" + File.separator;
         mTextureView.setSurfaceTextureListener(new MySurfaceTextureListener());
+
+        findViewById(R.id.btn_take_photo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePhoto();
+            }
+        });
+        findViewById(R.id.switch_camera_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchCamera();
+            }
+        });
+        findViewById(R.id.switch_flash_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchFlashlight();
+            }
+        });
     }
 
     private class MySurfaceTextureListener implements TextureView.SurfaceTextureListener {
@@ -388,7 +406,6 @@ public class Camera2Activity extends BaseActivity implements EasyPermissions.Per
         return bestSize;
     }
 
-    @OnClick({R.id.btn_take_photo})
     void takePhoto() {
         LogUtil.d(TAG);
         try {
@@ -461,7 +478,6 @@ public class Camera2Activity extends BaseActivity implements EasyPermissions.Per
         }
     }
 
-    @OnClick(R.id.switch_camera_btn)
     void switchCamera() {
         LogUtil.d(TAG);
         mCameraId = mCameraId.equals(mBackCameraId) ? mFrontCameraId : mBackCameraId;
@@ -470,7 +486,6 @@ public class Camera2Activity extends BaseActivity implements EasyPermissions.Per
         openCamera(mCameraId, mTextureView.getWidth(), mTextureView.getHeight());
     }
 
-    @OnClick(R.id.switch_flash_btn)
     void switchFlashlight() {
         LogUtil.d(TAG);
         // 没有作用？

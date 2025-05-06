@@ -1,13 +1,20 @@
 package com.winjay.practice.utils;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
+import kotlin.coroutines.CoroutineContext;
 
 /**
  * Bitmap工具类
@@ -131,5 +138,20 @@ public class BitmapUtil {
         int green = Color.green(pixelColor);
         int blue = Color.blue(pixelColor);
         return 0.299 * red + 0.587 * green + 0.114 * blue; // Luminance formula
+    }
+
+    public static Bitmap blurBitmap(Bitmap bitmap, Context context) {
+        Bitmap outBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        RenderScript rs = RenderScript.create(context);
+        ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+        Allocation allIn = Allocation.createFromBitmap(rs, bitmap);
+        Allocation allOut = Allocation.createFromBitmap(rs, outBitmap);
+        blurScript.setRadius(25.f);
+        blurScript.setInput(allIn);
+        blurScript.forEach(allOut);
+        allOut.copyTo(outBitmap);
+        bitmap.recycle();
+        rs.destroy();
+        return outBitmap;
     }
 }

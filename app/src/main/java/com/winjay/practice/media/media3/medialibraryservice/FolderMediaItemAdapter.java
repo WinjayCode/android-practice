@@ -13,9 +13,6 @@ import com.winjay.practice.R;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 
 public class FolderMediaItemAdapter extends RecyclerView.Adapter<FolderMediaItemAdapter.ViewHolder> {
     private static final String TAG = FolderMediaItemAdapter.class.getSimpleName();
@@ -50,12 +47,11 @@ public class FolderMediaItemAdapter extends RecyclerView.Adapter<FolderMediaItem
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        @BindView(R.id.item_tv)
         TextView item_tv;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            item_tv = itemView.findViewById(R.id.item_tv);
             item_tv.setOnClickListener(this);
         }
 

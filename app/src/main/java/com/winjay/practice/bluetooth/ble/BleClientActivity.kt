@@ -1,6 +1,12 @@
 package com.winjay.practice.bluetooth.ble
 
-import android.bluetooth.*
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCallback
+import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattDescriptor
+import android.bluetooth.BluetoothGattService
+import android.bluetooth.BluetoothProfile
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
@@ -11,13 +17,11 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import butterknife.OnClick
-import com.winjay.practice.R
 import com.winjay.practice.bluetooth.BtUtil
 import com.winjay.practice.common.BaseActivity
 import com.winjay.practice.databinding.BleClientActivityBinding
 import com.winjay.practice.utils.LogUtil
-import java.util.*
+import java.util.UUID
 
 /**
  * 低功耗蓝牙客户端(中心设备)
@@ -64,6 +68,10 @@ class BleClientActivity : BaseActivity() {
         bleListAdapter = BleListAdapter(mScanResult)
         isSupportBLE()
         initRecyclerView()
+
+        binding.scanBtn.setOnClickListener { scanDevice() }
+        binding.readDataBtn.setOnClickListener { readData() }
+        binding.writeDataBtn.setOnClickListener { writeData() }
     }
 
     private fun isSupportBLE() {
@@ -183,7 +191,6 @@ class BleClientActivity : BaseActivity() {
         }
     }
 
-    @OnClick(R.id.scan_btn)
     fun scanDevice() {
         if (isScanning) {
             return
@@ -247,7 +254,6 @@ class BleClientActivity : BaseActivity() {
         }
     }
 
-    @OnClick(R.id.read_data_btn)
     fun readData() {
         val service = getGattService(BtUtil.UUID_SERVICE)
         if (service != null) {
@@ -269,7 +275,6 @@ class BleClientActivity : BaseActivity() {
         return service
     }
 
-    @OnClick(R.id.write_data_btn)
     fun writeData() {
         val msg = binding.dataEt.text.toString()
         binding.dataEt.setText("")

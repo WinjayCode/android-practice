@@ -9,13 +9,9 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.winjay.annotations.BindView;
-import com.winjay.annotations.OnClick;
 import com.winjay.bind.BindHelper;
 import com.winjay.bind.Unbinder;
 import com.winjay.practice.R;
-import com.winjay.practice.utils.DebouncingOnClickListener;
-import com.winjay.practice.utils.LogUtil;
 
 /**
  * 注解测试类
@@ -26,10 +22,8 @@ import com.winjay.practice.utils.LogUtil;
 public class IOCActivity extends AppCompatActivity {
     private static final String TAG = IOCActivity.class.getSimpleName();
 
-    @BindView(R.id.ioc_tv)
     TextView mIOCTV;
 
-    @BindView(R.id.ioc_iv)
     ImageView mIOCIV;
 
     private Unbinder mUnbinder;
@@ -40,11 +34,23 @@ public class IOCActivity extends AppCompatActivity {
         setContentView(R.layout.ioc_activity);
         mUnbinder = BindHelper.bind(this);
 
-        // TODO null point error
+        mIOCTV = findViewById(R.id.ioc_tv);
+        mIOCTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hahaha(v);
+            }
+        });
+        mIOCIV = findViewById(R.id.ioc_iv);
+        mIOCIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hahaha(v);
+            }
+        });
         mIOCTV.setText("注解测试");
     }
 
-    @OnClick({R.id.ioc_tv, R.id.ioc_iv})
     void hahaha(View view) {
         if (view.getId()  == R.id.ioc_tv) {
             Toast.makeText(this, "文本点击事件", Toast.LENGTH_SHORT).show();

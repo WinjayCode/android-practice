@@ -17,8 +17,6 @@ import com.winjay.practice.utils.LogUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-
 /**
  * ActivityManager学习
  *
@@ -29,7 +27,6 @@ public class ActivityManagerActivity extends BaseActivity {
     private static final String TAG = ActivityManagerActivity.class.getSimpleName();
     private ActivityManager mActivityManager;
 
-    @BindView(R.id.app_process_rv)
     RecyclerView app_process_rv;
 
     @Override
@@ -41,6 +38,7 @@ public class ActivityManagerActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        app_process_rv = findViewById(R.id.app_process_rv);
         app_process_rv.setLayoutManager(new LinearLayoutManager(this));
         app_process_rv.setAdapter(new AppProcessAdapter(this, getRunningProcessInfo()));
 

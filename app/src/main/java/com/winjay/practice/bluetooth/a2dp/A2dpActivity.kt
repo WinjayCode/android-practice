@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
-import butterknife.OnClick
 import com.winjay.practice.R
 import com.winjay.practice.bluetooth.BtUtil
 import com.winjay.practice.bluetooth.bt.BluetoothListAdapter
@@ -79,6 +78,12 @@ class A2dpActivity : BaseActivity() {
                 }
             }
         }, BluetoothProfile.A2DP)
+
+        binding.scanBtn.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                scan()
+            }
+        })
     }
 
     private fun initRecyclerView() {
@@ -176,7 +181,6 @@ class A2dpActivity : BaseActivity() {
         fun onFail(error: String)
     }
 
-    @OnClick(R.id.scan_btn)
     fun scan() {
         bluetoothListData.clear()
         bluetoothListAdapter.notifyDataSetChanged()

@@ -267,11 +267,11 @@ public final class TrackSelectionDialog extends DialogFragment {
   private static String getTrackTypeString(Resources resources, @C.TrackType int trackType) {
     switch (trackType) {
       case C.TRACK_TYPE_VIDEO:
-        return resources.getString(R.string.exo_track_selection_title_video);
+        return resources.getString(com.google.android.exoplayer2.R.string.exo_track_selection_title_video);
       case C.TRACK_TYPE_AUDIO:
-        return resources.getString(R.string.exo_track_selection_title_audio);
+        return resources.getString(com.google.android.exoplayer2.R.string.exo_track_selection_title_audio);
       case C.TRACK_TYPE_TEXT:
-        return resources.getString(R.string.exo_track_selection_title_text);
+        return resources.getString(com.google.android.exoplayer2.R.string.exo_track_selection_title_text);
       default:
         throw new IllegalArgumentException();
     }
@@ -339,8 +339,8 @@ public final class TrackSelectionDialog extends DialogFragment {
         @Nullable Bundle savedInstanceState) {
       View rootView =
           inflater.inflate(
-              R.layout.exo_track_selection_dialog, container, /* attachToRoot= */ false);
-      TrackSelectionView trackSelectionView = rootView.findViewById(R.id.exo_track_selection_view);
+                  com.google.android.exoplayer2.R.layout.exo_track_selection_dialog, container, /* attachToRoot= */ false);
+      TrackSelectionView trackSelectionView = rootView.findViewById(com.google.android.exoplayer2.R.id.exo_track_selection_view);
       trackSelectionView.setShowDisableOption(true);
       trackSelectionView.setAllowMultipleOverrides(allowMultipleOverrides);
       trackSelectionView.setAllowAdaptiveSelections(allowAdaptiveSelections);
