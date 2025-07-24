@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -43,6 +44,7 @@ import com.winjay.practice.ui.view.RecognitionView;
 import com.winjay.practice.utils.FileUtil;
 import com.winjay.practice.utils.LogUtil;
 import com.winjay.practice.utils.NetUtil;
+import com.winjay.practice.utils.ToastUtil;
 import com.winjay.practice.utils.VolumeUtil;
 
 import java.io.File;
@@ -61,6 +63,7 @@ public class TestActivity extends AppCompatActivity {
     private LinearLayout skillLL;
 
     private ScrollView mTestSV;
+    private ScrollView mRootSV;
 
     private Button downBtn;
     private EditText editText;
@@ -105,6 +108,7 @@ public class TestActivity extends AppCompatActivity {
         skillLL = findViewById(R.id.skill_ll);
         editText = findViewById(R.id.edit);
         testBtn = findViewById(R.id.test_btn);
+        mRootSV = findViewById(R.id.root_sv);
 
         findViewById(R.id.mute).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,10 +133,22 @@ public class TestActivity extends AppCompatActivity {
 //            MyDialog dialog = new MyDialog(TestActivity.this);
 //            dialog.show();
 
-//            AlertDialog.Builder builder = new AlertDialog.Builder(TestActivity.this);
-//            builder.setMessage("测试弹窗！");
-//            mAlertDialog = builder.create();
-//            mAlertDialog.show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(TestActivity.this);
+            builder.setMessage("测试弹窗！");
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mAlertDialog.dismiss();
+                }
+            });
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ToastUtil.show(TestActivity.this, "emenn");
+                }
+            });
+            mAlertDialog = builder.create();
+            mAlertDialog.show();
 
 //            if (isTest) {
 //                fullscreen(true);
@@ -220,6 +236,14 @@ public class TestActivity extends AppCompatActivity {
                 LogUtil.d(TAG, "newPath=" + newPath);
                 boolean result = copyFolder(oldPath, newPath);
                 LogUtil.d(TAG, "result=" + result);
+            }
+        });
+
+        Button toastBtn = findViewById(R.id.toast_btn);
+        toastBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(TestActivity.this, "This is a test Toast, so it is a test Toast, and this is so funny!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -318,6 +342,8 @@ public class TestActivity extends AppCompatActivity {
     public void onUserInteraction() {
         super.onUserInteraction();
         LogUtil.d(TAG, "onUserInteraction()");
+        LogUtil.d(TAG, "canScrollVertically(1)=" + mRootSV.canScrollVertically(1));
+        LogUtil.d(TAG, "canScrollVertically(-1)=" + mRootSV.canScrollVertically(-1));
     }
 
     @Override

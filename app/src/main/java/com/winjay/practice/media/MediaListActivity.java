@@ -71,7 +71,8 @@ public class MediaListActivity extends BaseActivity {
                 Manifest.permission.READ_MEDIA_IMAGES,
                 Manifest.permission.READ_MEDIA_VIDEO,
                 Manifest.permission.READ_MEDIA_AUDIO,
-                Manifest.permission.POST_NOTIFICATIONS};
+                Manifest.permission.POST_NOTIFICATIONS,
+                Manifest.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK};
     }
 
     @Override

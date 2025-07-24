@@ -164,7 +164,9 @@ public class Media3SessionActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initMediaDisplay() {
+        LogUtil.d(TAG);
         if (mediaController.getCurrentMediaItem() == null) {
+            LogUtil.w(TAG, "current media item is null!");
             return;
         }
         MediaItem mediaItem = mediaController.getCurrentMediaItem();

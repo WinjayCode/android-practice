@@ -1,10 +1,12 @@
 package com.winjay.practice.notification;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,11 +14,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.RemoteViews;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.Person;
 import androidx.core.app.RemoteInput;
@@ -64,10 +69,13 @@ public class NotificationActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestNotificationPermission();
+
         visibility_rg = findViewById(R.id.visibility_rg);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationChannel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID,
-                Constants.NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+                Constants.NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
         mNotificationManager.createNotificationChannel(mNotificationChannel);
 
         visibility_rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -103,18 +111,55 @@ public class NotificationActivity extends BaseActivity {
                 headsup();
             }
         });
-        findViewById(R.id.visibility_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                visibility();
-            }
-        });
         findViewById(R.id.reply_notification).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 replyNotification();
             }
         });
+        findViewById(R.id.test_notification).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                testNotification();
+            }
+        });
+        findViewById(R.id.visibility_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                visibility();
+            }
+        });
+    }
+
+    /**
+     * 跳转到通知读取权限设置界面
+     */
+    public void goToNotificationPermissionPage() {
+        Intent intent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
+        startActivity(intent);
+    }
+
+    /**
+     * 检查权限是否已授权
+     */
+    public boolean isNotificationPermissionGranted() {
+        String enabledListeners = Settings.Secure.getString(
+                getContentResolver(),
+                "enabled_notification_listeners"
+        );
+        return enabledListeners != null && enabledListeners.contains(getPackageName());
+    }
+
+    public void requestNotificationPermission() {
+        if (!isNotificationPermissionGranted()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("需要通知权限");
+            builder.setMessage("请允许应用读取通知以继续使用功能");
+            builder.setPositiveButton("去设置", (dialog, which) ->
+                    goToNotificationPermissionPage()
+            );
+            builder.show();
+        }
     }
 
     /**
@@ -254,8 +299,10 @@ public class NotificationActivity extends BaseActivity {
         // 创建通知
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.icon)
-                .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(Notification.CATEGORY_MESSAGE)
+                .setOngoing(true)
+                .setTimeoutAfter(10 * 60 * 1000)
                 .setContentTitle("Headsup Notification")
                 .setContentText("I am a Headsup notification.");
 
@@ -377,5 +424,29 @@ public class NotificationActivity extends BaseActivity {
             // 可实现类似回复短信，显示最近3条回复的效果
 //            mNotificationManager.cancel(1);
         }
+    }
+
+    private void testNotification() {
+        /*Intent push = new Intent();
+        push.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        push.setClass(this, NotificationActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, push, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // Create a new call with the user as caller.
+        Person incoming_caller = new Person.Builder()
+                .setName("Jane Doe")
+                .setImportant(true)
+                .build();
+
+        // Create a call style notification for an incoming call.
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID)
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.mipmap.icon)
+                .setStyle(
+                        NotificationCompat.CallStyle.forIncomingCall(incoming_caller, pendingIntent, pendingIntent))
+                .setFullScreenIntent(pendingIntent, true)
+                .addPerson(incoming_caller);
+
+        mNotificationManager.notify(++NOTIFICATION_ID, builder.build());*/
     }
 }
