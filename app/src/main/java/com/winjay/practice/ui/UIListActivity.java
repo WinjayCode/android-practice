@@ -54,6 +54,7 @@ public class UIListActivity extends BaseActivity {
             put("ImageLoader", ImageLoaderActivity.class);
             put("Window", WindowActivity.class);
             put("EmptyPage", EmptyActivity.class);
+            put("TransparentPage", TransparentActivity.class);
         }
     };
 

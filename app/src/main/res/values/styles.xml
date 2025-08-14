@@ -27,6 +27,22 @@
         <item name="android:windowBackground">@color/black_color_transparent_50</item>
     </style>
 
+    <!--<style name="Theme.TransparentNoDisplay" parent="Theme.AppCompat.Translucent.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>-->
+
+    <style name="InvisibleTransparent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoDisplay">true</item> <!-- 关键属性 -->
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
     <!-- inherit from the material theme -->
     <style name="MyMaterialDesignTheme" parent="android:Theme.Material">
         <!-- Main theme colors -->

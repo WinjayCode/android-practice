@@ -60,3 +60,4 @@ include ":dlna"
 include ":scrcpy_server"
 include ":scrcpy_android"
 include ":adblib"
+include ':algorithm'

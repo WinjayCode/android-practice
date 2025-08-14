@@ -140,7 +140,7 @@
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
             android:exported="true"
-            android:showWhenLocked="true"
+            android:showWhenLocked="false"
             android:screenOrientation="portrait"
             android:directBootAware="true"/>
 
@@ -316,7 +316,7 @@
             android:exported="true"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
-            android:theme="@style/NoTitleTranslucentTheme" />
+            android:theme="@style/InvisibleTransparent" />
 
         <activity
             android:name=".EmptyActivity"

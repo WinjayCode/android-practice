@@ -1,4 +1,4 @@
-package com.winjay.practice.algorithm.sort;
+package com.winjay.algorithm.sort;
 
 /**
  * @author Winjay

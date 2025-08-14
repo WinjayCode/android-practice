@@ -20,30 +20,37 @@ import com.winjay.practice.utils.LogUtil;
 public class TransparentActivity extends BaseActivity {
     private final String TAG = getClass().getSimpleName();
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.transparent_activity;
-    }
+//    @Override
+//    protected int getLayoutId() {
+//        return R.layout.transparent_activity;
+//    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtil.d(TAG, "onCreate()");
+        LogUtil.d(TAG);
 
         //设置1像素
-        Window window = getWindow();
-        window.setGravity(Gravity.LEFT | Gravity.TOP);
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.x = 0;
-        params.y = 0;
-        params.height = 1;
-        params.width = 1;
-        window.setAttributes(params);
+//        Window window = getWindow();
+//        window.setGravity(Gravity.LEFT | Gravity.TOP);
+//        WindowManager.LayoutParams params = window.getAttributes();
+//        params.x = 0;
+//        params.y = 0;
+//        params.height = 1;
+//        params.width = 1;
+//        window.setAttributes(params);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogUtil.d(TAG);
+        finish();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogUtil.d(TAG, "onDestroy()");
+        LogUtil.d(TAG);
     }
 }
