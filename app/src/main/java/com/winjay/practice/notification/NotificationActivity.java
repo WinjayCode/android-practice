@@ -115,6 +115,13 @@ public class NotificationActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 replyNotification();
+
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        replyNotification();
+//                    }
+//                }, 5000);
             }
         });
         findViewById(R.id.test_notification).setOnClickListener(new View.OnClickListener() {

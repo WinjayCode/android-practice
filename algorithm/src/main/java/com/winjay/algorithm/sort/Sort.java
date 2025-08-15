@@ -5,8 +5,8 @@ import java.util.Arrays;
 public class Sort {
     public static void main(String[] args) {
         int[] arr = new int[]{6, 3, 8, 1, 9};
-        System.out.println(System.currentTimeMillis());
-        bubble_sort(arr);
+        int[] result = bubble_sort(arr);
+        System.out.println("Sort result=" + Arrays.toString(result));
         // 3,6,1,8,9
         // 3,1,6,8,9
         // 1,3,6,8,9
@@ -20,7 +20,7 @@ public class Sort {
      * 2.每轮遍历将最大值冒泡到末尾
      * 3.重复n-1轮完成排序
      */
-    public static void bubble_sort(int[] arr) {
+    public static int[] bubble_sort(int[] arr) {
         boolean r = false;
         for (int i = 0; i < arr.length - 1; i++) {
             if (arr[i] > arr[i + 1]) {
@@ -35,7 +35,7 @@ public class Sort {
             bubble_sort(arr);
         } else {
             System.out.println(Arrays.toString(arr));
-            System.out.println(System.currentTimeMillis());
         }
+        return arr;
     }
 }
