@@ -46,6 +46,7 @@ public class NotificationActivity extends BaseActivity {
 
     private NotificationManager mNotificationManager;
     private NotificationChannel mNotificationChannel;
+    private NotificationChannel mSilentNotificationChannel;
 
     private int NOTIFICATION_ID = 0;
 
@@ -74,9 +75,20 @@ public class NotificationActivity extends BaseActivity {
 
         visibility_rg = findViewById(R.id.visibility_rg);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         mNotificationChannel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID,
                 Constants.NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+
+        // Silent NotificationChannel
+        mSilentNotificationChannel = new NotificationChannel(Constants.SILENT_NOTIFICATION_CHANNEL_ID,
+                Constants.SILENT_NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
+        mSilentNotificationChannel.setSound(null, null);
+        mSilentNotificationChannel.enableVibration(false);
+        // 是否在桌面应用图标上显示角标
+        mSilentNotificationChannel.setShowBadge(false);
+
         mNotificationManager.createNotificationChannel(mNotificationChannel);
+        mNotificationManager.createNotificationChannel(mSilentNotificationChannel);
 
         visibility_rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -122,6 +134,12 @@ public class NotificationActivity extends BaseActivity {
 //                        replyNotification();
 //                    }
 //                }, 5000);
+            }
+        });
+        findViewById(R.id.silent_notification).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                silentNotification();
             }
         });
         findViewById(R.id.test_notification).setOnClickListener(new View.OnClickListener() {
@@ -431,6 +449,26 @@ public class NotificationActivity extends BaseActivity {
             // 可实现类似回复短信，显示最近3条回复的效果
 //            mNotificationManager.cancel(1);
         }
+    }
+
+    /**
+     * 静默通知
+     */
+    private void silentNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.SILENT_NOTIFICATION_CHANNEL_ID)
+                .setContentTitle("Silent Notification")
+                .setContentText("I am a silent notification!")
+                .setSmallIcon(R.mipmap.icon)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                // 关键设置：不显示在状态栏
+                .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+                // 关键设置：无提示
+                .setSilent(true)
+                // 关键设置：不显示通知图标
+                .setShowWhen(false);
+//                .setOngoing(true); // 加这个选项，SystemUI通知栏中的Silent横条后不显示 清除 按钮
+
+        mNotificationManager.notify(++NOTIFICATION_ID, builder.build());
     }
 
     private void testNotification() {

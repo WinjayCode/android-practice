@@ -40,6 +40,14 @@ public class Constants {
      * 应用通知唯一 Channel Name
      */
     public static final String NOTIFICATION_CHANNEL_NAME = AppApplication.getApplication().getResources().getString(R.string.app_name);
+    /**
+     * 静默通知渠道 Channel ID
+     */
+    public static final String SILENT_NOTIFICATION_CHANNEL_ID = "Winjay_Silent_Notification_ID";
+    /**
+     * 静默通知渠道 Channel Name
+     */
+    public static final String SILENT_NOTIFICATION_CHANNEL_NAME = "Winjay_Silent_Notification";
 
     public static final int NOTIFICATION_ID = 100;
 
