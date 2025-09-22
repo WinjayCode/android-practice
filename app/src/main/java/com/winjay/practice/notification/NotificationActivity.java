@@ -120,6 +120,13 @@ public class NotificationActivity extends BaseActivity {
         findViewById(R.id.headsup_notification).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        headsup();
+//                    }
+//                }, 5000);
+
                 headsup();
             }
         });
@@ -407,6 +414,8 @@ public class NotificationActivity extends BaseActivity {
                 .build();
         NotificationCompat.Action actionReply = new NotificationCompat.Action.Builder(0, "回复", pendingIntent)
                 .addRemoteInput(remoteInput).build();
+        // 锁屏状态，直接启动全屏 Activity(AndroidManifest中需要配置USE_FULL_SCREEN_INTENT权限和android:showWhenLocked="true")，覆盖锁屏界面。
+        // 解锁状态，通知以“展开式横幅”形式展示，不直接全屏
         builder.setFullScreenIntent(pendingIntent, true)
                 .addAction(actionReply);
 

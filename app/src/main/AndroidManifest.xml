@@ -72,6 +72,9 @@
     <!-- android13运行时通知权限 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- 全屏通知权限（Android 14（API 34）起：只有提供通话或闹钟功能的应用才能被授予该权限，其他应用将被 Google Play 撤销默认授权） -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
+
     <!-- 以下情况均需要添加该权限： -->
     <!-- 查看应用列表 -->
     <!-- 获取其他App meta-data 数据 -->
@@ -771,6 +774,7 @@
         <activity
             android:name=".notification.NotificationActivity"
             android:exported="true"
+            android:showWhenLocked="true"
             android:screenOrientation="portrait" />
 
         <service android:name=".notification.MyNotificationService"
