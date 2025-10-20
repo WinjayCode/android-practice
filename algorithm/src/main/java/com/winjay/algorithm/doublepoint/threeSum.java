@@ -2,8 +2,7 @@ package com.winjay.algorithm.doublepoint;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,24 +37,30 @@ public class threeSum {
         int[] nums = new int[]{-1, 0, 1, 2, -1, -4};
         int[] nums2 = new int[]{0, 1, 1};
         int[] nums3 = new int[]{0, 0, 0};
+        int[] nums4 = new int[]{0, 0, 0, 0};
+        int[] nums5 = new int[]{0, 0, 0, 0, -1, 0, 1, 2, -1, -4};
+        int[] nums6 = new int[]{-4, -2, 1, -5, -4, -4, 4, -2, 0, 4, 0, -2, 3, 1, -5, 0};
 
         List<List<Integer>> listList1 = threeSum_my(nums);
         List<List<Integer>> listList2 = threeSum_my(nums2);
         List<List<Integer>> listList3 = threeSum_my(nums3);
+        List<List<Integer>> listList4 = threeSum_my(nums4);
+        List<List<Integer>> listList5 = threeSum_my(nums5);
+        List<List<Integer>> listList6 = threeSum_my(nums6);
 
         System.out.println(listList1);
         System.out.println(listList2);
         System.out.println(listList3);
-
-//        int[] nums4 = new int[]{0, 1, 2, -1, -4};
-//        List<List<Integer>> listList4 = twoSum(nums4, 1, -1);
-//        System.out.println(listList4);
+        System.out.println(listList4);
+        System.out.println(listList5);
+        System.out.println(listList6);
     }
 
     public static List<List<Integer>> threeSum(int[] nums) {
         return new ArrayList<>();
     }
 
+    // 时间复杂度: O(n^2)
     public static List<List<Integer>> threeSum_my(int[] nums) {
         if (nums.length < 3) {
             return new ArrayList<>();
@@ -70,11 +75,16 @@ public class threeSum {
                 return listList;
             }
         }
-//        -1, 0, 1, 2, -1, -4
 
         int left = 0, right = 1, n = nums.length;
-        while (right < n) {
+        Arrays.sort(nums);
+        while (right < n - 1) {
             int fixedNum = nums[left];
+            if (left > 0 && nums[left] == nums[left - 1]) {
+                ++left;
+                right = left + 1;
+                continue;
+            }
             int target = 0 - fixedNum - nums[right];
 
             int[] newNums = Arrays.copyOfRange(nums, right + 1, n);
@@ -85,29 +95,31 @@ public class threeSum {
                 list.add(fixedNum);
                 list.add(nums[right]);
                 list.add(target);
-                System.out.println("list=" + list);
-                System.out.println();
-                listList.add(list);
+                if (!haveSame(listList, list)) {
+                    listList.add(list);
+                }
             }
             ++right;
+            if (right == n - 1) {
+                ++left;
+                right = left + 1;
+            }
         }
 
         return listList;
     }
 
-    public static List<List<Integer>> twoSum(int[] nums, int target, int fixedNum) {
-        List<List<Integer>> listList = new ArrayList<>();
-        HashMap<Integer, Integer> hashMap = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            if (hashMap.containsKey(target - nums[i])) {
-                List<Integer> list = new ArrayList<>();
-                list.add(fixedNum);
-                list.add(nums[i]);
-                list.add(hashMap.get(target - nums[i]));
-                listList.add(list);
+    public static boolean haveSame(List<List<Integer>> listList, List<Integer> list) {
+        boolean haveSame = false;
+        for (List<Integer> listIntegers : listList) {
+            Collections.sort(listIntegers);
+            Collections.sort(list);
+            System.out.println("haveSame(): listIntegers=" + listIntegers + ", list=" + list);
+            if (listIntegers.equals(list)) {
+                haveSame = true;
+                break;
             }
-            hashMap.put(nums[i], i);
         }
-        return listList;
+        return haveSame;
     }
 }
