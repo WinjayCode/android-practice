@@ -58,10 +58,12 @@
     <style name="ToolbarTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- toolbar颜色 -->
         <item name="colorPrimary">#4876FF</item>
-        <!-- 状态栏颜色 -->
+        <!-- 状态栏背景色 -->
         <item name="colorPrimaryDark">#3A5FCD</item>
         <!-- 窗口的背景颜色 -->
         <item name="android:windowBackground">@android:color/white</item>
+        <!-- 状态栏文本和图标颜色 true:黑 false:白 -->
+        <item name="android:windowLightStatusBar">false</item>
         <item name="searchViewStyle">@style/MySearchView</item>
     </style>
 
