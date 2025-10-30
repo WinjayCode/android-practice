@@ -1,8 +1,5 @@
 package com.winjay.algorithm.doublepoint;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * 接雨水 (42-困难)
  * <p>
@@ -22,89 +19,29 @@ public class trap {
         int[] nums = new int[]{0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1};
         int[] nums2 = new int[]{4, 2, 0, 3, 2, 5};
 
-//        int result1 = trap_my(nums);
-//        System.out.println(result1);
-//        int result2 = trap_my(nums2);
-//        System.out.println(result2);
-
-//        int[] test = new int[]{0, 1, 2, 0, 1, 2};
-        int[] test = new int[]{3, 2, 1, 2, 1};
-        int testResult = trap_my(test);
-        System.out.println(testResult);
+        int result1 = trap(nums);
+        System.out.println(result1);
+        int result2 = trap(nums2);
+        System.out.println(result2);
     }
 
+    // 时间复杂度：O(n)，其中 n 是数组 height 的长度。两个指针的移动总次数不超过 n。
+    // 空间复杂度：O(1)。只需要使用常数的额外空间。
     public static int trap(int[] height) {
         int capacity = 0;
-        return capacity;
-    }
-
-
-//    0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1
-//    4, 2, 0, 3, 2, 5
-//    0, 1, 2, 0, 1, 2
-//    3, 2, 1, 2, 1
-//    4, 3, 1, 2, 1
-    public static int trap_my(int[] height) {
-        int totalCapacity = 0;
-        int n = height.length;
-//        int capacity;
-        int invalidCapacity = 0;
-        boolean haveLeftBoundary = false;
-        for (int left = 0; left < n; left++) {
-            boolean haveSpace = false;
-
-            int lastNum = height[left];
-            // 左指针不是0时，开始移动右指针
-            for (int right = left + 1; right < n; right++) {
-                // 右 == 左
-                if (height[right] == lastNum) {
-                    continue;
-                }
-
-                // 右指针非零时，和左指针做比较
-                if (height[right] > lastNum) {
-                    if (haveLeftBoundary) {
-                        haveSpace = true;
-                    }
-                    // 前面有零标记时，开始计算当前容器的容量
-                    if (haveSpace) {
-                        invalidCapacity += height[right];
-                    }
-                }
-                    // 右 >= 左
-//                if (height[right] >= height[left]) {
-//                    // 前面有零标记时，开始计算当前容器的容量
-//                    if (haveSpace) {
-//                        capacity = height[left] * (right - left);
-//                        totalCapacity += capacity;
-//                        haveSpace = false;
-//
-//                        left = right + 1;
-//                    }
-//                    // 前面没有零标记时，右 >= 左，左指针右移
-//                    else {
-//                        break;
-//                    }
-//                }
-
-                // 右 < 左
-                if (height[right] < lastNum) {
-                    if (haveSpace) {
-                        totalCapacity = lastNum * (right - 1 - left);
-                        System.out.println("totalCapacity=" + totalCapacity + ", invalidCapacity=" + invalidCapacity);
-                        totalCapacity -= invalidCapacity;
-                    } else {
-                        haveLeftBoundary = true;
-                        lastNum = height[right];
-                        invalidCapacity += height[right];
-                    }
-                }
+        int left = 0, right = height.length - 1;
+        int leftMax = 0, rightMax = 0;
+        while (left < right) {
+            leftMax = Math.max(leftMax, height[left]);
+            rightMax = Math.max(rightMax, height[right]);
+            if (height[left] < height[right]) {
+                capacity += leftMax - height[left];
+                ++left;
+            } else {
+                capacity += rightMax - height[right];
+                --right;
             }
-
-//            if (left == n) {
-//                break;
-//            }
         }
-        return totalCapacity;
+        return capacity;
     }
 }
