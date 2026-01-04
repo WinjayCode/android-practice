@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -192,6 +193,54 @@ public class NotificationActivity extends BaseActivity {
             );
             builder.show();
         }
+    }
+
+    void demo() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // 重点：先创建通知渠道
+        NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID,
+                Constants.NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+        channel.enableLights(true); //设置开启指示灯，如果设备有的话
+        channel.setLightColor(Color.RED); //设置指示灯颜色
+        channel.setShowBadge(true); //设置是否显示角标
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);//设置是否应在锁定屏幕上显示此频道的通知
+        channel.setDescription("channelDescription");//设置渠道描述
+        channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 600});//设置震动频率
+        channel.setBypassDnd(true);//设置是否绕过免打扰模式
+        notificationManager.createNotificationChannel(channel);
+
+        // 创建点击意图
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.baidu.com"));
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        //再创建通知
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.app_name));
+        //设置通知栏大图标
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                // 设置状态栏和通知栏小图标
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                // 设置通知栏应用名称
+                .setTicker("通知栏应用名称")
+                // 设置通知栏显示时间
+                .setWhen(System.currentTimeMillis())
+                // 设置通知栏标题
+                .setContentTitle("通知栏标题")
+                // 设置通知栏内容
+                .setContentText("通知栏内")
+                // 设置通知栏点击后是否清除，设置为true，当点击此通知栏后，它会自动消失
+                .setAutoCancel(false)
+                // 将Ongoing设为true 那么左滑右滑将不能删除通知栏(android13之前的版本可以实现常驻通知栏，android14之后用户在未锁屏的情况下可以删除，但是在锁屏下仍然不可以删除)
+                .setOngoing(true)
+                // 设置通知栏点击意图
+                .setContentIntent(pendingIntent)
+                // 铃声、闪光、震动均系统默认
+                .setDefaults(Notification.DEFAULT_ALL)
+                //设置通知时间
+                .setWhen(System.currentTimeMillis())
+                // 设置为public后，通知栏将在锁屏界面显示
+                .setVisibility(NotificationCompat.VISIBILITY_PRIVATE);
+        //发送通知
+        notificationManager.notify(10, builder.build());
     }
 
     /**
