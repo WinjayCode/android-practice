@@ -1,4 +1,4 @@
-package com.winjay.practice.test_java;
+package com.winjay.practice.java;
 
 /**
  * 泛型学习

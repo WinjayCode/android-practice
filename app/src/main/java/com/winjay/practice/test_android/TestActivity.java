@@ -1,4 +1,4 @@
-package com.winjay.practice;
+package com.winjay.practice.test_android;
 
 import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
@@ -38,6 +38,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.winjay.practice.R;
 import com.winjay.practice.hook.HookSetOnClickListenerHelper;
 import com.winjay.practice.thread.HandlerManager;
 import com.winjay.practice.ui.view.RecognitionView;

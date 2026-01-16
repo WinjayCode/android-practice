@@ -1,4 +1,4 @@
-package com.winjay.practice.test_java;
+package com.winjay.practice.java;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;

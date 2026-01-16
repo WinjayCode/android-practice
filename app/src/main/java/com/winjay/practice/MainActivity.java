@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.winjay.g2048.activity.Game2048Activity;
 import com.winjay.practice.activity_manager.ActivityManagerActivity;
+import com.winjay.practice.alarm.AlarmActivity;
 import com.winjay.practice.architecture_mode.ArchitectureModeListActivity;
 import com.winjay.practice.bluetooth.BluetoothListActivity;
 import com.winjay.practice.common.BaseActivity;
@@ -35,6 +36,8 @@ import com.winjay.practice.performance_optimize.PerformanceOptimizeActivity;
 import com.winjay.practice.plugin.PluginActivity;
 import com.winjay.practice.storage.StorageActivity;
 import com.winjay.practice.system_info.SystemInfoActivity;
+import com.winjay.practice.test_android.FocusTestActivity;
+import com.winjay.practice.test_android.TestActivity;
 import com.winjay.practice.ui.UIListActivity;
 import com.winjay.practice.usb.USBDeviceReceiver;
 import com.winjay.practice.usb.VolumeInfo;
@@ -58,6 +61,7 @@ public class MainActivity extends BaseActivity {
 
     private LinkedHashMap<String, Class<?>> mainMap = new LinkedHashMap<String, Class<?>>() {
         {
+            put("Alarm", AlarmActivity.class);
             put("Jetpack", JetpackLibListActivity.class);
             put("UI", UIListActivity.class);
             put("Media", MediaListActivity.class);
@@ -87,6 +91,7 @@ public class MainActivity extends BaseActivity {
             put("Scrcpy_Android_2_Android", com.winjay.mirrorcast.MainActivity.class);
             put("Test", TestActivity.class);
             put("Crash Test", CrashTestActivity.class);
+            put("Focus Test", FocusTestActivity.class);
         }
     };
 

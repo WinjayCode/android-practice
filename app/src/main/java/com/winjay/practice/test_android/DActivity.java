@@ -1,11 +1,11 @@
-package com.winjay.practice;
+package com.winjay.practice.test_android;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.winjay.practice.R;
 
 public class DActivity extends AppCompatActivity {
     @Override

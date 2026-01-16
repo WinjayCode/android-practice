@@ -109,6 +109,13 @@ public class NotificationActivity extends BaseActivity {
         findViewById(R.id.basic_notification).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        basic(v);
+//                    }
+//                }, 15000);
+
                 basic(v);
             }
         });

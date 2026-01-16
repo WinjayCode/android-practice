@@ -1,4 +1,4 @@
-package com.winjay.practice;
+package com.winjay.practice.test_android;
 
 import android.app.Service;
 import android.content.Intent;
