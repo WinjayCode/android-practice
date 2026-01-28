@@ -1,13 +1,10 @@
 package com.winjay.practice.notification;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,8 +12,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
+import android.service.notification.StatusBarNotification;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.RemoteViews;
@@ -26,15 +23,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.Person;
 import androidx.core.app.RemoteInput;
-import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.graphics.drawable.IconCompat;
 
 import com.winjay.practice.Constants;
 import com.winjay.practice.R;
 import com.winjay.practice.common.BaseActivity;
 import com.winjay.practice.utils.LogUtil;
-
-import java.util.Collections;
 
 /**
  * Notification学习（未适配高版本）
@@ -49,13 +43,23 @@ public class NotificationActivity extends BaseActivity {
     private NotificationChannel mNotificationChannel;
     private NotificationChannel mSilentNotificationChannel;
 
-    private int NOTIFICATION_ID = 0;
+    private int NOTIFICATION_ID = 1;
 
     RadioGroup visibility_rg;
 
     private int notificationGrade = 1;
 
     public static final String KEY_TEXT_REPLY = "key_text_reply";
+
+    /**
+     * 归类的key
+     */
+    private static final String REPLY_NOTIFICATION_GROUP =
+            "Reply Notification Group";
+    /**
+     * 通知组别的id
+     */
+    private static final int NOTIFICATION_GROUP_SUMMARY_ID = 0;
 
     @Override
     protected String[] permissions() {
@@ -79,6 +83,8 @@ public class NotificationActivity extends BaseActivity {
 
         mNotificationChannel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID,
                 Constants.NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+        // 自定义铃声
+        mNotificationChannel.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.custom_notification), Notification.AUDIO_ATTRIBUTES_DEFAULT);
 
         // Silent NotificationChannel
         mSilentNotificationChannel = new NotificationChannel(Constants.SILENT_NOTIFICATION_CHANNEL_ID,
@@ -221,7 +227,7 @@ public class NotificationActivity extends BaseActivity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         //再创建通知
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, getString(R.string.app_name));
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channel.getId());
         //设置通知栏大图标
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 // 设置状态栏和通知栏小图标
@@ -270,7 +276,7 @@ public class NotificationActivity extends BaseActivity {
                 .build();
 
         // 创建通知
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, mNotificationChannel.getId());
         builder.setSmallIcon(R.mipmap.icon);
         builder.setContentIntent(pendingIntent);
         builder.setAutoCancel(true);
@@ -439,7 +445,7 @@ public class NotificationActivity extends BaseActivity {
     }
 
     private void sendReplyNotification(String content) {
-        Uri uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+        /*Uri uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
                 "://" + getResources().getResourcePackageName(R.mipmap.ic_launcher_round)
                 + '/' + getResources().getResourceTypeName(R.mipmap.ic_launcher_round)
                 + '/' + getResources().getResourceEntryName(R.mipmap.ic_launcher_round));
@@ -459,7 +465,7 @@ public class NotificationActivity extends BaseActivity {
                 .setCategory(Notification.CATEGORY_MESSAGE)
                 .setContentTitle("Reply Notification")
                 .setContentText(content)
-                .setGroup("haha")
+                .setGroup(REPLY_NOTIFICATION_GROUP)
                 .addPerson(person);
 
         Intent replyIntent = new Intent(this, NotificationActivity.class);
@@ -492,7 +498,34 @@ public class NotificationActivity extends BaseActivity {
         builder.setShortcutInfo(shortcut);
 
         // 发出通知
+        mNotificationManager.notify(++NOTIFICATION_ID, builder.build());*/
+
+
+        // 创建通知
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.mipmap.icon)
+                .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
+                .setCategory(Notification.CATEGORY_MESSAGE)
+                .setContentTitle("Reply Notification")
+                .setContentText(content)
+                .setGroup(REPLY_NOTIFICATION_GROUP);
+
+        Intent replyIntent = new Intent(this, NotificationActivity.class);
+        replyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY)
+                .setLabel("快速回复")
+                .build();
+        NotificationCompat.Action actionReply = new NotificationCompat.Action.Builder(0, "回复", pendingIntent)
+                .addRemoteInput(remoteInput).build();
+        builder.setFullScreenIntent(pendingIntent, true)
+                .addAction(actionReply);
+
+        // 发出通知
         mNotificationManager.notify(++NOTIFICATION_ID, builder.build());
+
+        //如果有必要，增加/更新/移除通知的归类
+        updateNotificationSummary();
     }
 
     // 该操作建议放到BroadCastReceiver中或者其他地方处理，否则会启动多次activity
@@ -512,7 +545,7 @@ public class NotificationActivity extends BaseActivity {
             sendReplyNotification(replyMsg);
 
             // 可实现类似回复短信，显示最近3条回复的效果
-//            mNotificationManager.cancel(1);
+            mNotificationManager.cancel(NOTIFICATION_ID);
         }
     }
 
@@ -558,5 +591,53 @@ public class NotificationActivity extends BaseActivity {
                 .addPerson(incoming_caller);
 
         mNotificationManager.notify(++NOTIFICATION_ID, builder.build());*/
+    }
+
+
+    /**
+     * 获取当前状态栏具有统一id的通知的数量
+     *
+     * @return 数量
+     */
+    private int getNumberOfNotifications() {
+        //查询当前展示的所有通知的状态列表
+        final StatusBarNotification[] activeNotifications = mNotificationManager.getActiveNotifications();
+        //获取当前通知栏里头，NOTIFICATION_GROUP_SUMMARY_ID归类id的组别
+        for (StatusBarNotification notification : activeNotifications) {
+            if (notification.getId() == NOTIFICATION_GROUP_SUMMARY_ID) {
+                //-1是因为发送分组的通知也算一条通知，所以需要-1
+                return activeNotifications.length - 1;
+            }
+        }
+        LogUtil.d(TAG, "group notification count=" + activeNotifications.length);
+        return activeNotifications.length;
+    }
+
+    /**
+     * 如果有必要，增加/更新/移除通知的归类
+     */
+    protected void updateNotificationSummary() {
+        LogUtil.d(TAG);
+        int numberOfNotifications = getNumberOfNotifications();
+        if (numberOfNotifications > 1) { //如果数量>=2,说明有了同样组key的通知，需要归类起来
+            LogUtil.d(TAG, "group");
+            //将通知添加/更新归类到同一组下面
+            String notificationContent = "Reply notification group";
+            final NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID)
+                    .setSmallIcon(R.mipmap.icon)
+                    //添加富样式到通知的显示样式中，如果当前系统版本不支持，那么将不起作用，依旧用原来的通知样式
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .setSummaryText(notificationContent))
+                    .setGroup(REPLY_NOTIFICATION_GROUP) //设置类组key，说明此条通知归属于哪一个归类
+                    .setGroupSummary(true); //这句话必须和上面那句一起调用，否则不起作用
+            final Notification notification = builder.build();
+            //发送通知到状态栏
+            //测试发现，发送归类状态栏也是算一条通知的。所以返回值得时候，需要-1
+            mNotificationManager.notify(NOTIFICATION_GROUP_SUMMARY_ID, notification);
+        } else {
+            LogUtil.d(TAG, "ungroup");
+            //移除归类
+            mNotificationManager.cancel(NOTIFICATION_GROUP_SUMMARY_ID);
+        }
     }
 }
