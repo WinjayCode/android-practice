@@ -4,8 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import org.junit.Test
+import java.io.File
 import java.io.FileWriter
 import java.lang.IllegalArgumentException
+import javax.sql.DataSource
 
 fun main() {
 //    println("Hello world!")
@@ -1783,3 +1785,763 @@ class C2 private constructor(a: Int) {  }
 // 一个 Maven 项目。
 // 一个 Gradle 源代码集（例外情况是 test 源代码集可以访问 main 的 internal 声明）。
 // 一组使用一次 <kotlinc> Ant 任务调用编译的文件。
+
+
+//扩展
+//Kotlin 的 扩展 允许你扩展类或接口以增加新功能，而无需使用继承或诸如 Decorator 之类的设计模式。
+//当处理无法直接修改的第三方库时，它们非常有用。一旦创建，你可以像调用原类或接口的成员一样调用这些扩展。
+//最常见的扩展形式是 扩展函数 和 扩展属性。
+//重要的是，扩展实际上并不修改它们所扩展的类或接口。当你定义一个扩展时，你不会添加新成员。你只是让这类类型可以通过相同的语法调用新函数或访问新属性。
+
+//接收者
+//扩展总是作用于接收者。接收者必须与被扩展的类或接口具有相同的类型。要使用扩展，请在其前加上接收者，后跟一个 . 和函数或属性名称。
+//例如，标准库中的 .appendLine() 扩展函数扩展了 StringBuilder 类。因此在这种情况下，接收者是 StringBuilder 实例，而 接收者类型 是 StringBuilder：
+fun main_expand1() {
+    // builder 是 StringBuilder 的一个实例
+    val builder = StringBuilder()
+        // 在 builder 上调用 .appendLine() 扩展函数
+        .appendLine("Hello")
+        .appendLine()
+        .appendLine("World")
+    println(builder.toString())
+    // Hello
+    //
+    // World
+}
+
+//扩展函数
+//在创建自己的扩展函数之前，请查看 Kotlin 标准库 中是否已有你想要的功能。标准库提供了许多有用的扩展函数，用于：
+//操作集合: .map(), .filter(), .reduce(), .fold(), .groupBy()。
+//转换为字符串: .joinToString()。
+//处理 null 值: .filterNotNull()。
+//要创建自己的扩展函数，请在其名称前加上接收者类型，后跟一个 .。在此示例中，.truncate() 函数扩展了 String 类，因此接收者类型是 String：
+fun String.truncate(maxLength: Int): String {
+    return if (this.length <= maxLength) this else take(maxLength - 3) + "..."
+}
+
+fun main_expand2() {
+    val shortUsername = "KotlinFan42"
+    val longUsername = "JetBrainsLoverForever"
+
+    println("Short username: ${shortUsername.truncate(15)}")
+    // KotlinFan42
+    println("Long username:  ${longUsername.truncate(15)}")
+    // JetBrainsLov...
+}
+//.truncate() 函数会截断任何在其上调用的字符串，截断长度由 maxLength 实参指定，并添加一个省略号 ...。如果字符串短于 maxLength，函数将返回原始字符串。
+
+//在此示例中，.displayInfo() 函数扩展了 User 接口：
+interface User2 {
+    val name: String
+    val email: String
+}
+
+fun User2.displayInfo(): String = "User(name=$name, email=$email)"
+
+// 继承并实现 User 接口的属性
+class RegularUser(override val name: String, override val email: String) : User2
+
+fun main_expand3() {
+    val user = RegularUser("Alice", "alice@example.com")
+    println(user.displayInfo())
+    // User(name=Alice, email=alice@example.com)
+}
+//.displayInfo() 函数返回一个字符串，其中包含 RegularUser 实例的 name 和 email。像这样在接口上定义扩展非常有用，当你只想为所有实现该接口的类型添加一次功能时。
+
+//在此示例中，.mostVoted() 函数扩展了 Map<String, Int> 类：
+fun Map<String, Int>.mostVoted(): String? {
+    return maxByOrNull { (key, value) -> value }?.key
+}
+
+fun main_expand4() {
+    val poll = mapOf(
+        "Cats" to 37,
+        "Dogs" to 58,
+        "Birds" to 22
+    )
+
+    println("Top choice: ${poll.mostVoted()}")
+    // Dogs
+}
+//.mostVoted() 函数遍历在其上调用的 Map 的键值对，并使用 maxByOrNull() 函数返回包含最高值的键。
+//如果 Map 为空，maxByOrNull() 函数将返回 null。mostVoted() 函数使用安全调用 ?.，仅在 maxByOrNull() 函数返回非空值时才访问 key 属性。
+
+//泛型扩展函数
+//要创建泛型扩展函数，请在函数名称之前声明泛型类型形参，使其在接收者类型表达式中可用。在此示例中，.endpoints() 函数扩展了 List<T>，其中 T 可以是任意类型：
+fun <T> List<T>.endpoints(): Pair<T, T> {
+    return first() to last()
+}
+
+fun main_expand5() {
+    val cities = listOf("Paris", "London", "Berlin", "Prague")
+    val temperatures = listOf(21.0, 19.5, 22.3)
+
+    val cityEndpoints = cities.endpoints()
+    val tempEndpoints = temperatures.endpoints()
+
+    println("First and last cities: $cityEndpoints")
+    // (Paris, Prague)
+    println("First and last temperatures: $tempEndpoints")
+    // (21.0, 22.3)
+}
+//.endpoints() 函数返回一个 Pair，其中包含在其上调用的 List 的第一个和最后一个元素。在函数体内部，它调用 first() 和 last() 函数，并使用 to 中缀函数将它们返回的值组合成一个 Pair。
+
+//可空的接收者
+//你可以定义可空的接收者类型的扩展函数，这允许你即使在变量值为 null 时也能在其上调用它们。当接收者为 null 时，this 也将是 null。
+//请确保在函数内部正确处理可空性。例如，在函数体内部使用 this == null 检测、安全调用 ?. 或 Elvis 操作符 ?:。
+//在此示例中，你可以调用 .toString() 函数而无需检测 null，因为该检测已在扩展函数内部发生：
+fun main_expand6() {
+    // 可空 Any 上的扩展函数
+    fun Any?.toString(): String {
+        if (this == null) return "null"
+        // 在 null 检测后，`this` 会智能转换为非空 Any 类型
+        // 因此此调用会解析为常规的 toString() 函数
+        return toString()
+    }
+
+    val number: Int? = 42
+    val nothing: Any? = null
+
+    println(number.toString())
+    // 42
+    println(nothing.toString())
+    // null
+}
+
+//扩展函数还是成员函数？
+//由于扩展函数和成员函数调用具有相同的符号，编译器如何知道使用哪一个？扩展函数是 静态 分派的，这意味着编译器在编译期根据接收者类型决定调用哪个函数。例如：
+fun main_expand7() {
+    open class Shape
+    class Rectangle: Shape()
+
+    fun Shape.getName() = "Shape"
+    fun Rectangle.getName() = "Rectangle"
+
+    fun printClassName(shape: Shape) {
+        println(shape.getName())
+    }
+
+    printClassName(Rectangle())
+    // Shape
+}
+//在此示例中，编译器调用 Shape.getName() 扩展函数，因为形参 shape 被声明为 Shape 类型。由于扩展函数是静态解析的，编译器根据声明类型选择函数，而不是实际实例。
+//因此，即使示例传递了一个 Rectangle 实例，.getName() 函数也会解析为 Shape.getName()，因为变量被声明为 Shape 类型。
+
+//如果一个类具有成员函数，并且存在一个具有相同接收者类型、相同名称和兼容实参的扩展函数，则成员函数优先。例如：
+fun main_expand8() {
+    class Example {
+        fun printFunctionType() { println("Member function") }
+    }
+
+    fun Example.printFunctionType() { println("Extension function") }
+
+    Example().printFunctionType()
+    // Member function
+}
+
+//然而，扩展函数可以重载具有相同名称但 不同 签名的成员函数：
+fun main_expand9() {
+    class Example {
+        fun printFunctionType() { println("Member function") }
+    }
+
+    // 相同名称但不同签名
+    fun Example.printFunctionType(index: Int) { println("Extension function #$index") }
+
+    Example().printFunctionType(1)
+    // Extension function #1
+}
+//在此示例中，由于向 .printFunctionType() 函数传递了一个 Int，编译器选择扩展函数，因为它匹配签名。编译器忽略不带实参的成员函数。
+
+//匿名扩展函数
+//你可以定义不带名称的扩展函数。当你希望避免使全局命名空间混乱，或者需要将某些扩展行为作为实参传递时，这会很有用。
+//例如，假设你想要为一个数据类扩展一个一次性函数来计算运费，而不给它命名：
+fun main_expand10() {
+    data class Order(val weight: Double)
+    val calculateShipping = fun Order.(rate: Double): Double = this.weight * rate
+
+    val order = Order(2.5)
+    val cost = order.calculateShipping(3.0)
+    println("Shipping cost: $cost")
+    // 运费: 7.5
+}
+
+//要将扩展行为作为实参传递，请使用带有类型注解的 lambda 表达式。例如，假设你想要检测一个数字是否在一个区间内，而无需定义命名函数：
+fun main_expand11() {
+    val isInRange: Int.(min: Int, max: Int) -> Boolean = { min, max -> this in min..max }
+
+    println(5.isInRange(1, 10))
+    // true
+    println(20.isInRange(1, 10))
+    // false
+}
+//在此示例中，isInRange 变量持有 Int.(min: Int, max: Int) -> Boolean 类型的函数。该类型是 Int 类上的一个扩展函数，它接收 min 和 max 形参并返回一个 Boolean 值。
+//lambda 体 { min, max -> this in min..max } 检测调用该函数的 Int 值是否落在 min 和 max 形参之间的区间内。如果检测成功，lambda 返回 true。
+
+//扩展属性
+//Kotlin 支持扩展属性，这对于执行数据转换或创建 UI 显示辅助器非常有用，而不会使你正在使用的类变得混乱。
+//要创建扩展属性，请写入你想要扩展的类的名称，后跟一个 . 和你的属性名称。
+//例如，假设你有一个表示用户（包含名字和姓氏）的数据类，并且你想要创建一个属性，在访问时返回一个电子邮件风格的用户名。你的代码可能如下所示：
+data class User3(val firstName: String, val lastName: String)
+
+// 用于获取用户名风格电子邮件句柄的扩展属性
+val User3.emailUsername: String
+    get() = "${firstName.lowercase()}.${lastName.lowercase()}"
+
+fun main_expand12() {
+    val user = User3("Mickey", "Mouse")
+    // 调用扩展属性
+    println("Generated email username: ${user.emailUsername}")
+    // 生成的电子邮件用户名: mickey.mouse
+}
+
+//由于扩展实际上不会向类中添加成员，因此扩展属性无法高效地拥有 幕后字段。这就是为什么扩展属性不允许有初始化器。你只能通过显式提供 getter 和 setter 来定义它们的行为。例如：
+data class House(val streetName: String)
+
+// 不会编译，因为没有 getter 和 setter
+// var House.number = 1
+// Error: Initializers are not allowed for extension properties
+
+// 成功编译
+val houseNumbers = mutableMapOf<House, Int>()
+var House.number: Int
+    get() = houseNumbers[this] ?: 1
+    set(value) {
+        println("Setting house number for ${this.streetName} to $value")
+        houseNumbers[this] = value
+    }
+
+fun main_expand13() {
+    val house = House("Maple Street")
+
+    // 显示默认值
+    println("Default number: ${house.number} ${house.streetName}")
+    // 默认号码: 1 Maple Street
+
+    house.number = 99
+    // 正在将 Maple Street 的房屋号码设置为 99
+
+    // 显示更新后的号码
+    println("Updated number: ${house.number} ${house.streetName}")
+    // 更新后的号码: 99 Maple Street
+}
+//在此示例中，getter 使用 Elvis 操作符 返回房屋号码（如果它存在于 houseNumbers Map 中），否则返回 1。
+
+//伴生对象扩展
+//如果一个类定义了 伴生对象，你也可以为该伴生对象定义扩展函数和属性。就像伴生对象的常规成员一样，你只需使用类名作为限定符即可调用它们。编译器默认将伴生对象命名为 Companion：
+class Logger {
+    companion object { }
+}
+
+fun Logger.Companion.logStartupMessage() {
+    println("Application started.")
+}
+
+fun main_expand14() {
+    Logger.logStartupMessage()
+    // 应用程序已启动。
+}
+
+//将扩展声明为成员
+//你可以在一个类内部声明另一个类的扩展。这样的扩展具有多个 隐式接收者。隐式接收者是一个对象，其成员无需使用 this 限定即可访问：
+//*你声明扩展的类是 分派接收者。
+//*扩展函数的接收者类型是 扩展接收者。
+//考虑此示例，其中 Connection 类包含一个针对 Host 类的扩展函数 printConnectionString()：
+class Host(val hostname: String) {
+    fun printHostname() { print(hostname) }
+}
+
+class Connection(val host: Host, val port: Int) {
+    fun printPort() { print(port) }
+
+    // Host 是扩展接收者
+    fun Host.printConnectionString() {
+        // 调用 Host.printHostname()
+        printHostname()
+        print(":")
+        // 调用 Connection.printPort()
+        // Connection 是分派接收者
+        printPort()
+    }
+
+    fun connect() {
+        /*...*/
+        // 调用该扩展函数
+        host.printConnectionString()
+    }
+}
+
+fun main_expand15() {
+    Connection(Host("kotl.in"), 443).connect()
+    // kotl.in:443
+
+    // 触发错误，因为该扩展函数在 Connection 外部不可用
+    // Host("kotl.in").printConnectionString()
+    // Unresolved reference 'printConnectionString'.
+}
+//此示例在 Connection 类内部声明 printConnectionString() 函数，因此 Connection 类是分派接收者。扩展函数的接收者类型是 Host 类，因此 Host 类是扩展接收者。
+
+//如果分派接收者和扩展接收者具有同名成员，则扩展接收者的成员优先。要显式访问分派接收者，请使用 限定的 this 语法：
+class Connection2 {
+    fun Host.getConnectionString() {
+        // 调用 Host.toString()
+        toString()
+        // 调用 Connection.toString()
+        this@Connection2.toString()
+    }
+}
+
+//覆盖成员扩展
+//你可以将成员扩展声明为 open 并在子类中覆盖它们，这在你想为每个子类自定义扩展行为时很有用。编译器对每种接收者类型有不同的处理方式：
+// 接收者类型	 解析时间  分派类型
+// 分派接收者	  运行时	   虚拟
+// 扩展接收者	  编译期	   静态
+//考虑这个示例，其中 User 类是 open 的，Admin 类继承自它。NotificationSender 类为 User 和 Admin 类都定义了 sendNotification() 扩展函数，而 SpecialNotificationSender 类覆盖了它们：
+open class User4
+
+class Admin : User4()
+
+open class NotificationSender {
+    open fun User4.sendNotification() {
+        println("Sending user notification from normal sender")
+    }
+
+    open fun Admin.sendNotification() {
+        println("Sending admin notification from normal sender")
+    }
+
+    fun notify(user: User4) {
+        user.sendNotification()
+    }
+}
+
+class SpecialNotificationSender : NotificationSender() {
+    override fun User4.sendNotification() {
+        println("Sending user notification from special sender")
+    }
+
+    override fun Admin.sendNotification() {
+        println("Sending admin notification from special sender")
+    }
+}
+
+fun main_expand16() {
+    // 分派接收者是 NotificationSender
+    // 扩展接收者是 User
+    // 解析为 NotificationSender 中的 User.sendNotification()
+    NotificationSender().notify(User4())
+    // Sending user notification from normal sender
+
+    // 分派接收者是 SpecialNotificationSender
+    // 扩展接收者是 User
+    // 解析为 SpecialNotificationSender 中的 User.sendNotification()
+    SpecialNotificationSender().notify(User4())
+    // Sending user notification from special sender
+
+    // 分派接收者是 SpecialNotificationSender
+    // 扩展接收者是 User 而非 Admin
+    // notify() 函数将 user 声明为 User 类型
+    // 静态解析为 SpecialNotificationSender 中的 User.sendNotification()
+    SpecialNotificationSender().notify(Admin())
+    // Sending user notification from special sender
+}
+//分派接收者在运行时使用虚拟分派解析，这使得 main() 函数中的行为更容易理解。但你可能会感到惊讶的是，
+//当你对 Admin 实例调用 notify() 函数时，编译器根据声明类型 user: User 选择扩展，因为它静态解析扩展接收者。
+
+//扩展与可见性修饰符
+//扩展使用与在相同作用域中声明的常规函数相同的 可见性修饰符，包括作为其他类的成员声明的扩展。
+//例如，在一个文件的顶层声明的扩展可以访问同一文件中其他 private 顶层声明：
+// 文件: KotlinStudy.kt
+private fun removeWhitespace(input: String): String {
+    return input.replace("\\s".toRegex(), "")
+}
+
+fun String.cleaned(): String {
+    return removeWhitespace(this)
+}
+
+fun main_expand17() {
+    val rawEmail = "  user @example. com  "
+    val cleaned = rawEmail.cleaned()
+    println("Raw:     '$rawEmail'")
+    // 原始:     '  user @example. com  '
+    println("Cleaned: '$cleaned'")
+    // 清理后: 'user@example.com'
+    println("Looks like an email: ${cleaned.contains("@") && cleaned.contains(".")}")
+    // 看起来像一个电子邮件地址: true
+}
+
+//如果扩展在其接收者类型之外声明，它无法访问接收者的 private 或 protected 成员：
+class User5(private val password: String) {
+    fun isLoggedIn(): Boolean = true
+    fun passwordLength(): Int = password.length
+}
+
+// 在类外部声明的扩展
+fun User5.isSecure(): Boolean {
+    // 无法访问 password，因为它是 private 的:
+    // return password.length >= 8
+
+    // 相反，我们依赖 public 成员:
+    return passwordLength() >= 8 && isLoggedIn()
+}
+
+fun main_expand18() {
+    val user = User5("supersecret")
+    println("Is user secure: ${user.isSecure()}")
+    // 用户是否安全: true
+}
+
+//如果一个扩展被标记为 internal，它只能在其 模块 内部访问：
+// 网络模块
+// JsonParser.kt
+internal fun String.parseJson(): Map<String, Any> {
+    return mapOf("fakeKey" to "fakeValue")
+}
+
+//扩展的作用域
+//在大多数情况下，你会在顶层，即包之下直接定义扩展：
+fun List<String>.getLongestString() { /*...*/}
+
+//要在其声明包之外使用扩展，请在调用处导入它：
+//package org.example.usage
+
+//import org.example.declarations.getLongestString
+
+fun main_expand19() {
+    val list = listOf("red", "green", "blue")
+    list.getLongestString()
+}
+
+
+
+//数据类
+//Kotlin 中的数据类主要用于存储数据。对于每个数据类，编译器会自动生成额外的成员函数，使你能够将实例打印为可读输出、比较实例、复制实例等。
+//数据类用 data 标记：
+data class User6(val name: String, val age: Int)
+//编译器会自动从主构造函数中声明的所有属性派生出以下成员：
+// *equals()/hashCode() 对。
+// *toString() 函数，形式为 "User(name=John, age=42)"。
+// *与属性声明顺序对应的 componentN() 函数。
+// *copy() 函数（详见下文）。
+
+//为了确保生成代码的一致性和有意义的行为，数据类必须满足以下要求：
+// *主构造函数必须至少有一个形参。
+// *所有主构造函数形参必须标记为 val 或 var。
+// *数据类不能是 abstract、open、sealed 或 inner。
+
+//此外，数据类成员的生成遵循以下关于成员继承的规则：
+// *如果数据类体中存在 equals()、hashCode() 或 toString() 的显式实现，或者在超类中存在 final 实现，则这些函数不会被生成，而是使用现有的实现。
+// *如果超类型具有 open 且返回兼容类型的 componentN() 函数，则会为数据类生成对应的函数并覆盖超类型中的函数。如果超类型的函数因签名不兼容或因为是 final 而无法被覆盖，则会报告错误。
+// *不允许为 componentN() 和 copy() 函数提供显式实现。
+
+//数据类可以扩展其他类
+//在 JVM 上，如果生成的类需要有一个无参构造函数，则必须为属性指定默认值
+data class User7(val name: String = "", val age: Int = 0)
+
+//在类体中声明的属性
+//编译器仅使用主构造函数中定义的属性来自动生成函数。要将属性从生成的实现中排除，请在类体中声明它：
+data class Person21(val name: String) {
+    var age: Int = 0
+}
+
+//在下面的示例中，toString()、equals()、hashCode() 和 copy() 实现默认只使用 name 属性，并且只有一个 component 函数，
+//即 component1()。age 属性在类体中声明，因此被排除在外。 因此，两个具有相同 name 但 age 值不同的 Person 对象被视为相等，因为 equals() 仅求值主构造函数中的属性：
+data class Person22(val name: String) {
+    var age: Int = 0
+}
+fun main_data() {
+    val person1 = Person22("John")
+    val person2 = Person22("John")
+    person1.age = 10
+    person2.age = 20
+
+    println("person1 == person2: ${person1 == person2}")
+    // person1 == person2: true
+
+    println("person1 with age ${person1.age}: ${person1}")
+    // person1 with age 10: Person(name=John)
+
+    println("person2 with age ${person2.age}: ${person2}")
+    // person2 with age 20: Person(name=John)
+}
+
+//复制
+//使用 copy() 函数可以复制对象，从而在保留其余属性不变的情况下更改其_部分_属性。 上面 User 类的此函数实现如下：
+//fun copy(name: String = this.name, age: Int = this.age) = User(name, age)
+//然后你可以这样编写：
+val jack = User7(name = "Jack", age = 1)
+val olderJack = jack.copy(age = 2)
+//copy() 函数会创建实例的_浅_复制。换句话说，它不会递归复制 component。结果是，对其他对象的引用是共享的。
+//例如，如果某个属性持有可变 list，则通过“原始”值进行的更改也通过复制可见，而通过复制进行的更改也通过原始值可见：
+data class Employee2(val name: String, val roles: MutableList<String>)
+
+fun main_data2() {
+    val original = Employee2("Jamie", mutableListOf("developer"))
+    val duplicate = original.copy()
+
+    // 同时作用于新值和原始值
+    duplicate.roles.add("team lead")
+
+    println(original)
+    // Employee(name=Jamie, roles=[developer, team lead])
+    println(duplicate)
+    // Employee(name=Jamie, roles=[developer, team lead])
+}
+//如你所见，修改 duplicate.roles 属性也会更改 original.roles 属性，因为这两个属性共享相同的 list 引用。
+
+//数据类与解构声明
+//为数据类生成的_component 函数_使其可以在 解构声明 中使用：
+fun main_data3() {
+    val jane = User7("Jane", 35)
+    val (name, age) = jane
+    println("$name, $age years of age")
+// Jane, 35 years of age
+}
+
+//标准数据类
+//标准库提供了 Pair 和 Triple 类。但在大多数情况下，命名数据类是更好的设计选择，因为它们通过为属性提供有意义的名称使代码更易于阅读。
+
+
+
+//密封类和接口
+//密封（Sealed） 类和接口提供对类层次结构的受控继承。密封类的所有直接子类在编译期是已知的。在密封类定义所在的模块和包之外，
+//不能出现其他子类。同样的逻辑也适用于密封接口及其实现：一旦包含密封接口的模块被编译，就不能创建新的实现。
+//  -直接子类是直接从其超类继承的类。
+//  -间接子类是从其超类下多于一层的类继承的类。
+
+//当你将密封类和接口与 when 表达式结合使用时，可以覆盖所有可能的子类的行为，并确保不会创建新的子类来对你的代码产生不利影响。
+//密封类最适用于以下场景：
+// *期望限制类继承： 你有一个预定义、有限的子类集合，它们扩展自某个类，并且所有这些子类都在编译期已知。
+// *需要类型安全设计： 在你的项目中，安全性和模式匹配至关重要。特别是对于状态管理或处理复杂条件逻辑。
+// *处理封闭 API： 你希望为库提供健壮且可维护的公共 API，以确保第三方客户端按预期使用这些 API。
+
+//声明密封类或接口
+//要声明密封类或接口，请使用 sealed 修饰符：
+// Create a sealed interface
+sealed interface Error
+
+// Create a sealed class that implements sealed interface Error
+sealed class IOError(): Error
+
+// Define subclasses that extend sealed class 'IOError'
+class FileReadError(val file: File): IOError()
+class DatabaseError(val source: DataSource): IOError()
+
+// Create a singleton object implementing the 'Error' sealed interface
+object RuntimeError : Error
+
+//这个例子可以表示一个库的 API，其中包含错误类，允许库用户处理库可能抛出的错误。如果此类错误类的层次结构包含在公共 API 中可见的接口或抽象类，
+//那么没有任何东西能阻止其他开发者在客户端代码中实现或扩展它们。由于库不知道外部声明的错误，它无法与自己的类保持一致地处理它们。
+//然而，通过密封的错误类层次结构，库作者可以确信他们了解所有可能的错误类型，并且以后不会出现其他错误类型。
+
+//构造函数
+//密封类本身始终是抽象类，因此不能直接实例化。但是，它可能包含或继承构造函数。这些构造函数并非用于创建密封类本身的实例，
+//而是用于其子类。请看以下示例，其中有一个名为 Error 的密封类及其几个子类，我们对其进行实例化：
+sealed class Error2(val message: String) {
+    class NetworkError : Error2("Network failure")
+    class DatabaseError : Error2("Database cannot be reached")
+    class UnknownError : Error2("An unknown error has occurred")
+}
+
+fun main_sealed() {
+    val errors = listOf(Error2.NetworkError(), Error2.DatabaseError(), Error2.UnknownError())
+    errors.forEach { println(it.message) }
+    // Network failure
+    // Database cannot be reached
+    // An unknown error has occurred
+}
+
+//你可以在密封类中使用 enum 类，以使用枚举常量来表示状态并提供额外细节。每个枚举常量只存在一个单个实例，而密封类的子类可以有多个实例。
+//在此示例中，sealed class Error 及其几个子类，采用 enum 来表示错误严重性。 每个子类构造函数都初始化 severity 并可以改变其状态：
+enum class ErrorSeverity { MINOR, MAJOR, CRITICAL }
+
+sealed class Error3(val severity: ErrorSeverity) {
+    class FileReadError(val file: File): Error3(ErrorSeverity.MAJOR)
+    class DatabaseError(val source: DataSource): Error3(ErrorSeverity.CRITICAL)
+    object RuntimeError : Error3(ErrorSeverity.CRITICAL)
+    // Additional error types can be added here
+}
+
+//密封类的构造函数可以有以下两种可见性之一：protected（默认）或 private：
+sealed class IOError2 {
+    // 密封类构造函数默认具有 protected 可见性。它在此类及其子类中可见
+    constructor() { /*...*/ }
+
+    // 私有构造函数，仅在此类中可见。
+    // 在密封类中使用私有构造函数可以更严格地控制实例化，从而在类内实现特定的初始化过程。
+    private constructor(description: String): this() { /*...*/ }
+
+    // 这将引发错误，因为密封类中不允许使用 public 和 internal 构造函数
+    // public constructor(code: Int): this() {}
+}
+
+//继承
+//密封类和接口的直接子类必须在同一个包中声明。它们可以是顶层类，也可以嵌套在任何数量的其他具名类、具名接口或具名对象中。
+//子类可以拥有任何可见性，只要它们与 Kotlin 中的常规继承规则兼容。
+//密封类的子类必须具有合格名称。它们不能是局部或匿名对象。
+//enum 类不能扩展密封类或任何其他类。但是，它们可以实现密封接口：
+sealed interface Error4
+
+// enum class extending the sealed interface Error
+enum class ErrorType : Error4 {
+    FILE_ERROR, DATABASE_ERROR
+}
+
+//这些限制不适用于间接子类。如果密封类的直接子类未标记为密封，则可以按照其修饰符允许的任何方式进行扩展：
+// Sealed interface 'Error' has implementations only in the same package and module
+sealed interface Error5
+
+// Sealed class 'IOError' extends 'Error' and is extendable only within the same package
+sealed class IOError3(): Error5
+
+// Open class 'CustomError' extends 'Error' and can be extended anywhere it's visible
+open class CustomError(): Error5
+
+//多平台项目中的继承
+//在多平台项目中还有一项继承限制：密封类的直接子类必须驻留在同一个源代码集中。这适用于没有 expect 与 actual 修饰符的密封类。
+//如果一个密封类在公共源代码集中声明为 expect，并在平台源代码集中具有 actual 实现，那么 expect 和 actual 版本都可以在其源代码集中拥有子类。
+//此外，如果你使用层次结构，则可以在 expect 和 actual 声明之间的任何源代码集中创建子类。
+
+//将密封类与 when 表达式结合使用
+//使用密封类的主要好处在于将其用于 when 表达式时。 when 表达式与密封类结合使用时，允许 Kotlin 编译器穷尽地检测是否覆盖了所有可能的情况。
+//在这种情况下，你无需添加 else 子句：
+// Sealed class and its subclasses
+sealed class Error6 {
+    class FileReadError(val file: String): Error6()
+    class DatabaseError(val source: String): Error6()
+    object RuntimeError : Error6()
+}
+
+// Function to log errors
+fun log(e: Error6) = when(e) {
+    is Error6.FileReadError -> println("Error while reading file ${e.file}")
+    is Error6.DatabaseError -> println("Error while reading from database ${e.source}")
+    Error6.RuntimeError -> println("Runtime error")
+    // No `else` clause is required because all the cases are covered
+}
+
+// List all errors
+fun main_sealed2() {
+    val errors = listOf(
+        Error6.FileReadError("example.txt"),
+        Error6.DatabaseError("usersDatabase"),
+        Error6.RuntimeError
+    )
+
+    errors.forEach { log(it) }
+}
+//将密封类与 when 表达式结合使用时，你还可以添加守卫条件以在单个分支中包含额外的检测。
+
+//用例场景
+//让我们探讨一些密封类和接口特别有用的实际场景。
+//UI 应用程序中的状态管理
+//你可以使用密封类来表示应用程序中不同的 UI 状态。这种方法可以结构化且安全地处理 UI 更改。此示例演示了如何管理各种 UI 状态：
+sealed class UIState {
+    data object Loading : UIState()
+    data class Success(val data: String) : UIState()
+    data class Error(val exception: Exception) : UIState()
+}
+
+fun updateUI(state: UIState) {
+//    when (state) {
+//        is UIState.Loading -> showLoadingIndicator()
+//        is UIState.Success -> showData(state.data)
+//        is UIState.Error -> showError(state.exception)
+//    }
+}
+
+//支付方法处理
+//在实际业务应用程序中，高效处理各种支付方法是常见需求。 你可以使用密封类和 when 表达式来实现此类业务逻辑。
+//通过将不同的支付方法表示为密封类的子类，它为处理事务建立了一个清晰且易于管理的结构：
+sealed class Payment {
+    data class CreditCard(val number: String, val expiryDate: String) : Payment()
+    data class PayPal(val email: String) : Payment()
+    data object Cash : Payment()
+}
+
+fun processPayment(payment: Payment) {
+//    when (payment) {
+//        is Payment.CreditCard -> processCreditCardPayment(payment.number, payment.expiryDate)
+//        is Payment.PayPal -> processPayPalPayment(payment.email)
+//        is Payment.Cash -> processCashPayment()
+//    }
+}
+//Payment 是一个密封类，表示电子商务系统中的不同支付方法：CreditCard、PayPal 和 Cash。每个子类可以有其特定的属性，
+//例如 CreditCard 的 number 和 expiryDate，以及 PayPal 的 email。
+//processPayment() 函数演示了如何处理不同的支付方法。这种方法确保所有可能的支付类型都得到考虑，并且系统对于将来添加新的支付方法保持灵活性。
+// 导入必要的模块
+//import io.ktor.server.application.*
+//import io.ktor.server.resources.*
+
+//import kotlinx.serialization.*
+
+// 定义用于 API 请求的密封接口，使用 Ktor 资源
+//@Resource("api")
+sealed interface ApiRequest
+
+//@Serializable
+//@Resource("login")
+data class LoginRequest(val username: String, val password: String) : ApiRequest
+
+//@Serializable
+//@Resource("logout")
+object LogoutRequest : ApiRequest
+
+// 定义具有详细响应类型的 ApiResponse 密封类
+sealed class ApiResponse {
+    data class UserSuccess(val user: UserData) : ApiResponse()
+    data object UserNotFound : ApiResponse()
+    data class Error(val message: String) : ApiResponse()
+}
+
+// 用于成功响应的用户数据类
+data class UserData(val userId: String, val name: String, val email: String)
+
+// 用于验证用户凭据的函数（仅用于演示）
+fun isValidUser(username: String, password: String): Boolean {
+    // 某些验证逻辑（这只是一个占位符）
+    return username == "validUser" && password == "validPass"
+}
+
+// 处理具有详细响应的 API 请求的函数
+fun handleRequest(request: ApiRequest): ApiResponse {
+    return when (request) {
+        is LoginRequest -> {
+            if (isValidUser(request.username, request.password)) {
+                ApiResponse.UserSuccess(UserData("userId", "userName", "userEmail"))
+            } else {
+                ApiResponse.Error("Invalid username or password")
+            }
+        }
+        is LogoutRequest -> {
+            // 假设此示例中的登出操作总是成功
+            ApiResponse.UserSuccess(UserData("userId", "userName", "userEmail")) // 仅用于演示
+        }
+    }
+}
+
+// 模拟 getUserById 调用
+fun getUserById(userId: String): ApiResponse {
+    return if (userId == "validUserId") {
+        ApiResponse.UserSuccess(UserData("validUserId", "John Doe", "john@example.com"))
+    } else {
+        ApiResponse.UserNotFound
+    }
+    // 错误处理也会导致 Error 响应。
+}
+
+// 演示用法的 main 函数
+fun main_sealed3() {
+    val loginResponse = handleRequest(LoginRequest("user", "pass"))
+    println(loginResponse)
+
+    val logoutResponse = handleRequest(LogoutRequest)
+    println(logoutResponse)
+
+    val userResponse = getUserById("validUserId")
+    println(userResponse)
+
+    val userNotFoundResponse = getUserById("invalidId")
+    println(userNotFoundResponse)
+}

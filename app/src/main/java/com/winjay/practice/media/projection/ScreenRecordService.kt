@@ -65,6 +65,7 @@ class ScreenRecordService : Service() {
             )
         )
         val builder = NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID)
+        // startForegroundService之后必须在10s内调用startForeground，否则ANR
         startForeground(Constants.NOTIFICATION_ID, builder.build())
 
         registerMediaProjectionControlReceiver()
