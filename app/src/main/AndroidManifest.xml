@@ -799,6 +799,13 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".notification.NotificationReplyReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.winjay.action.NOTIFICATION_REPLY" />
+            </intent-filter>
+        </receiver>
         <!-- notification end -->
 
         <!-- test start -->

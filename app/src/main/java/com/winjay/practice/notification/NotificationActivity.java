@@ -7,11 +7,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+
+import java.util.concurrent.atomic.AtomicInteger;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import android.view.View;
@@ -60,6 +63,9 @@ public class NotificationActivity extends BaseActivity {
      * 通知组别的id
      */
     private static final int NOTIFICATION_GROUP_SUMMARY_ID = 0;
+
+    /** 回复类通知的 id 计数器，用于广播处理回复时与 Activity 解耦，避免多次启动 Activity */
+    private static final AtomicInteger sReplyNotificationIdCounter = new AtomicInteger(1);
 
     @Override
     protected String[] permissions() {
@@ -110,8 +116,6 @@ public class NotificationActivity extends BaseActivity {
             }
         });
 
-        handleReplyNotification();
-
         findViewById(R.id.basic_notification).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,14 +151,14 @@ public class NotificationActivity extends BaseActivity {
         findViewById(R.id.reply_notification).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replyNotification();
+//                replyNotification();
 
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        replyNotification();
-//                    }
-//                }, 5000);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        replyNotification();
+                    }
+                }, 5000);
             }
         });
         findViewById(R.id.silent_notification).setOnClickListener(new View.OnClickListener() {
@@ -501,6 +505,19 @@ public class NotificationActivity extends BaseActivity {
         mNotificationManager.notify(++NOTIFICATION_ID, builder.build());*/
 
 
+        // 使用广播 PendingIntent 处理回复，避免每次点击回复都启动 Activity
+        int replyNotificationId = sReplyNotificationIdCounter.incrementAndGet();
+        Intent replyIntent = new Intent(this, NotificationReplyReceiver.class);
+        replyIntent.setAction(Constants.ACTION_NOTIFICATION_REPLY);
+        replyIntent.putExtra(Constants.EXTRA_NOTIFICATION_ID, replyNotificationId);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, replyNotificationId, replyIntent,
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY)
+                .setLabel("快速回复")
+                .build();
+        NotificationCompat.Action actionReply = new NotificationCompat.Action.Builder(0, "回复", pendingIntent)
+                .addRemoteInput(remoteInput).build();
+
         // 创建通知
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.icon)
@@ -508,43 +525,63 @@ public class NotificationActivity extends BaseActivity {
                 .setCategory(Notification.CATEGORY_MESSAGE)
                 .setContentTitle("Reply Notification")
                 .setContentText(content)
-                .setGroup(REPLY_NOTIFICATION_GROUP);
-
-        Intent replyIntent = new Intent(this, NotificationActivity.class);
-        replyIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, replyIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
-        RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY)
-                .setLabel("快速回复")
-                .build();
-        NotificationCompat.Action actionReply = new NotificationCompat.Action.Builder(0, "回复", pendingIntent)
-                .addRemoteInput(remoteInput).build();
-        builder.setFullScreenIntent(pendingIntent, true)
+                .setGroup(REPLY_NOTIFICATION_GROUP)
                 .addAction(actionReply);
+        builder.setFullScreenIntent(pendingIntent, true);
 
         // 发出通知
-        mNotificationManager.notify(++NOTIFICATION_ID, builder.build());
+        mNotificationManager.notify(replyNotificationId, builder.build());
 
         //如果有必要，增加/更新/移除通知的归类
         updateNotificationSummary();
     }
 
-    // 该操作建议放到BroadCastReceiver中或者其他地方处理，否则会启动多次activity
+    /**
+     * 静态方法：发送一条“回复样式”通知（带快速回复按钮），由 BroadcastReceiver 或 Activity 调用。
+     * 使用广播 PendingIntent 作为回复动作，避免为每次回复启动 Activity。
+     */
+    public static void postReplyNotification(Context context, String content) {
+        android.app.NotificationManager nm = (android.app.NotificationManager)
+                context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (nm == null) return;
+        NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL_ID,
+                Constants.NOTIFICATION_CHANNEL_NAME, android.app.NotificationManager.IMPORTANCE_DEFAULT);
+        nm.createNotificationChannel(channel);
+
+        int id = sReplyNotificationIdCounter.incrementAndGet();
+        Intent replyIntent = new Intent(context, NotificationReplyReceiver.class);
+        replyIntent.setAction(Constants.ACTION_NOTIFICATION_REPLY);
+        replyIntent.putExtra(Constants.EXTRA_NOTIFICATION_ID, id);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, replyIntent,
+                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+        RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY).setLabel("快速回复").build();
+        NotificationCompat.Action actionReply = new NotificationCompat.Action.Builder(0, "回复", pendingIntent)
+                .addRemoteInput(remoteInput).build();
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.mipmap.icon)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setCategory(Notification.CATEGORY_MESSAGE)
+                .setContentTitle("Reply Notification")
+                .setContentText(content)
+                .setGroup(REPLY_NOTIFICATION_GROUP)
+                .addAction(actionReply);
+        nm.notify(id, builder.build());
+    }
+
+    /**
+     * 已废弃：回复改由 {@link NotificationReplyReceiver} 在广播中处理，避免为每次回复启动 Activity。
+     * 若仍有通过 startActivity 携带 RemoteInput 的旧 Intent，可在此做兼容处理（一般不再需要）。
+     */
+    @Deprecated
     private void handleReplyNotification() {
-        LogUtil.d(TAG);
         Intent intent = getIntent();
-        if (intent != null) {
-            Bundle resultsFromIntent = RemoteInput.getResultsFromIntent(intent);
-            if (resultsFromIntent == null) {
-                LogUtil.d(TAG, "no reply msg!");
-                return;
-            }
-
-            String replyMsg = (String) resultsFromIntent.getCharSequence(KEY_TEXT_REPLY);
-            LogUtil.d(TAG, "reply msg=" + replyMsg);
-
-            sendReplyNotification(replyMsg);
-
-            // 可实现类似回复短信，显示最近3条回复的效果
+        if (intent == null) return;
+        Bundle resultsFromIntent = RemoteInput.getResultsFromIntent(intent);
+        if (resultsFromIntent == null) return;
+        CharSequence cs = resultsFromIntent.getCharSequence(KEY_TEXT_REPLY);
+        if (cs != null) {
+            sendReplyNotification(cs.toString());
             mNotificationManager.cancel(NOTIFICATION_ID);
         }
     }

@@ -51,6 +51,12 @@ public class Constants {
 
     public static final int NOTIFICATION_ID = 100;
 
+    /**
+     * 通知快速回复广播 Action（在 BroadcastReceiver 中处理，避免为每次回复启动 Activity）
+     */
+    public static final String ACTION_NOTIFICATION_REPLY = "com.winjay.action.NOTIFICATION_REPLY";
+    public static final String EXTRA_NOTIFICATION_ID = "notification_id";
+
     //---------------------------------- net ----------------------------------
     public static final String WEBSOCKET_LOCAL_ADDRESS = "ws://localhost:";
     public static final int SOCKET_PORT = 8080;
