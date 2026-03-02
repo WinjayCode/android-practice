@@ -207,9 +207,12 @@ public abstract class BaseActivity extends AppCompatActivity implements EasyPerm
         return new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
+                receiveActivityResult(result);
             }
         };
     }
+
+    protected void receiveActivityResult(ActivityResult result){}
 
     ////////////////////////////////////////// permission //////////////////////////////////////////
     protected String[] permissions() {
